@@ -1,7 +1,7 @@
-import { css } from '@emotion/react';
-import { Button, Input, Modal } from '@shared/components';
-import { ReactNode, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
+import { css } from '@emotion/react';
+import { Button, FormError, Input, Modal } from '@shared/components';
 import { display } from 'styles/utils.display.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './DeleteModal.styles';
@@ -17,6 +17,7 @@ type Props = {
   isDisabledMessage?: string | ReactNode;
   onHide: VoidFunction;
   onSubmit: VoidFunction;
+  error?: string;
 };
 
 export const DeleteModal = ({
@@ -30,6 +31,7 @@ export const DeleteModal = ({
   isDisabledMessage,
   onHide,
   onSubmit,
+  error,
 }: Props) => {
   const form = useForm<{ name: string }>({ mode: 'onChange' });
   const { isValid } = form.formState;
@@ -41,6 +43,10 @@ export const DeleteModal = ({
     setIsDeleting(true);
     onSubmit();
   };
+
+  useEffect(() => {
+    if (error) setIsDeleting(false);
+  }, [error]);
 
   return (
     <Modal portalId={portalId} isOpen={true} handleClose={onHide}>
@@ -105,6 +111,7 @@ export const DeleteModal = ({
                 Cancel
               </Button>
             </div>
+            <FormError isVisible={!!error}>{error}</FormError>
           </form>
         </FormProvider>
       </>

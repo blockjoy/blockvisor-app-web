@@ -3,6 +3,7 @@ export * from './Logo/Logo';
 export * from './QuoteBlock/QuoteBlock';
 export * from './EmptyColumn/EmptyColum';
 export * from './EmptyColumn/AnimatedGraphic';
+export * from './Heading/Heading';
 export * from './HostIps/HostIps';
 export * from './HostIpStatus/HostIpStatus';
 export * from './HostManagedBy/HostManagedBy';

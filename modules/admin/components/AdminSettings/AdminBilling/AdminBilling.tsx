@@ -1,48 +1,36 @@
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { billingAtoms, billingSelectors } from '@modules/billing';
+import { useRecoilValue } from 'recoil';
 import { Switch, SwitchLabel } from '@shared/components';
+// import { billingSelectors } from '@modules/billing';
+// import { useSettings } from '@modules/settings';
 import { authSelectors } from '@modules/auth';
 
 export const AdminBilling = () => {
-  const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
-  const [isEnabledBillingPreview, setIsEnabledBillingPreview] = useRecoilState(
-    billingAtoms.isEnabledBillingPreview(isSuperUser),
+  // const { updateSettings } = useSettings();
+  // const bypassBillingForSuperUser = useRecoilValue(
+  //   billingSelectors.bypassBillingForSuperUser,
+  // );
+
+  const billingExempt = useRecoilValue(
+    authSelectors.hasPermission('billing-exempt'),
   );
-  const [bypassBillingForSuperUser, setBypassBillingForSuperUser] =
-    useRecoilState(billingSelectors.bypassBillingForSuperUser);
 
-  const handleActiveBilling = () => {
-    setIsEnabledBillingPreview(!isEnabledBillingPreview);
-  };
-
-  const handleSuperUserBilling = () => {
-    setBypassBillingForSuperUser(!bypassBillingForSuperUser);
-  };
+  // const handleSuperUserBilling = () => {
+  //   updateSettings('billing', {
+  //     bypassBilling: !bypassBillingForSuperUser,
+  //   });
+  // };
 
   return (
-    <>
-      <SwitchLabel
-        label="Enable Billing Preview for Super Users"
-        description="When active, Super Users will be able to preview Billing."
-      >
-        <Switch
-          name="billing-enabled"
-          disabled={false}
-          checked={isEnabledBillingPreview}
-          onChange={handleActiveBilling}
-        />
-      </SwitchLabel>
-      <SwitchLabel
-        label="Exclude Super Users from Billing"
-        description="When active, Super Users will be able to bypass Billing when creating new Resources."
-      >
-        <Switch
-          name="superuser-billing"
-          disabled={false}
-          checked={bypassBillingForSuperUser}
-          onChange={handleSuperUserBilling}
-        />
-      </SwitchLabel>
-    </>
+    <SwitchLabel
+      label="Exclude Super Users from Billing"
+      description="When active, Super Users will be able to bypass Billing when creating new Resources."
+    >
+      <Switch
+        name="superuser-billing"
+        disabled={true}
+        checked={billingExempt}
+        // onChange={handleSuperUserBilling}
+      />
+    </SwitchLabel>
   );
 };

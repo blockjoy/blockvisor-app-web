@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { SerializedStyles } from '@emotion/react';
 import { Dropdown, InputLabel, withSearchDropdown } from '@shared/components';
-import { Country, useCountries } from '@shared/hooks/useCountries';
+import { getCountries } from '@shared/utils/getCountries';
 
 export type CountrySelectorProps = {
   name: string;
@@ -23,15 +23,14 @@ export const CountrySelector = ({
   disabled,
   onChange,
 }: CountrySelectorProps) => {
-  const COUNTRIES = useCountries();
-
+  const countries = useMemo(() => getCountries(), []);
   const [isOpen, setIsOpen] = useState(false);
   const handleOpen = (open: boolean = true) => {
     setIsOpen(open);
   };
 
   const defaultCountry =
-    COUNTRIES.find((country: Country) => country.code === value) ?? null;
+    countries.find((country: Country) => country.code === value) ?? null;
 
   const [selectedCountry, setSelectedCountry] =
     useState<Country | null>(defaultCountry);
@@ -60,7 +59,7 @@ export const CountrySelector = ({
       )}
 
       <CountrySelectDropdown
-        items={COUNTRIES}
+        items={countries}
         selectedItem={selectedCountry}
         handleSelected={handleCountryChange}
         defaultText={defaultCountry ? defaultCountry?.name : 'Select country'}

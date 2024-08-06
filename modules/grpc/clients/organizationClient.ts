@@ -1,16 +1,25 @@
 import {
+  Invoice,
   Org,
   OrgSearch,
+  OrgServiceBillingDetailsResponse,
   OrgServiceClient,
   OrgServiceDefinition,
+  OrgServiceGetAddressRequest,
+  OrgServiceGetAddressResponse,
+  OrgServiceGetInvoicesRequest,
+  OrgServiceGetInvoicesResponse,
   OrgServiceGetProvisionTokenResponse,
   OrgServiceListRequest,
   OrgServiceListResponse,
   OrgServiceResetProvisionTokenResponse,
+  OrgServiceSetAddressRequest,
+  OrgServiceSetAddressResponse,
   OrgServiceUpdateRequest,
   OrgServiceUpdateResponse,
   OrgSort,
   OrgSortField,
+  PaymentMethod,
 } from '../library/blockjoy/v1/org';
 import {
   getOptions,
@@ -20,12 +29,14 @@ import {
   UIPagination,
   getPaginationOffset,
   createSearch,
+  callWithTokenRefresh,
 } from '@modules/grpc';
 import { createChannel, createClient } from 'nice-grpc-web';
 import {
   SearchOperator,
   SortOrder,
 } from '../library/blockjoy/common/v1/search';
+import { Address } from '../library/blockjoy/common/v1/address';
 
 class OrganizationClient {
   private client: OrgServiceClient;
@@ -156,6 +167,99 @@ class OrganizationClient {
     try {
       await authClient.refreshToken();
       return this.client.resetProvisionToken({ userId, orgId }, getOptions());
+    } catch (err) {
+      return handleError(err);
+    }
+  }
+
+  // BILLING
+  async getSubscription(
+    orgId: string,
+  ): Promise<OrgServiceBillingDetailsResponse> {
+    try {
+      const req = { orgId };
+      await authClient.refreshToken();
+      const response = await this.client.billingDetails(req, getOptions());
+
+      return response;
+    } catch (err) {
+      return handleError(err);
+    }
+  }
+
+  async initCard(orgId: string, userId: string): Promise<string> {
+    try {
+      await authClient.refreshToken();
+      const response = await this.client.initCard(
+        { orgId, userId },
+        getOptions(),
+      );
+
+      return response.clientSecret!;
+    } catch (err) {
+      return handleError(err);
+    }
+  }
+
+  async listPaymentMethods(orgId: string): Promise<PaymentMethod[]> {
+    try {
+      await authClient.refreshToken();
+      const response = await this.client.listPaymentMethods(
+        { orgId },
+        getOptions(),
+      );
+
+      return response.methods!;
+    } catch (err) {
+      return handleError(err);
+    }
+  }
+
+  async getBillingAddress(orgId: string): Promise<Address | null> {
+    try {
+      const request: OrgServiceGetAddressRequest = {
+        orgId,
+      };
+
+      const response: OrgServiceGetAddressResponse = await callWithTokenRefresh(
+        this.client.getAddress.bind(this.client),
+        request,
+      );
+      return response.address ?? null;
+    } catch (err) {
+      return handleError(err);
+    }
+  }
+
+  async createBillingAddress(orgId: string, address: Address): Promise<void> {
+    try {
+      const request: OrgServiceSetAddressRequest = {
+        orgId,
+        address,
+      };
+
+      await callWithTokenRefresh(
+        this.client.setAddress.bind(this.client),
+        request,
+      );
+    } catch (err) {
+      return handleError(err);
+    }
+  }
+
+  async getInvoices(orgId: string): Promise<Invoice[]> {
+    try {
+      const request: OrgServiceGetInvoicesRequest = {
+        orgId,
+      };
+
+      const response: OrgServiceGetInvoicesResponse =
+        await callWithTokenRefresh(
+          this.client.getInvoices.bind(this.client),
+          request,
+        );
+
+      return response.invoices;
     } catch (err) {
       return handleError(err);
     }

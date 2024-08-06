@@ -1,52 +1,48 @@
-import { InvoiceStatus, SubscriptionStatus } from '@modules/billing';
+import { InvoiceStatus } from '@modules/grpc/library/blockjoy/v1/org';
 
-export const getInvoiceStatusColor = (status: string) => {
+export const getInvoiceStatusColor = (status?: InvoiceStatus) => {
   switch (status) {
-    case InvoiceStatus.paid:
+    case InvoiceStatus.INVOICE_STATUS_PAID:
       return 'primary';
-    case InvoiceStatus.payment_due:
-      return 'note';
-    case InvoiceStatus.not_paid:
+    case InvoiceStatus.INVOICE_STATUS_OPEN:
       return 'note';
     default:
       return 'default';
   }
 };
 
-export const getInvoiceStatusText = (status: string) => {
+export const getInvoiceStatusText = (status?: InvoiceStatus) => {
   switch (status) {
-    case InvoiceStatus.paid:
+    case InvoiceStatus.INVOICE_STATUS_PAID:
       return 'Paid';
-    case InvoiceStatus.payment_due:
+    case InvoiceStatus.INVOICE_STATUS_OPEN:
       return 'Payment due';
-    case InvoiceStatus.not_paid:
-      return 'Not paid';
     default:
       return 'Unknown';
   }
 };
 
-export const getSubscriptionStatusColor = (status: string) => {
-  switch (status) {
-    case SubscriptionStatus.active:
+export const getSubscriptionStatusColor = (status: SubscriptionStatus) => {
+  switch (status.toLowerCase()) {
+    case 'active':
       return 'primary';
-    case SubscriptionStatus.cancelled:
+    case 'canceled':
       return 'secondary';
-    case SubscriptionStatus.non_renewing:
+    case 'paused':
       return 'note';
     default:
       return 'default';
   }
 };
 
-export const getSubscriptionStatusText = (status: string) => {
-  switch (status) {
-    case SubscriptionStatus.active:
+export const getSubscriptionStatusText = (status: SubscriptionStatus) => {
+  switch (status.toLowerCase()) {
+    case 'active':
       return 'Active';
-    case SubscriptionStatus.cancelled:
+    case 'canceled':
       return 'Cancelled';
-    case SubscriptionStatus.non_renewing:
-      return 'Non-renewing';
+    case 'paused':
+      return 'Paused';
     default:
       return 'Unknown';
   }

@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { isMobile } from 'react-device-detect';
-import { toast } from 'react-toastify';
 import { Host, Region } from '@modules/grpc/library/blockjoy/v1/host';
 import { styles } from './NodeLauncherSummary.styles';
 import {
@@ -11,9 +10,8 @@ import {
   HostSelectMultiple,
   OrganizationSelect,
   Pricing,
-  SvgIcon,
+  Tooltip,
 } from '@shared/components';
-import { HUBSPOT_FORMS, useHubSpotForm } from '@shared/index';
 import { hostAtoms } from '@modules/host';
 import {
   NodeRegionSelect,
@@ -23,8 +21,8 @@ import {
   NodeLauncherHost,
 } from '@modules/node';
 import { NodeLauncherSummaryDetails } from './NodeLauncherSummaryDetails';
-import { billingSelectors } from '@modules/billing';
-import { authAtoms, authSelectors } from '@modules/auth';
+import { authSelectors } from '@modules/auth';
+import { billingAtoms } from '@modules/billing';
 import IconRocket from '@public/assets/icons/app/Rocket.svg';
 import IconCog from '@public/assets/icons/common/Cog.svg';
 
@@ -58,23 +56,11 @@ export const NodeLauncherSummary = ({
   );
   const allHosts = useRecoilValue(hostAtoms.allHosts);
   const isLoadingAllHosts = useRecoilValue(hostAtoms.isLoadingAllHosts);
-  const itemPrice = useRecoilValue(billingSelectors.selectedItemPrice);
   const isLoadingAllRegions = useRecoilValue(nodeAtoms.allRegionsLoadingState);
+  const price = useRecoilValue(billingAtoms.price);
   const [isLaunching, setIsLaunching] = useRecoilState(
     nodeLauncherAtoms.isLaunching,
   );
-  const isEnabledBillingPreview = useRecoilValue(
-    billingSelectors.isEnabledBillingPreview,
-  );
-  const bypassBillingForSuperUser = useRecoilValue(
-    billingSelectors.bypassBillingForSuperUser,
-  );
-  const user = useRecoilValue(authAtoms.user);
-  const nodeLauncherInfo = useRecoilValue(
-    nodeLauncherSelectors.nodeLauncherInfo,
-  );
-
-  const { submitForm } = useHubSpotForm();
 
   useEffect(() => {
     setIsLaunching(false);
@@ -85,46 +71,15 @@ export const NodeLauncherSummary = ({
     (selectedHosts?.every((h) => h.isValid) && totalNodesToLaunch! > 0);
 
   const isDisabled =
+    !hasPermissionsToCreate ||
     !hasNetworkList ||
     !isNodeValid ||
     !isConfigValid ||
     Boolean(error) ||
     isLaunching ||
     isLoadingAllRegions !== 'finished' ||
-    (!(!isEnabledBillingPreview || bypassBillingForSuperUser) && !itemPrice) ||
+    !price ||
     !isNodeAllocationValid;
-
-  const handleCreateNodeClicked = async () => {
-    if (!hasPermissionsToCreate) {
-      setIsLaunching(true);
-      await submitForm({
-        formId: HUBSPOT_FORMS.requestNodeLaunch,
-        formData: {
-          email: user?.email,
-          node_info: Object.values(nodeLauncherInfo).join(' | '),
-        },
-        callback: (message) => {
-          toast(
-            <div>
-              <h5>
-                <SvgIcon size="20px">
-                  <IconRocket />
-                </SvgIcon>
-                <span>Request Received</span>
-              </h5>
-              <p>{message}</p>
-            </div>,
-            {
-              autoClose: false,
-              hideProgressBar: true,
-              className: 'Toastify__notification',
-            },
-          );
-        },
-      });
-      setIsLaunching(false);
-    } else onCreateNodeClicked();
-  };
 
   const handleHostsChanged = (nodeLauncherHosts: NodeLauncherHost[] | null) => {
     onHostsChanged(nodeLauncherHosts);
@@ -187,16 +142,24 @@ export const NodeLauncherSummary = ({
       <FormLabel>Summary</FormLabel>
       <NodeLauncherSummaryDetails totalNodesToLaunch={totalNodesToLaunch} />
 
-      {isEnabledBillingPreview && (
+      {price && (
         <>
           <FormLabel>Pricing</FormLabel>
-          <Pricing itemPrice={itemPrice} />
+          <Pricing />
         </>
       )}
 
       <div css={styles.buttons}>
+        {!hasPermissionsToCreate && (
+          <Tooltip
+            noWrap
+            top="-30px"
+            left="50%"
+            tooltip="Insufficient permissions to launch a node."
+          />
+        )}
         <button
-          onClick={handleCreateNodeClicked}
+          onClick={onCreateNodeClicked}
           disabled={isDisabled}
           css={[
             styles.createButton,

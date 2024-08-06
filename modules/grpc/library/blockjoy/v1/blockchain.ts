@@ -217,6 +217,7 @@ export interface BlockchainServicePricingResponse {
  * 1. blockchain type,
  * 2. node type,
  * 3. version.
+ *
  * When a blockchain node is created, a list of properties must be submitted by
  * the caller. The properties that are required / allowed are defined by these
  * properties here.
@@ -2318,10 +2319,10 @@ export interface BlockchainServiceClient<CallOptionsExt = {}> {
   ): Promise<BlockchainServicePricingResponse>;
 }
 
-declare const self: any | undefined;
-declare const window: any | undefined;
-declare const global: any | undefined;
-const tsProtoGlobalThis: any = (() => {
+declare var self: any | undefined;
+declare var window: any | undefined;
+declare var global: any | undefined;
+var tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }

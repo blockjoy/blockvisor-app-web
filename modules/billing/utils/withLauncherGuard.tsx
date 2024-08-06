@@ -2,61 +2,48 @@ import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import {
   billingSelectors,
-  ItemPriceSimple,
   PaymentRequired,
   SubscriptionActivation,
-  LAUNCH_ERRORS,
 } from '@modules/billing';
-import { useDefaultOrganization } from '@modules/organization';
-import { authSelectors } from '@modules/auth';
+import { organizationSelectors } from '@modules/organization';
 
 type LauncherView = 'payment-required' | 'confirm-subscription' | 'launcher';
 
-type WithLauncherGuardBasicProps = {
+type WithLauncherGuardProps = {
   type: 'launch-host' | 'launch-node';
   hasPermissionsToCreate: boolean;
-};
-
-export type WithLauncherGuardAdditionalProps = {
-  itemPrices?: ItemPriceSimple[];
-};
-
-type WithLauncherGuardProps = WithLauncherGuardBasicProps &
-  Partial<WithLauncherGuardAdditionalProps>;
-
-export type WithLauncherGuardPermissions = {
-  disabled: boolean;
-  permitted: boolean;
-  superUser: boolean;
-  message: string;
 };
 
 type LauncherWithGuardBasicProps = {
   fulfilReqs: boolean;
   resetFulfilReqs: VoidFunction;
   onCreateClick: VoidFunction;
-  permissions: WithLauncherGuardPermissions;
-} & Partial<WithLauncherGuardAdditionalProps>;
+} & Partial<WithLauncherGuardProps>;
 
 export type LauncherWithGuardProps = LauncherWithGuardBasicProps &
-  Partial<WithLauncherGuardAdditionalProps>;
+  Partial<WithLauncherGuardProps>;
 
 export const withLauncherGuard = (Component: any) => {
   const withLauncherGuard = ({ ...props }: WithLauncherGuardProps) => {
-    const { type, hasPermissionsToCreate, ...aditionalProps } = props;
+    const { type, hasPermissionsToCreate, ...additionalProps } = props;
 
-    const { defaultOrganization } = useDefaultOrganization();
-    const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
-    const isEnabledBillingPreview = useRecoilValue(
-      billingSelectors.isEnabledBillingPreview,
+    const defaultOrganization = useRecoilValue(
+      organizationSelectors.defaultOrganization,
     );
-    const hasAuthorizedBilling = useRecoilValue(
-      billingSelectors.hasAuthorizedBilling,
-    );
-    const bypassBillingForSuperUser = useRecoilValue(
-      billingSelectors.bypassBillingForSuperUser,
+    const { isAdmin, isOwner } = useRecoilValue(
+      organizationSelectors.organizationRole,
     );
     const hasPaymentMethod = useRecoilValue(billingSelectors.hasPaymentMethod);
+    /**
+     * Determines if a resource can be created.
+     * Conditions:
+     * - User has a subscription
+     * - User has a payment method
+     * - User is an admin or the owner
+     */
+    const canCreateResource = useRecoilValue(
+      billingSelectors.canCreateResource,
+    );
 
     const [activeView, setActiveView] = useState<LauncherView>('launcher');
     const [fulfilRequirements, setFulfilRequirements] = useState(false);
@@ -64,13 +51,6 @@ export const withLauncherGuard = (Component: any) => {
     useEffect(() => {
       setFulfilRequirements(false);
     }, [defaultOrganization?.id]);
-
-    const isPermittedAsSuperUser =
-      isSuperUser && (!isEnabledBillingPreview || bypassBillingForSuperUser);
-
-    const isDisabledAdding =
-      (!hasAuthorizedBilling || !hasPermissionsToCreate) &&
-      !isPermittedAsSuperUser;
 
     const handleDefaultView = () => {
       setActiveView('launcher');
@@ -90,11 +70,7 @@ export const withLauncherGuard = (Component: any) => {
     };
 
     const handleCreateClicked = () => {
-      if (
-        isEnabledBillingPreview &&
-        !hasAuthorizedBilling &&
-        !isPermittedAsSuperUser
-      ) {
+      if (!canCreateResource) {
         const newActiveView: LauncherView = !hasPaymentMethod
           ? 'payment-required'
           : 'confirm-subscription';
@@ -112,27 +88,16 @@ export const withLauncherGuard = (Component: any) => {
       setFulfilRequirements(false);
     };
 
-    const warningMessage = isDisabledAdding
-      ? !hasPermissionsToCreate
-        ? LAUNCH_ERRORS.NO_PERMISSION
-        : !hasPaymentMethod
-        ? LAUNCH_ERRORS.NO_BILLING
-        : LAUNCH_ERRORS.NO_ACTIVE_SUBSCRIPTION
-      : '';
-
     return (
       <>
         <Component
           fulfilReqs={fulfilRequirements}
           resetFulfilReqs={resetFulfilReqs}
           onCreateClick={handleCreateClicked}
-          permissions={{
-            disabled: isDisabledAdding,
-            permitted: hasPermissionsToCreate,
-            superUser: isPermittedAsSuperUser,
-            message: warningMessage,
-          }}
-          {...aditionalProps}
+          hasPermissionsToCreate={
+            hasPermissionsToCreate && (isAdmin || isOwner)
+          }
+          {...additionalProps}
         />
         {activeView === 'payment-required' && (
           <PaymentRequired
@@ -145,7 +110,6 @@ export const withLauncherGuard = (Component: any) => {
             } requires a payment method.`}
             handleCancel={handleCancelAction}
             handleSubmit={handleSubmittedPayment}
-            handleBack={handleDefaultView}
           />
         )}
         {activeView === 'confirm-subscription' && (

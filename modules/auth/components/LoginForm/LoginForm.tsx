@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useRecoilValue } from 'recoil';
 import { isSafari } from 'react-device-detect';
-import { authAtoms, useSignIn, useUserSettings } from '@modules/auth';
+import { authAtoms, useSignIn } from '@modules/auth';
 import {
   useDefaultOrganization,
   useGetOrganizations,
@@ -15,7 +15,6 @@ import { display } from 'styles/utils.display.styles';
 import { reset } from 'styles/utils.reset.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { PasswordToggle } from '@modules/auth';
-import { useBilling } from '@modules/billing';
 
 type LoginForm = {
   email: string;
@@ -43,9 +42,6 @@ export function LoginForm() {
   const [loading, setIsLoading] = useState(false);
   const [loginError, setLoginError] = useState<string | undefined>(undefined);
   const [activeType, setActiveType] = useState<'password' | 'text'>('password');
-
-  useUserSettings();
-  useBilling();
 
   const handleIconClick = () => {
     const type = activeType === 'password' ? 'text' : 'password';

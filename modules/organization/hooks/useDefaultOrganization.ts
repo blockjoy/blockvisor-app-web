@@ -5,6 +5,7 @@ import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { settingsAtoms, useSettings } from '@modules/settings';
 import { sort } from '@shared/components';
 import { organizationSelectors } from '@modules/organization';
+import { authAtoms } from '@modules/auth';
 
 export function useDefaultOrganization() {
   const pathname = usePathname();
@@ -13,6 +14,9 @@ export function useDefaultOrganization() {
     organizationSelectors.defaultOrganization,
   );
   const setAppLoadingState = useSetRecoilState(settingsAtoms.appLoadingState);
+  const setPermissionsLoadingState = useSetRecoilState(
+    authAtoms.permissionsLoadingState,
+  );
 
   const { updateSettings } = useSettings();
 
@@ -48,6 +52,8 @@ export function useDefaultOrganization() {
     organization: DefaultOrganization,
     userId?: string,
   ) => {
+    setPermissionsLoadingState('loading');
+
     if (['/nodes', '/hosts'].some((path) => pathname?.includes(path)))
       setAppLoadingState('loading');
 

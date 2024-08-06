@@ -17,16 +17,13 @@ import {
   useProvisionToken,
   organizationSelectors,
 } from '@modules/organization';
-import {
-  // LAUNCH_ERRORS,
-  LauncherWithGuardProps,
-} from '@modules/billing';
+import { LAUNCH_ERRORS, LauncherWithGuardProps } from '@modules/billing';
 
 export const HostLauncher = ({
   fulfilReqs,
   resetFulfilReqs,
   onCreateClick,
-  permissions,
+  hasPermissionsToCreate,
 }: LauncherWithGuardProps) => {
   const defaultOrganization = useRecoilValue(
     organizationSelectors.defaultOrganization,
@@ -35,15 +32,11 @@ export const HostLauncher = ({
   const { resetProvisionToken, provisionToken, provisionTokenLoadingState } =
     useProvisionToken();
 
-  const handleCreateHostClicked = () => {
-    if (permissions.permitted) handleHostCreation();
-  };
-
   useEffect(() => {
     if (fulfilReqs) handleHostCreation();
   }, [fulfilReqs]);
 
-  const token = !permissions?.disabled
+  const token = hasPermissionsToCreate
     ? provisionToken
     : provisionToken?.replace(/./g, '*');
 
@@ -73,14 +66,14 @@ export const HostLauncher = ({
             <div css={[styles.copy, spacing.bottom.medium]}>
               <CopyToClipboard
                 value={`bvup ${token}`}
-                disabled={permissions?.disabled}
+                disabled={!hasPermissionsToCreate}
               />
-              {permissions?.disabled && (
+              {!hasPermissionsToCreate && (
                 <Tooltip
                   noWrap
                   top="-30px"
                   left="50%"
-                  tooltip={permissions.message}
+                  tooltip={LAUNCH_ERRORS.NO_PERMISSION}
                 />
               )}
             </div>
@@ -89,15 +82,14 @@ export const HostLauncher = ({
               size="small"
               disabled={
                 provisionTokenLoadingState !== 'finished' ||
-                !permissions.permitted
+                !hasPermissionsToCreate
               }
               css={styles.button}
-              onClick={handleCreateHostClicked}
+              onClick={onCreateClick}
               loading={provisionTokenLoadingState !== 'finished'}
-              // {...(!permissions?.permitted &&
-              //   !permissions.superUser && {
-              //     tooltip: LAUNCH_ERRORS.NO_PERMISSION,
-              //   })}
+              {...(!hasPermissionsToCreate && {
+                tooltip: LAUNCH_ERRORS.NO_PERMISSION,
+              })}
             >
               <SvgIcon>
                 <IconRefresh />

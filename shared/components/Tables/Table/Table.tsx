@@ -20,7 +20,9 @@ export const Table = <T extends BaseQueryParams>({
   additionalStyles,
   isHover = true,
 }: TableProps<T>) => {
-  const [activeRowKey, setActiveRowKey] = useState<string>(rows?.[0]?.key);
+  const [activeRowKey, setActiveRowKey] = useState<string>(
+    rows?.[0]?.isClickable ? rows?.[0]?.key : '',
+  );
 
   const handleRowClick = (id: string) => {
     if (onRowClick) {

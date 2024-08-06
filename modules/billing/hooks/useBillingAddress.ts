@@ -1,82 +1,80 @@
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { _customer } from 'chargebee-typescript';
-import { BillingAddress } from 'chargebee-typescript/lib/resources/customer';
-import {
-  BILLING_API_ROUTES,
-  billingAtoms,
-  billingSelectors,
-  fetchBilling,
-} from '@modules/billing';
+import { Address } from '@modules/grpc/library/blockjoy/common/v1/address';
+import { billingAtoms } from '@modules/billing';
+import { organizationClient } from '@modules/grpc';
+import { organizationSelectors } from '@modules/organization';
 
 interface IBillingAddressHook {
-  billingAddress: BillingAddress | null;
+  billingAddress: Address | null;
   billingAddressLoadingState: LoadingState;
-  addBillingAddress: (
-    customerId: string,
-    card: BillingAddressForm,
+  getBillingAddress: VoidFunction;
+  createBillingAddress: (
+    address: Address,
+    onSuccess?: VoidFunction,
+    onError?: (errorMessage: string) => void,
   ) => Promise<void>;
 }
 
 export const useBillingAddress = (): IBillingAddressHook => {
-  const billingAddress = useRecoilValue(billingSelectors.billingAddress);
-
-  const [customer, setCustomer] = useRecoilState(billingSelectors.customer);
-  const [customerLoadingState, setCustomerLoadingState] = useRecoilState(
-    billingAtoms.customerLoadingState,
+  const defaultOrganization = useRecoilValue(
+    organizationSelectors.defaultOrganization,
   );
+  const [billingAddress, setBillingAddress] = useRecoilState(
+    billingAtoms.billingAddress,
+  );
+  const [billingAddressLoadingState, setBillingAddressLoadingState] =
+    useRecoilState(billingAtoms.billingAddressLoadingState);
 
-  const addBillingAddress = async (
-    customerId: string,
-    {
-      firstName,
-      lastName,
-      company,
-      address,
-      city,
-      country,
-      region,
-      postal,
-    }: BillingAddressForm,
-  ) => {
-    setCustomerLoadingState('loading');
+  const getBillingAddress = async () => {
+    setBillingAddressLoadingState('initializing');
 
     try {
-      const updatedBillingInfo: _customer.billing_address_update_billing_info_params =
-        {
-          first_name: firstName,
-          last_name: lastName,
-          line1: address,
-          city,
-          state: region,
-          zip: postal,
-          country,
-          company,
-        };
-
-      const params: _customer.update_billing_info_params = {
-        billing_address: updatedBillingInfo,
-      };
-
-      const data = await fetchBilling(
-        BILLING_API_ROUTES.customer.billingInfo.update,
-        {
-          customerId: customer?.id ? customer.id : customerId,
-          params,
-        },
+      const data = await organizationClient.getBillingAddress(
+        defaultOrganization?.id!,
       );
 
-      setCustomer(data);
-      console.log('%cAddBillingAddress', 'color: #bff589', { params, data });
+      setBillingAddress(data);
+
+      console.log('%cGetBillingAddress', 'color: #bff589', data);
+    } catch (error) {
+      setBillingAddress(null);
+      console.log('Failed to get billing address', error);
+    } finally {
+      setBillingAddressLoadingState('finished');
+    }
+  };
+
+  const createBillingAddress = async (
+    address: Address,
+    onSuccess?: VoidFunction,
+    onError?: (errorMessage: string) => void,
+  ) => {
+    setBillingAddressLoadingState('loading');
+    try {
+      await organizationClient.createBillingAddress(
+        defaultOrganization?.id!,
+        address,
+      );
+
+      setBillingAddress(address);
+      onSuccess?.();
     } catch (error) {
       console.error('Failed to create billing address', error);
+      onError?.(
+        `Error ${
+          billingAddress ? 'updating' : 'creating'
+        } an address, an unknown error occurred`,
+      );
     } finally {
-      setCustomerLoadingState('finished');
+      setBillingAddressLoadingState('finished');
     }
   };
 
   return {
     billingAddress,
-    billingAddressLoadingState: customerLoadingState,
-    addBillingAddress,
+    billingAddressLoadingState,
+
+    getBillingAddress,
+    createBillingAddress,
   };
 };

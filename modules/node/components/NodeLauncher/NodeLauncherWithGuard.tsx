@@ -1,58 +1,21 @@
-import { useEffect, useMemo } from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-import {
-  WithLauncherGuardAdditionalProps,
-  billingAtoms,
-  withLauncherGuard,
-  billingSelectors,
-} from '@modules/billing';
-import { authSelectors } from '@modules/auth';
+import { useMemo } from 'react';
+import { useRecoilValue } from 'recoil';
+import { withLauncherGuard } from '@modules/billing';
 import { NodeLauncher } from '@modules/node';
+import { authSelectors } from '@modules/auth';
 
-export const NodeLauncherWithGuard = ({
-  itemPrices,
-}: WithLauncherGuardAdditionalProps) => {
-  const setItemPrices = useSetRecoilState(billingAtoms.itemPrices);
-
-  const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
-  const isEnabledBillingPreview = useRecoilValue(
-    billingSelectors.isEnabledBillingPreview,
-  );
-  const bypassBillingForSuperUser = useRecoilValue(
-    billingSelectors.bypassBillingForSuperUser,
-  );
-
+export const NodeLauncherWithGuard = () => {
   const canAddNode = useRecoilValue(authSelectors.hasPermission('node-create'));
-  const canCreateSubscription = useRecoilValue(
-    authSelectors.hasPermission('subscription-create'),
-  );
-  const canUpdateSubscription = useRecoilValue(
-    authSelectors.hasPermission('subscription-update'),
-  );
-
-  const hasBillingPermissionsToCreate = isEnabledBillingPreview
-    ? canCreateSubscription || canUpdateSubscription
-    : true;
-
-  const isPermittedAsSuperUser =
-    isSuperUser && (!isEnabledBillingPreview || bypassBillingForSuperUser);
-
-  const hasPermissionsToCreate =
-    isPermittedAsSuperUser || (canAddNode && hasBillingPermissionsToCreate);
 
   const NodeLauncherGuarded = useMemo(
     () => withLauncherGuard(NodeLauncher),
     [],
   );
 
-  useEffect(() => {
-    setItemPrices(itemPrices ?? null);
-  }, [itemPrices]);
-
   return (
     <NodeLauncherGuarded
       type="launch-node"
-      hasPermissionsToCreate={hasPermissionsToCreate}
+      hasPermissionsToCreate={canAddNode}
     />
   );
 };

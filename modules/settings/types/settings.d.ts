@@ -22,6 +22,7 @@ type UserSettings = {
   hosts?: string;
   organization?: string;
   admin?: string;
+  billing?: string;
 };
 
 type UserSettingsUI = {
@@ -30,6 +31,7 @@ type UserSettingsUI = {
   hosts?: HostSettings;
   organization?: OrganizationSettings;
   admin?: AdminSettings;
+  billing?: BillingSettings;
 };
 
 type LayoutBasicSettings = {
@@ -74,4 +76,8 @@ type AdminSettings = {
   blockchains?: AdminSettingsItem;
   orgs?: AdminSettingsItem;
   users?: AdminSettingsItem;
+};
+
+type BillingSettings = {
+  bypassBilling: boolean;
 };

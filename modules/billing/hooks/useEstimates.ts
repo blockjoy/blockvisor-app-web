@@ -1,54 +1,39 @@
-import { useRecoilValue } from 'recoil';
-import useSWR, { preload } from 'swr';
-import { Estimate } from 'chargebee-typescript/lib/resources';
-import {
-  BILLING_API_ROUTES,
-  billingSelectors,
-  fetchBilling,
-} from '@modules/billing';
-import { authSelectors } from '@modules/auth';
+import { useRecoilState } from 'recoil';
+import { Invoice } from '@modules/grpc/library/blockjoy/v1/org';
+import { billingAtoms } from '@modules/billing';
+import { _UPCOMING_INVOICE } from '../mocks/upcomingInvoice';
 
 interface IEstimatesHook {
-  estimate: Estimate | null;
-  estimateLoadingState: LoadingState;
-  loadEstimates: VoidFunction;
+  estimates: Invoice | null;
+  estimatesLoadingState: LoadingState;
+  getEstimates: () => Promise<void>;
 }
 
 export const useEstimates = (): IEstimatesHook => {
-  const subscription = useRecoilValue(billingSelectors.subscription);
-  const canUpdateSubscription = useRecoilValue(
-    authSelectors.hasPermission('subscription-update'),
+  const [estimates, setEstimates] = useRecoilState(billingAtoms.estimates);
+  const [estimatesLoadingState, setEstimatesLoadingState] = useRecoilState(
+    billingAtoms.estimatesLoadingState,
   );
 
-  const fetcher = () =>
-    fetchBilling(BILLING_API_ROUTES.estimates.get, {
-      subscriptionId: subscription?.id!,
-    });
+  const getEstimates = async () => {
+    setEstimatesLoadingState('initializing');
 
-  const getKey = () => {
-    if (subscription?.status !== 'active') return null;
+    try {
+      const data: Invoice = _UPCOMING_INVOICE;
 
-    if (!canUpdateSubscription) return null;
-
-    return `${BILLING_API_ROUTES.estimates.get}_${subscription?.id}`;
+      console.log('%cGetEstimates', 'color: #bff589', data);
+      setEstimates(data);
+    } catch (error) {
+      console.error('Failed to fetch Estimates', error);
+      setEstimates(null);
+    } finally {
+      setEstimatesLoadingState('finished');
+    }
   };
-
-  const { data, error, isLoading } = useSWR(getKey, fetcher);
-
-  if (error) console.error('Failed to fetch Estimates', error);
-
-  const estimateLoadingState: LoadingState = isLoading
-    ? 'initializing'
-    : 'finished';
-
-  const loadEstimates = async () => {
-    preload(getKey, fetcher);
-  };
-
   return {
-    estimate: data,
-    estimateLoadingState,
+    estimates,
+    estimatesLoadingState,
 
-    loadEstimates,
+    getEstimates,
   };
 };

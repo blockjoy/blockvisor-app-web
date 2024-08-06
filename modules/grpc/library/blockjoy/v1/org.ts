@@ -289,7 +289,7 @@ export interface Invoice {
   /** The invoice number is displayed on the invoice. */
   number?: string | undefined;
   createdAt?: Date | undefined;
-  discount: Discount | undefined;
+  discounts: Discount[];
   pdfUrl?: string | undefined;
   lineItems: LineItem[];
   status?: InvoiceStatus | undefined;
@@ -299,23 +299,20 @@ export interface Invoice {
 
 export interface Discount {
   name?: string | undefined;
+  amount?: Amount | undefined;
 }
 
 export interface LineItem {
+  total: number;
   subtotal: number;
-  total?: number | undefined;
+  unitAmount?: number | undefined;
   description?: string | undefined;
   start?: Date | undefined;
   end?: Date | undefined;
   plan?: string | undefined;
   proration: boolean;
   quantity?: number | undefined;
-  discounts: LineItemDiscount[];
-}
-
-export interface LineItemDiscount {
-  name?: string | undefined;
-  amount?: Amount | undefined;
+  discounts: Discount[];
 }
 
 function createBaseOrg(): Org {
@@ -2512,7 +2509,7 @@ function createBaseInvoice(): Invoice {
   return {
     number: undefined,
     createdAt: undefined,
-    discount: undefined,
+    discounts: [],
     pdfUrl: undefined,
     lineItems: [],
     status: undefined,
@@ -2529,8 +2526,8 @@ export const Invoice = {
     if (message.createdAt !== undefined) {
       Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(18).fork()).ldelim();
     }
-    if (message.discount !== undefined) {
-      Discount.encode(message.discount, writer.uint32(26).fork()).ldelim();
+    for (const v of message.discounts) {
+      Discount.encode(v!, writer.uint32(26).fork()).ldelim();
     }
     if (message.pdfUrl !== undefined) {
       writer.uint32(34).string(message.pdfUrl);
@@ -2576,7 +2573,7 @@ export const Invoice = {
             break;
           }
 
-          message.discount = Discount.decode(reader, reader.uint32());
+          message.discounts.push(Discount.decode(reader, reader.uint32()));
           continue;
         case 4:
           if (tag !== 34) {
@@ -2630,9 +2627,7 @@ export const Invoice = {
     const message = createBaseInvoice();
     message.number = object.number ?? undefined;
     message.createdAt = object.createdAt ?? undefined;
-    message.discount = (object.discount !== undefined && object.discount !== null)
-      ? Discount.fromPartial(object.discount)
-      : undefined;
+    message.discounts = object.discounts?.map((e) => Discount.fromPartial(e)) || [];
     message.pdfUrl = object.pdfUrl ?? undefined;
     message.lineItems = object.lineItems?.map((e) => LineItem.fromPartial(e)) || [];
     message.status = object.status ?? undefined;
@@ -2643,13 +2638,16 @@ export const Invoice = {
 };
 
 function createBaseDiscount(): Discount {
-  return { name: undefined };
+  return { name: undefined, amount: undefined };
 }
 
 export const Discount = {
   encode(message: Discount, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.name !== undefined) {
       writer.uint32(10).string(message.name);
+    }
+    if (message.amount !== undefined) {
+      Amount.encode(message.amount, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -2668,6 +2666,13 @@ export const Discount = {
 
           message.name = reader.string();
           continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.amount = Amount.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2684,14 +2689,18 @@ export const Discount = {
   fromPartial(object: DeepPartial<Discount>): Discount {
     const message = createBaseDiscount();
     message.name = object.name ?? undefined;
+    message.amount = (object.amount !== undefined && object.amount !== null)
+      ? Amount.fromPartial(object.amount)
+      : undefined;
     return message;
   },
 };
 
 function createBaseLineItem(): LineItem {
   return {
+    total: 0,
     subtotal: 0,
-    total: undefined,
+    unitAmount: undefined,
     description: undefined,
     start: undefined,
     end: undefined,
@@ -2704,11 +2713,14 @@ function createBaseLineItem(): LineItem {
 
 export const LineItem = {
   encode(message: LineItem, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.total !== 0) {
+      writer.uint32(80).int64(message.total);
+    }
     if (message.subtotal !== 0) {
       writer.uint32(8).int64(message.subtotal);
     }
-    if (message.total !== undefined) {
-      writer.uint32(16).int64(message.total);
+    if (message.unitAmount !== undefined) {
+      writer.uint32(16).int64(message.unitAmount);
     }
     if (message.description !== undefined) {
       writer.uint32(26).string(message.description);
@@ -2729,7 +2741,7 @@ export const LineItem = {
       writer.uint32(64).uint64(message.quantity);
     }
     for (const v of message.discounts) {
-      LineItemDiscount.encode(v!, writer.uint32(74).fork()).ldelim();
+      Discount.encode(v!, writer.uint32(74).fork()).ldelim();
     }
     return writer;
   },
@@ -2741,6 +2753,13 @@ export const LineItem = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
+        case 10:
+          if (tag !== 80) {
+            break;
+          }
+
+          message.total = longToNumber(reader.int64() as Long);
+          continue;
         case 1:
           if (tag !== 8) {
             break;
@@ -2753,7 +2772,7 @@ export const LineItem = {
             break;
           }
 
-          message.total = longToNumber(reader.int64() as Long);
+          message.unitAmount = longToNumber(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 26) {
@@ -2802,7 +2821,7 @@ export const LineItem = {
             break;
           }
 
-          message.discounts.push(LineItemDiscount.decode(reader, reader.uint32()));
+          message.discounts.push(Discount.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -2819,74 +2838,16 @@ export const LineItem = {
 
   fromPartial(object: DeepPartial<LineItem>): LineItem {
     const message = createBaseLineItem();
+    message.total = object.total ?? 0;
     message.subtotal = object.subtotal ?? 0;
-    message.total = object.total ?? undefined;
+    message.unitAmount = object.unitAmount ?? undefined;
     message.description = object.description ?? undefined;
     message.start = object.start ?? undefined;
     message.end = object.end ?? undefined;
     message.plan = object.plan ?? undefined;
     message.proration = object.proration ?? false;
     message.quantity = object.quantity ?? undefined;
-    message.discounts = object.discounts?.map((e) => LineItemDiscount.fromPartial(e)) || [];
-    return message;
-  },
-};
-
-function createBaseLineItemDiscount(): LineItemDiscount {
-  return { name: undefined, amount: undefined };
-}
-
-export const LineItemDiscount = {
-  encode(message: LineItemDiscount, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== undefined) {
-      writer.uint32(10).string(message.name);
-    }
-    if (message.amount !== undefined) {
-      Amount.encode(message.amount, writer.uint32(18).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): LineItemDiscount {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseLineItemDiscount();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.name = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.amount = Amount.decode(reader, reader.uint32());
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<LineItemDiscount>): LineItemDiscount {
-    return LineItemDiscount.fromPartial(base ?? {});
-  },
-
-  fromPartial(object: DeepPartial<LineItemDiscount>): LineItemDiscount {
-    const message = createBaseLineItemDiscount();
-    message.name = object.name ?? undefined;
-    message.amount = (object.amount !== undefined && object.amount !== null)
-      ? Amount.fromPartial(object.amount)
-      : undefined;
+    message.discounts = object.discounts?.map((e) => Discount.fromPartial(e)) || [];
     return message;
   },
 };
@@ -3191,10 +3152,10 @@ export interface OrgServiceClient<CallOptionsExt = {}> {
   ): Promise<OrgServiceGetInvoicesResponse>;
 }
 
-declare const self: any | undefined;
-declare const window: any | undefined;
-declare const global: any | undefined;
-const tsProtoGlobalThis: any = (() => {
+declare var self: any | undefined;
+declare var window: any | undefined;
+declare var global: any | undefined;
+var tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }
