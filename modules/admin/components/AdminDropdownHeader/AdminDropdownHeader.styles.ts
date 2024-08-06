@@ -13,6 +13,7 @@ export const styles = {
   h2: (theme: ITheme) => css`
     color: ${theme.colorLabel};
     font-size: 14px;
+    text-transform: capitalize;
   `,
   button: (theme: ITheme) => css`
     background: transparent;

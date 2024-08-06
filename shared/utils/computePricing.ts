@@ -1,6 +1,3 @@
-import { ItemPriceSimple, PromoCode } from '@modules/billing';
-import { ItemPrice } from 'chargebee-typescript/lib/resources';
-
 interface IComputePricing {
   subtotal: number;
   total: number;
@@ -9,8 +6,8 @@ interface IComputePricing {
 }
 
 export const computePricing = (
-  itemPrice: ItemPrice | ItemPriceSimple | null,
-  promoCode: PromoCode | null,
+  itemPrice: any | null,
+  promoCode: any | null,
 ): IComputePricing => {
   const subtotal = itemPrice?.price ?? 0;
   let total = subtotal ?? 0;

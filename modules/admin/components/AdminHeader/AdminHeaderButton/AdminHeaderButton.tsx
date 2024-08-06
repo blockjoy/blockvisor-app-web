@@ -24,7 +24,7 @@ export const AdminHeaderButton = ({
       css={[styles.button, isDanger && styles.buttonDanger]}
       onClick={onClick}
     >
-      <SvgIcon size="15px">{icon}</SvgIcon>
+      <SvgIcon size="16px">{icon}</SvgIcon>
       {Boolean(tooltip) && (
         <span className="tooltip" css={styles.tooltip}>
           {tooltip}

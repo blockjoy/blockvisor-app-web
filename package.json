@@ -13,14 +13,13 @@
     "serve-storybook": "serve storybook-static"
   },
   "dependencies": {
-    "@chargebee/chargebee-js-react-wrapper": "^0.6.3",
     "@emotion/react": "^11.9.3",
     "@hookform/error-message": "^2.0.0",
+    "@stripe/react-stripe-js": "^2.7.1",
+    "@stripe/stripe-js": "^3.4.0",
     "animejs": "^3.2.1",
-    "chargebee-typescript": "^2.31.0",
     "date-fns": "^2.29.2",
     "google-protobuf": "^3.21.0",
-    "i18n-iso-countries": "^7.6.0",
     "jwt-decode": "^3.1.2",
     "long": "^5.2.3",
     "mixpanel-browser": "^2.47.0",

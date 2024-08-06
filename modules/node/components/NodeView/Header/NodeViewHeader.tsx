@@ -1,10 +1,12 @@
+import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import {
   DeleteModal,
   NodeStatus,
   Skeleton,
   SkeletonGrid,
 } from '@shared/components';
-import { useState } from 'react';
 import { colors } from 'styles/utils.colors.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { styles } from './NodeViewHeader.styles';
@@ -18,8 +20,6 @@ import {
 import { wrapper } from 'styles/wrapper.styles';
 import { ROUTES } from '@shared/constants/routes';
 import { NodeViewHeaderActions } from './Actions/NodeViewHeaderActions';
-import { toast } from 'react-toastify';
-import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { getNodeJobProgress } from '@modules/node/utils/getNodeJobProgress';
 import { useGetOrganizations } from '@modules/organization';
 import { useHostList } from '@modules/host';
@@ -38,23 +38,34 @@ export const NodeViewHeader = () => {
   const [isReportProblemMode, setIsReportProblemMode] = useState(false);
 
   const [isSaving, setIsSaving] = useState<boolean | null>(null);
+  const [error, setError] = useState('');
 
   const progress = getNodeJobProgress(node!);
+
+  useEffect(() => {
+    if (!isDeleteMode && error) setError('');
+  }, [isDeleteMode]);
 
   const toggleDeleteModalOpen = () => setIsDeleteMode(!isDeleteMode);
   const toggleReportProblemModalOpen = () =>
     setIsReportProblemMode(!isReportProblemMode);
 
   const handleDeleteNode = () => {
-    deleteNode(node!, () => {
-      toast.success('Node Deleted');
-      removeFromNodeList(node!.id);
+    setError('');
 
-      navigate(ROUTES.NODES, () => {
-        loadHosts();
-        getOrganizations();
-      });
-    });
+    deleteNode(
+      node!,
+      () => {
+        toast.success('Node Deleted');
+        removeFromNodeList(node!.id);
+
+        navigate(ROUTES.NODES, () => {
+          loadHosts();
+          getOrganizations();
+        });
+      },
+      (err) => setError(err),
+    );
   };
 
   const handleReportProblem = async (message: string) => {
@@ -67,9 +78,7 @@ export const NodeViewHeader = () => {
     setIsSaving(true);
     await updateNode({
       displayName: value,
-      allowIps: node?.allowIps!,
-      denyIps: node?.denyIps!,
-      id: node?.id!,
+      ids: [node?.id!],
     });
     toast.success('Node name updated');
     setIsSaving(false);
@@ -88,6 +97,7 @@ export const NodeViewHeader = () => {
           entityName="Node"
           onHide={toggleDeleteModalOpen}
           onSubmit={handleDeleteNode}
+          error={error}
         />
       )}
 

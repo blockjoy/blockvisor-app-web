@@ -1,3 +1,5 @@
+type CreditCardBrand = 'amex' | 'discover' | 'mastercard' | 'visa' | string;
+
 type CreditCardForm = {
   cardHolder: string;
   cardNumber: string;

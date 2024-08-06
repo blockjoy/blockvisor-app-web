@@ -16,6 +16,7 @@ import {
   sortVersions,
 } from '@modules/node';
 import { authSelectors } from '@modules/auth';
+import { nodeTypeList } from '@shared/index';
 
 const networks = selector<NetworkConfig[]>({
   key: 'nodeLauncher.networks',
@@ -157,6 +158,33 @@ const selectedRegionByHost = selectorFamily<Region | null, string | undefined>({
     },
 });
 
+const nodeLauncherInfo = selector<NodeLauncherBasicInfo>({
+  key: 'nodeLauncher.info',
+  get: ({ get }) => {
+    const nodeLauncher = get(nodeLauncherAtoms.nodeLauncher);
+    const allBlockchains = get(blockchainAtoms.blockchains);
+    const selectedBlockchain = allBlockchains.find(
+      (blockchain) => blockchain.id === nodeLauncher.blockchainId,
+    );
+
+    const nodeType = get(nodeLauncherAtoms.selectedNodeType);
+    const selectedNodeType = nodeTypeList.find(
+      (nt) => nt.id === nodeType?.nodeType,
+    );
+
+    const selectedNetwork = get(nodeLauncherAtoms.selectedNetwork);
+
+    const selectedVersion = get(nodeLauncherAtoms.selectedVersion);
+
+    return {
+      blockchainName: selectedBlockchain?.name ?? '',
+      nodeTypeName: selectedNodeType?.name ?? '',
+      networkName: selectedNetwork ?? '',
+      versionName: selectedVersion?.version ?? '',
+    };
+  },
+});
+
 export const nodeLauncherSelectors = {
   networks,
   versions,
@@ -173,4 +201,6 @@ export const nodeLauncherSelectors = {
 
   selectedBlockchain,
   selectedRegionByHost,
+
+  nodeLauncherInfo,
 };

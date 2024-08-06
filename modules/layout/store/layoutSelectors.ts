@@ -1,4 +1,4 @@
-import { selector } from 'recoil';
+import { selector, selectorFamily } from 'recoil';
 import { authAtoms } from '@modules/auth';
 
 const layout = selector<LayoutSettings>({
@@ -29,6 +29,15 @@ const nodeView = selector<View>({
   },
 });
 
+const nodeViewMobile = selector<View>({
+  key: 'layout.mobile.nodes.view',
+  get: ({ get }) => {
+    const layoutVal = get(layout);
+
+    return layoutVal?.['mobile.nodes.view'] ?? 'grid';
+  },
+});
+
 const isNodeFiltersOpen = selector<boolean>({
   key: 'layout.nodes.filters.isOpen',
   get: ({ get }) => {
@@ -47,6 +56,15 @@ const hostView = selector<View>({
   },
 });
 
+const hostViewMobile = selector<View>({
+  key: 'layout.mobile.hosts.view',
+  get: ({ get }) => {
+    const layoutVal = get(layout);
+
+    return layoutVal?.['mobile.hosts.view'] ?? 'grid';
+  },
+});
+
 const isHostFiltersOpen = selector<boolean>({
   key: 'layout.hosts.filters.isOpen',
   get: ({ get }) => {
@@ -54,6 +72,30 @@ const isHostFiltersOpen = selector<boolean>({
 
     return layoutVal?.['hosts.filters.isOpen'] ?? false;
   },
+});
+
+const activeNodeView = selectorFamily<View, boolean>({
+  key: 'layout.nodes.activeView',
+  get:
+    (isXlrg) =>
+    ({ get }) => {
+      const nodeViewVal = get(nodeView);
+      const nodeViewMobileVal = get(nodeViewMobile);
+
+      return isXlrg ? nodeViewMobileVal : nodeViewVal;
+    },
+});
+
+const activeHostView = selectorFamily<View, boolean>({
+  key: 'layout.hosts.activeView',
+  get:
+    (isXlrg) =>
+    ({ get }) => {
+      const hostViewVal = get(hostView);
+      const hostViewMobileVal = get(hostViewMobile);
+
+      return isXlrg ? hostViewMobileVal : hostViewVal;
+    },
 });
 
 const adminFullWidth = selector<boolean>({
@@ -65,16 +107,30 @@ const adminFullWidth = selector<boolean>({
   },
 });
 
+const adminSidebarWidth = selector<number>({
+  key: 'layout.admin.sidebarWidth',
+  get: ({ get }) => {
+    const layoutVal = get(layout);
+
+    return layoutVal?.['admin.sidebarWidth'] ?? 200;
+  },
+});
+
 export const layoutSelectors = {
   layout,
 
   isSidebarOpen,
 
   nodeView,
+  nodeViewMobile,
+  activeNodeView,
   isNodeFiltersOpen,
 
   hostView,
+  hostViewMobile,
+  activeHostView,
   isHostFiltersOpen,
 
   adminFullWidth,
+  adminSidebarWidth,
 };

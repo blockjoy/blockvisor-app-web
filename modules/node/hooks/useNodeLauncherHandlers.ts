@@ -15,7 +15,6 @@ import {
   UiType,
 } from '@modules/grpc/library/blockjoy/common/v1/node';
 import {
-  NodePlacement,
   NodeProperty,
   NodeScheduler_ResourceAffinity,
   NodeServiceCreateRequest,
@@ -25,7 +24,6 @@ import {
   useNodeAdd,
   nodeLauncherAtoms,
   blockchainAtoms,
-  nodeAtoms,
   nodeLauncherSelectors,
   useGetRegions,
   sortNetworks,
@@ -35,8 +33,8 @@ import {
 import { organizationSelectors } from '@modules/organization';
 import { ROUTES, useNavigate } from '@shared/index';
 import { Mixpanel } from '@shared/services/mixpanel';
-import { matchSKU } from '@modules/billing';
 import { authSelectors } from '@modules/auth';
+import { usePricing } from '@modules/billing';
 
 type IUseNodeLauncherHandlersParams = {
   fulfilReqs: boolean;
@@ -67,6 +65,7 @@ export const useNodeLauncherHandlers = ({
   const { getHosts } = useHostSelect();
   const { createNode } = useNodeAdd();
   useGetRegions();
+  const { getPrice } = usePricing();
 
   const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
 
@@ -112,7 +111,6 @@ export const useNodeLauncherHandlers = ({
   const [selectedNetwork, setSelectedNetwork] = useRecoilState(
     nodeLauncherAtoms.selectedNetwork,
   );
-  const setSelectedSKU = useSetRecoilState(nodeAtoms.selectedSKU);
 
   useEffect(() => {
     setSelectedHosts(null);
@@ -392,20 +390,19 @@ export const useNodeLauncherHandlers = ({
   }, [selectedVersion?.id]);
 
   useEffect(() => {
-    const nodeSKU = matchSKU('node', {
-      blockchain: selectedBlockchain,
-      nodeLauncher: nodeLauncherState,
-      version: selectedVersion,
-      region: !!selectedHosts ? selectedRegionByHost : selectedRegion,
-      network: selectedNetwork,
+    getPrice({
+      blockchainId: nodeLauncherState.blockchainId,
+      version: selectedVersion?.version!,
+      nodeType: nodeLauncherState.nodeType,
+      network: selectedNetwork!,
+      region: selectedRegion?.name!,
     });
-    setSelectedSKU(nodeSKU);
   }, [
+    nodeLauncherState.blockchainId,
+    selectedVersion?.version,
     nodeLauncherState.nodeType,
-    selectedVersion,
-    selectedRegion,
     selectedNetwork,
-    selectedHosts,
+    selectedRegion?.name,
   ]);
 
   useEffect(() => {

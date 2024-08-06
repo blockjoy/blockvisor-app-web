@@ -70,12 +70,14 @@ export const useNodeView = (): Hook => {
       setIsLoading('finished');
       if (!isSuperUser) {
         setNode(foundNode);
-        switchOrganization(foundNode.orgId, foundNode.orgName);
+        if (foundNode.orgId !== defaultOrganization?.id)
+          switchOrganization(foundNode.orgId, foundNode.orgName);
       } else {
         setNode(foundNode);
         const node = await nodeClient.getNode(id as string);
         setNode(node);
-        switchOrganization(node.orgId, node.orgName);
+        if (node.orgId !== defaultOrganization?.id)
+          switchOrganization(node.orgId, node.orgName);
       }
 
       return;

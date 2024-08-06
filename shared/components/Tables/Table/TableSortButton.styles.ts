@@ -34,24 +34,23 @@ export const styles = {
   buttonActive: (theme: ITheme) => css`
     color: ${theme.colorText};
   `,
-  active: (theme: ITheme) => css`
-    svg :is(path, circle, rect) {
-      fill: ${theme.colorText};
-    }
-
-    /* &,
-    &:hover {
-      color: ${theme.colorPrimary};
-    }
-    & path,
-    &:hover path {
-      fill: ${theme.colorPrimary};
-    } */
-  `,
   text: css`
     letter-spacing: inherit;
     text-transform: inherit;
     color: inherit;
     line-height: 1;
   `,
+  icon: (isActive: boolean, isAscending: boolean) => (theme: ITheme) =>
+    css`
+      ${isActive &&
+      css`
+        svg :is(path, circle, rect) {
+          fill: ${theme.colorText};
+        }
+      `}
+      ${isAscending &&
+      css`
+        transform: rotate(180deg);
+      `}
+    `,
 };

@@ -1,53 +1,22 @@
-import { atom, atomFamily } from 'recoil';
-import {
-  Customer,
-  Estimate,
-  Invoice,
-  PaymentSource,
-  Subscription,
-} from 'chargebee-typescript/lib/resources';
+import { atom, selector } from 'recoil';
 import { localStorageEffect } from 'utils/store/persist';
-import { Subscription as UserSubscription } from '@modules/grpc/library/blockjoy/v1/subscription';
-import { ItemPriceSimple, PromoCode } from '@modules/billing';
+import {
+  Invoice,
+  OrgServiceBillingDetailsResponse,
+  PaymentMethod,
+} from '@modules/grpc/library/blockjoy/v1/org';
+import { Address } from '@modules/grpc/library/blockjoy/common/v1/address';
+import { authAtoms } from '@modules/auth';
+import { Amount } from '@modules/grpc/library/blockjoy/common/v1/currency';
 
-export const isEnabledBillingPreview = atomFamily<boolean, boolean>({
-  key: 'billing.preview',
-  default: false,
-  effects: (isSuperUser) => {
-    return isSuperUser
-      ? [localStorageEffect('billing.isEnabledForSuperUsers', false)]
-      : [];
-  },
+const billingContacts = atom<any | null>({
+  key: 'billing.contacts',
+  default: null,
 });
 
-export const bypassBillingForSuperUser = atomFamily<boolean, boolean>({
-  key: 'billing.superUser',
-  default: false,
-  effects: (isSuperUser) => {
-    return isSuperUser
-      ? [localStorageEffect('billing.bypassBillingForSuperUser', false)]
-      : [];
-  },
-});
-
-const billing = atom<{
-  identity: {
-    id: string | null;
-    subscription: UserSubscription | null;
-  };
-  customer: Customer | null;
-  subscription: Subscription | null;
-}>({
-  key: 'billing',
-  default: {
-    identity: {
-      id: null,
-      subscription: null,
-    },
-    customer: null,
-    subscription: null,
-  },
-  effects: [localStorageEffect('billing')],
+const billingContactsLoadingState = atom<LoadingState>({
+  key: 'billing.contacts.loadingState',
+  default: 'initializing',
 });
 
 const customerLoadingState = atom<LoadingState>({
@@ -55,17 +24,7 @@ const customerLoadingState = atom<LoadingState>({
   default: 'finished',
 });
 
-const itemPrices = atom<ItemPriceSimple[] | null>({
-  key: 'billing.items.prices',
-  default: null,
-});
-
-const itemPricesLoadingState = atom<LoadingState>({
-  key: 'billing.items.prices.loadingState',
-  default: 'finished',
-});
-
-const paymentMethods = atom<PaymentSource[]>({
+const paymentMethods = atom<PaymentMethod[]>({
   key: 'billing.paymentMethods',
   default: [],
   effects: [localStorageEffect('billing.paymentMethods')],
@@ -76,13 +35,8 @@ const paymentMethodsLoadingState = atom<LoadingState>({
   default: 'finished',
 });
 
-const paymentMethod = atom<PaymentSource | null>({
+const paymentMethod = atom<PaymentMethod | null>({
   key: 'billing.paymentMethod',
-  default: null,
-});
-
-const paymentMethodError = atom<PaymentError | null>({
-  key: 'billing.paymentMethod.error',
   default: null,
 });
 
@@ -91,29 +45,24 @@ const paymentMethodLoadingState = atom<LoadingState>({
   default: 'finished',
 });
 
+const billingAddress = atom<Address | null>({
+  key: 'billing.billingAddress',
+  default: null,
+});
+
 const billingAddressLoadingState = atom<LoadingState>({
   key: 'billing.billingAddress.loadingState',
   default: 'finished',
 });
 
-const estimates = atom<Estimate | null>({
+const estimates = atom<Invoice | null>({
   key: 'billing.estimates',
   default: null,
 });
 
 const estimatesLoadingState = atom<LoadingState>({
   key: 'billing.estimates.loadingState',
-  default: 'initializing',
-});
-
-const invoice = atom<Invoice | null>({
-  key: 'billing.invoice',
-  default: null,
-});
-
-const invoiceLoadingState = atom<LoadingState>({
-  key: 'billing.invoice.loadingState',
-  default: 'initializing',
+  default: 'finished',
 });
 
 const invoices = atom<Invoice[]>({
@@ -123,22 +72,17 @@ const invoices = atom<Invoice[]>({
 
 const invoicesLoadingState = atom<LoadingState>({
   key: 'billing.invoices.loadingState',
-  default: 'initializing',
+  default: 'finished',
 });
 
-const invoicesNextOffset = atom<string | undefined>({
-  key: 'billing.invoices.nextOffset',
-  default: undefined,
-});
-
-const preloadInvoices = atom<number>({
-  key: 'billing.invoices.preload',
-  default: 0,
+const subscription = atom<OrgServiceBillingDetailsResponse | null>({
+  key: 'billing.subscription',
+  default: null,
 });
 
 const subscriptionLoadingState = atom<LoadingState>({
   key: 'billing.subscription.loadingState',
-  default: 'initializing',
+  default: 'finished',
 });
 
 const subscriptionPaymentMethodLoadingState = atom<LoadingState>({
@@ -146,7 +90,17 @@ const subscriptionPaymentMethodLoadingState = atom<LoadingState>({
   default: 'finished',
 });
 
-const promoCode = atom<PromoCode | null>({
+const price = atom<Amount | null>({
+  key: 'billing.price',
+  default: null,
+});
+
+const priceLoadingState = atom<LoadingState>({
+  key: 'billing.price.loadingState',
+  default: 'initializing',
+});
+
+const promoCode = atom<any | null>({
   key: 'billing.promoCode',
   default: null,
 });
@@ -161,40 +115,60 @@ const promoCodeLoadingState = atom<LoadingState>({
   default: 'finished',
 });
 
+const cardHolder = atom<{ firstName: string; lastName: string }>({
+  key: 'billing.card.holder',
+  default: selector({
+    key: 'billing.card.holder.default',
+    get: ({ get }) => {
+      const user = get(authAtoms.user);
+
+      return {
+        firstName: user?.firstName || '',
+        lastName: user?.lastName || '',
+      };
+    },
+  }),
+});
+
+const isValidCard = atom<boolean>({
+  key: 'billing.card.isValid',
+  default: false,
+});
+
 export const billingAtoms = {
-  isEnabledBillingPreview,
-  bypassBillingForSuperUser,
+  subscription,
+  subscriptionLoadingState,
 
-  billing,
+  billingContacts,
+  billingContactsLoadingState,
 
+  billingAddress,
   billingAddressLoadingState,
+
   customerLoadingState,
 
   estimates,
   estimatesLoadingState,
 
-  itemPrices,
-  itemPricesLoadingState,
-
-  invoice,
-  invoiceLoadingState,
   invoices,
   invoicesLoadingState,
-  invoicesNextOffset,
-  preloadInvoices,
 
   paymentMethod,
-  paymentMethodError,
   paymentMethodLoadingState,
 
   paymentMethods,
   paymentMethodsLoadingState,
 
-  subscriptionLoadingState,
-
   subscriptionPaymentMethodLoadingState,
+
+  price,
+  priceLoadingState,
 
   promoCode,
   promoCodeError,
   promoCodeLoadingState,
+
+  cardHolder,
+
+  isValidCard,
 };

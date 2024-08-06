@@ -1,89 +1,93 @@
-import { Invoice } from 'chargebee-typescript/lib/resources';
-import { Badge, TableBlock } from '@shared/components';
+import { css } from '@emotion/react';
+import { Invoice } from '@modules/grpc/library/blockjoy/v1/org';
+import { Badge } from '@shared/components';
 import { formatters } from '@shared/index';
 import {
-  InvoiceDownload,
   getInvoiceStatusColor,
   getInvoiceStatusText,
+  InvoiceDownload,
 } from '@modules/billing';
 
-export const mapInvoicesToRows = (invoices?: Invoice[]) => {
+export const mapInvoicesToRows = (invoices: Invoice[]) => {
   const headers: TableHeader[] = [
     {
-      name: 'ID',
+      name: 'Invoice number',
       key: '1',
-      width: '100px',
-    },
-    {
-      name: 'Info',
-      key: '2',
-      width: '300px',
+      width: '250px',
     },
     {
       name: 'Amount',
+      key: '2',
+      width: '180px',
+    },
+    {
+      name: 'Date',
       key: '3',
       width: '150px',
     },
     {
-      name: 'Due date',
+      name: 'Status',
       key: '4',
       width: '100px',
     },
     {
-      name: 'Status',
-      key: '5',
-      width: '100px',
-    },
-    {
       name: '',
-      key: '6',
+      key: '5',
       width: '80px',
+      textAlign: 'right',
     },
   ];
 
   const rows: Row[] =
-    invoices?.map((invoice: Invoice) => ({
-      key: invoice.id,
+    invoices?.map((invoice) => ({
+      key: invoice?.number!,
       cells: [
         {
           key: '1',
-          component: <p>#{invoice.id}</p>,
+          component: (
+            <span
+              css={css`
+                white-space: nowrap;
+              `}
+            >
+              {invoice?.number}
+            </span>
+          ),
         },
         {
           key: '2',
-          component: (
-            <TableBlock
-              topRow={invoice?.line_items?.[0].description!}
-              bottomRow={`${formatters.formatTimestamp(
-                invoice?.line_items?.[0].date_from!,
-              )} - ${formatters.formatTimestamp(
-                invoice?.line_items?.[0].date_to!,
-              )}`}
-            />
+          component: invoice?.total ? (
+            <span>{formatters.formatCurrency(invoice.total)}</span>
+          ) : (
+            '-'
           ),
         },
         {
           key: '3',
-          component: <p>{formatters.formatCurrency(invoice?.total!)}</p>,
-        },
-        {
-          key: '4',
-          component: <p>{formatters.formatTimestamp(invoice?.due_date!)}</p>,
+          component: invoice?.createdAt ? (
+            <span>{formatters.formatDate(invoice.createdAt!)}</span>
+          ) : (
+            '-'
+          ),
         },
         {
           key: '5',
           component: (
             <Badge
-              color={getInvoiceStatusColor(invoice.status)}
+              color={getInvoiceStatusColor(invoice?.status)}
               style="outline"
             >
-              {getInvoiceStatusText(invoice.status)}
+              {getInvoiceStatusText(invoice?.status)}
             </Badge>
           ),
         },
         {
           key: '6',
-          component: <InvoiceDownload invoice={invoice} />,
+          component: invoice?.pdfUrl ? (
+            <InvoiceDownload invoicePdf={invoice.pdfUrl} />
+          ) : (
+            '-'
+          ),
         },
       ],
     })) ?? [];

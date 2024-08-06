@@ -19,6 +19,7 @@ import {
   SyncStatus,
 } from '@modules/grpc/library/blockjoy/common/v1/node';
 import { AdminNodesUpgrade } from './AdminNodesUpgrade/AdminNodesUpgrade';
+import { AdminNodesOrgAssign } from './AdminNodesOrgAssign/AdminNodesOrgAssign';
 import { pageSize } from '@modules/admin/constants/constants';
 import { Node, NodeSortField } from '@modules/grpc/library/blockjoy/v1/node';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
@@ -261,12 +262,7 @@ export const AdminNodes = () => {
       selectedIds={selectedIds}
       onIdSelected={handleIdSelected}
       onIdAllSelected={handleIdAllSelected}
-      additionalHeaderButtons={
-        <AdminNodesUpgrade
-          isDisabled={!selectedIds.length || selectedBlockchains?.length > 1}
-          selectedIds={selectedIds}
-        />
-      }
+      additionalHeaderButtons={[AdminNodesUpgrade, AdminNodesOrgAssign]}
     />
   );
 };

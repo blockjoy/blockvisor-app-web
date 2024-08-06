@@ -1,7 +1,5 @@
-import { Contact } from 'chargebee-typescript/lib/resources/customer';
-
 export const checkIfBillingContactExists = (
-  billingContacts: Contact[],
+  billingContacts: any[],
   email: string,
 ) => {
   if (

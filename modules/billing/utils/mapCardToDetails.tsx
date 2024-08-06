@@ -1,7 +1,7 @@
-import { Card } from 'chargebee-typescript/lib/resources/payment_source';
 import { css } from '@emotion/react';
 import { capitalize } from 'utils/capitalize';
 import { PaymentIcon } from '@modules/billing';
+import { Card } from '@modules/grpc/library/blockjoy/v1/org';
 
 const styles = {
   info: css`
@@ -25,13 +25,13 @@ export const mapCardToDetails = (card: Card) => {
     },
     {
       label: 'Number',
-      data: <p>{card?.masked_number}</p>,
+      data: <p>{card?.last4}</p>,
     },
     {
       label: 'Expiration date',
       data: (
         <p>
-          {card?.expiry_month?.toString().padStart(2, '0')}/{card?.expiry_year}
+          {card?.expMonth?.toString().padStart(2, '0')}/{card?.expYear}
         </p>
       ),
     },
@@ -39,7 +39,7 @@ export const mapCardToDetails = (card: Card) => {
       label: 'Billing Address',
       data: (
         <>
-          {card?.billing_addr1 ? (
+          {/* {card?. ? (
             <p>
               {card?.billing_addr1}
               <br />
@@ -47,7 +47,7 @@ export const mapCardToDetails = (card: Card) => {
             </p>
           ) : (
             '-'
-          )}
+          )} */}
         </>
       ),
     },

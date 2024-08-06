@@ -1,11 +1,10 @@
 import { useRecoilValue } from 'recoil';
 import { styles } from './TableGrid.styles';
-import { GridCell } from './types/GridCell';
 import { TableGridLoader } from './TableGridLoader';
 import { layoutSelectors } from '@modules/layout';
 
 type Props = {
-  cells: GridCell[] | null;
+  cells: Cell[] | null;
   entityName?: 'hosts' | 'nodes';
   preload?: number;
   isLoading?: LoadingState;

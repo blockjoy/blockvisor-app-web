@@ -1,29 +1,19 @@
 import { useEffect, useState } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { ItemPrice } from 'chargebee-typescript/lib/resources';
-import {
-  ItemPriceSimple,
-  billingAtoms,
-  billingSelectors,
-} from '@modules/billing';
+import { billingAtoms } from '@modules/billing';
 import { styles } from './Pricing.styles';
 import { formatters } from '@shared/index';
 import { Promo, Skeleton } from '@shared/components';
 import { blockchainAtoms, nodeAtoms } from '@modules/node';
 
-type PricingProps = {
-  itemPrice: ItemPrice | ItemPriceSimple | null;
-};
-
-export const Pricing = ({ itemPrice }: PricingProps) => {
-  const subscription = useRecoilValue(billingSelectors.subscription);
+export const Pricing = () => {
+  const subscription = useRecoilValue(billingAtoms.subscription);
   const blockchainsLoadingState = useRecoilValue(
     blockchainAtoms.blockchainsLoadingState,
   );
   const allRegionsLoadingState = useRecoilValue(
     nodeAtoms.allRegionsLoadingState,
   );
-  const pricing = useRecoilValue(billingSelectors.pricing);
   const promoCode = useRecoilValue(billingAtoms.promoCode);
   const setPromoCodeError = useSetRecoilState(billingAtoms.promoCodeError);
 
@@ -35,13 +25,17 @@ export const Pricing = ({ itemPrice }: PricingProps) => {
 
   const togglePromo = () => setIsOpenPromo(!isOpenPromo);
 
+  const price = useRecoilValue(billingAtoms.price);
+
+  const pricing: any = { total: 0, subtotal: 0 };
+
   const { total, subtotal } = pricing;
 
   const isLoading =
     blockchainsLoadingState !== 'finished' ||
     allRegionsLoadingState !== 'finished';
 
-  const isDisabled = !itemPrice;
+  const isDisabled = false;
 
   return (
     <>
@@ -50,31 +44,32 @@ export const Pricing = ({ itemPrice }: PricingProps) => {
           <Skeleton width="120px" height="25px" />
         ) : (
           <div css={styles.priceWrapper}>
-            {total !== subtotal && (
+            {/* {total !== subtotal && (
               <span css={styles.priceSubtotal}>
                 {formatters.formatCurrency(subtotal)}
               </span>
-            )}
+            )} */}
             <span css={styles.priceTotal}>
-              {formatters.formatCurrency(total)}
+              {formatters.formatCurrency(price?.value!)}
             </span>
             <span css={styles.priceLabel}>
-              {`/ ${
+              {/* {`/ ${
                 promoCode?.coupon?.duration_type === 'one_time' ? 'first ' : ''
-              }${subscription?.billing_period_unit ?? 'month'}`}
+              }month`} */}
+              / month
             </span>
           </div>
         )}
 
-        {isLoading ? (
+        {/* {isLoading ? (
           <Skeleton width="82px" height="25px" />
         ) : (
           <a onClick={togglePromo} css={styles.promo}>
             Have a promo code?
           </a>
-        )}
+        )} */}
       </div>
-      {isOpenPromo && itemPrice ? <Promo /> : null}
+      {isOpenPromo ? <Promo /> : null}
     </>
   );
 };

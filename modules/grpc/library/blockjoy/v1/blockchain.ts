@@ -4,6 +4,7 @@ import type { CallContext, CallOptions } from "nice-grpc-common";
 import _m0 from "protobufjs/minimal";
 import { Timestamp } from "../../google/protobuf/timestamp";
 import { NetworkConfig } from "../common/v1/blockchain";
+import { BillingAmount } from "../common/v1/currency";
 import { ArchiveLocation, ImageIdentifier, RhaiPlugin } from "../common/v1/image";
 import { NodeType, UiType } from "../common/v1/node";
 import { SearchOperator, SortOrder } from "../common/v1/search";
@@ -199,11 +200,24 @@ export interface BlockchainServiceAddVersionResponse {
   version: BlockchainVersion | undefined;
 }
 
+export interface BlockchainServicePricingRequest {
+  blockchainId: string;
+  version: string;
+  nodeType: NodeType;
+  network: string;
+  region: string;
+}
+
+export interface BlockchainServicePricingResponse {
+  billingAmount: BillingAmount | undefined;
+}
+
 /**
  * A property that is supported by a node of a particular:
  * 1. blockchain type,
  * 2. node type,
  * 3. version.
+ *
  * When a blockchain node is created, a list of properties must be submitted by
  * the caller. The properties that are required / allowed are defined by these
  * properties here.
@@ -1795,6 +1809,144 @@ export const BlockchainServiceAddVersionResponse = {
   },
 };
 
+function createBaseBlockchainServicePricingRequest(): BlockchainServicePricingRequest {
+  return { blockchainId: "", version: "", nodeType: 0, network: "", region: "" };
+}
+
+export const BlockchainServicePricingRequest = {
+  encode(message: BlockchainServicePricingRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.blockchainId !== "") {
+      writer.uint32(10).string(message.blockchainId);
+    }
+    if (message.version !== "") {
+      writer.uint32(18).string(message.version);
+    }
+    if (message.nodeType !== 0) {
+      writer.uint32(24).int32(message.nodeType);
+    }
+    if (message.network !== "") {
+      writer.uint32(34).string(message.network);
+    }
+    if (message.region !== "") {
+      writer.uint32(42).string(message.region);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): BlockchainServicePricingRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseBlockchainServicePricingRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.blockchainId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.version = reader.string();
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.nodeType = reader.int32() as any;
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.network = reader.string();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.region = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<BlockchainServicePricingRequest>): BlockchainServicePricingRequest {
+    return BlockchainServicePricingRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<BlockchainServicePricingRequest>): BlockchainServicePricingRequest {
+    const message = createBaseBlockchainServicePricingRequest();
+    message.blockchainId = object.blockchainId ?? "";
+    message.version = object.version ?? "";
+    message.nodeType = object.nodeType ?? 0;
+    message.network = object.network ?? "";
+    message.region = object.region ?? "";
+    return message;
+  },
+};
+
+function createBaseBlockchainServicePricingResponse(): BlockchainServicePricingResponse {
+  return { billingAmount: undefined };
+}
+
+export const BlockchainServicePricingResponse = {
+  encode(message: BlockchainServicePricingResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.billingAmount !== undefined) {
+      BillingAmount.encode(message.billingAmount, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): BlockchainServicePricingResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseBlockchainServicePricingResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.billingAmount = BillingAmount.decode(reader, reader.uint32());
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<BlockchainServicePricingResponse>): BlockchainServicePricingResponse {
+    return BlockchainServicePricingResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<BlockchainServicePricingResponse>): BlockchainServicePricingResponse {
+    const message = createBaseBlockchainServicePricingResponse();
+    message.billingAmount = (object.billingAmount !== undefined && object.billingAmount !== null)
+      ? BillingAmount.fromPartial(object.billingAmount)
+      : undefined;
+    return message;
+  },
+};
+
 function createBaseBlockchainProperty(): BlockchainProperty {
   return { name: "", displayName: "", default: undefined, uiType: 0, required: false };
 }
@@ -2059,6 +2211,15 @@ export const BlockchainServiceDefinition = {
       responseStream: false,
       options: {},
     },
+    /** Returns the pricing for this blockchain config */
+    pricing: {
+      name: "Pricing",
+      requestType: BlockchainServicePricingRequest,
+      requestStream: false,
+      responseType: BlockchainServicePricingResponse,
+      responseStream: false,
+      options: {},
+    },
   },
 } as const;
 
@@ -2103,6 +2264,11 @@ export interface BlockchainServiceImplementation<CallContextExt = {}> {
     request: BlockchainServiceAddVersionRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<BlockchainServiceAddVersionResponse>>;
+  /** Returns the pricing for this blockchain config */
+  pricing(
+    request: BlockchainServicePricingRequest,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<BlockchainServicePricingResponse>>;
 }
 
 export interface BlockchainServiceClient<CallOptionsExt = {}> {
@@ -2146,12 +2312,17 @@ export interface BlockchainServiceClient<CallOptionsExt = {}> {
     request: DeepPartial<BlockchainServiceAddVersionRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<BlockchainServiceAddVersionResponse>;
+  /** Returns the pricing for this blockchain config */
+  pricing(
+    request: DeepPartial<BlockchainServicePricingRequest>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<BlockchainServicePricingResponse>;
 }
 
-declare const self: any | undefined;
-declare const window: any | undefined;
-declare const global: any | undefined;
-const tsProtoGlobalThis: any = (() => {
+declare var self: any | undefined;
+declare var window: any | undefined;
+declare var global: any | undefined;
+var tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }

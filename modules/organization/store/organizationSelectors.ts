@@ -1,10 +1,10 @@
 import { selector, selectorFamily } from 'recoil';
-import { Org, OrgUser } from '@modules/grpc/library/blockjoy/v1/org';
-import { paginate, sort, filter } from '@shared/components';
-import { InitialQueryParams as InitialQueryParamsOrganizations } from '../ui/OrganizationsUIHelpers';
+import { Org, OrgRole, OrgUser } from '@modules/grpc/library/blockjoy/v1/org';
+import { paginate, sort } from '@shared/components';
 import { InitialQueryParams as InitialQueryParamsOrganizationMembers } from '../ui/OrganizationMembersUIHelpers';
 import { organizationAtoms } from '@modules/organization';
-import { authAtoms } from '@modules/auth';
+import { authAtoms, authSelectors } from '@modules/auth';
+import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 
 const settings = selector<OrganizationSettings>({
   key: 'organization.settings',
@@ -21,10 +21,11 @@ const defaultOrganization = selector<DefaultOrganization | null>({
   get: ({ get }) => {
     const orgSettings = get(settings);
     const organizations = get(organizationAtoms.allOrganizations);
+    const isSuperUser = get(authSelectors.isSuperUser);
 
     const defOrg = orgSettings?.default ?? null;
 
-    if (organizations?.length && defOrg) {
+    if (organizations?.length && defOrg && !isSuperUser) {
       const org = organizations.find((org) => org?.id === defOrg?.id);
 
       if (!org)
@@ -52,42 +53,6 @@ const allOrganizationsSorted = selector<Org[]>({
   },
 });
 
-const organizationsFiltered = selectorFamily<
-  Org[],
-  InitialQueryParamsOrganizations
->({
-  key: 'organizations.active.filtered',
-  get:
-    (queryParams) =>
-    ({ get }) => {
-      const allOrgs = get(organizationAtoms.allOrganizations);
-      const { sorting, filtering } = queryParams;
-
-      const filteredOrganizations = filter(allOrgs, filtering);
-      const sortedOrganizations = sort(filteredOrganizations, sorting);
-
-      return sortedOrganizations;
-    },
-});
-
-const organizationsActive = selectorFamily<
-  Org[],
-  InitialQueryParamsOrganizations
->({
-  key: 'organizations.active',
-  get:
-    (queryParams) =>
-    ({ get }) => {
-      const allOrgs = get(organizationsFiltered(queryParams));
-
-      const { pagination } = queryParams;
-
-      const paginatedOrganizations = paginate(allOrgs, pagination);
-
-      return paginatedOrganizations;
-    },
-});
-
 const organizationMembersActive = selectorFamily<
   OrgUser[],
   InitialQueryParamsOrganizationMembers
@@ -98,21 +63,51 @@ const organizationMembersActive = selectorFamily<
     ({ get }) => {
       const org = get(organizationAtoms.selectedOrganization);
 
-      const { pagination } = queryParams;
-
-      if (!org?.members) {
-        return [];
-      }
+      if (!org?.members) return [];
 
       const sorted = sort(org?.members, {
         field: 'email',
-        order: 'asc',
+        order: SortOrder.SORT_ORDER_ASCENDING,
       });
 
-      const paginated = paginate(sorted, pagination);
+      const paginated = paginate(sorted, queryParams.pagination);
 
       return paginated;
     },
+});
+
+const organizationRoles = selector<OrgRole[]>({
+  key: 'organization.roles',
+  get: ({ get }) => {
+    const user = get(authAtoms.user);
+    const defOrg = get(defaultOrganization);
+    const allOrgs = get(organizationAtoms.allOrganizations);
+
+    const currentOrg = allOrgs.find((org) => org.id === defOrg?.id);
+    const currentMember = currentOrg?.members?.find(
+      (member) => member.userId === user?.id,
+    );
+
+    return currentMember?.roles ?? [];
+  },
+});
+
+const organizationRole = selector({
+  key: 'organization.role',
+  get: ({ get }) => {
+    const roles = get(organizationRoles);
+    const isOwner = roles?.some(
+      (role) => role.name === 'org-owner' || role.name === 'org-personal',
+    );
+    const isAdmin = roles?.some((role) => role.name === 'org-admin');
+    const isMember = roles?.some((role) => role.name === 'org-member');
+
+    return {
+      isOwner,
+      isAdmin,
+      isMember,
+    };
+  },
 });
 
 export const organizationSelectors = {
@@ -121,7 +116,8 @@ export const organizationSelectors = {
   defaultOrganization,
 
   allOrganizationsSorted,
-  organizationsFiltered,
-  organizationsActive,
   organizationMembersActive,
+
+  organizationRoles,
+  organizationRole,
 };

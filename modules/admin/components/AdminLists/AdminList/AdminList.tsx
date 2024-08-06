@@ -1,21 +1,37 @@
-import { useUpdateQueryString } from '@modules/admin/hooks';
-import { AdminListColumn } from '@modules/admin/types/AdminListColumn';
-import { loadAdminColumns } from '@modules/admin/utils';
-import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
+import {
+  Dispatch,
+  FunctionComponent,
+  SetStateAction,
+  useEffect,
+  useState,
+} from 'react';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import { useSettings } from '@modules/settings';
+import { useUpdateQueryString } from '@modules/admin/hooks';
+import { adminSelectors, loadAdminColumns } from '@modules/admin';
+import { AdminListColumn } from '@modules/admin/types/AdminListColumn';
+import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { styles } from './AdminList.styles';
 import { AdminListHeader } from './AdminListHeader/AdminListHeader';
 import { AdminListTable } from './AdminListTable/AdminListTable';
 
 type Props = {
-  name: string;
+  name: keyof AdminSettings;
   columns: AdminListColumn[];
   hidePagination?: boolean;
   defaultSortField: number;
   defaultSortOrder: SortOrder;
-  additionalHeaderButtons?: React.ReactNode;
+  additionalHeaderButtons?: FunctionComponent<{
+    selectedIds: string[];
+    list: any[];
+    setList: Dispatch<SetStateAction<any[]>>;
+  }>[];
   selectedIds?: string[];
+  tagsAdded?: AdminTags[];
+  tagsRemoved?: AdminTags[];
+  setTagsAdded?: Dispatch<SetStateAction<AdminTags[]>>;
+  setTagsRemoved?: Dispatch<SetStateAction<AdminTags[]>>;
   onIdSelected?: (id: string, secondId?: string) => void;
   onIdAllSelected?: (ids: string[]) => void;
   listMap: (list: any[]) => any[];
@@ -47,6 +63,10 @@ export const AdminList = ({
   defaultSortOrder,
   selectedIds,
   additionalHeaderButtons,
+  tagsAdded,
+  tagsRemoved,
+  setTagsAdded,
+  setTagsRemoved,
   onIdSelected,
   onIdAllSelected,
   listMap,
@@ -62,21 +82,22 @@ export const AdminList = ({
 
   const { updateQueryString } = useUpdateQueryString(name);
 
+  const settings = useRecoilValue(adminSelectors.settings);
+  const settingsColumns = settings[name]?.columns ?? [];
+
+  const [columnsState, setColumnsState] = useState<AdminListColumn[]>([]);
+
   const [listSettings, setListSettings] = useState<ListSettings>({
     listSearch: (search as string) || '',
     listPage: page ? +page?.toString()! : 1,
-    sortField: +localStorage?.getItem(`${name}SortField`)! || defaultSortField,
-    sortOrder: +localStorage?.getItem(`${name}SortOrder`)! || defaultSortOrder,
-    filters: loadAdminColumns(name, columns).filter(
-      (column) => !!column.filterComponent,
-    ),
+    sortField: settings[name]?.sort?.field || defaultSortField,
+    sortOrder: settings[name]?.sort?.order || defaultSortOrder,
+    filters: settingsColumns.filter((column) => !!column.filterComponent),
   });
 
-  const [columnsState, setColumnsState] = useState(
-    loadAdminColumns(name, columns),
-  );
-
   const { listSearch, listPage, sortField, sortOrder, filters } = listSettings;
+
+  const { updateSettings } = useSettings();
 
   const handleGetList = async (
     keyword: string,
@@ -126,21 +147,24 @@ export const AdminList = ({
       sortOrder: nextSortOrder,
     });
 
-    localStorage.setItem(`${name}SortField`, nextSortField.toString());
-    localStorage.setItem(`${name}SortOrder`, nextSortOrder.toString());
-
     const nextColumns = [...columnsState];
     const foundColumn = nextColumns.find(
       (column) => column.sortField === nextSortField,
     );
 
+    updateSettings('admin', {
+      [name]: {
+        columns: foundColumn ? nextColumns : settings[name]?.columns,
+        sort: {
+          field: nextSortField,
+          order: nextSortOrder,
+        },
+      },
+    });
+
     if (!foundColumn) return;
 
-    foundColumn.sortOrder = nextSortOrder;
-
     setColumnsState(nextColumns);
-
-    handleGetList(listSearch, listPage, nextSortField, nextSortOrder, filters);
   };
 
   const handlePageChanged = (nextPage: number) => {
@@ -155,7 +179,12 @@ export const AdminList = ({
   };
 
   const handleColumnsChanged = (nextColumns: AdminListColumn[]) => {
-    localStorage.setItem(`${name}Columns`, JSON.stringify(nextColumns));
+    updateSettings('admin', {
+      [name]: {
+        ...settings[name],
+        columns: nextColumns,
+      },
+    });
     setColumnsState(nextColumns);
   };
 
@@ -171,7 +200,13 @@ export const AdminList = ({
       }
     }
 
-    localStorage.setItem(`${name}Columns`, JSON.stringify(nextColumns));
+    updateSettings('admin', {
+      [name]: {
+        ...settings[name],
+        columns: nextColumns,
+      },
+    });
+
     setColumnsState(nextColumns);
 
     setListSettings({
@@ -181,13 +216,79 @@ export const AdminList = ({
     });
 
     updateQueryString(1, search as string);
+  };
 
-    handleGetList(listSearch, 1, sortField, sortOrder, nextFilters);
+  const initSettingsColumns = () => {
+    if (!!settings[name]) return;
+
+    updateSettings('admin', {
+      [name]: {
+        ...settings[name],
+        columns,
+      },
+    });
   };
 
   useEffect(() => {
-    handleGetList(listSearch, listPage, sortField, sortOrder, filters);
+    const adminColumns = loadAdminColumns(columns, settingsColumns);
+    setColumnsState(adminColumns);
+    setListSettings({
+      ...listSettings,
+      filters: adminColumns.filter((col) => !!col.filterSettings),
+    });
   }, []);
+
+  useEffect(() => {
+    initSettingsColumns();
+    if (columnsState.length) {
+      handleGetList(listSearch, listPage, sortField, sortOrder, filters);
+    }
+  }, [listSettings]);
+
+  useEffect(() => {
+    if (tagsAdded?.length) {
+      const listCopy = [...list];
+
+      tagsAdded?.forEach((tag) => {
+        const foundListItem = listCopy.find((item) => item.id === tag.id);
+
+        if (foundListItem) {
+          foundListItem.tags = {
+            tags: [
+              ...foundListItem.tags.tags,
+              ...tag.tags.map((t) => ({
+                name: t,
+              })),
+            ],
+          };
+        }
+      });
+
+      setList(listCopy);
+      setTagsAdded?.([]);
+    }
+  }, [tagsAdded]);
+
+  useEffect(() => {
+    if (tagsRemoved?.length) {
+      const listCopy = [...list];
+
+      tagsRemoved?.forEach((tag) => {
+        const foundListItem = listCopy.find((item) => item.id === tag.id);
+
+        if (foundListItem) {
+          foundListItem.tags = {
+            tags: tag.tags.map((t) => ({
+              name: t,
+            })),
+          };
+        }
+      });
+
+      setList(listCopy);
+      setTagsRemoved?.([]);
+    }
+  }, [tagsRemoved]);
 
   return (
     <article key={name} id={name} css={styles.card}>
@@ -198,6 +299,9 @@ export const AdminList = ({
         onColumnsChanged={handleColumnsChanged}
         onFiltersChanged={handleFiltersChanged}
         additionalHeaderButtons={additionalHeaderButtons}
+        selectedIds={selectedIds!}
+        list={list}
+        setList={setList}
       />
       <AdminListTable
         name={name}

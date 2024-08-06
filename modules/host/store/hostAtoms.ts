@@ -1,6 +1,7 @@
 import { atom } from 'recoil';
 import { Host } from '@modules/grpc/library/blockjoy/v1/host';
 import { localStorageEffect } from 'utils/store/persist';
+import { HOST_PAGINATION_DEFAULT } from '@shared/index';
 
 const activeHost = atom<Host | null>({
   key: 'host',
@@ -22,6 +23,11 @@ const hostList = atom<Host[]>({
   default: [],
 });
 
+const hostListPagination = atom<Pagination>({
+  key: 'host.list.pagination',
+  default: HOST_PAGINATION_DEFAULT,
+});
+
 const allHosts = atom<Host[]>({
   key: 'host.all',
   default: [],
@@ -32,7 +38,7 @@ const isLoadingAllHosts = atom<LoadingState>({
   default: 'initializing',
 });
 
-const isLoading = atom<LoadingState>({
+const hostListLoadingState = atom<LoadingState>({
   key: 'host.list.loading',
   default: 'initializing',
 });
@@ -58,11 +64,12 @@ export const hostAtoms = {
   isLoadingActiveHost,
 
   hostList,
+  hostListPagination,
   allHosts,
   isLoadingAllHosts,
   hostCount,
   hostIpListType,
-  isLoading,
+  hostListLoadingState,
 
   filtersTempTotal,
   filtersSearchQuery,

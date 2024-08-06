@@ -41,7 +41,7 @@ const AcceptInvite: NextPage = () => {
 
           await getOrganizations();
 
-          setDefaultOrganization({
+          await setDefaultOrganization({
             id: activeInvitation?.orgId!,
             name: activeInvitation?.orgName!,
           });

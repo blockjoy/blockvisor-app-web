@@ -1,254 +1,76 @@
 import { selector, selectorFamily } from 'recoil';
-import {
-  Customer,
-  CustomerBillingAddress,
-  PaymentSource,
-  Subscription,
-} from 'chargebee-typescript/lib/resources';
-import { Subscription as UserSubscription } from '@modules/grpc/library/blockjoy/v1/subscription';
-import { ItemPriceSimple, billingAtoms } from '@modules/billing';
-import { nodeAtoms } from '@modules/node';
-import { computePricing } from '@shared/index';
-import { authSelectors } from '@modules/auth';
+import { Invoice } from '@modules/grpc/library/blockjoy/v1/org';
+import { billingAtoms } from '@modules/billing';
+import { organizationSelectors } from '@modules/organization';
+import { authAtoms, authSelectors } from '@modules/auth';
 
-const isEnabledBillingPreview = selector<boolean>({
-  key: 'billing.preview.isEnabled',
+const settings = selector<BillingSettings>({
+  key: 'billing.settings',
   get: ({ get }) => {
-    const isSuperUser = get(authSelectors.isSuperUser);
-    const isEnabled = get(billingAtoms.isEnabledBillingPreview(isSuperUser));
+    const userSettings = get(authAtoms.userSettings);
+    if (!userSettings?.hasOwnProperty('billing')) return {};
 
-    return isEnabled;
-  },
-  set: ({ set, get }, newValue) => {
-    const isSuperUser = get(authSelectors.isSuperUser);
-
-    return set(billingAtoms.isEnabledBillingPreview(isSuperUser), newValue);
+    return JSON.parse(userSettings?.billing ?? '{}');
   },
 });
 
-const bypassBillingForSuperUser = selector<boolean>({
-  key: 'billing.superUser.bypass',
+const bypassBillingForSuperUser = selector({
+  key: 'billing.settings.superUser.bypassBilling',
   get: ({ get }) => {
-    const isSuperUser = get(authSelectors.isSuperUser);
-    const isEnabled = get(billingAtoms.bypassBillingForSuperUser(isSuperUser));
+    const billingSettings = get(settings);
 
-    return isEnabled;
-  },
-  set: ({ set, get }, newValue) => {
-    const isSuperUser = get(authSelectors.isSuperUser);
-
-    return set(billingAtoms.bypassBillingForSuperUser(isSuperUser), newValue);
+    return billingSettings.bypassBilling ?? false;
   },
 });
 
-const billingId = selector<string | null>({
-  key: 'billing.identity.id',
-  get: ({ get }) => get(billingAtoms.billing)?.identity?.id,
-  set: ({ set }, newValue) =>
-    set(billingAtoms.billing, (prevState: any) => ({
-      ...prevState,
-      identity: {
-        ...prevState.identity,
-        id: newValue,
-      },
-    })),
-});
-
-const userSubscription = selector<UserSubscription | null>({
-  key: 'billing.identity.subscription',
-  get: ({ get }) => get(billingAtoms.billing)?.identity?.subscription,
-  set: ({ set }, newValue) =>
-    set(billingAtoms.billing, (prevState: any) => ({
-      ...prevState,
-      identity: {
-        ...prevState.identity,
-        subscription: newValue,
-      },
-    })),
-});
-
-const customer = selector<Customer | null>({
-  key: 'billing.customer',
-  get: ({ get }) => get(billingAtoms.billing)?.customer,
-  set: ({ set }, newValue) =>
-    set(billingAtoms.billing, (prevState: any) => ({
-      ...prevState,
-      customer: newValue,
-    })),
-});
-
-const billingAddress = selector<CustomerBillingAddress | null>({
-  key: 'billing.billingAddress',
-  get: ({ get }) => {
-    const customerVal = get(customer);
-    if (!customerVal) return null;
-
-    const billingAddress = customerVal.billing_address;
-    if (!billingAddress) return null;
-
-    return billingAddress;
-  },
-});
-
-const paymentMethodById = selectorFamily<PaymentSource | null, string>({
-  key: 'billing.paymentMethodById',
+const invoiceById = selectorFamily<Invoice | null, string>({
+  key: 'billing.invoice',
   get:
-    (paymentSourceId: string) =>
+    (id: string) =>
     ({ get }) => {
-      if (!paymentSourceId) return null;
+      const invoicesVal = get(billingAtoms.invoices);
 
-      const paymentMethods = get(billingAtoms.paymentMethods);
-      if (!paymentMethods || !paymentMethods.length) return null;
-
-      const selectedPaymentMethod = paymentMethods.find(
-        (paymentMethod: PaymentSource) => paymentMethod.id === paymentSourceId,
-      );
-
-      return selectedPaymentMethod || null;
+      return invoicesVal.find((invoice) => invoice.number === id) || null;
     },
 });
 
-const subscription = selector<Subscription | null>({
-  key: 'billing.subscription',
-  get: ({ get }) => get(billingAtoms.billing).subscription,
-  set: ({ set }, newValue) =>
-    set(billingAtoms.billing, (prevState: any) => ({
-      ...prevState,
-      subscription: newValue,
-    })),
-});
-
-const selectedItemPrice = selector<ItemPriceSimple | null>({
-  key: 'billing.selectedItemPrice',
-  get: ({ get }) => {
-    const itemPrices = get(billingAtoms.itemPrices);
-    if (!itemPrices?.length) return null;
-
-    const selectedSKU = get(nodeAtoms.selectedSKU);
-    if (!selectedSKU) return null;
-
-    const subscriptionVal = get(subscription);
-    const billingPeriodUnit = subscriptionVal?.billing_period_unit ?? 'month';
-
-    const itemPrice = itemPrices.find(
-      (itemPrice: ItemPriceSimple) =>
-        `${itemPrice.item_id}-${itemPrice.price_variant_id}` === selectedSKU &&
-        itemPrice.period_unit === billingPeriodUnit,
-    );
-
-    return itemPrice || null;
-  },
-});
-
-const hasBillingAddress = selector<boolean>({
-  key: 'billing.hasBillingAddress',
-  get: ({ get }) => {
-    const customerVal = get(customer);
-    if (!customerVal) return false;
-
-    const billingAddress = customerVal.billing_address;
-    if (!billingAddress) return false;
-
-    return true;
-  },
-});
-
-const hasPaymentMethod = selector<boolean>({
+const hasPaymentMethod = selector({
   key: 'billing.hasPaymentMethod',
   get: ({ get }) => {
-    const customer = get(billingAtoms.billing).customer;
-    if (!customer) return false;
-    if (!customer?.primary_payment_source_id) return false;
+    const paymentMethods = get(billingAtoms.paymentMethods);
 
-    return true;
+    return !!paymentMethods.length;
   },
 });
 
-const hasSubscription = selector<boolean>({
+const hasSubscription = selector({
   key: 'billing.hasSubscription',
   get: ({ get }) => {
-    const subscription = get(billingAtoms.billing)?.identity?.subscription;
+    const subscriptionVal = get(billingAtoms.subscription);
 
-    return subscription !== null;
+    return subscriptionVal !== null;
   },
 });
 
-const isActiveSubscription = selector<boolean>({
-  key: 'billing.subscription.isActive',
-  get: ({ get }) => {
-    const subscriptionVal = get(subscription);
-    if (!subscriptionVal) return false;
-
-    return subscriptionVal?.status === 'active';
-  },
-});
-
-const hasAuthorizedBilling = selector<boolean>({
+const canCreateResource = selector({
   key: 'billing.resources.canCreate',
   get: ({ get }) => {
-    const isSuperUser = get(authSelectors.isSuperUser);
-    const isEnabledBillingPreview = get(
-      billingAtoms.isEnabledBillingPreview(isSuperUser),
-    );
-
-    if (!isEnabledBillingPreview) return true;
-
     const hasSubscriptionVal = get(hasSubscription);
-    const isActiveSubscriptionVal = get(isActiveSubscription);
     const hasPaymentMethodVal = get(hasPaymentMethod);
 
-    const isAuthorized =
-      hasPaymentMethodVal && hasSubscriptionVal && isActiveSubscriptionVal;
+    const { isAdmin, isOwner } = get(organizationSelectors.organizationRole);
 
-    return isAuthorized || false;
-  },
-});
-
-const pricing = selector<{
-  subtotal: number;
-  total: number;
-  discount: number;
-  discountPercentage: number;
-}>({
-  key: 'billing.pricing',
-  get: ({ get }) => {
-    const itemPrice = get(selectedItemPrice);
-    const promoCode = get(billingAtoms.promoCode);
-
-    const { subtotal, total, discount, discountPercentage } = computePricing(
-      itemPrice,
-      promoCode,
-    );
-
-    return {
-      subtotal,
-      total,
-      discount,
-      discountPercentage,
-    };
+    return hasPaymentMethodVal && hasSubscriptionVal && (isAdmin || isOwner);
   },
 });
 
 export const billingSelectors = {
-  isEnabledBillingPreview,
   bypassBillingForSuperUser,
 
-  billingId,
-  userSubscription,
+  invoiceById,
 
-  customer,
-  subscription,
-
-  selectedItemPrice,
-
-  billingAddress,
-  paymentMethodById,
-
-  hasBillingAddress,
   hasPaymentMethod,
   hasSubscription,
-  isActiveSubscription,
-  hasAuthorizedBilling,
 
-  pricing,
+  canCreateResource,
 };

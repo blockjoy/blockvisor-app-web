@@ -1,9 +1,11 @@
+import { UINodeFilterCriteria } from '@modules/grpc';
 import { NetType } from '@modules/grpc/library/blockjoy/common/v1/blockchain';
 import { NodeType } from '@modules/grpc/library/blockjoy/common/v1/node';
 import { Host, Region } from '@modules/grpc/library/blockjoy/v1/host';
 import {
   NodePlacement,
   NodeProperty,
+  NodeSort,
 } from '@modules/grpc/library/blockjoy/v1/node';
 
 export type NodeLauncherState = {
@@ -49,4 +51,10 @@ export type NetworkConfigSimple = {
   blockchainId?: string;
   name?: string;
   netType?: NetType;
+};
+
+export type InitialNodeQueryParams = {
+  pagination: Pagination;
+  filter: UINodeFilterCriteria;
+  sort: NodeSort[];
 };

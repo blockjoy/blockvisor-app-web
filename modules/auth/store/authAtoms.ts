@@ -33,7 +33,7 @@ const userSettings = atom<UserSettings | null>({
 
 const userSettingsLoadingState = atom<LoadingState>({
   key: 'auth.user.settings.loadingState',
-  default: 'finished',
+  default: 'initializing',
 });
 
 export const authAtoms = {

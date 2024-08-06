@@ -5,7 +5,7 @@ import { styles } from './DropdownButton.styles';
 import { ITheme } from 'types/theme';
 import IconArrow from '@public/assets/icons/common/ChevronDown.svg';
 
-type Props = {
+type DropdownButtonProps = {
   disabled?: boolean;
   isOpen: boolean;
   text: string | ReactNode;
@@ -16,7 +16,7 @@ type Props = {
   isLoading?: boolean;
   tabIndex?: number;
   type?: 'input' | 'default';
-  buttonStyles?: (theme: ITheme) => SerializedStyles;
+  buttonStyles?: ((theme: ITheme) => SerializedStyles)[];
   hideDropdownIcon?: boolean;
 };
 
@@ -35,7 +35,7 @@ export const DropdownButton = forwardRef(
       type,
       buttonStyles,
       hideDropdownIcon,
-    }: Props,
+    }: DropdownButtonProps,
     ref: Ref<HTMLButtonElement>,
   ) => {
     return (
@@ -45,7 +45,7 @@ export const DropdownButton = forwardRef(
         type="button"
         css={
           buttonStyles
-            ? [buttonStyles]
+            ? buttonStyles
             : [
                 styles.button,
                 isLoading && styles.loading,
@@ -59,8 +59,11 @@ export const DropdownButton = forwardRef(
       >
         {icon && <SvgIcon size="16px">{icon}</SvgIcon>}
         {text}
-        {!hideDropdownIcon && !disabled && (
-          <span css={[styles.icon, isOpen && styles.iconOpen]}>
+        {!hideDropdownIcon && (
+          <span
+            className="dropdown-caret"
+            css={[styles.icon, isOpen && styles.iconOpen]}
+          >
             <SvgIcon size="12px">
               <IconArrow />
             </SvgIcon>

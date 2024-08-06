@@ -32,7 +32,8 @@ export const NodeViewSettings = () => {
     <TableSkeleton />
   ) : (
     <div css={styles.wrapper}>
-      <div css={styles.row}>
+      {/* TODO: Add back in once firewall implemented */}
+      {/* <div css={styles.row}>
         <FormLabelCaps noBottomMargin>Firewall Rules</FormLabelCaps>
         <div css={styles.firewallWrapper}>
           <FirewallDropdown
@@ -43,7 +44,7 @@ export const NodeViewSettings = () => {
             deniedIps={node!.denyIps}
           />
         </div>
-      </div>
+      </div> */}
       <div css={styles.row}>
         <FormLabelCaps noBottomMargin>Auto Updates</FormLabelCaps>
         {isSuperUser ? (

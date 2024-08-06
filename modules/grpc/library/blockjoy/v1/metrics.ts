@@ -142,7 +142,7 @@ export interface HostMetrics {
     | number
     | undefined;
   /**
-   * This is the list of IPs already in use - that include all nodes created on host (standalone too)
+   * This is the list of IPs already in use - that include all nodes created on host (those in dev mode too)
    * or for any other purpose.
    */
   usedIps: string[];
@@ -779,10 +779,10 @@ export interface MetricsServiceClient<CallOptionsExt = {}> {
   ): Promise<MetricsServiceHostResponse>;
 }
 
-declare const self: any | undefined;
-declare const window: any | undefined;
-declare const global: any | undefined;
-const tsProtoGlobalThis: any = (() => {
+declare var self: any | undefined;
+declare var window: any | undefined;
+declare var global: any | undefined;
+var tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }

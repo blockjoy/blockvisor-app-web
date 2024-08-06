@@ -1,6 +1,5 @@
 import {
   Blockchain,
-  BlockchainProperty,
   BlockchainSearch,
   BlockchainServiceAddVersionRequest,
   BlockchainServiceAddVersionResponse,
@@ -10,6 +9,8 @@ import {
   BlockchainServiceGetResponse,
   BlockchainServiceListRequest,
   BlockchainServiceListResponse,
+  BlockchainServicePricingRequest,
+  BlockchainServicePricingResponse,
   BlockchainSort,
   BlockchainSortField,
   BlockchainVersion,
@@ -21,11 +22,11 @@ import {
   handleError,
 } from '@modules/grpc';
 import { createChannel, createClient } from 'nice-grpc-web';
-import { NodeType } from '../library/blockjoy/common/v1/node';
 import {
   SearchOperator,
   SortOrder,
 } from '../library/blockjoy/common/v1/search';
+import { Amount } from '../library/blockjoy/common/v1/currency';
 
 export type BlockchainPagination = {
   currentPage: number;
@@ -115,6 +116,24 @@ class BlockchainClient {
         );
       console.log('addVersionResponse', response);
       return response.version!;
+    } catch (err: any) {
+      return handleError(err);
+    }
+  }
+
+  async getPricing(
+    params: BlockchainServicePricingRequest,
+  ): Promise<Amount | null> {
+    const request: BlockchainServicePricingRequest = params;
+    console.log('getPricingRequest', params);
+    try {
+      const response: BlockchainServicePricingResponse =
+        await callWithTokenRefresh(
+          this.client.pricing.bind(this.client),
+          request,
+        );
+      console.log('getPricingResponse', response);
+      return response.billingAmount?.amount ?? null;
     } catch (err: any) {
       return handleError(err);
     }

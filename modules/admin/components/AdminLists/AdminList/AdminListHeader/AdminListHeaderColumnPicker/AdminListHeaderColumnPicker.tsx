@@ -24,19 +24,12 @@ export const AdminListHeaderColumnPicker = ({
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   const handleColumnToggled = (columnName: string) => {
-    const columnsStateCopy = [...columns];
-
-    const foundColumn = columnsStateCopy.find(
-      (column) => column.name === columnName,
+    const nextColumns = columns.map((column) =>
+      column.name === columnName
+        ? { ...column, isVisible: !column.isVisible }
+        : column,
     );
-
-    if (!foundColumn) return;
-
-    foundColumn.isVisible = !foundColumn?.isVisible;
-
-    if (!columnsStateCopy.some((column) => column.isVisible)) return;
-
-    onColumnsChanged(columnsStateCopy);
+    onColumnsChanged(nextColumns);
   };
 
   const handleClickOutside = () => setIsOpen(false);
@@ -50,18 +43,7 @@ export const AdminListHeaderColumnPicker = ({
         onClick={() => setIsOpen(!isOpen)}
         tooltip="Change Columns"
       />
-      <DropdownMenu
-        isOpen={isOpen}
-        additionalStyles={[
-          css`
-            left: auto;
-            right: 0;
-            top: 54px;
-            min-width: max-content;
-            overflow: visible;
-          `,
-        ]}
-      >
+      <DropdownMenu isOpen={isOpen} additionalStyles={[styles.dropdownMenu]}>
         <AdminDropdownHeader onClose={handleClickOutside}>
           Columns
         </AdminDropdownHeader>

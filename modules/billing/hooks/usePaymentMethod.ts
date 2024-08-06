@@ -1,57 +1,93 @@
-import { useRecoilValue } from 'recoil';
-import useSWR from 'swr';
-import { PaymentSource } from 'chargebee-typescript/lib/resources';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { StripeCardNumberElement } from '@stripe/stripe-js';
 import {
-  BILLING_API_ROUTES,
-  billingSelectors,
-  fetchBilling,
+  CardNumberElement,
+  useElements,
+  useStripe,
+} from '@stripe/react-stripe-js';
+import { authAtoms } from '@modules/auth';
+import {
+  billingAtoms,
+  PAYMENT_ERRORS,
+  usePaymentMethods,
 } from '@modules/billing';
+import { organizationClient } from '@modules/grpc';
+import { organizationSelectors } from '@modules/organization';
+import { ApplicationError } from '@modules/auth/utils/Errors';
 
-interface IPaymentMethodHook {
-  paymentMethod: PaymentSource | null;
+interface PaymentMethodHook {
   paymentMethodLoadingState: LoadingState;
-  getPaymentMethod: VoidFunction;
+  initPaymentMethod: (
+    onSuccess: VoidFunction,
+    onError?: (errorMessage: string) => void,
+  ) => Promise<void>;
 }
 
-export const usePaymentMethod = (): IPaymentMethodHook => {
-  const subscription = useRecoilValue(billingSelectors.subscription);
-  const subscriptionPaymentMethod = useRecoilValue(
-    billingSelectors.paymentMethodById(subscription?.payment_source_id!),
+export const usePaymentMethod = (): PaymentMethodHook => {
+  const stripe = useStripe();
+  const elements = useElements();
+
+  const user = useRecoilValue(authAtoms.user);
+  const defaultOrganization = useRecoilValue(
+    organizationSelectors.defaultOrganization,
   );
+  const [paymentMethodLoadingState, setPaymentMethodLoadingState] =
+    useRecoilState(billingAtoms.paymentMethodLoadingState);
 
-  const fetcher = () =>
-    fetchBilling(BILLING_API_ROUTES.payments.sources.get, {
-      id: subscription?.payment_source_id,
-    });
+  const { getPaymentMethods } = usePaymentMethods();
 
-  const { data, error, isLoading, mutate } = useSWR(
-    subscription?.payment_source_id
-      ? `${BILLING_API_ROUTES.payments.sources.get}_${subscription?.id}`
-      : null,
-    fetcher,
-    {
-      shouldRetryOnError: false,
-      revalidateOnFocus: false,
-    },
-  );
+  const initPaymentMethod = async (
+    onSuccess: VoidFunction,
+    onError?: (errorMessage: string) => void,
+  ) => {
+    setPaymentMethodLoadingState('initializing');
 
-  if (error) console.error('Failed to fetch Payment Methods', error);
+    try {
+      if (!stripe || !elements) return;
 
-  const paymentMethodLoadingState: LoadingState =
-    isLoading && !subscriptionPaymentMethod ? 'initializing' : 'finished';
+      const clientSecret = await organizationClient.initCard(
+        defaultOrganization?.id!,
+        user?.id!,
+      );
 
-  const getPaymentMethod = () => {
-    if (!subscriptionPaymentMethod) mutate();
+      if (!clientSecret) return;
+
+      const { setupIntent, error } = await stripe.confirmCardSetup(
+        clientSecret,
+        {
+          payment_method: {
+            card: elements.getElement(
+              CardNumberElement,
+            ) as StripeCardNumberElement,
+          },
+        },
+        {
+          handleActions: false,
+        },
+      );
+
+      if (error)
+        throw new ApplicationError(
+          'InitCardError',
+          error.message ?? 'Intent error',
+        );
+
+      await new Promise((resolve) => setTimeout(resolve, 5000));
+
+      const paymentMethods = await getPaymentMethods();
+      console.log('setupIntent', setupIntent);
+      console.log('paymentMethods', paymentMethods);
+
+      if (!paymentMethods.length)
+        throw new ApplicationError('InitCardError', 'Webhook failed');
+
+      onSuccess();
+    } catch (error) {
+      onError?.(PAYMENT_ERRORS.FAILED);
+    } finally {
+      setPaymentMethodLoadingState('finished');
+    }
   };
 
-  const returnedPaymentMethod = subscriptionPaymentMethod
-    ? subscriptionPaymentMethod
-    : data;
-
-  return {
-    paymentMethod: returnedPaymentMethod,
-    paymentMethodLoadingState,
-
-    getPaymentMethod,
-  };
+  return { paymentMethodLoadingState, initPaymentMethod };
 };

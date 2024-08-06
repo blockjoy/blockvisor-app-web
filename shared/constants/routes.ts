@@ -1,5 +1,7 @@
 export const ROUTES = {
   BILLING: '/billing',
+  BILLING_PAYMENT_METHODS: '/billing/payment-methods',
+  BILLING_SUBSCRIPTION: '/billing/subscription',
   DEFAULT: '/nodes',
   DASHBOARD: '/dashboard',
   FAQ: '/faq',
@@ -18,10 +20,8 @@ export const ROUTES = {
   NOT_FOUND: '/404',
   ORGANIZATIONS: '/organizations',
   ORGANIZATION: (id: string) => `/organizations/${id}`,
+  PROFILE: '/profile',
   REGISTER: '/register',
-  SETTINGS: '/settings',
-  SETTINGS_PROFILE: '/settings/profile',
-  SETTINGS_BILLING: '/settings/billing',
 };
 
 export const PUBLIC_ROUTES = [

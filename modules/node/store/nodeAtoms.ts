@@ -3,6 +3,7 @@ import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { Region } from '@modules/grpc/library/blockjoy/v1/host';
 import { BlockchainSimpleWRegion } from '@modules/node';
 import { localStorageEffect } from 'utils/store/persist';
+import { NODE_PAGINATION_DEFAULT } from '@shared/index';
 
 const activeNode = atom<Node | null>({
   key: 'node.activeNode',
@@ -12,6 +13,11 @@ const activeNode = atom<Node | null>({
 const nodeList = atom<Node[]>({
   key: 'node.nodeList',
   default: [],
+});
+
+const nodeListPagination = atom<Pagination>({
+  key: 'node.list.pagination',
+  default: NODE_PAGINATION_DEFAULT,
 });
 
 const nodeCount = atom<number>({
@@ -34,8 +40,8 @@ const isLoadingNodeListByHost = atom<LoadingState>({
   default: 'initializing',
 });
 
-const isLoading = atom<LoadingState>({
-  key: 'node.loading',
+const nodeListLoadingState = atom<LoadingState>({
+  key: 'node.list.loadingState',
   default: 'initializing',
 });
 
@@ -83,8 +89,9 @@ const filtersSearchQuery = atom<string>({
 export const nodeAtoms = {
   activeNode,
   nodeList,
+  nodeListPagination,
   nodeCount,
-  isLoading,
+  nodeListLoadingState,
   isLoadingActiveNode,
   selectedSKU,
 

@@ -3,6 +3,11 @@ import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
+  wrapper: css`
+    display: flex;
+    flex-flow: row nowrap;
+    gap: 5px;
+  `,
   collapseButton: css`
     display: none;
 
@@ -52,21 +57,7 @@ export const styles = {
       }
     }
   `,
-  dropdownIcon: css`
-    display: grid;
-    place-items: center;
-    width: 8px;
-    height: 8px;
 
-    @media ${breakpoints.fromXLrg} {
-      display: none;
-    }
-
-    svg {
-      width: 100%;
-      height: 100%;
-    }
-  `,
   orgPicker: css`
     @media ${breakpoints.fromLrg} {
       display: none;

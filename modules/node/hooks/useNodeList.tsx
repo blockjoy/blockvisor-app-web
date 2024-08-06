@@ -1,25 +1,21 @@
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { nodeClient } from '@modules/grpc';
-import {
-  nodeAtoms,
-  getInitialQueryParams,
-  InitialQueryParams,
-  Pagination,
-  nodeSelectors,
-} from '@modules/node';
-import { useDefaultOrganization } from '@modules/organization';
+import { nodeAtoms, nodeSelectors } from '@modules/node';
+import { organizationSelectors } from '@modules/organization';
+import { authSelectors } from '@modules/auth';
 
 export const useNodeList = () => {
-  const orgId = useDefaultOrganization().defaultOrganization?.id;
-
-  const [isLoading, setIsLoading] = useRecoilState(nodeAtoms.isLoading);
+  const defaultOrganization = useRecoilValue(
+    organizationSelectors.defaultOrganization,
+  );
+  const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
+  const queryParams = useRecoilValue(nodeSelectors.queryParams);
+  const [nodeListLoadingState, setNodeListLoadingState] = useRecoilState(
+    nodeAtoms.nodeListLoadingState,
+  );
   const [nodeList, setNodeList] = useRecoilState(nodeAtoms.nodeList);
   const [nodeCount, setNodeCount] = useRecoilState(nodeAtoms.nodeCount);
-
-  const initialFilters = useRecoilValue(nodeSelectors.filters);
-  const initialKeyword = useRecoilValue(nodeAtoms.filtersSearchQuery);
-
   const [nodeListByHost, setNodeListByHost] = useRecoilState(
     nodeAtoms.nodeListByHost,
   );
@@ -29,29 +25,16 @@ export const useNodeList = () => {
   const [nodeListByHostLoadingState, setNodeListByHostLoadingState] =
     useRecoilState(nodeAtoms.isLoadingNodeListByHost);
 
-  const savedQueryParams = getInitialQueryParams(
-    initialFilters,
-    initialKeyword,
-  );
-
-  const loadNodes = async (
-    queryParams?: InitialQueryParams,
-    showLoader: boolean = true,
-  ) => {
-    if (!queryParams) queryParams = savedQueryParams;
-
-    const loadingState =
-      queryParams.pagination.currentPage === 0 ? 'initializing' : 'loading';
-
-    if (showLoader) {
-      setIsLoading(loadingState);
-    }
+  const loadNodes = async () => {
+    if (nodeListLoadingState !== 'initializing')
+      setNodeListLoadingState('loading');
 
     try {
       const response = await nodeClient.listNodes(
-        orgId!,
+        defaultOrganization?.id!,
         queryParams.filter,
         queryParams.pagination,
+        queryParams.sort,
       );
 
       const { nodeCount } = response;
@@ -62,14 +45,19 @@ export const useNodeList = () => {
 
       if (queryParams.pagination.currentPage !== 0) {
         nodes = [...nodeList!, ...nodes];
+      } else {
+        window.scrollTo({
+          top: 0,
+          behavior: 'instant' as ScrollBehavior,
+        });
       }
 
       setNodeList(nodes);
-      setIsLoading('finished');
     } catch (err) {
-      setIsLoading('finished');
       setNodeList([]);
       setNodeCount(0);
+    } finally {
+      setNodeListLoadingState('finished');
     }
   };
 
@@ -80,9 +68,9 @@ export const useNodeList = () => {
     setNodeListByHostLoadingState('initializing');
 
     const response = await nodeClient.listNodesByHost(
-      orgId!,
       hostId,
       pagination,
+      isSuperUser ? undefined : defaultOrganization?.id!,
     );
 
     const { nodeCount } = response;
@@ -135,11 +123,10 @@ export const useNodeList = () => {
     nodeList,
     nodeCount,
     loadNodes,
-    isLoading,
+    nodeListLoadingState,
     addToNodeList,
     removeFromNodeList,
     modifyNodeInNodeList,
-    setIsLoading,
     listNodesByHost,
     nodeListByHost,
     nodeListByHostCount,

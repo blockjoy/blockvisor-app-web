@@ -90,7 +90,7 @@ export const OrganizationPicker = ({
       handleOpen={handleOpen}
       isLoading={false}
       size="small"
-      dropdownButtonStyles={styles.select}
+      dropdownButtonStyles={[styles.select]}
       dropdownMenuStyles={[styles.dropdown(isRightAligned)]}
       hideDropdownIcon
       noBottomMargin

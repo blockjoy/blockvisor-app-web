@@ -16,7 +16,6 @@ import {
 } from '@modules/organization';
 import { readToken } from '@shared/utils/readToken';
 import { Mixpanel } from '@shared/services/mixpanel';
-import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 
 type SignInParams = {
@@ -27,8 +26,6 @@ type SignInParams = {
 export function useSignIn() {
   const setUser = useSetRecoilState(authAtoms.user);
   const repository = useIdentityRepository();
-
-  const router = useRouter();
 
   const { acceptInvitation, declineInvitation } = useInvitations();
 
@@ -75,10 +72,10 @@ export function useSignIn() {
 
         await getOrganizations();
 
-        setDefaultOrganization({
-          id: activeInvitation?.orgId!,
-          name: activeInvitation?.orgName!,
-        });
+        await setDefaultOrganization(
+          { id: activeInvitation?.orgId!, name: activeInvitation?.orgName! },
+          userId,
+        );
 
         toast.success('Joined Organization');
       } else if (invitationId && !isInvited) {

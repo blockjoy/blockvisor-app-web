@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 import {
   Button,
@@ -6,7 +6,6 @@ import {
   FormHeaderCaps,
   FormLabelCaps,
   FormText,
-  HubSpotForm,
   OrganizationSelect,
   SvgIcon,
   Tooltip,
@@ -18,16 +17,13 @@ import {
   useProvisionToken,
   organizationSelectors,
 } from '@modules/organization';
-import {
-  // LAUNCH_ERRORS,
-  LauncherWithGuardProps,
-} from '@modules/billing';
+import { LAUNCH_ERRORS, LauncherWithGuardProps } from '@modules/billing';
 
 export const HostLauncher = ({
   fulfilReqs,
   resetFulfilReqs,
   onCreateClick,
-  permissions,
+  hasPermissionsToCreate,
 }: LauncherWithGuardProps) => {
   const defaultOrganization = useRecoilValue(
     organizationSelectors.defaultOrganization,
@@ -36,21 +32,11 @@ export const HostLauncher = ({
   const { resetProvisionToken, provisionToken, provisionTokenLoadingState } =
     useProvisionToken();
 
-  const [isOpenHubSpot, setIsOpenHubSpot] = useState(false);
-
-  const handleCreateNodeClicked = () => {
-    if (!permissions.permitted) handleOpenHubSpot();
-    else handleHostCreation();
-  };
-
-  const handleOpenHubSpot = () => setIsOpenHubSpot(true);
-  const handleCloseHubSpot = () => setIsOpenHubSpot(false);
-
   useEffect(() => {
     if (fulfilReqs) handleHostCreation();
   }, [fulfilReqs]);
 
-  const token = !permissions?.disabled
+  const token = hasPermissionsToCreate
     ? provisionToken
     : provisionToken?.replace(/./g, '*');
 
@@ -80,28 +66,30 @@ export const HostLauncher = ({
             <div css={[styles.copy, spacing.bottom.medium]}>
               <CopyToClipboard
                 value={`bvup ${token}`}
-                disabled={permissions?.disabled}
+                disabled={!hasPermissionsToCreate}
               />
-              {permissions?.disabled && (
+              {!hasPermissionsToCreate && (
                 <Tooltip
                   noWrap
                   top="-30px"
                   left="50%"
-                  tooltip={permissions.message}
+                  tooltip={LAUNCH_ERRORS.NO_PERMISSION}
                 />
               )}
             </div>
             <Button
               style="outline"
               size="small"
-              disabled={provisionTokenLoadingState !== 'finished'}
+              disabled={
+                provisionTokenLoadingState !== 'finished' ||
+                !hasPermissionsToCreate
+              }
               css={styles.button}
-              onClick={handleCreateNodeClicked}
+              onClick={onCreateClick}
               loading={provisionTokenLoadingState !== 'finished'}
-              // {...(!permissions?.permitted &&
-              //   !permissions.superUser && {
-              //     tooltip: LAUNCH_ERRORS.NO_PERMISSION,
-              //   })}
+              {...(!hasPermissionsToCreate && {
+                tooltip: LAUNCH_ERRORS.NO_PERMISSION,
+              })}
             >
               <SvgIcon>
                 <IconRefresh />
@@ -117,14 +105,6 @@ export const HostLauncher = ({
           </div>
         </li>
       </ul>
-      {isOpenHubSpot && (
-        <HubSpotForm
-          title="Request Host Launch"
-          content="Interested in launching a host? Leave us your email to get started."
-          isOpenHubSpot={isOpenHubSpot}
-          handleClose={handleCloseHubSpot}
-        />
-      )}
     </div>
   );
 };

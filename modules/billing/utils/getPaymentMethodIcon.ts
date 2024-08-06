@@ -15,9 +15,9 @@ const IconBilling = dynamic(
   () => import(`@public/assets/icons/common/Billing.svg`),
 );
 
-export const getPaymentMethodIcon = (name: string) => {
+export const getPaymentMethodIcon = (name: CreditCardBrand) => {
   switch (name) {
-    case 'american_express':
+    case 'amex':
       return IconAmericanExpress;
     case 'mastercard':
       return IconMasterCard;

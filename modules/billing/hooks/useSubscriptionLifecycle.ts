@@ -1,13 +1,9 @@
 import { useRecoilState } from 'recoil';
-import { _subscription } from 'chargebee-typescript';
-import {
-  BILLING_API_ROUTES,
-  billingAtoms,
-  billingSelectors,
-  fetchBilling,
-} from '@modules/billing';
+import { OrgServiceBillingDetailsResponse } from '@modules/grpc/library/blockjoy/v1/org';
+import { billingAtoms } from '@modules/billing';
 
 interface ISubscriptionLifecycleHook {
+  subscription: OrgServiceBillingDetailsResponse | null;
   subscriptionLoadingState: LoadingState;
   cancelSubscription: (params: { endOfTerm: boolean }) => Promise<void>;
   restoreSubscription: (id: string) => Promise<void>;
@@ -16,7 +12,7 @@ interface ISubscriptionLifecycleHook {
 
 export const useSubscriptionLifecycle = (): ISubscriptionLifecycleHook => {
   const [subscription, setSubscription] = useRecoilState(
-    billingSelectors.subscription,
+    billingAtoms.subscription,
   );
 
   const [subscriptionLoadingState, setSubscriptionLoadingState] =
@@ -26,12 +22,7 @@ export const useSubscriptionLifecycle = (): ISubscriptionLifecycleHook => {
     setSubscriptionLoadingState('loading');
 
     try {
-      const data = await fetchBilling(BILLING_API_ROUTES.subscriptions.cancel, {
-        id: subscription?.id!,
-        params: {
-          end_of_term: endOfTerm,
-        },
-      });
+      const data = null;
 
       setSubscription(data);
     } catch (error) {
@@ -45,10 +36,7 @@ export const useSubscriptionLifecycle = (): ISubscriptionLifecycleHook => {
     setSubscriptionLoadingState('loading');
 
     try {
-      const data = await fetchBilling(
-        BILLING_API_ROUTES.subscriptions.restore,
-        { id },
-      );
+      const data = null;
 
       setSubscription(data);
     } catch (error) {
@@ -62,14 +50,7 @@ export const useSubscriptionLifecycle = (): ISubscriptionLifecycleHook => {
     setSubscriptionLoadingState('loading');
 
     try {
-      const params: _subscription.update_params = {
-        invoice_immediately: true,
-      };
-
-      const data = await fetchBilling(
-        BILLING_API_ROUTES.subscriptions.reactivate,
-        { id, params },
-      );
+      const data = null;
 
       setSubscription(data);
     } catch (error) {
@@ -80,6 +61,7 @@ export const useSubscriptionLifecycle = (): ISubscriptionLifecycleHook => {
   };
 
   return {
+    subscription,
     subscriptionLoadingState,
 
     cancelSubscription,

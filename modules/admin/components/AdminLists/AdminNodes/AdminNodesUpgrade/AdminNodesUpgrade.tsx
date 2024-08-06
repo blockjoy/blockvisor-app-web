@@ -1,5 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
-import { css } from '@emotion/react';
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import { styles } from './AdminNodesUpgrade.styles';
 import { useClickOutside } from '@shared/hooks/useClickOutside';
 import { AdminHeaderButton } from '@modules/admin/components/AdminHeader/AdminHeaderButton/AdminHeaderButton';
@@ -13,57 +12,56 @@ import {
 import { AdminDropdownHeader } from '@modules/admin/components';
 import { blockchainClient, nodeClient } from '@modules/grpc';
 import { toast } from 'react-toastify';
-import IconUpgrade from '@public/assets/icons/app/NodeUpgrade.svg';
 import { BlockchainVersion } from '@modules/grpc/library/blockjoy/v1/blockchain';
+import IconUpgrade from '@public/assets/icons/app/NodeUpgrade.svg';
 
 type Props = {
-  isDisabled?: boolean;
   selectedIds: string[];
+  list: any[];
+  setList: Dispatch<SetStateAction<any[]>>;
 };
 
-export const AdminNodesUpgrade = ({ isDisabled, selectedIds }: Props) => {
+export const AdminNodesUpgrade = ({ selectedIds, list, setList }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const [selectedVersion, setSelectedVersion] = useState<BlockchainVersion>();
 
-  const [isUpgrading, setIsUpgrading] = useState(false);
+  const [versions, setVersions] = useState<BlockchainVersion[]>([]);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   const handleClickOutside = () => setIsOpen(false);
 
   const handleUpgrade = async () => {
-    try {
-      const upgradeCommands = [];
+    const listCopy = [...list];
 
-      for (let id of selectedIds!) {
-        upgradeCommands.push(
-          (async () => {
-            try {
-              await nodeClient.upgradeNode(id, selectedVersion?.version!);
-              toast.success('Upgrade Command Sent');
-            } catch (err) {
-              toast.error(`Error Upgrading Node: ${id}`);
-            }
-          })(),
-        );
+    try {
+      await nodeClient.upgradeNode(selectedIds, selectedVersion?.version!);
+
+      for (const id of selectedIds) {
+        const foundNode = list.find((n) => n.id === id);
+
+        foundNode.version = selectedVersion?.version;
       }
 
-      await Promise.all(upgradeCommands);
+      setList(listCopy);
+
+      toast.success('Upgrade Command Sent');
     } catch (err) {
-      console.log('handleUpgradeError', err);
+      toast.error(`Error Upgrading`);
     } finally {
       setIsOpen(false);
+      setIsLoading(false);
     }
   };
 
   useClickOutside<HTMLDivElement>(dropdownRef, handleClickOutside);
 
-  const [versions, setVersions] = useState<BlockchainVersion[]>([]);
-
   useEffect(() => {
     (async () => {
-      if (selectedIds.length) {
+      if (selectedIds.length && !versions.length) {
         const blockchainId = (await nodeClient.getNode(selectedIds[0]))
           .blockchainId!;
 
@@ -78,23 +76,12 @@ export const AdminNodesUpgrade = ({ isDisabled, selectedIds }: Props) => {
   return (
     <div css={styles.wrapper} ref={dropdownRef}>
       <AdminHeaderButton
-        isDisabled={isDisabled}
+        isDisabled={!selectedIds.length}
         icon={<IconUpgrade />}
         onClick={() => setIsOpen(!isOpen)}
-        tooltip="Upgrade Nodes"
+        tooltip="Upgrade"
       />
-      <DropdownMenu
-        isOpen={isOpen}
-        additionalStyles={[
-          css`
-            left: auto;
-            right: 0;
-            top: 54px;
-            min-width: max-content;
-            overflow: visible;
-          `,
-        ]}
-      >
+      <DropdownMenu isOpen={isOpen} additionalStyles={[styles.dropdownMenu]}>
         <AdminDropdownHeader onClose={handleClickOutside}>
           Upgrade Nodes
         </AdminDropdownHeader>
@@ -118,7 +105,7 @@ export const AdminNodesUpgrade = ({ isDisabled, selectedIds }: Props) => {
         <div css={styles.buttonWrapper}>
           <Button
             disabled={!selectedVersion}
-            loading={isUpgrading}
+            loading={isLoading}
             type="button"
             onClick={handleUpgrade}
           >

@@ -1,40 +1,50 @@
-import { useState } from 'react';
+import { useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
-import { _subscription } from 'chargebee-typescript';
-import { TableSkeleton } from '@shared/components';
+import { Tabs } from '@shared/components';
+import { useTabs } from '@shared/index';
 import {
-  SubscriptionCancellation,
+  Invoices,
   billingAtoms,
-  SubscriptionPreview,
-  SubscriptionActivation,
+  // Estimates,
+  SubscriptionInfo,
 } from '@modules/billing';
 
-export type ActiveView =
-  | 'preview'
-  | 'cancel-subscription'
-  | 'reactivate-subscription'
-  | 'restore-subscription';
-
 export const Subscription = () => {
+  const subscription = useRecoilValue(billingAtoms.subscription);
   const subscriptionLoadingState = useRecoilValue(
     billingAtoms.subscriptionLoadingState,
   );
-  const [activeView, setActiveView] = useState<ActiveView>('preview');
 
-  const handleBack = () => setActiveView('preview');
+  const tabItems = useMemo(
+    () => [
+      {
+        label: 'Details',
+        value: 'details',
+        component: <SubscriptionInfo />,
+      },
+      // {
+      //   label: 'Estimates',
+      //   value: 'estimates',
+      //   component: <Estimates />,
+      // },
+      {
+        label: 'Invoices',
+        value: 'invoices',
+        component: <Invoices />,
+      },
+    ],
+    [subscription],
+  );
 
-  if (subscriptionLoadingState === 'initializing') return <TableSkeleton />;
+  const { activeTab, handleActiveTabChange } = useTabs(tabItems);
 
   return (
-    <>
-      <SubscriptionPreview onViewChange={setActiveView} />
-      {activeView === 'cancel-subscription' && (
-        <SubscriptionCancellation handleBack={handleBack} />
-      )}
-      {(activeView === 'reactivate-subscription' ||
-        activeView === 'restore-subscription') && (
-        <SubscriptionActivation handleBack={handleBack} type={activeView} />
-      )}
-    </>
+    <Tabs
+      activeTab={activeTab}
+      onTabClick={handleActiveTabChange}
+      tabItems={tabItems}
+      isLoading={subscriptionLoadingState === 'initializing'}
+      type="inner"
+    />
   );
 };

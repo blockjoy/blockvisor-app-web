@@ -1,88 +1,86 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useRef } from 'react';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import isEqual from 'lodash/isEqual';
-import { useRecoilValue } from 'recoil';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import {
   TableSkeleton,
   EmptyColumn,
   Table,
   TableGrid,
 } from '@shared/components';
-import { styles } from './HostList.styles';
-import InfiniteScroll from 'react-infinite-scroll-component';
-import { spacing } from 'styles/utils.spacing.styles';
+import { useViewport } from '@shared/index';
 import {
-  // HostFilters,
+  hostAtoms,
+  HostFilters,
   HostListHeader,
+  hostSelectors,
   mapHostListToGird,
   mapHostListToRows,
   resultsStatus,
   useHostList,
-  useHostUIContext,
+  useHostSort,
 } from '@modules/host';
 import { layoutSelectors } from '@modules/layout';
+import { spacing } from 'styles/utils.spacing.styles';
+import { styles } from './HostList.styles';
 
 export const HostList = () => {
-  const hostUIContext = useHostUIContext();
-  const hostUIProps = useMemo(() => {
-    return {
-      queryParams: hostUIContext.queryParams,
-      setQueryParams: hostUIContext.setQueryParams,
-    };
-  }, [hostUIContext]);
+  const queryParams = useRecoilValue(hostSelectors.queryParams);
+  const setPagination = useSetRecoilState(hostAtoms.hostListPagination);
 
-  const { loadHosts, hostList, hostCount, isLoading, handleHostClick } =
-    useHostList();
+  const currentQueryParams = useRef(queryParams);
 
-  const view = useRecoilValue(layoutSelectors.hostView);
+  const {
+    loadHosts,
+    hostList,
+    hostCount,
+    hostListLoadingState,
+    handleHostClick,
+  } = useHostList();
+  const { updateSorting } = useHostSort();
 
-  const currentQueryParams = useRef(hostUIProps.queryParams);
+  const { isXlrg } = useViewport();
 
-  const hasMore =
-    hostCount !== hostList.length &&
-    hostUIContext.queryParams.pagination.currentPage *
-      hostUIContext.queryParams.pagination.itemsPerPage +
-      hostUIContext.queryParams.pagination.itemsPerPage <
-      hostCount;
+  const activeView = useRecoilValue(layoutSelectors.activeHostView(isXlrg));
 
   useEffect(() => {
-    if (!isEqual(currentQueryParams.current, hostUIProps.queryParams)) {
-      loadHosts(hostUIProps.queryParams);
-      currentQueryParams.current = hostUIProps.queryParams;
+    if (!isEqual(currentQueryParams.current, queryParams)) {
+      loadHosts();
+      currentQueryParams.current = queryParams;
     }
-  }, [hostUIProps.queryParams]);
+  }, [queryParams]);
 
-  const updateQueryParams = async () => {
-    const newCurrentPage = hostUIProps.queryParams.pagination.currentPage + 1;
-    const newQueryParams = {
-      ...hostUIProps.queryParams,
-
-      pagination: {
-        ...hostUIProps.queryParams.pagination,
-        currentPage: newCurrentPage,
-      },
-    };
-
-    hostUIProps.setQueryParams(newQueryParams);
+  const loadMore = async () => {
+    setPagination((oldPagi) => ({
+      ...oldPagi,
+      currentPage: oldPagi.currentPage + 1,
+    }));
   };
 
   const cells = mapHostListToGird(hostList, handleHostClick);
-
   const { headers, rows } = mapHostListToRows(hostList);
 
   const { isFiltered, isEmpty } = resultsStatus(
     hostList.length,
-    hostUIProps.queryParams.filter,
+    queryParams.filter,
   );
+
+  const hasMore =
+    hostCount !== hostList.length &&
+    queryParams.pagination.currentPage * queryParams.pagination.itemsPerPage +
+      queryParams.pagination.itemsPerPage <
+      hostCount;
 
   return (
     <div css={styles.wrapper}>
-      {/* TODO: Implement filters in api */}
-      {/* <HostFilters /> */}
+      <HostFilters />
+
       <div css={styles.listWrapper}>
-        <HostListHeader />
-        {isLoading === 'initializing' ? (
+        {!isXlrg && <HostListHeader />}
+
+        {hostListLoadingState === 'initializing' ? (
           <TableSkeleton />
-        ) : !Boolean(hostList?.length) && isLoading === 'finished' ? (
+        ) : !Boolean(hostList?.length) ? (
           <EmptyColumn
             title="No Hosts."
             description={
@@ -100,23 +98,25 @@ export const HostList = () => {
         ) : (
           <InfiniteScroll
             dataLength={hostList.length}
-            next={updateQueryParams}
+            next={loadMore}
             hasMore={hasMore}
             style={{ overflow: 'hidden' }}
             scrollThreshold={0.75}
             loader={''}
           >
-            {view === 'table' ? (
+            {activeView === 'table' ? (
               <Table
-                isLoading={isLoading}
+                isLoading={hostListLoadingState}
                 headers={headers}
                 rows={rows}
+                queryParams={queryParams}
+                handleSort={updateSorting}
                 onRowClick={handleHostClick}
               />
             ) : (
               <div css={styles.gridWrapper}>
                 <TableGrid
-                  isLoading={isLoading}
+                  isLoading={hostListLoadingState}
                   cells={cells!}
                   entityName="hosts"
                 />

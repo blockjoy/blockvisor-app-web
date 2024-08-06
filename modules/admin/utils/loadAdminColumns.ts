@@ -1,30 +1,26 @@
-import { AdminListColumn } from '../types/AdminListColumn';
+export const loadAdminColumns = (
+  columns: AdminListColumn[],
+  settingsColumns: AdminListColumn[],
+) => {
+  let columnsCopy = columns;
 
-export const loadAdminColumns = (name: string, columns: AdminListColumn[]) => {
-  const localStorageColumns: AdminListColumn[] = JSON.parse(
-    localStorage.getItem(`${name}Columns`)!,
-  );
-
-  let columnsCopy = [...columns];
-  let localStorageColumnsCopy = localStorageColumns
-    ? [...localStorageColumns]
-    : [];
-
-  if (localStorageColumns) {
+  if (settingsColumns) {
     columnsCopy.forEach((column) => {
-      const isVisible = localStorageColumns?.find(
-        (c: AdminListColumn) => c.name === column.name,
-      )?.isVisible;
-
-      column.isVisible = isVisible;
-
-      const foundLocalStorage = localStorageColumnsCopy?.find(
+      const foundSettingsColumn = settingsColumns?.find(
         (c) => c?.name === column?.name,
       );
 
-      if (column.filterSettings && foundLocalStorage) {
-        column.filterSettings.values =
-          foundLocalStorage.filterSettings?.values!;
+      if (foundSettingsColumn) {
+        if (foundSettingsColumn.isVisible !== undefined) {
+          column.isVisible = foundSettingsColumn.isVisible;
+        }
+
+        if (column.filterComponent) {
+          if (!column.filterSettings) column.filterSettings = {};
+
+          column.filterSettings.values =
+            foundSettingsColumn.filterSettings?.values!;
+        }
       }
     });
   }

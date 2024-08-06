@@ -6,6 +6,7 @@ import { Timestamp } from "../../google/protobuf/timestamp";
 import { BillingAmount } from "../common/v1/currency";
 import { NodeType } from "../common/v1/node";
 import { SearchOperator, SortOrder } from "../common/v1/search";
+import { Tag, Tags } from "../common/v1/tag";
 
 export const protobufPackage = "blockjoy.v1";
 
@@ -105,6 +106,8 @@ export interface Host {
   ipAddresses: HostIpAddress[];
   /** The entity that can make decisions on whether to run nodes on this host. */
   managedBy: ManagedBy;
+  /** A list of tags that are attached to this host. */
+  tags: Tags | undefined;
 }
 
 export interface HostServiceCreateRequest {
@@ -164,7 +167,11 @@ export interface HostServiceCreateRequest {
    * The entity that can make decisions on whether to run nodes on this host. By
    * default this value will be set to `Automatic`.
    */
-  managedBy?: ManagedBy | undefined;
+  managedBy?:
+    | ManagedBy
+    | undefined;
+  /** A list of tags that are attached to this host. */
+  tags: Tags | undefined;
 }
 
 export interface HostServiceCreateResponse {
@@ -255,7 +262,23 @@ export interface HostServiceUpdateRequest {
     | number
     | undefined;
   /** The entity that can make decisions on whether to run nodes on this host. */
-  managedBy?: ManagedBy | undefined;
+  managedBy?:
+    | ManagedBy
+    | undefined;
+  /**
+   * If this is provided, the tags contained in this will overwrite the existing
+   * tags.
+   */
+  updateTags?: UpdateTags | undefined;
+}
+
+export interface UpdateTags {
+  /** A list of tags that are attached to this host. */
+  overwriteTags?:
+    | Tags
+    | undefined;
+  /** A single tag that is added. */
+  addTag?: Tag | undefined;
 }
 
 export interface HostServiceUpdateResponse {
@@ -361,6 +384,7 @@ function createBaseHost(): Host {
     vmmMountpoint: undefined,
     ipAddresses: [],
     managedBy: 0,
+    tags: undefined,
   };
 }
 
@@ -422,6 +446,9 @@ export const Host = {
     }
     if (message.managedBy !== 0) {
       writer.uint32(184).int32(message.managedBy);
+    }
+    if (message.tags !== undefined) {
+      Tags.encode(message.tags, writer.uint32(194).fork()).ldelim();
     }
     return writer;
   },
@@ -566,6 +593,13 @@ export const Host = {
 
           message.managedBy = reader.int32() as any;
           continue;
+        case 24:
+          if (tag !== 194) {
+            break;
+          }
+
+          message.tags = Tags.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -602,6 +636,7 @@ export const Host = {
     message.vmmMountpoint = object.vmmMountpoint ?? undefined;
     message.ipAddresses = object.ipAddresses?.map((e) => HostIpAddress.fromPartial(e)) || [];
     message.managedBy = object.managedBy ?? 0;
+    message.tags = (object.tags !== undefined && object.tags !== null) ? Tags.fromPartial(object.tags) : undefined;
     return message;
   },
 };
@@ -624,6 +659,7 @@ function createBaseHostServiceCreateRequest(): HostServiceCreateRequest {
     billingAmount: undefined,
     vmmMountpoint: undefined,
     managedBy: undefined,
+    tags: undefined,
   };
 }
 
@@ -676,6 +712,9 @@ export const HostServiceCreateRequest = {
     }
     if (message.managedBy !== undefined) {
       writer.uint32(136).int32(message.managedBy);
+    }
+    if (message.tags !== undefined) {
+      Tags.encode(message.tags, writer.uint32(154).fork()).ldelim();
     }
     return writer;
   },
@@ -799,6 +838,13 @@ export const HostServiceCreateRequest = {
 
           message.managedBy = reader.int32() as any;
           continue;
+        case 19:
+          if (tag !== 154) {
+            break;
+          }
+
+          message.tags = Tags.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -832,6 +878,7 @@ export const HostServiceCreateRequest = {
       : undefined;
     message.vmmMountpoint = object.vmmMountpoint ?? undefined;
     message.managedBy = object.managedBy ?? undefined;
+    message.tags = (object.tags !== undefined && object.tags !== null) ? Tags.fromPartial(object.tags) : undefined;
     return message;
   },
 };
@@ -1325,6 +1372,7 @@ function createBaseHostServiceUpdateRequest(): HostServiceUpdateRequest {
     billingAmount: undefined,
     totalDiskSpace: undefined,
     managedBy: undefined,
+    updateTags: undefined,
   };
 }
 
@@ -1356,6 +1404,9 @@ export const HostServiceUpdateRequest = {
     }
     if (message.managedBy !== undefined) {
       writer.uint32(72).int32(message.managedBy);
+    }
+    if (message.updateTags !== undefined) {
+      UpdateTags.encode(message.updateTags, writer.uint32(82).fork()).ldelim();
     }
     return writer;
   },
@@ -1430,6 +1481,13 @@ export const HostServiceUpdateRequest = {
 
           message.managedBy = reader.int32() as any;
           continue;
+        case 10:
+          if (tag !== 82) {
+            break;
+          }
+
+          message.updateTags = UpdateTags.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1456,6 +1514,70 @@ export const HostServiceUpdateRequest = {
       : undefined;
     message.totalDiskSpace = object.totalDiskSpace ?? undefined;
     message.managedBy = object.managedBy ?? undefined;
+    message.updateTags = (object.updateTags !== undefined && object.updateTags !== null)
+      ? UpdateTags.fromPartial(object.updateTags)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseUpdateTags(): UpdateTags {
+  return { overwriteTags: undefined, addTag: undefined };
+}
+
+export const UpdateTags = {
+  encode(message: UpdateTags, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.overwriteTags !== undefined) {
+      Tags.encode(message.overwriteTags, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.addTag !== undefined) {
+      Tag.encode(message.addTag, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UpdateTags {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUpdateTags();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.overwriteTags = Tags.decode(reader, reader.uint32());
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.addTag = Tag.decode(reader, reader.uint32());
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<UpdateTags>): UpdateTags {
+    return UpdateTags.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<UpdateTags>): UpdateTags {
+    const message = createBaseUpdateTags();
+    message.overwriteTags = (object.overwriteTags !== undefined && object.overwriteTags !== null)
+      ? Tags.fromPartial(object.overwriteTags)
+      : undefined;
+    message.addTag = (object.addTag !== undefined && object.addTag !== null)
+      ? Tag.fromPartial(object.addTag)
+      : undefined;
     return message;
   },
 };
@@ -2312,10 +2434,10 @@ export interface HostServiceClient<CallOptionsExt = {}> {
   ): Promise<HostServiceRegionsResponse>;
 }
 
-declare const self: any | undefined;
-declare const window: any | undefined;
-declare const global: any | undefined;
-const tsProtoGlobalThis: any = (() => {
+declare var self: any | undefined;
+declare var window: any | undefined;
+declare var global: any | undefined;
+var tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }

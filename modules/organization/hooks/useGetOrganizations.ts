@@ -25,6 +25,7 @@ export function useGetOrganizations() {
   const getOrganizations = async (
     init?: boolean,
     showLoader: boolean = true,
+    userId?: string,
   ) => {
     if (showLoader) setIsLoading('initializing');
 
@@ -37,7 +38,7 @@ export function useGetOrganizations() {
 
     setOrganizations(orgs);
 
-    if (init) await getDefaultOrganization(response.orgs);
+    if (init) await getDefaultOrganization(response.orgs, userId);
 
     setIsLoading('finished');
   };

@@ -1,8 +1,28 @@
+declare namespace globalThis {
+  type NodeSettings = {
+    filters: import('@modules/grpc').UINodeFilterCriteria;
+    sort: import('@modules/grpc/library/blockjoy/v1/node').NodeSort[];
+  };
+
+  type HostSettings = {
+    filters: import('@modules/grpc').UIHostFilterCriteria;
+    sort: import('@modules/grpc/library/blockjoy/v1/node').HostSort[];
+  };
+
+  type SearchSortOrder =
+    import('@modules/grpc/library/blockjoy/common/v1/search').SortOrder;
+
+  type AdminListColumn =
+    import('@modules/admin/types/AdminListColumn').AdminListColumn;
+}
+
 type UserSettings = {
   layout?: string;
   nodes?: string;
   hosts?: string;
   organization?: string;
+  admin?: string;
+  billing?: string;
 };
 
 type UserSettingsUI = {
@@ -10,25 +30,26 @@ type UserSettingsUI = {
   nodes?: NodeSettings;
   hosts?: HostSettings;
   organization?: OrganizationSettings;
+  admin?: AdminSettings;
+  billing?: BillingSettings;
 };
 
-type LayoutSettings = {
+type LayoutBasicSettings = {
   'sidebar.isOpen': boolean;
   'nodes.view': View;
   'nodes.filters.isOpen': boolean;
   'hosts.view': View;
   'hosts.filters.isOpen': boolean;
   'admin.fullWidth': boolean;
+  'admin.sidebarWidth': number;
 };
 
-type NodeSettings = {
-  filters: UINodeFilterCriteria;
+type LayoutMobileSettings = {
+  'mobile.nodes.view': View;
+  'mobile.hosts.view': View;
 };
 
-type HostSettings = {
-  filters: UIHostFilterCriteria;
-  default: Host | null;
-};
+type LayoutSettings = LayoutBasicSettings & LayoutMobileSettings;
 
 type DefaultOrganization = {
   id: string;
@@ -37,4 +58,26 @@ type DefaultOrganization = {
 
 type OrganizationSettings = {
   default?: DefaultOrganization | null;
+};
+
+type AdminSettingsSort = {
+  field: number;
+  order: SortOrder;
+};
+
+type AdminSettingsItem = {
+  sort?: AdminSettingsSort;
+  columns?: AdminListColumn[];
+};
+
+type AdminSettings = {
+  nodes?: AdminSettingsItem;
+  hosts?: AdminSettingsItem;
+  blockchains?: AdminSettingsItem;
+  orgs?: AdminSettingsItem;
+  users?: AdminSettingsItem;
+};
+
+type BillingSettings = {
+  bypassBilling: boolean;
 };

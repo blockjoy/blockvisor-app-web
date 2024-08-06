@@ -8,7 +8,6 @@ import { layoutAtoms, layoutSelectors } from '@modules/layout';
 import { invitationAtoms, organizationSelectors } from '@modules/organization';
 import { ROUTES } from '@shared/index';
 import { authSelectors } from '@modules/auth';
-import { billingSelectors } from '@modules/billing';
 import { SidebarFooter } from './SidebarFooter/SidebarFooter';
 import IconNodes from '@public/assets/icons/app/Node.svg';
 import IconOrganizations from '@public/assets/icons/app/Organization.svg';
@@ -41,14 +40,13 @@ export default () => {
   const [isSidebarOpenMobile, setIsSidebarOpenMobile] = useRecoilState(
     layoutAtoms.isSidebarOpenMobile,
   );
-
   const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
+  const canInitCard = useRecoilValue(
+    authSelectors.hasPermission('org-billing-init-card'),
+  );
   const invitationCount = useRecoilValue(
     invitationAtoms.receivedInvitations,
   )?.length;
-  const isEnabledBillingPreview = useRecoilValue(
-    billingSelectors.isEnabledBillingPreview,
-  );
 
   const handleLinkClicked = () => {
     if (document.body.clientWidth < 768) {
@@ -115,7 +113,7 @@ export default () => {
   }
 
   let navBlocks: BlockItem[] = blocks.map((block: BlockItem) => {
-    if (block.id === 'settings' && isEnabledBillingPreview) {
+    if (block.id === 'settings' && canInitCard) {
       return {
         ...block,
         items: [

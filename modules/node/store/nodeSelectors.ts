@@ -1,8 +1,16 @@
 import { selector, selectorFamily } from 'recoil';
+import isEqual from 'lodash/isEqual';
 import { Region } from '@modules/grpc/library/blockjoy/v1/host';
 import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
+import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
+import { NodeSort } from '@modules/grpc/library/blockjoy/v1/node';
+import { UINodeFilterCriteria } from '@modules/grpc';
 import { nodeStatusList } from '@shared/constants/nodeStatusList';
-import { nodeTypeList, NODE_FILTERS_DEFAULT } from '@shared/constants/lookups';
+import {
+  nodeTypeList,
+  NODE_FILTERS_DEFAULT,
+  NODE_SORT_DEFAULT,
+} from '@shared/constants/lookups';
 import { NodeStatusListItem, sort } from '@shared/components';
 import {
   nodeAtoms,
@@ -10,8 +18,8 @@ import {
   blockchainSelectors,
   BlockchainSimple,
   NetworkConfigSimple,
+  InitialNodeQueryParams,
 } from '@modules/node';
-import { UINodeFilterCriteria } from '@modules/grpc';
 import { authAtoms } from '@modules/auth';
 
 const settings = selector<NodeSettings>({
@@ -21,6 +29,56 @@ const settings = selector<NodeSettings>({
     if (!userSettings?.hasOwnProperty('nodes')) return {};
 
     return JSON.parse(userSettings?.nodes ?? '{}');
+  },
+});
+
+const filters = selector<UINodeFilterCriteria>({
+  key: 'node.filters',
+  get: ({ get }) => {
+    const nodeSettings = get(settings);
+    const searchQuery = get(nodeAtoms.filtersSearchQuery);
+
+    return nodeSettings?.filters
+      ? { ...nodeSettings.filters, keyword: searchQuery ?? '' }
+      : NODE_FILTERS_DEFAULT;
+  },
+});
+
+const isFiltersEmpty = selector({
+  key: 'node.filters.isEmpty',
+  get: ({ get }) => {
+    const filtersVal = get(filters);
+
+    return isEqual(filtersVal, NODE_FILTERS_DEFAULT);
+  },
+});
+
+const nodeSort = selector<NodeSort[]>({
+  key: 'node.sort',
+  get: ({ get }) => {
+    const nodeSettings = get(settings);
+
+    return nodeSettings?.sort ?? NODE_SORT_DEFAULT;
+  },
+});
+
+const queryParams = selector<InitialNodeQueryParams>({
+  key: 'node.queryParams',
+
+  get: ({ get }) => {
+    const filter = get(filters);
+    const sort = get(nodeSort);
+    const pagination = get(nodeAtoms.nodeListPagination);
+    const keyword = get(nodeAtoms.filtersSearchQuery);
+
+    return {
+      pagination,
+      filter: {
+        ...filter,
+        keyword: keyword ?? filter.keyword,
+      },
+      sort,
+    };
   },
 });
 
@@ -42,18 +100,6 @@ const regionsByBlockchain = selectorFamily<Region[], BlockchainSimple>({
     },
 });
 
-const filters = selector<UINodeFilterCriteria>({
-  key: 'node.filters',
-  get: ({ get }) => {
-    const nodeSettings = get(settings);
-    const searchQuery = get(nodeAtoms.filtersSearchQuery);
-
-    return nodeSettings?.filters
-      ? { ...nodeSettings.filters, keyword: searchQuery ?? '' }
-      : NODE_FILTERS_DEFAULT;
-  },
-});
-
 const filtersBlockchainSelectedIds = selector<string[]>({
   key: 'node.filters.blockchain',
   get: ({ get }) => get(filters)?.blockchain ?? [],
@@ -72,6 +118,7 @@ const filtersBlockchainAll = selectorFamily<
 
       const allFilters = allBlockchains.map((blockchain) => ({
         ...blockchain,
+        name: blockchain.displayName,
         isChecked: tempFilters?.some((filter) => blockchain.id === filter),
       }));
 
@@ -92,7 +139,7 @@ const filtersStatusAll = selectorFamily<FilterListItem[], string[]>({
         })),
       {
         field: 'name',
-        order: 'asc',
+        order: SortOrder.SORT_ORDER_ASCENDING,
       },
     );
 
@@ -134,7 +181,11 @@ const filtersNetworksAll = selectorFamily<
   get:
     (tempFilters: string[]) =>
     ({ get }) => {
-      const allNetworks = get(blockchainSelectors.blockchainNetworks);
+      const filterBlockchainsIDs = get(filtersBlockchainSelectedIds);
+
+      const allNetworks = get(
+        blockchainSelectors.blockchainNetworks(filterBlockchainsIDs),
+      );
 
       const allFilters = allNetworks.map((network) => ({
         ...network,
@@ -146,11 +197,13 @@ const filtersNetworksAll = selectorFamily<
 });
 
 export const nodeSelectors = {
-  regionsByBlockchain,
-
   settings,
-
   filters,
+  isFiltersEmpty,
+  nodeSort,
+  queryParams,
+
+  regionsByBlockchain,
 
   filtersBlockchainSelectedIds,
 

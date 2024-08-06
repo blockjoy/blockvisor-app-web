@@ -53,6 +53,16 @@ export const NodeLauncherConfig = ({
       <div css={styles.wrapper}>
         <FormHeader>Configure</FormHeader>
 
+        {selectedVersion && (
+          <>
+            <FormLabel>Version</FormLabel>
+            <NodeVersionSelect
+              versions={versions}
+              onVersionChanged={onVersionChanged}
+            />
+          </>
+        )}
+
         <FormLabel>Network</FormLabel>
         {selectedVersion && Boolean(networks?.length) ? (
           <PillPicker
@@ -69,26 +79,16 @@ export const NodeLauncherConfig = ({
           </div>
         )}
 
-        {selectedVersion && (
-          <>
-            <FormLabel>Version</FormLabel>
-            <NodeVersionSelect
-              versions={versions}
-              onVersionChanged={onVersionChanged}
-            />
-          </>
-        )}
-
-        <FormLabel hint="Add IP addresses that are allowed/denied">
+        {/* TODO: Add back in when firewall implemented */}
+        {/* <FormLabel hint="Add IP addresses that are allowed/denied">
           Firewall Rules
         </FormLabel>
-
         <FirewallDropdown
           isDisabled={!isSuperUser}
           onPropertyChanged={onNodePropertyChanged}
           allowedIps={nodeLauncher?.allowIps}
           deniedIps={nodeLauncher?.denyIps}
-        />
+        /> */}
 
         {Boolean(networks?.length) &&
           properties?.map((property: NodeProperty) => {

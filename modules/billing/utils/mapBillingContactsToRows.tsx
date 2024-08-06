@@ -1,10 +1,9 @@
 import { Button, SvgIcon } from '@shared/components';
 import IconClose from '@public/assets/icons/common/Close.svg';
-import { Contact } from 'chargebee-typescript/lib/resources/customer';
 
 export const mapBillingContactsToRows = (
-  billingContacts: Contact[],
-  handleRemove: (contact: Contact) => void,
+  billingContacts: any[],
+  handleRemove: (contact: any) => void,
   subscriptionStatus: string | undefined,
 ) => {
   const headers: TableHeader[] = [

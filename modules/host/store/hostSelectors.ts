@@ -1,11 +1,20 @@
 import { selector, selectorFamily } from 'recoil';
-import { Host, HostStatus } from '@modules/grpc/library/blockjoy/v1/host';
+import isEqual from 'lodash/isEqual';
+import {
+  Host,
+  HostSort,
+  HostStatus,
+} from '@modules/grpc/library/blockjoy/v1/host';
+import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { hostClient, UIHostFilterCriteria } from '@modules/grpc';
 import { authAtoms, authSelectors } from '@modules/auth';
-import { hostAtoms } from '@modules/host';
+import { hostAtoms, InitialHostQueryParams } from '@modules/host';
 import { sort } from '@shared/components';
 import { nodeStatusList } from '@shared/constants/nodeStatusList';
-import { HOST_FILTERS_DEFAULT } from '@shared/constants/lookups';
+import {
+  HOST_FILTERS_DEFAULT,
+  HOST_SORT_DEFAULT,
+} from '@shared/constants/lookups';
 
 const settings = selector<HostSettings>({
   key: 'host.settings',
@@ -14,6 +23,56 @@ const settings = selector<HostSettings>({
     if (!userSettings?.hasOwnProperty('hosts')) return {};
 
     return JSON.parse(userSettings?.hosts ?? '{}');
+  },
+});
+
+const filters = selector<UIHostFilterCriteria>({
+  key: 'host.filters',
+  get: ({ get }) => {
+    const hostSettings = get(settings);
+    const searchQuery = get(hostAtoms.filtersSearchQuery);
+
+    return hostSettings?.filters
+      ? { ...hostSettings.filters, keyword: searchQuery ?? '' }
+      : HOST_FILTERS_DEFAULT;
+  },
+});
+
+const isFiltersEmpty = selector({
+  key: 'host.filters.isEmpty',
+  get: ({ get }) => {
+    const filtersVal = get(filters);
+
+    return isEqual(filtersVal, HOST_FILTERS_DEFAULT);
+  },
+});
+
+const hostSort = selector<HostSort[]>({
+  key: 'host.sort',
+  get: ({ get }) => {
+    const hostSettings = get(settings);
+
+    return hostSettings?.sort ?? HOST_SORT_DEFAULT;
+  },
+});
+
+const queryParams = selector<InitialHostQueryParams>({
+  key: 'host.queryParams',
+
+  get: ({ get }) => {
+    const filter = get(filters);
+    const sort = get(hostSort);
+    const pagination = get(hostAtoms.hostListPagination);
+    const keyword = get(hostAtoms.filtersSearchQuery);
+
+    return {
+      pagination,
+      filter: {
+        ...filter,
+        keyword: keyword ?? filter.keyword,
+      },
+      sort,
+    };
   },
 });
 
@@ -64,18 +123,6 @@ const hostListSorted = selector<Host[]>({
   },
 });
 
-const filters = selector<UIHostFilterCriteria>({
-  key: 'host.filters',
-  get: ({ get }) => {
-    const hostSettings = get(settings);
-    const searchQuery = get(hostAtoms.filtersSearchQuery);
-
-    return hostSettings?.filters
-      ? { ...hostSettings.filters, keyword: searchQuery ?? '' }
-      : HOST_FILTERS_DEFAULT;
-  },
-});
-
 const filtersStatusAll = selectorFamily<
   (HostStatus & FilterListItem)[],
   string[]
@@ -92,7 +139,7 @@ const filtersStatusAll = selectorFamily<
         })),
       {
         field: 'name',
-        order: 'asc',
+        order: SortOrder.SORT_ORDER_ASCENDING,
       },
     );
 
@@ -109,11 +156,14 @@ const filtersStatusAll = selectorFamily<
 
 export const hostSelectors = {
   settings,
+  filters,
+  isFiltersEmpty,
+  hostSort,
+  queryParams,
+
+  filtersStatusAll,
 
   hostById,
 
   hostListSorted,
-
-  filters,
-  filtersStatusAll,
 };

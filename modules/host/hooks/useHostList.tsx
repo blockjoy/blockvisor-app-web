@@ -3,25 +3,57 @@ import { useRouter } from 'next/router';
 import { ROUTES } from '@shared/constants/routes';
 import { HostServiceListResponse } from '@modules/grpc/library/blockjoy/v1/host';
 import { hostClient } from '@modules/grpc/clients/hostClient';
-import {
-  hostAtoms,
-  getInitialQueryParams,
-  InitialQueryParams,
-  hostSelectors,
-} from 'modules/host';
-import { useDefaultOrganization } from '@modules/organization';
+import { hostAtoms, hostSelectors } from 'modules/host';
+import { organizationSelectors } from '@modules/organization';
 
 export const useHostList = () => {
   const router = useRouter();
 
-  const orgId = useDefaultOrganization()?.defaultOrganization?.id!;
-
-  const [isLoading, setIsLoading] = useRecoilState(hostAtoms.isLoading);
+  const defaultOrganization = useRecoilValue(
+    organizationSelectors.defaultOrganization,
+  );
+  const queryParams = useRecoilValue(hostSelectors.queryParams);
+  const [hostListLoadingState, setHostListLoadingState] = useRecoilState(
+    hostAtoms.hostListLoadingState,
+  );
   const [hostList, setHostList] = useRecoilState(hostAtoms.hostList);
   const [hostCount, setHostCount] = useRecoilState(hostAtoms.hostCount);
 
-  const initialFilters = useRecoilValue(hostSelectors.filters);
-  const initialKeyword = useRecoilValue(hostAtoms.filtersSearchQuery);
+  const loadHosts = async () => {
+    if (hostListLoadingState !== 'initializing')
+      setHostListLoadingState('loading');
+
+    try {
+      const response: HostServiceListResponse = await hostClient.listHosts(
+        defaultOrganization?.id!,
+        queryParams.filter,
+        queryParams.pagination,
+        queryParams.sort,
+      );
+
+      const { hostCount } = response;
+
+      let hosts = response.hosts;
+
+      setHostCount(hostCount);
+
+      if (queryParams.pagination.currentPage !== 0) {
+        hosts = [...hostList!, ...hosts];
+      } else {
+        window.scrollTo({
+          top: 0,
+          behavior: 'instant' as ScrollBehavior,
+        });
+      }
+
+      setHostList(hosts);
+    } catch (err) {
+      setHostList([]);
+      setHostCount(0);
+    } finally {
+      setHostListLoadingState('finished');
+    }
+  };
 
   const handleHostClick = (id: string) => {
     router.push(ROUTES.HOST(id));
@@ -37,52 +69,14 @@ export const useHostList = () => {
     setHostCount(hostCount - 1);
   };
 
-  const loadHosts = async (queryParams?: InitialQueryParams) => {
-    if (!queryParams) {
-      const savedQueryParams = getInitialQueryParams(
-        initialFilters,
-        initialKeyword,
-      );
-      queryParams = savedQueryParams;
-    }
-
-    const loadingState =
-      queryParams.pagination.currentPage === 0 ? 'initializing' : 'loading';
-
-    setIsLoading(loadingState);
-
-    try {
-      const response: HostServiceListResponse = await hostClient.listHosts(
-        orgId!,
-        queryParams.filter,
-        queryParams.pagination,
-      );
-
-      const { hostCount } = response;
-
-      let hosts = response.hosts;
-
-      setHostCount(hostCount);
-
-      if (queryParams.pagination.currentPage !== 0) {
-        hosts = [...hostList!, ...hosts];
-      }
-
-      setHostList(hosts);
-      setIsLoading('finished');
-    } catch (err) {
-      setIsLoading('finished');
-    }
-  };
-
   return {
     hostList,
     hostCount,
-    isLoading,
+    hostListLoadingState,
 
-    handleHostClick,
     loadHosts,
     setHostList,
+    handleHostClick,
     removeFromHostList,
   };
 };

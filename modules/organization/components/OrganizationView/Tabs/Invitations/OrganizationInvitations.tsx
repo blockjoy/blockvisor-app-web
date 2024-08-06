@@ -2,12 +2,7 @@ import { useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useRecoilValue } from 'recoil';
 import { toast } from 'react-toastify';
-import {
-  Table,
-  TableAdd,
-  getHandlerTableChange,
-  withQuery,
-} from '@shared/components';
+import { Table, TableAdd, withQuery } from '@shared/components';
 import { spacing } from 'styles/utils.spacing.styles';
 import {
   useInvitations,
@@ -21,17 +16,13 @@ import {
   Action,
   Member,
 } from '@modules/organization/utils/mapOrganizationMembersToRows';
-import { InitialQueryParams } from '@modules/organization/ui/OrganizationMembersUIHelpers';
 import { useOrganizationInvitationsUIContext } from '@modules/organization/ui/OrganizationInvitationsUIContext';
 import { mapOrganizationInvitationsToRows } from '@modules/organization/utils/mapOrganizationInvitationsToRows';
 import { authSelectors } from '@modules/auth';
 import { checkIfExists } from '@modules/organization/utils/checkIfExists';
 
 export const OrganizationInvitations = () => {
-  const [isInviting, setIsInviting] = useState<boolean>(false);
-
   const router = useRouter();
-
   const { id } = router.query;
 
   const organizationInvitationsUIContext =
@@ -43,25 +34,29 @@ export const OrganizationInvitations = () => {
     };
   }, [organizationInvitationsUIContext]);
 
-  const { sentInvitations, getSentInvitations } = useInvitations();
-
   const sentInvitationsActive = useRecoilValue(
     invitationAtoms.sentInvitationsActive(
       organizationInvitationsUIProps.queryParams,
     ),
   );
-
   const selectedOrganization = useRecoilValue(
     organizationAtoms.selectedOrganization,
   );
-
   const canCreateMember = useRecoilValue(
     authSelectors.hasPermission('invitation-create'),
   );
 
-  const members = selectedOrganization?.members;
+  const [isInviting, setIsInviting] = useState<boolean>(false);
+  const [activeView, setActiveView] =
+    useState<string | 'list' | 'invite'>('list');
+  const [activeMember, setActiveMember] = useState<Member | null>(null);
+  const [activeAction, setActiveAction] = useState<Action | null>(null);
 
+  const { sentInvitations, getSentInvitations } = useInvitations();
   const { inviteMembers } = useInviteMembers();
+  const { resendInvitation } = useResendInvitation();
+
+  const members = selectedOrganization?.members;
 
   const handleInviteClicked = async (email: string) => {
     setIsInviting(true);
@@ -89,14 +84,6 @@ export const OrganizationInvitations = () => {
     return true;
   };
 
-  const { resendInvitation } = useResendInvitation();
-
-  const [activeView, setActiveView] =
-    useState<string | 'list' | 'invite'>('list');
-
-  const [activeMember, setActiveMember] = useState<Member | null>(null);
-  const [activeAction, setActiveAction] = useState<Action | null>(null);
-
   const methods = {
     action: (action: Action, orgMember: Member) => {
       setActiveView('action');
@@ -117,14 +104,9 @@ export const OrganizationInvitations = () => {
     methods,
   );
 
-  const handleTableChange = (type: string, queryParams: InitialQueryParams) => {
-    getHandlerTableChange(organizationInvitationsUIProps.setQueryParams)(
-      type,
-      queryParams,
-    );
-  };
-
-  const InvitationsTable = withQuery(Table);
+  const InvitationsTable = withQuery({
+    pagination: true,
+  })(Table);
 
   return (
     <section>
@@ -148,8 +130,8 @@ export const OrganizationInvitations = () => {
             verticalAlign="middle"
             fixedRowHeight="74px"
             total={sentInvitations?.length}
-            properties={organizationInvitationsUIProps.queryParams}
-            onTableChange={handleTableChange}
+            queryParams={organizationInvitationsUIProps.queryParams}
+            setQueryParams={organizationInvitationsUIProps.setQueryParams}
           />
           {activeView === 'action' && (
             <OrganizationDialog

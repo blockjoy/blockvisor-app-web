@@ -15,6 +15,7 @@ import { PasswordField } from '../PasswordField/PasswordField';
 import { usePasswordStrength } from '@modules/auth/hooks/usePasswordStrength';
 import { userClient } from '@modules/grpc';
 import { HUBSPOT_FORMS, useHubSpotForm } from '@shared/index';
+import { styles } from './RegisterForm.styles';
 
 type RegisterForm = {
   firstName: string;
@@ -48,12 +49,12 @@ export function RegisterForm() {
 
   const { setPassword } = usePasswordStrength();
 
-  const { submitHubSpotForm } = useHubSpotForm();
+  const { submitForm } = useHubSpotForm();
 
   const onSubmit = handleSubmit(
     async ({ email, password, firstName, lastName }) => {
       setIsLoading(true);
-      const response: any = await userClient.createUser(
+      const response = await userClient.createUser(
         {
           firstName,
           lastName,
@@ -69,9 +70,8 @@ export function RegisterForm() {
         return;
       }
 
-      submitHubSpotForm({
-        formId: HUBSPOT_FORMS.register.formId,
-        portalId: HUBSPOT_FORMS.register.portalId,
+      submitForm({
+        formId: HUBSPOT_FORMS.register,
         formData: {
           email,
           firstname: firstName,
@@ -170,6 +170,16 @@ export function RegisterForm() {
           >
             Create Account
           </Button>
+          <div css={styles.marketing}>
+            By creating an account, you agree to BlockJoy's{' '}
+            <a href="https://www.blockjoy.com/terms-of-use">
+              Terms & Conditions
+            </a>
+            {` `}
+            and{` `}
+            <a href="https://www.blockjoy.com/privacy-policy">Privacy Policy</a>
+            .
+          </div>
           {registerError && (
             <p css={[typo.smaller, colors.warning, spacing.top.medium]}>
               {registerError}

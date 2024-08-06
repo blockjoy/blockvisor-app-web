@@ -3,17 +3,44 @@ import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
-  title: css`
+  title: (theme: ITheme) => css`
     display: flex;
     align-items: center;
     gap: 10px;
     color: rgba(255, 255, 255, 0.3);
     font-size: 16px;
+
+    @media ${breakpoints.toXlrg} {
+      display: flex;
+      flex-flow: row nowrap;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: transparent;
+      border: 0;
+      cursor: pointer;
+      padding: 0 4px;
+      height: 30px;
+      width: 30px;
+      border-radius: 6px;
+
+      path {
+        fill: ${theme.colorLabel};
+      }
+
+      &:hover,
+      &:active,
+      &:focus,
+      &.active {
+        background: ${theme.colorActive};
+        & path {
+          fill: ${theme.colorText};
+        }
+      }
+    }
   `,
   filterIcon: css`
     position: relative;
-    height: 14px;
-    width: 14px;
   `,
   badge: (theme: ITheme) => css`
     position: absolute;
@@ -29,5 +56,10 @@ export const styles = {
     border-radius: 50%;
     color: ${theme.colorPrimaryText};
     background: ${theme.colorPrimary};
+  `,
+  label: css`
+    @media ${breakpoints.toXlrg} {
+      display: none;
+    }
   `,
 };

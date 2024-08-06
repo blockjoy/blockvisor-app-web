@@ -1,3 +1,4 @@
+import { Dispatch, FunctionComponent, SetStateAction } from 'react';
 import { AdminHeader } from '@modules/admin/components/AdminHeader/AdminHeader';
 import { AdminListHeaderColumnPicker } from './AdminListHeaderColumnPicker/AdminListHeaderColumnPicker';
 import { styles } from './AdminListHeader.styles';
@@ -9,7 +10,14 @@ import IconFilterClear from '@public/assets/icons/common/FilterClear.svg';
 type Props = {
   name: string;
   columns: AdminListColumn[];
-  additionalHeaderButtons?: React.ReactNode;
+  additionalHeaderButtons?: FunctionComponent<{
+    selectedIds: string[];
+    list: any[];
+    setList: Dispatch<SetStateAction<any[]>>;
+  }>[];
+  selectedIds: string[];
+  list: any[];
+  setList: Dispatch<SetStateAction<any[]>>;
   onColumnsChanged: (nextColumns: AdminListColumn[]) => void;
   onFiltersChanged: (nextFilters: AdminListColumn[]) => void;
   onSearch: (search: string) => void;
@@ -19,6 +27,9 @@ export const AdminListHeader = ({
   name,
   columns,
   additionalHeaderButtons,
+  selectedIds,
+  list,
+  setList,
   onColumnsChanged,
   onFiltersChanged,
   onSearch,
@@ -67,7 +78,14 @@ export const AdminListHeader = ({
             )}
           </AdminHeaderButton>
         )}
-        {Boolean(additionalHeaderButtons) && additionalHeaderButtons}
+        {Boolean(additionalHeaderButtons) &&
+          additionalHeaderButtons?.map((HeaderButton) => (
+            <HeaderButton
+              list={list}
+              setList={setList}
+              selectedIds={selectedIds}
+            />
+          ))}
       </div>
     </AdminHeader>
   );

@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import { useRecoilValue } from 'recoil';
 import { usePathname } from 'next/navigation';
 import { layoutSelectors } from '@modules/layout';
@@ -12,7 +13,8 @@ interface Props {
   title: string;
   childTitle?: string;
   canCopyChild?: boolean;
-  icon?: React.ReactNode;
+  icon?: ReactNode;
+  label?: ReactNode;
   onTitleClick?: VoidFunction;
   isLoading?: boolean;
   isAdmin?: boolean;
@@ -24,6 +26,7 @@ export const PageTitle = ({
   childTitle,
   canCopyChild,
   icon,
+  label,
   onTitleClick,
   isLoading,
   isAdmin,
@@ -63,6 +66,7 @@ export const PageTitle = ({
           ) : (
             <Title />
           )}
+          {label ? label : null}
           {isAdmin ? (
             <>
               <span css={styles.separator}>/</span>

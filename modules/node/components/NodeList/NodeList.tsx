@@ -1,107 +1,146 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import isEqual from 'lodash/isEqual';
+import { css, Global } from '@emotion/react';
 import {
   TableSkeleton,
   EmptyColumn,
   PageTitle,
+  PageTitleLabel,
   Table,
   TableGrid,
 } from '@shared/components';
-import { NodeFilters } from './NodeFilters/NodeFilters';
-import { styles } from './nodeList.styles';
-import { NodeListHeader } from './NodeListHeader/NodeListHeader';
+import { debounce, ROUTES, useViewport } from '@shared/index';
+import {} from './NodeListHeader/NodeListHeader';
 import {
+  NodeFilters,
+  NodeListHeader,
   resultsStatus,
   mapNodeListToGrid,
   mapNodeListToRows,
   useNodeList,
-  useNodeUIContext,
+  nodeAtoms,
+  nodeSelectors,
+  useNodeSort,
 } from '@modules/node';
+import { layoutSelectors } from '@modules/layout';
 import { wrapper } from 'styles/wrapper.styles';
 import { spacing } from 'styles/utils.spacing.styles';
+import { styles } from './nodeList.styles';
+import { breakpoints } from 'styles/variables.styles';
 import IconNode from '@public/assets/icons/app/Node.svg';
-import { ROUTES } from '@shared/index';
-import { layoutSelectors } from '@modules/layout';
 
 export const NodeList = () => {
   const router = useRouter();
 
-  const nodeUIContext = useNodeUIContext();
-  const nodeUIProps = useMemo(() => {
-    return {
-      queryParams: nodeUIContext.queryParams,
-      setQueryParams: nodeUIContext.setQueryParams,
-    };
-  }, [nodeUIContext]);
+  const queryParams = useRecoilValue(nodeSelectors.queryParams);
+  const setPagination = useSetRecoilState(nodeAtoms.nodeListPagination);
 
-  const { loadNodes, nodeList, nodeCount, isLoading } = useNodeList();
+  const nodeListWrapperRef = useRef<HTMLDivElement>(null);
+  const currentQueryParams = useRef(queryParams);
+
+  const { loadNodes, nodeList, nodeCount, nodeListLoadingState } =
+    useNodeList();
+  const { updateSorting } = useNodeSort();
+  const { isXlrg } = useViewport();
+
+  const activeView = useRecoilValue(layoutSelectors.activeNodeView(isXlrg));
+
+  const [isOverflow, setIsOverflow] = useState(false);
+
+  const loadNodesDebounced = debounce(loadNodes, 70);
+
+  useEffect(() => {
+    if (!isEqual(currentQueryParams.current, queryParams)) {
+      currentQueryParams.current = queryParams;
+      loadNodesDebounced();
+    }
+  }, [queryParams]);
+
+  const handleResize = () => {
+    if (nodeListWrapperRef.current) {
+      const height = nodeListWrapperRef.current.offsetHeight;
+      setIsOverflow(height > window.innerHeight - 72);
+    }
+  };
+
+  useLayoutEffect(() => {
+    const observer = new ResizeObserver(handleResize);
+
+    if (nodeListWrapperRef.current) {
+      observer.observe(nodeListWrapperRef.current);
+    }
+
+    handleResize();
+
+    return () => {
+      if (nodeListWrapperRef.current) {
+        observer.unobserve(nodeListWrapperRef.current);
+      }
+    };
+  }, []);
 
   const handleNodeClicked = (nodeId: string) => {
-    nodeUIProps.setQueryParams({
-      ...nodeUIProps.queryParams,
-      pagination: {
-        ...nodeUIProps.queryParams.pagination,
-      },
-    });
-
     router.push(ROUTES.NODE(nodeId));
   };
 
-  const hasMoreNodes =
-    nodeCount !== nodeList?.length &&
-    nodeUIContext.queryParams.pagination.currentPage *
-      nodeUIContext.queryParams.pagination.itemsPerPage +
-      nodeUIContext.queryParams.pagination.itemsPerPage <
-      nodeCount;
-
-  const view = useRecoilValue(layoutSelectors.nodeView);
-
-  const currentQueryParams = useRef(nodeUIProps.queryParams);
-
-  useEffect(() => {
-    if (!isEqual(currentQueryParams.current, nodeUIProps.queryParams)) {
-      loadNodes(nodeUIProps.queryParams, !nodeList?.length);
-      currentQueryParams.current = nodeUIProps.queryParams;
-    }
-  }, [nodeUIProps.queryParams]);
-
-  const updateQueryParams = () => {
-    const newCurrentPage = nodeUIProps.queryParams.pagination.currentPage + 1;
-    const newQueryParams = {
-      ...nodeUIProps.queryParams,
-
-      pagination: {
-        ...nodeUIProps.queryParams.pagination,
-        currentPage: newCurrentPage,
-        scrollPosition: window.scrollY,
-      },
-    };
-
-    nodeUIProps.setQueryParams(newQueryParams);
+  const loadMore = () => {
+    setPagination((oldPagi) => ({
+      ...oldPagi,
+      currentPage: oldPagi.currentPage + 1,
+    }));
   };
 
   const cells = mapNodeListToGrid(nodeList!, handleNodeClicked);
-
   const { headers, rows } = mapNodeListToRows(nodeList);
 
   const { isFiltered, isEmpty } = resultsStatus(
     nodeList?.length!,
-    nodeUIProps.queryParams.filter,
+    queryParams.filter,
   );
+
+  const hasMore =
+    nodeCount !== nodeList?.length &&
+    queryParams.pagination?.currentPage * queryParams.pagination?.itemsPerPage +
+      queryParams.pagination?.itemsPerPage <
+      nodeCount;
 
   return (
     <>
-      <PageTitle title="Nodes" icon={<IconNode />} />
+      {!isOverflow ? (
+        <Global
+          styles={css`
+            body {
+              @media ${breakpoints.fromXLrg} {
+                overflow: hidden;
+              }
+            }
+          `}
+        />
+      ) : null}
+
+      <PageTitle
+        title="Nodes"
+        icon={<IconNode />}
+        label={
+          <PageTitleLabel
+            isLoading={nodeListLoadingState !== 'finished'}
+            isSuccess={nodeCount > 0}
+            label={`${nodeCount}`}
+          />
+        }
+      />
+
       <div css={[styles.wrapper, wrapper.main]}>
         <NodeFilters />
-        <div css={styles.nodeListWrapper}>
-          <NodeListHeader />
-          {isLoading === 'initializing' ? (
+        <div css={styles.nodeListWrapper} ref={nodeListWrapperRef}>
+          {!isXlrg && <NodeListHeader />}
+
+          {nodeListLoadingState === 'initializing' ? (
             <TableSkeleton />
-          ) : !Boolean(nodeList?.length) && isLoading === 'finished' ? (
+          ) : !Boolean(nodeList?.length) ? (
             <EmptyColumn
               title="No Nodes."
               description={
@@ -122,24 +161,26 @@ export const NodeList = () => {
           ) : (
             <InfiniteScroll
               dataLength={nodeList?.length!}
-              next={updateQueryParams}
-              hasMore={hasMoreNodes}
+              next={loadMore}
+              hasMore={hasMore}
               style={{ overflow: 'hidden' }}
               scrollThreshold={0.75}
               loader={''}
             >
-              {view === 'table' ? (
+              {activeView === 'table' ? (
                 <Table
-                  isLoading={isLoading}
+                  isLoading={nodeListLoadingState}
                   headers={headers}
                   preload={0}
                   rows={rows}
                   fixedRowHeight="120px"
+                  queryParams={queryParams}
+                  handleSort={updateSorting}
                   onRowClick={handleNodeClicked}
                 />
               ) : (
                 <div css={styles.gridWrapper}>
-                  <TableGrid isLoading={isLoading} cells={cells!} />
+                  <TableGrid isLoading={nodeListLoadingState} cells={cells!} />
                 </div>
               )}
             </InfiniteScroll>

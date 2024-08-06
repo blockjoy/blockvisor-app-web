@@ -21,16 +21,19 @@ const itemsPerPage = 48;
 export const HostViewNodes = () => {
   const router = useRouter();
   const { id } = router.query;
-  const { nodeListByHost, isLoading, listNodesByHost, nodeListByHostCount } =
-    useNodeList();
+  const {
+    nodeListByHost,
+    nodeListLoadingState,
+    listNodesByHost,
+    nodeListByHostCount,
+  } = useNodeList();
   const { isLoading: isLoadingActiveHost } = useHostView();
 
   const defaultOrganization = useRecoilValue(
     organizationSelectors.defaultOrganization,
   );
-  const canAdminList = useRecoilValue(
-    authSelectors.hasPermission('node-admin-list'),
-  );
+
+  const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
 
   const [pageIndex, setPageIndex] = useState(0);
 
@@ -52,7 +55,7 @@ export const HostViewNodes = () => {
 
   return (
     <>
-      {canAdminList && (
+      {!isSuperUser && (
         <Alert isSuccess>
           Showing nodes for{' '}
           <NextLink href={ROUTES.ORGANIZATION(defaultOrganization?.id!)}>
@@ -62,7 +65,8 @@ export const HostViewNodes = () => {
         </Alert>
       )}
 
-      {isLoading !== 'finished' && isLoadingActiveHost !== 'finished' ? (
+      {nodeListLoadingState !== 'finished' &&
+      isLoadingActiveHost !== 'finished' ? (
         <TableSkeleton />
       ) : !Boolean(nodeListByHost?.length) ? (
         <EmptyColumn
@@ -89,7 +93,7 @@ export const HostViewNodes = () => {
         >
           <Table
             hideHeader
-            isLoading={isLoading}
+            isLoading={nodeListLoadingState}
             headers={headers}
             rows={rows}
             fixedRowHeight="120px"

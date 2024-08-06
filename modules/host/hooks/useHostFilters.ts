@@ -1,15 +1,21 @@
 import { useEffect, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import {
+  useRecoilState,
+  useRecoilValue,
+  useResetRecoilState,
+  useSetRecoilState,
+} from 'recoil';
 import isEqual from 'lodash/isEqual';
 import { UIHostFilterCriteria } from '@modules/grpc/clients/hostClient';
 import {
   HOST_FILTERS_CUSTOM_VALUES,
   HOST_FILTERS_DEFAULT,
   HOST_FILTERS_STEPS,
+  HOST_PAGINATION_DEFAULT,
 } from '@shared/constants/lookups';
 import { formatters } from '@shared/index';
-import { hostAtoms, hostSelectors, HostUIProps } from '@modules/host';
-import { useSettings } from '@modules/settings';
+import { hostAtoms, hostSelectors } from '@modules/host';
+import { settingsAtoms, useSettings } from '@modules/settings';
 
 type UseHostFiltersHook = {
   isDirty: boolean;
@@ -17,25 +23,25 @@ type UseHostFiltersHook = {
   tempSearchQuery: string;
   tempFiltersTotal: number;
   changeTempFilters: (type: string, value: string) => void;
-  updateFilters: VoidFunction;
-  resetFilters: VoidFunction;
+  updateFilters: () => Promise<void>;
+  resetFilters: () => Promise<void>;
 };
 
-export const useHostFilters = (
-  hostUIProps: HostUIProps,
-): UseHostFiltersHook => {
+export const useHostFilters = (): UseHostFiltersHook => {
   const filters = useRecoilValue(hostSelectors.filters);
-
+  const isFiltersEmpty = useRecoilValue(hostSelectors.isFiltersEmpty);
+  const setPagination = useSetRecoilState(hostAtoms.hostListPagination);
+  const resetPagination = useResetRecoilState(hostAtoms.hostListPagination);
+  const setAppLoadingState = useSetRecoilState(settingsAtoms.appLoadingState);
   const [tempFilters, setTempFilters] = useState<UIHostFilterCriteria>(filters);
   const [tempFiltersTotal, setTempFiltersTotal] = useRecoilState(
     hostAtoms.filtersTempTotal,
   );
-
   const filtersStatusAll = useRecoilValue(
     hostSelectors.filtersStatusAll(tempFilters.hostStatus!),
   );
 
-  const { updateSettings, removeSettings } = useSettings();
+  const { updateSettings } = useSettings();
 
   useEffect(() => {
     const isDirtyMemory = !isEqual(
@@ -61,36 +67,27 @@ export const useHostFilters = (
     setTempFiltersTotal(total);
   }, [tempFilters]);
 
-  const applyFilter = (values: UIHostFilterCriteria = HOST_FILTERS_DEFAULT) => {
-    const newQueryParams = {
-      ...hostUIProps.queryParams,
-      filter: {
-        ...hostUIProps.queryParams.filter,
-        ...values,
-      },
-    };
-
-    if (!isEqual(newQueryParams, hostUIProps.queryParams)) {
-      newQueryParams.pagination.currentPage = 0;
-      hostUIProps.setQueryParams(newQueryParams);
-    }
-  };
-
   const updateFilters = async () => {
-    await updateSettings('hosts', { filters: tempFilters });
+    setAppLoadingState('loading');
+    await updateSettings('hosts', { filters: tempFilters }, resetPagination);
 
-    applyFilter(tempFilters);
+    if (!isEqual(tempFilters, filters))
+      setPagination((oldPagi) => ({
+        ...oldPagi,
+        currentPage: 0,
+      }));
   };
 
   const resetFilters = async () => {
-    await removeSettings('hosts');
+    if (!isFiltersEmpty) setAppLoadingState('loading');
+    await updateSettings('hosts', { filters: undefined }, resetPagination);
 
     setTempFilters((currentTempFilters) => ({
       ...currentTempFilters,
       ...HOST_FILTERS_DEFAULT,
     }));
 
-    applyFilter();
+    setPagination(HOST_PAGINATION_DEFAULT);
   };
 
   const changeTempFilters = (key: string, value: string) => {

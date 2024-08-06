@@ -134,7 +134,9 @@ export const AdminListTable = ({
           <thead>
             <tr>
               {Boolean(onIdSelected) && (
-                <th>
+                <th
+                  style={{ width: '40px', minWidth: '40px', maxWidth: '40px' }}
+                >
                   <button
                     type="button"
                     css={styles.checkboxButton}
@@ -149,7 +151,10 @@ export const AdminListTable = ({
                   >
                     <Checkbox
                       name="check-all"
-                      checked={selectedIds?.length === list.length}
+                      checked={
+                        selectedIds?.length! > 0 &&
+                        selectedIds?.length === list.length
+                      }
                     />
                   </button>
                 </th>
@@ -183,7 +188,7 @@ export const AdminListTable = ({
               </tr>
             ) : (
               list.map((item) => (
-                <tr key={item['id']} onClick={() => gotoDetails(item.id)}>
+                <tr key={item['id']}>
                   {Boolean(onIdSelected) && (
                     <td>
                       <button
@@ -206,6 +211,9 @@ export const AdminListTable = ({
                     <td
                       key={column.name}
                       css={styles.tableCellWidth(column.width!)}
+                      onClick={() =>
+                        column.isRowClickDisabled ? null : gotoDetails(item.id)
+                      }
                     >
                       {column.canCopy ? (
                         <div css={styles.copyTd}>
