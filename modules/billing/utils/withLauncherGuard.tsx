@@ -99,7 +99,7 @@ export const withLauncherGuard = (Component: any) => {
           resetFulfilReqs={resetFulfilReqs}
           onCreateClick={handleCreateClicked}
           hasPermissionsToCreate={
-            hasPermissionsToCreate && (isAdmin || isOwner)
+            (hasPermissionsToCreate && (isAdmin || isOwner)) || billingExempt
           }
           {...additionalProps}
         />
