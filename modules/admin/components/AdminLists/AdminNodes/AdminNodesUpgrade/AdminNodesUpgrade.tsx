@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import { styles } from './AdminNodesUpgrade.styles';
 import { useClickOutside } from '@shared/hooks/useClickOutside';
 import { AdminHeaderButton } from '@modules/admin/components/AdminHeader/AdminHeaderButton/AdminHeaderButton';
@@ -16,11 +16,12 @@ import { BlockchainVersion } from '@modules/grpc/library/blockjoy/v1/blockchain'
 import IconUpgrade from '@public/assets/icons/app/NodeUpgrade.svg';
 
 type Props = {
-  isDisabled?: boolean;
   selectedIds: string[];
+  list: any[];
+  setList: Dispatch<SetStateAction<any[]>>;
 };
 
-export const AdminNodesUpgrade = ({ isDisabled, selectedIds }: Props) => {
+export const AdminNodesUpgrade = ({ selectedIds, list, setList }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const [selectedVersion, setSelectedVersion] = useState<BlockchainVersion>();
@@ -34,9 +35,20 @@ export const AdminNodesUpgrade = ({ isDisabled, selectedIds }: Props) => {
   const handleClickOutside = () => setIsOpen(false);
 
   const handleUpgrade = async () => {
+    const listCopy = [...list];
+
     try {
-      toast.success('Upgrade Command Sent');
       await nodeClient.upgradeNode(selectedIds, selectedVersion?.version!);
+
+      for (const id of selectedIds) {
+        const foundNode = list.find((n) => n.id === id);
+
+        foundNode.version = selectedVersion?.version;
+      }
+
+      setList(listCopy);
+
+      toast.success('Upgrade Command Sent');
     } catch (err) {
       toast.error(`Error Upgrading`);
     } finally {
@@ -64,7 +76,7 @@ export const AdminNodesUpgrade = ({ isDisabled, selectedIds }: Props) => {
   return (
     <div css={styles.wrapper} ref={dropdownRef}>
       <AdminHeaderButton
-        isDisabled={isDisabled}
+        isDisabled={!selectedIds.length}
         icon={<IconUpgrade />}
         onClick={() => setIsOpen(!isOpen)}
         tooltip="Upgrade"

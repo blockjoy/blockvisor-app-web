@@ -1,28 +1,22 @@
 import { Dispatch, SetStateAction, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useSearchParams } from 'next/navigation';
+import { toast } from 'react-toastify';
 import { styles } from './AdminHostsTag.styles';
 import { useClickOutside } from '@shared/hooks/useClickOutside';
 import { AdminHeaderButton } from '@modules/admin/components/AdminHeader/AdminHeaderButton/AdminHeaderButton';
 import { Button, DropdownMenu, TagList } from '@shared/components';
 import { AdminDropdownHeader } from '@modules/admin/components';
-import { toast } from 'react-toastify';
 import { hostClient } from '@modules/grpc';
 import IconTag from '@public/assets/icons/common/Tag.svg';
 
 type Props = {
-  isDisabled?: boolean;
   selectedIds: string[];
-  tagsAdded: AdminTags[];
-  setTagsAdded: Dispatch<SetStateAction<AdminTags[]>>;
+  list: any[];
+  setList: Dispatch<SetStateAction<any[]>>;
 };
 
-export const AdminHostsTag = ({
-  isDisabled,
-  selectedIds,
-  tagsAdded,
-  setTagsAdded,
-}: Props) => {
+export const AdminHostsTag = ({ selectedIds, list, setList }: Props) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const name = searchParams.get('name');
@@ -52,17 +46,9 @@ export const AdminHostsTag = ({
 
     const requests = [];
 
-    const tagsAddedCopy = [...tagsAdded];
+    const listCopy = [...list];
 
     for (let hostId of selectedIds) {
-      const foundUpdatedTag = tagsAddedCopy.find((t) => t.id === hostId);
-
-      if (foundUpdatedTag) {
-        foundUpdatedTag.tags = [...foundUpdatedTag.tags, ...tags];
-      } else {
-        tagsAddedCopy.push({ id: hostId, tags });
-      }
-
       for (let tag of tags) {
         requests.push(
           (async () => {
@@ -73,6 +59,12 @@ export const AdminHostsTag = ({
                   addTag: { name: tag },
                 },
               });
+
+              const foundHost = listCopy.find((h) => h.id === hostId);
+
+              if (foundHost) {
+                foundHost.tags.tags.push({ name: tag });
+              }
             } catch (err) {
               toast.error(`Error Updating Host: ${hostId}`);
             }
@@ -83,7 +75,8 @@ export const AdminHostsTag = ({
 
     await Promise.all(requests);
 
-    setTagsAdded(tagsAddedCopy);
+    setList(listCopy);
+
     toast.success('Tags Added');
     setIsSaving(false);
     setTags([]);
@@ -95,7 +88,7 @@ export const AdminHostsTag = ({
   return (
     <div css={styles.wrapper} ref={dropdownRef}>
       <AdminHeaderButton
-        isDisabled={isDisabled}
+        isDisabled={!selectedIds.length}
         icon={<IconTag />}
         onClick={() => setIsOpen(!isOpen)}
         tooltip="Add Tags"

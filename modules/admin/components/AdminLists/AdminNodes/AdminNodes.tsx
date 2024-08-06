@@ -262,18 +262,7 @@ export const AdminNodes = () => {
       selectedIds={selectedIds}
       onIdSelected={handleIdSelected}
       onIdAllSelected={handleIdAllSelected}
-      additionalHeaderButtons={
-        <>
-          <AdminNodesUpgrade
-            isDisabled={!selectedIds.length || selectedBlockchains?.length > 1}
-            selectedIds={selectedIds}
-          />
-          <AdminNodesOrgAssign
-            isDisabled={!selectedIds.length || selectedBlockchains?.length > 1}
-            selectedIds={selectedIds}
-          />
-        </>
-      }
+      additionalHeaderButtons={[AdminNodesUpgrade, AdminNodesOrgAssign]}
     />
   );
 };
