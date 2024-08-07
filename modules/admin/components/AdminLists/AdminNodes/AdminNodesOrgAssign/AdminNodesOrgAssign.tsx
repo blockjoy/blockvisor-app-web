@@ -14,11 +14,12 @@ import { nodeClient, organizationClient } from '@modules/grpc';
 import { toast } from 'react-toastify';
 import { Org } from '@modules/grpc/library/blockjoy/v1/org';
 import IconOrg from '@public/assets/icons/app/Organization.svg';
+import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 
 type Props = {
   selectedIds: string[];
-  list: any[];
-  setList: Dispatch<SetStateAction<any[]>>;
+  list: Node[];
+  setList: Dispatch<SetStateAction<Node[]>>;
 };
 
 export const AdminNodesOrgAssign = ({ selectedIds, list, setList }: Props) => {
@@ -47,8 +48,9 @@ export const AdminNodesOrgAssign = ({ selectedIds, list, setList }: Props) => {
 
       for (let id of selectedIds) {
         const foundNode = listCopy.find((n) => n.id === id);
-        foundNode.orgName = selectedOrg?.name;
-        foundNode.orgId = selectedOrg?.id;
+        if (!foundNode) return;
+        foundNode.orgName = selectedOrg?.name!;
+        foundNode.orgId = selectedOrg?.id!;
       }
 
       setList(listCopy);
