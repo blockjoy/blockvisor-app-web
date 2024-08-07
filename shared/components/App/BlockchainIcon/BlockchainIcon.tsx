@@ -250,6 +250,7 @@ export const BlockchainIcon = ({
       Component = IconStarknet;
       break;
     case 'subsquid':
+    case 'sqd':
       Component = IconSubsquid;
       break;
     case 'tezos':
