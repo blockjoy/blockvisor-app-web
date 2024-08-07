@@ -9,7 +9,7 @@ import { capitalize } from 'utils/capitalize';
 import { AdminDetail } from '../AdminDetail/AdminDetail';
 import { AdminBlockchainVersionAdd } from './AdminBlockchainVersionAdd/AdminBlockchainVersionAdd';
 import { spacing } from 'styles/utils.spacing.styles';
-import { sortVersions } from '@modules/node';
+import { convertNodeTypeToName, sortVersions } from '@modules/node';
 import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 import { useState } from 'react';
@@ -55,6 +55,35 @@ export const AdminBlockchain = () => {
   const getItem = async () =>
     await blockchainClient.getBlockchain(id as string);
 
+  const renderVersions = (item: Blockchain) => {
+    const versions: any[] = [];
+
+    item.nodeTypes.forEach((nodeType) => {
+      versions.push({
+        id: `blockchainVersion${nodeType.nodeType}`,
+        label: `${capitalize(
+          convertNodeTypeToName(nodeType.nodeType),
+        )} Versions`,
+        data: (
+          <ul css={nodeType.versions.length >= 10 && styles.versionList}>
+            {sortVersions(nodeType.versions).map((version) => (
+              <li key={version.id} css={spacing.bottom.small}>
+                {version.version}
+                {version.description && (
+                  <span css={styles.versionDescription}>
+                    {version.description}
+                  </span>
+                )}
+              </li>
+            ))}
+          </ul>
+        ),
+      });
+    });
+
+    return versions;
+  };
+
   const customItems = (item: Blockchain): AdminDetailProperty[] => [
     {
       id: 'name',
@@ -79,24 +108,7 @@ export const AdminBlockchain = () => {
           ?.toLowerCase(),
       ),
     },
-    {
-      id: 'versions',
-      label: 'Versions',
-      data: (
-        <ul css={item.nodeTypes[0].versions.length >= 10 && styles.versionList}>
-          {sortVersions(item.nodeTypes[0].versions).map((version) => (
-            <li key={version.id} css={spacing.bottom.small}>
-              {version.version}
-              {version.description && (
-                <span css={styles.versionDescription}>
-                  {version.description}
-                </span>
-              )}
-            </li>
-          ))}
-        </ul>
-      ),
-    },
+    ...[...renderVersions(item)],
   ];
 
   return (
