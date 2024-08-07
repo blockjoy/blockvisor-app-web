@@ -6,12 +6,9 @@ import {
   Blockchain,
   BlockchainVersion,
 } from '@modules/grpc/library/blockjoy/v1/blockchain';
-import { Region } from '@modules/grpc/library/blockjoy/v1/host';
 import {
-  nodeAtoms,
   blockchainAtoms,
   nodeLauncherAtoms,
-  BlockchainSimpleWRegion,
   sortNetworks,
   sortVersions,
 } from '@modules/node';
@@ -138,26 +135,6 @@ const selectedBlockchain = selectorFamily<Blockchain | null, string>({
     },
 });
 
-const selectedRegionByHost = selectorFamily<Region | null, string | undefined>({
-  key: 'nodeLauncher.region.byHost',
-  get:
-    (regionName?: string) =>
-    ({ get }) => {
-      const allRegions = get(nodeAtoms.allRegions);
-      const nodeLauncherState = get(nodeLauncherAtoms.nodeLauncher);
-      const activeBlockchainId = nodeLauncherState.blockchainId;
-
-      return (
-        allRegions
-          ?.find(
-            (blockchain: BlockchainSimpleWRegion) =>
-              blockchain.blockchainId === activeBlockchainId,
-          )
-          ?.regions.find((region: Region) => region.name === regionName) ?? null
-      );
-    },
-});
-
 const nodeLauncherInfo = selector<NodeLauncherBasicInfo>({
   key: 'nodeLauncher.info',
   get: ({ get }) => {
@@ -200,7 +177,6 @@ export const nodeLauncherSelectors = {
   totalNodesToLaunch,
 
   selectedBlockchain,
-  selectedRegionByHost,
 
   nodeLauncherInfo,
 };

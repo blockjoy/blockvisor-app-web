@@ -24,24 +24,20 @@ export const useGetBlockchains = (): UseGetBlockchainsHook => {
   const fetcher = async () =>
     await blockchainClient.listBlockchains(defaultOrganization?.id!);
 
-  useSWR(
-    defaultOrganization?.id ? `blockchains_${defaultOrganization.id}` : null,
-    fetcher,
-    {
-      revalidateOnMount: true,
-      revalidateOnFocus: false,
+  useSWR(defaultOrganization?.id ? `blockchains` : null, fetcher, {
+    revalidateOnMount: true,
+    revalidateOnFocus: false,
 
-      onSuccess: (data) => {
-        setBlockchains(data.blockchains);
-        setBlockchainsLoadingState('finished');
-      },
-      onError: (error) => {
-        console.error('Failed to fetch Blockchains', error);
-        setBlockchains([]);
-        setBlockchainsLoadingState('finished');
-      },
+    onSuccess: (data) => {
+      setBlockchains(data.blockchains);
+      setBlockchainsLoadingState('finished');
     },
-  );
+    onError: (error) => {
+      console.log('Failed to fetch Blockchains', error);
+      setBlockchains([]);
+      setBlockchainsLoadingState('finished');
+    },
+  });
 
   return {
     blockchains,
