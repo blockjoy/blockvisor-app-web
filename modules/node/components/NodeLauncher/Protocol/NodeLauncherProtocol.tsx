@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { NodeType } from '@modules/grpc/library/blockjoy/common/v1/node';
 import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
@@ -18,7 +18,6 @@ import {
   nodeLauncherSelectors,
 } from '@modules/node';
 import { styles } from './NodeLauncherProtocol.styles';
-import { authSelectors } from '@modules/auth';
 
 type NodeLauncherProtocolProps = {
   onProtocolSelected: (blockchainId: string, nodeTypeId: NodeType) => void;
@@ -30,7 +29,6 @@ export const NodeLauncherProtocol = ({
   const nodeLauncher = useRecoilValue(nodeLauncherAtoms.nodeLauncher);
   const blockchains = useRecoilValue(blockchainAtoms.blockchains);
   const loadingState = useRecoilValue(blockchainAtoms.blockchainsLoadingState);
-  const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
 
   const [isFocused, setIsFocused] = useState(false);
   const handleFocus = useCallback((focus: boolean) => {

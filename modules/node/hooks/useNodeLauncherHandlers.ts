@@ -24,7 +24,6 @@ import {
   useNodeAdd,
   nodeLauncherAtoms,
   blockchainAtoms,
-  nodeLauncherSelectors,
   useGetRegions,
   sortNetworks,
   sortVersions,
@@ -83,9 +82,6 @@ export const useNodeLauncherHandlers = ({
   const resetNodeLauncherState = useResetRecoilState(
     nodeLauncherAtoms.nodeLauncher,
   );
-  const selectedBlockchain = useRecoilValue(
-    nodeLauncherSelectors.selectedBlockchain(nodeLauncherState.blockchainId),
-  );
   const setError = useSetRecoilState(nodeLauncherAtoms.error);
   const setIsLaunching = useSetRecoilState(nodeLauncherAtoms.isLaunching);
   const [selectedHosts, setSelectedHosts] = useRecoilState(
@@ -99,11 +95,6 @@ export const useNodeLauncherHandlers = ({
   );
   const [selectedRegion, setSelectedRegion] = useRecoilState(
     nodeLauncherAtoms.selectedRegion,
-  );
-  const selectedRegionByHost = useRecoilValue(
-    nodeLauncherSelectors.selectedRegionByHost(
-      selectedHosts?.length ? selectedHosts[0].host?.region : '',
-    ),
   );
   const resetSelectedNetwork = useResetRecoilState(
     nodeLauncherAtoms.selectedNetwork,
@@ -395,7 +386,7 @@ export const useNodeLauncherHandlers = ({
       version: selectedVersion?.version!,
       nodeType: nodeLauncherState.nodeType,
       network: selectedNetwork!,
-      region: selectedRegion?.name!,
+      region: selectedHosts?.[0].host?.region ?? selectedRegion?.name!,
     });
   }, [
     nodeLauncherState.blockchainId,
