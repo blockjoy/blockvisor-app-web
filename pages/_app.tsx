@@ -1,13 +1,24 @@
-import { Global } from '@emotion/react';
+import { NextPage } from 'next';
+import { AppProps } from 'next/app';
+import { ReactElement, ReactNode } from 'react';
 import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { RecoilRoot } from 'recoil';
-import { globalStyles } from 'styles/global.styles';
-import ThemeProvider from '@modules/theme/ThemeProvider';
+import { Global } from '@emotion/react';
 import { PrivateRoute } from '@modules/auth';
+import ThemeProvider from '@modules/theme/ThemeProvider';
+import 'react-toastify/dist/ReactToastify.css';
+import { globalStyles } from 'styles/global.styles';
 
-function MyApp({ Component, pageProps, router }: any) {
-  const getLayout = Component?.getLayout || ((page: any) => page);
+type NextPageWithLayout = NextPage & {
+  getLayout?: (page: ReactElement) => ReactNode;
+};
+
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout;
+};
+
+function MyApp({ Component, pageProps, router }: AppPropsWithLayout) {
+  const getLayout = Component?.getLayout || ((page: ReactNode) => page);
   return (
     <RecoilRoot>
       <Global styles={globalStyles} />
