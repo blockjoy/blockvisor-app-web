@@ -86,6 +86,10 @@ const IconKava = dynamic(
   () => import(`@public/assets/icons/blockchain/Kava.svg`),
 );
 
+const IconKaia = dynamic(
+  () => import(`@public/assets/icons/blockchain/Kaia.svg`),
+);
+
 const IconKlaytn = dynamic(
   () => import(`@public/assets/icons/blockchain/Klaytn.svg`),
 );
@@ -208,6 +212,9 @@ export const BlockchainIcon = ({
       break;
     case 'cosmos':
       Component = IconCosmos;
+      break;
+    case 'kaia':
+      Component = IconKaia;
       break;
     case 'kava':
       Component = IconKava;
