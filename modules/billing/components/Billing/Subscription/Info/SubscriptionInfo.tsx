@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { DetailsTable, Heading, TableSkeleton } from '@shared/components';
+import { DetailsTable, /*Heading,*/ TableSkeleton } from '@shared/components';
 import {
   billingAtoms,
   mapSubscriptionToDetails,
-  SubscriptionLifecycle,
+  // SubscriptionLifecycle,
 } from '@modules/billing';
-import { spacing } from 'styles/utils.spacing.styles';
+// import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './SubscriptionInfo.styles';
 import { containers } from 'styles/containers.styles';
 

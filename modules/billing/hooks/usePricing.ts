@@ -37,10 +37,9 @@ export const usePricing = (): UsePricingHook => {
 
       setPrice(response);
     } catch (error) {
-      console.error('Failed to fetch Price', error);
+      console.log('Failed to fetch Price', error);
       setPrice(null);
     } finally {
-      console.log('completed after return;');
       setPriceLoadingState('finished');
     }
   };

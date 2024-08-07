@@ -81,7 +81,7 @@ export const NodeLauncherSummary = ({
     Boolean(error) ||
     isLaunching ||
     isLoadingAllRegions !== 'finished' ||
-    !price ||
+    (!price && !billingExempt) ||
     !isNodeAllocationValid;
 
   const handleHostsChanged = (nodeLauncherHosts: NodeLauncherHost[] | null) => {
@@ -165,7 +165,7 @@ export const NodeLauncherSummary = ({
         )}
         <button
           onClick={onCreateNodeClicked}
-          disabled={isDisabled && !billingExempt}
+          disabled={isDisabled}
           css={[
             styles.createButton,
             isLaunching && !Boolean(error) && styles.createButtonLoading,

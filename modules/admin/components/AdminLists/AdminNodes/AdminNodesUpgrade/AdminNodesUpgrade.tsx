@@ -14,11 +14,12 @@ import { blockchainClient, nodeClient } from '@modules/grpc';
 import { toast } from 'react-toastify';
 import { BlockchainVersion } from '@modules/grpc/library/blockjoy/v1/blockchain';
 import IconUpgrade from '@public/assets/icons/app/NodeUpgrade.svg';
+import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 
 type Props = {
   selectedIds: string[];
-  list: any[];
-  setList: Dispatch<SetStateAction<any[]>>;
+  list: Node[];
+  setList: Dispatch<SetStateAction<Node[]>>;
 };
 
 export const AdminNodesUpgrade = ({ selectedIds, list, setList }: Props) => {
@@ -42,8 +43,8 @@ export const AdminNodesUpgrade = ({ selectedIds, list, setList }: Props) => {
 
       for (const id of selectedIds) {
         const foundNode = list.find((n) => n.id === id);
-
-        foundNode.version = selectedVersion?.version;
+        if (!foundNode) return;
+        foundNode.version = selectedVersion?.version!;
       }
 
       setList(listCopy);

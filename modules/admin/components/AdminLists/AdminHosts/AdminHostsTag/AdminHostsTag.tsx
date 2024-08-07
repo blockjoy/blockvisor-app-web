@@ -9,11 +9,12 @@ import { Button, DropdownMenu, TagList } from '@shared/components';
 import { AdminDropdownHeader } from '@modules/admin/components';
 import { hostClient } from '@modules/grpc';
 import IconTag from '@public/assets/icons/common/Tag.svg';
+import { Host } from '@modules/grpc/library/blockjoy/v1/host';
 
 type Props = {
   selectedIds: string[];
-  list: any[];
-  setList: Dispatch<SetStateAction<any[]>>;
+  list: Host[];
+  setList: Dispatch<SetStateAction<Host[]>>;
 };
 
 export const AdminHostsTag = ({ selectedIds, list, setList }: Props) => {
@@ -55,16 +56,12 @@ export const AdminHostsTag = ({ selectedIds, list, setList }: Props) => {
             try {
               await hostClient.updateHost({
                 id: hostId,
-                updateTags: {
-                  addTag: { name: tag },
-                },
+                updateTags: { addTag: { name: tag } },
               });
 
               const foundHost = listCopy.find((h) => h.id === hostId);
-
-              if (foundHost) {
-                foundHost.tags.tags.push({ name: tag });
-              }
+              if (!foundHost) return;
+              foundHost.tags?.tags.push({ name: tag });
             } catch (err) {
               toast.error(`Error Updating Host: ${hostId}`);
             }
