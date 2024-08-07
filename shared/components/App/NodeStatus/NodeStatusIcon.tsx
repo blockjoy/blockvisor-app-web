@@ -88,7 +88,7 @@ const getIcon = (statusName: string) => {
     return <IconSynced />;
   } else if (statusName?.match(/STOPPED/g)) {
     return <IconStopped />;
-  } else if (statusName?.match(/UNSPECIFIED|UNDEFINED|SYNCED|STOPPED/g)) {
+  } else if (statusName?.match(/UNSPECIFIED|UNDEFINED/g)) {
     return <IconUnspecified />;
   } else {
     switch (statusName) {
@@ -101,6 +101,7 @@ const getIcon = (statusName: string) => {
       case 'DELEGATING':
         return <IconDelegating />;
       case 'DELINQUENT':
+      case 'FAILED':
         return <IconDelinquent />;
       case 'DISABLED':
         return <IconDisabled />;
@@ -156,6 +157,7 @@ export const NodeStatusIcon = ({
   return (
     <Suspense fallback={null}>
       {statusName?.includes('PROVISIONING') ||
+      status === 0 ||
       status === NodeStatusEnum.NODE_STATUS_UPLOADING ||
       status === NodeStatusEnum.NODE_STATUS_DOWNLOADING ? (
         <NodeStatusSpinner
