@@ -49,7 +49,8 @@ export const useSubscription = (): ISubscriptionHook => {
       );
 
       console.log('%cGetSubscription', 'color: #bff589', data);
-      setSubscription(data);
+      if (!data.createdAt) setSubscription(null);
+      else setSubscription(data);
     } catch (error) {
       console.log('Failed to fetch Subscription', error);
       setSubscription(null);
