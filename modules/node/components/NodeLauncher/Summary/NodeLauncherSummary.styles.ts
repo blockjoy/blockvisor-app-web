@@ -18,18 +18,27 @@ const move = keyframes`
 `;
 
 export const styles = {
-  wrapper: (theme: ITheme) => css`
-    padding: 10px 0 10px 24px;
-    flex: 1 1 400px;
+  nodeLauncherPanel: (theme: ITheme) => css`
+    padding-bottom: 24px;
     border-left: 1px solid ${theme.colorBorder};
+
+    @media ${breakpoints.toXlrg} {
+      border-left: 0;
+      border-top: 1px solid ${theme.colorBorder};
+    }
+  `,
+  wrapper: (theme: ITheme) => css`
+    padding: 10px 0 24px 24px;
+    flex: 1 1 400px;
+
+    min-height: 100%;
+    height: 100%;
 
     @media ${breakpoints.toXlrg} {
       padding: 10px;
       max-width: 100%;
       width: 100%;
       min-width: 100%;
-      border-left: 0;
-      border-top: 1px solid ${theme.colorBorder};
     }
   `,
   buttons: css`

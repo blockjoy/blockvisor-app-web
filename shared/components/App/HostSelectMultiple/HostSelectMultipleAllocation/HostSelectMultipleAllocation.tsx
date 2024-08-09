@@ -7,7 +7,6 @@ import { Host } from '@modules/grpc/library/blockjoy/v1/host';
 import IconClose from '@public/assets/icons/common/Close.svg';
 
 type Props = {
-  isValid: boolean;
   onChange: (host: Host) => void;
   onHostAllocationChanged: (
     host: Host,
@@ -17,7 +16,6 @@ type Props = {
 };
 
 export const HostSelectMultipleAllocation = ({
-  isValid = true,
   onChange,
   onHostAllocationChanged,
 }: Props) => {

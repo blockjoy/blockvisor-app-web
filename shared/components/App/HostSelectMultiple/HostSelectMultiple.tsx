@@ -16,11 +16,10 @@ import { styles } from './HostSelectMultiple.styles';
 import { useDebounce } from '@shared/hooks/useDebounce';
 
 type Props = {
-  isValid: boolean;
   onChange: (hosts: NodeLauncherHost[] | null) => void;
 };
 
-export const HostSelectMultiple = ({ isValid, onChange }: Props) => {
+export const HostSelectMultiple = ({ onChange }: Props) => {
   const hostList = useRecoilValue(hostAtoms.allHosts);
   const selectedHosts = useRecoilValue(nodeLauncherAtoms.selectedHosts);
 
@@ -172,7 +171,6 @@ export const HostSelectMultiple = ({ isValid, onChange }: Props) => {
         <HostSelectMultipleAllocation
           onChange={handleChange}
           onHostAllocationChanged={handleAllocationChange}
-          isValid={isValid}
         />
       )}
     </>
