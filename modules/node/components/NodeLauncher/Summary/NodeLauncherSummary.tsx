@@ -19,6 +19,7 @@ import {
   nodeLauncherAtoms,
   nodeLauncherSelectors,
   NodeLauncherHost,
+  NodeLauncherPanel,
 } from '@modules/node';
 import { NodeLauncherSummaryDetails } from './NodeLauncherSummaryDetails';
 import { authSelectors } from '@modules/auth';
@@ -99,94 +100,93 @@ export const NodeLauncherSummary = ({
   };
 
   return (
-    <div css={styles.wrapper}>
-      <FormHeader>Launch</FormHeader>
-      {(isSuperUser || Boolean(allHosts?.length)) && (
-        <FormLabel>
-          <span>Host{isSuperUser ? 's' : ''}</span>
-          {selectedHosts !== null ? (
-            <a onClick={() => onHostsChanged(null)} css={styles.autoSelect}>
-              Auto select
-            </a>
-          ) : null}
-        </FormLabel>
-      )}
-      {isSuperUser ? (
-        <HostSelectMultiple
-          isValid={isNodeAllocationValid}
-          onChange={handleHostsChanged}
-        />
-      ) : (
-        Boolean(allHosts?.length) && (
-          <HostSelect
-            hosts={allHosts}
-            isLoading={isLoadingAllHosts !== 'finished'}
-            selectedHost={selectedHosts?.[0]?.host!}
-            onChange={handleHostChanged}
-          />
-        )
-      )}
-
-      {!selectedHosts && (
-        <>
-          <FormLabel>Region</FormLabel>
-          <NodeRegionSelect
-            onChange={onRegionChanged}
-            onLoad={onRegionsLoaded}
-          />
-        </>
-      )}
-
-      {isMobile && (
-        <>
-          <FormLabel>Organization</FormLabel>
-          <OrganizationSelect />
-        </>
-      )}
-
-      <FormLabel>Summary</FormLabel>
-      <NodeLauncherSummaryDetails totalNodesToLaunch={totalNodesToLaunch} />
-
-      {price && (
-        <>
-          <FormLabel>Pricing</FormLabel>
-          <Pricing />
-        </>
-      )}
-
-      <div css={styles.buttons}>
-        {!hasPermissionsToCreate && (
-          <Tooltip
-            noWrap
-            top="-30px"
-            left="50%"
-            tooltip="Insufficient permissions to launch a node."
-          />
+    <NodeLauncherPanel additionalStyles={styles.nodeLauncherPanel}>
+      <div css={styles.wrapper}>
+        <FormHeader>Launch</FormHeader>
+        {(isSuperUser || Boolean(allHosts?.length)) && (
+          <FormLabel>
+            <span>Host{isSuperUser ? 's' : ''}</span>
+            {selectedHosts !== null ? (
+              <a onClick={() => onHostsChanged(null)} css={styles.autoSelect}>
+                Auto select
+              </a>
+            ) : null}
+          </FormLabel>
         )}
-        <button
-          onClick={onCreateNodeClicked}
-          disabled={isDisabled}
-          css={[
-            styles.createButton,
-            isLaunching && !Boolean(error) && styles.createButtonLoading,
-          ]}
-        >
-          <span css={styles.createButtonInner}>
-            {isLaunching && !Boolean(error) ? (
-              <span css={styles.cogIcon}>
-                <IconCog />
+        {isSuperUser ? (
+          <HostSelectMultiple onChange={handleHostsChanged} />
+        ) : (
+          Boolean(allHosts?.length) && (
+            <HostSelect
+              hosts={allHosts}
+              isLoading={isLoadingAllHosts !== 'finished'}
+              selectedHost={selectedHosts?.[0]?.host!}
+              onChange={handleHostChanged}
+            />
+          )
+        )}
+
+        {!selectedHosts && (
+          <>
+            <FormLabel>Region</FormLabel>
+            <NodeRegionSelect
+              onChange={onRegionChanged}
+              onLoad={onRegionsLoaded}
+            />
+          </>
+        )}
+
+        {isMobile && (
+          <>
+            <FormLabel>Organization</FormLabel>
+            <OrganizationSelect />
+          </>
+        )}
+
+        <FormLabel>Summary</FormLabel>
+        <NodeLauncherSummaryDetails totalNodesToLaunch={totalNodesToLaunch} />
+
+        {price && (
+          <>
+            <FormLabel>Pricing</FormLabel>
+            <Pricing />
+          </>
+        )}
+
+        <div css={styles.buttons}>
+          {!hasPermissionsToCreate && (
+            <Tooltip
+              noWrap
+              top="-30px"
+              left="50%"
+              tooltip="Insufficient permissions to launch a node."
+            />
+          )}
+          <button
+            onClick={onCreateNodeClicked}
+            disabled={isDisabled}
+            css={[
+              styles.createButton,
+              isLaunching && !Boolean(error) && styles.createButtonLoading,
+            ]}
+          >
+            <span css={styles.createButtonInner}>
+              {isLaunching && !Boolean(error) ? (
+                <span css={styles.cogIcon}>
+                  <IconCog />
+                </span>
+              ) : (
+                <IconRocket />
+              )}
+              <span>
+                {isLaunching && !Boolean(error)
+                  ? 'Launching'
+                  : `Launch Your Node${totalNodesToLaunch > 1 ? 's' : ''}`}
               </span>
-            ) : (
-              <IconRocket />
-            )}
-            <span>
-              {isLaunching && !Boolean(error)
-                ? 'Launching'
-                : `Launch Your Node${totalNodesToLaunch > 1 ? 's' : ''}`}
             </span>
-          </span>
-        </button>
+          </button>
+        </div>
       </div>
-    </div>
+    </NodeLauncherPanel>
   );
 };

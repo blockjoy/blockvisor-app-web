@@ -5,12 +5,11 @@ import { colors } from 'styles/utils.colors.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { styles } from './NodeLauncherConfig.styles';
-import { NodeLauncherConfigWrapper } from './NodeLauncherConfigWrapper';
 import { NodeProperty } from '@modules/grpc/library/blockjoy/v1/node';
 import { renderControls } from '@modules/node/utils/renderNodeLauncherConfigControls';
 import { BlockchainVersion } from '@modules/grpc/library/blockjoy/v1/blockchain';
 import {
-  FirewallDropdown,
+  NodeLauncherPanel,
   NodeVersionSelect,
   nodeLauncherAtoms,
   nodeLauncherSelectors,
@@ -49,7 +48,7 @@ export const NodeLauncherConfig = ({
   };
 
   return (
-    <NodeLauncherConfigWrapper>
+    <NodeLauncherPanel>
       <div css={styles.wrapper}>
         <FormHeader>Configure</FormHeader>
 
@@ -107,6 +106,6 @@ export const NodeLauncherConfig = ({
             );
           })}
       </div>
-    </NodeLauncherConfigWrapper>
+    </NodeLauncherPanel>
   );
 };

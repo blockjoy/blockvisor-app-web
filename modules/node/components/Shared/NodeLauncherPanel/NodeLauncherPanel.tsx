@@ -1,8 +1,13 @@
 import { PropsWithChildren } from 'react';
 import { Scrollbar } from '@shared/components';
-import { css } from '@emotion/react';
+import { css, SerializedStyles } from '@emotion/react';
 import { breakpoints } from 'styles/variables.styles';
 import { isDesktop } from 'react-device-detect';
+import { ITheme } from 'types/theme';
+
+type Props = {
+  additionalStyles?: (theme: ITheme) => SerializedStyles;
+} & PropsWithChildren;
 
 const styles = {
   wrapper: css`
@@ -15,9 +20,9 @@ const styles = {
   `,
 };
 
-export const NodeLauncherConfigWrapper = ({ children }: PropsWithChildren) => {
+export const NodeLauncherPanel = ({ additionalStyles, children }: Props) => {
   return (
-    <div css={styles.wrapper}>
+    <div css={[styles.wrapper, Boolean(additionalStyles) && additionalStyles]}>
       {!isDesktop ? (
         <>{children}</>
       ) : (

@@ -33,6 +33,7 @@ export const styles = {
     }
   `,
   scrollbar: css`
+    position: relative;
     max-height: 200px;
   `,
   rowDisabled: css`
