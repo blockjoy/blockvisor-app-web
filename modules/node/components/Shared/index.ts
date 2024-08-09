@@ -3,3 +3,4 @@ export * from './LockedSwitch/LockedSwitch';
 export * from './NodeRegionSelect/NodeRegionSelect';
 export * from './NodeTypeConfigLabel/NodeTypeConfigLabel';
 export * from './NodeVersionSelect/NodeVersionSelect';
+export * from './NodeLauncherPanel/NodeLauncherPanel';
