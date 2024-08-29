@@ -87,8 +87,8 @@ const isNodeValid = selector<boolean>({
   },
 });
 
-const isConfigValid = selector<boolean>({
-  key: 'nodeLauncher.isConfigValid',
+const isConfigValid = selector({
+  key: 'nodeLauncher.config.isValid',
   get: ({ get }) => {
     const nodeLauncher = get(nodeLauncherAtoms.nodeLauncher);
     const selectedNetwork = get(nodeLauncherAtoms.selectedNetwork);
@@ -107,6 +107,16 @@ const isConfigValid = selector<boolean>({
             .every((type) => type.value),
         ))
     );
+  },
+});
+
+const isPropertiesValid = selector({
+  key: 'nodeLauncher.properties.isValid',
+  get: ({ get }) => {
+    const nodeLauncher = get(nodeLauncherAtoms.nodeLauncher);
+    const { properties } = nodeLauncher;
+
+    return properties?.some((p) => p.required === true && !p.value) ?? false;
   },
 });
 
@@ -228,6 +238,7 @@ export const nodeLauncherSelectors = {
 
   isNodeValid,
   isConfigValid,
+  isPropertiesValid,
 
   totalNodesToLaunch,
 

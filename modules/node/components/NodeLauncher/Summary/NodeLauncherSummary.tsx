@@ -70,6 +70,9 @@ export const NodeLauncherSummary = ({
   const nodeLauncherInfo = useRecoilValue(
     nodeLauncherSelectors.nodeLauncherInfo,
   );
+  const isPropertiesValid = useRecoilValue(
+    nodeLauncherSelectors.isPropertiesValid,
+  );
 
   const { submitForm } = useHubSpotForm();
 
@@ -195,7 +198,9 @@ export const NodeLauncherSummary = ({
           <button
             onClick={handleNodeClicked}
             disabled={
-              isLaunching || (isSuperUser && nodeLauncherStatus.isDisabled)
+              isLaunching ||
+              (isSuperUser && nodeLauncherStatus.isDisabled) ||
+              isPropertiesValid
             }
             css={[
               styles.createButton,

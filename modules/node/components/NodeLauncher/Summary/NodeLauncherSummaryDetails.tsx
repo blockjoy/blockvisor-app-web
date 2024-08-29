@@ -98,12 +98,12 @@ export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
             {!isConfigValid
               ? properties
                   ?.filter(
-                    (property: any) =>
+                    (property) =>
                       property.required &&
                       !property.disabled &&
                       !property.value,
                   )
-                  .map((property: any) => (
+                  .map((property) => (
                     <div key={property.name}>{property.displayName}</div>
                   ))
               : null}
