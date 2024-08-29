@@ -1,49 +1,47 @@
 import { Fragment, KeyboardEvent } from 'react';
 import { styles } from './PillPicker.styles';
 
-type PillPickerProps = {
+type PillPickerProps<T = any> = {
   name: string;
-  items: string[];
-  selectedItem: string;
+  items: T[];
+  selectedItem: T;
   isCompact?: boolean;
   noBottomMargin?: boolean;
-  onChange: (name: string, item: string) => void;
+  onChange: (item: T) => void;
 };
 
-export const PillPicker = ({
+export const PillPicker = <T extends { id?: string; name?: string }>({
   name,
   items,
   selectedItem,
   isCompact,
   noBottomMargin,
   onChange,
-}: PillPickerProps) => {
-  const handleChange = (item: string) => onChange(name, item);
-
-  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>, item: string) => {
-    if (e.key === 'Enter') handleChange(item);
+}: PillPickerProps<T>) => {
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>, item: T) => {
+    if (e.key === 'Enter') onChange(item);
   };
 
   return (
     <div css={[styles.wrapper, noBottomMargin && styles.wrapperNoBottomMargin]}>
       {items.map((item) => (
-        <Fragment key={item}>
+        <Fragment key={item.id}>
           <input
             css={styles.input}
-            name={name + item}
-            id={name + item}
+            name={name + item.name}
+            id={name + item.name}
             type="radio"
-            onChange={() => handleChange(item)}
+            onChange={() => onChange(item)}
             onKeyDown={(e) => handleKeyDown(e, item)}
-            checked={item === selectedItem}
-            value={item}
+            checked={item.id === selectedItem?.id}
+            value={item.id}
           />
           <label
-            htmlFor={name + item}
+            htmlFor={name + item.name}
             css={[styles.label, isCompact && styles.labelCompact]}
           >
             <span css={[styles.button, isCompact && styles.buttonCompact]}>
-              {item}
+              {item.name}
             </span>
           </label>
         </Fragment>

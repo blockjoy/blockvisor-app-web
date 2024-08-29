@@ -4,16 +4,19 @@ import { UiType } from '@modules/grpc/library/blockjoy/common/v1/node';
 import { NetworkConfig } from '@modules/grpc/library/blockjoy/common/v1/blockchain';
 import {
   Blockchain,
+  BlockchainNodeType,
   BlockchainVersion,
 } from '@modules/grpc/library/blockjoy/v1/blockchain';
 import {
   blockchainAtoms,
   nodeLauncherAtoms,
   sortNetworks,
+  getNodeTypes,
   sortVersions,
 } from '@modules/node';
 import { authSelectors } from '@modules/auth';
 import { nodeTypeList } from '@shared/index';
+import { billingAtoms } from '@modules/billing';
 
 const networks = selector<NetworkConfig[]>({
   key: 'nodeLauncher.networks',
@@ -91,7 +94,7 @@ const isConfigValid = selector<boolean>({
     const selectedNetwork = get(nodeLauncherAtoms.selectedNetwork);
 
     return (
-      Boolean(selectedNetwork) &&
+      Boolean(selectedNetwork?.name) &&
       (!nodeLauncher?.properties?.length ||
         Boolean(
           nodeLauncher.properties
@@ -119,47 +122,99 @@ const totalNodesToLaunch = selector<number>({
   },
 });
 
-const selectedBlockchain = selectorFamily<Blockchain | null, string>({
+const selectedBlockchain = selector<Blockchain | null>({
   key: 'nodeLauncher.blockchain',
-  get:
-    (blockchainId: string) =>
-    ({ get }) => {
-      const allBlockchains = get(blockchainAtoms.blockchains);
-      const isSuperUser = get(authSelectors.isSuperUser);
+  get: ({ get }) => {
+    const blockchainId = get(nodeLauncherAtoms.nodeLauncher).blockchainId;
+    const allBlockchains = get(blockchainAtoms.blockchains);
 
-      return allBlockchains?.find(
-        (blockchain: Blockchain) => blockchain.id === blockchainId,
-      ) ?? isSuperUser
-        ? allBlockchains[0]
-        : null;
-    },
+    return (
+      allBlockchains?.find((blockchain) => blockchain.id === blockchainId) ??
+      null
+    );
+  },
+});
+
+const selectedBlockchainNodeTypes = selector<BlockchainNodeType[]>({
+  key: 'nodeLauncher.nodeTypes',
+  get: ({ get }) => {
+    const selectedBlockchainVal = get(selectedBlockchain);
+    if (!selectedBlockchainVal) return [];
+
+    return getNodeTypes(selectedBlockchainVal);
+  },
 });
 
 const nodeLauncherInfo = selector<NodeLauncherBasicInfo>({
   key: 'nodeLauncher.info',
   get: ({ get }) => {
-    const nodeLauncher = get(nodeLauncherAtoms.nodeLauncher);
-    const allBlockchains = get(blockchainAtoms.blockchains);
-    const selectedBlockchain = allBlockchains.find(
-      (blockchain) => blockchain.id === nodeLauncher.blockchainId,
-    );
-
+    const selectedBlockchainVal = get(selectedBlockchain);
     const nodeType = get(nodeLauncherAtoms.selectedNodeType);
     const selectedNodeType = nodeTypeList.find(
       (nt) => nt.id === nodeType?.nodeType,
     );
-
     const selectedNetwork = get(nodeLauncherAtoms.selectedNetwork);
-
     const selectedVersion = get(nodeLauncherAtoms.selectedVersion);
 
     return {
-      blockchainName: selectedBlockchain?.name ?? '',
+      blockchainName: selectedBlockchainVal?.name ?? '',
       nodeTypeName: selectedNodeType?.name ?? '',
-      networkName: selectedNetwork ?? '',
+      networkName: selectedNetwork?.name ?? '',
       versionName: selectedVersion?.version ?? '',
     };
   },
+});
+
+const isNodeAllocationValid = selector({
+  key: 'nodeLauncher.nodeAllocation.isValid',
+  get: ({ get }) => {
+    const selectedHosts = get(nodeLauncherAtoms.selectedHosts);
+    const totalNodesToLaunchVal = get(totalNodesToLaunch);
+
+    return (
+      !selectedHosts ||
+      (selectedHosts?.every((h) => h.isValid) && totalNodesToLaunchVal > 0)
+    );
+  },
+});
+
+const nodeLauncherStatus = selectorFamily<
+  { isDisabled: boolean; reasons: string[] },
+  boolean
+>({
+  key: 'nodeLauncher.status',
+  get:
+    (hasPermissionsToCreate) =>
+    ({ get }) => {
+      const nodeLauncher = get(nodeLauncherAtoms.nodeLauncher);
+      const selectedHosts = get(nodeLauncherAtoms.selectedHosts);
+      const selectedRegion = get(nodeLauncherAtoms.selectedRegion);
+      const hasNetworkListVal = get(hasNetworkList);
+      const isConfigValidVal = get(isConfigValid);
+      const error = get(nodeLauncherAtoms.error);
+      const price = get(billingAtoms.price);
+      const isNodeAllocationValidVal = get(isNodeAllocationValid);
+      const billingExempt = get(authSelectors.hasPermission('billing-exempt'));
+
+      const disablingConditions: Record<string, boolean> = {
+        NoPermission: !hasPermissionsToCreate,
+        NoNetworks: !hasNetworkListVal,
+        NoBlockchain: !nodeLauncher.blockchainId,
+        NoNodeType: !nodeLauncher.nodeType,
+        NoRegion: !(selectedHosts?.length || selectedRegion),
+        InvalidConfig: !isConfigValidVal,
+        ErrorExists: Boolean(error),
+        NoPrice: !price && !billingExempt,
+        InvalidNodeAllocation: !isNodeAllocationValidVal,
+      };
+
+      const reasons = Object.entries(disablingConditions)
+        .filter(([_, value]) => value)
+        .map(([key]) => key);
+      const isDisabled = reasons.length > 0;
+
+      return { isDisabled, reasons };
+    },
 });
 
 export const nodeLauncherSelectors = {
@@ -177,6 +232,10 @@ export const nodeLauncherSelectors = {
   totalNodesToLaunch,
 
   selectedBlockchain,
+  selectedBlockchainNodeTypes,
 
   nodeLauncherInfo,
+
+  isNodeAllocationValid,
+  nodeLauncherStatus,
 };

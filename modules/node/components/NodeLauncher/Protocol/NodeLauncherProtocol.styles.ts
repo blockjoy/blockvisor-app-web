@@ -56,23 +56,6 @@ export const styles = {
       background: ${theme.colorLabel};
     }
   `,
-  blockchainWrapper: css`
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    min-width: 50%;
-    height: inherit;
-  `,
-  nodeTypeButtons: css`
-    flex: 1 1 auto;
-    min-width: 0;
-    display: flex;
-    gap: 8px;
-    opacity: 0;
-    visibility: hidden;
-    scale: 0;
-    position: absolute;
-  `,
   row: css`
     display: flex;
     align-items: center;
@@ -179,39 +162,6 @@ export const styles = {
       :is(.active, .focus) path {
         fill: ${theme.colorPrimary};
       }
-    }
-  `,
-  rowDisabled: css`
-    opacity: 0.2;
-    cursor: not-allowed;
-
-    .focus {
-      opacity: 1;
-
-      .coming-soon-badge {
-        opacity: 1;
-      }
-    }
-  `,
-  createButton: (theme: ITheme) => css`
-    border: 0;
-    font-size: 11px;
-    height: 32px;
-    min-width: 60px;
-    padding: 0 10px;
-    background: ${theme.colorLightGrey};
-    color: ${theme.colorText};
-    border-radius: 4px;
-    cursor: pointer;
-    text-transform: capitalize;
-
-    :is(:focus) {
-      box-shadow: 0px 0px 0px 3px rgba(255, 255, 255, 0.125);
-    }
-
-    &.active {
-      background: ${theme.colorPrimary};
-      color: ${theme.colorPrimaryText};
     }
   `,
 };

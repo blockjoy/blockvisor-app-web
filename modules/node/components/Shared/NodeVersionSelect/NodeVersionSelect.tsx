@@ -3,17 +3,16 @@ import { useRecoilValue } from 'recoil';
 import { css } from '@emotion/react';
 import { BlockchainVersion } from '@modules/grpc/library/blockjoy/v1/blockchain';
 import { Dropdown } from '@shared/components';
-import { nodeLauncherAtoms } from '@modules/node';
+import { nodeLauncherAtoms, nodeLauncherSelectors } from '@modules/node';
 import { authSelectors } from '@modules/auth';
 import { ITheme } from 'types/theme';
 
 type NodeVersionSelectProps = {
-  versions: BlockchainVersion[];
   onVersionChanged: (version: BlockchainVersion | null) => void;
 };
 
 const styles = {
-  versionDescription: (theme: ITheme) => css`
+  versionDescription: css`
     color: rgb(255 255 255 / 56%);
   `,
   buttonText: (theme: ITheme) => css`
@@ -22,11 +21,10 @@ const styles = {
 };
 
 export const NodeVersionSelect = ({
-  versions,
   onVersionChanged,
 }: NodeVersionSelectProps) => {
+  const versions = useRecoilValue(nodeLauncherSelectors.versions);
   const selectedVersion = useRecoilValue(nodeLauncherAtoms.selectedVersion);
-
   const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
 
   const [isOpen, setIsOpen] = useState(false);
@@ -38,9 +36,15 @@ export const NodeVersionSelect = ({
       disabled={!isSuperUser || versions.length < 2}
       items={versions}
       itemKey="version"
-      renderButtonText={
-        <p css={styles.buttonText}> {selectedVersion?.version}</p>
-      }
+      {...(selectedVersion
+        ? {
+            renderButtonText: (
+              <p css={styles.buttonText}>{selectedVersion?.version}</p>
+            ),
+          }
+        : isSuperUser
+        ? { error: 'Version List Empty' }
+        : { defaultText: <p css={styles.buttonText}>Auto select</p> })}
       renderItem={(item) => (
         <>
           {item.version}
