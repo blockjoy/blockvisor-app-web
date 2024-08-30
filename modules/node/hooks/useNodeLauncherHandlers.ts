@@ -236,7 +236,7 @@ export const useNodeLauncherHandlers = ({
     );
 
     const isVersionUpdated = activeBlockchain?.nodeTypes.some((nt) =>
-      nt.versions?.some((v) => v.version === selectedVersion?.version),
+      nt.versions?.some((v) => v.id === selectedVersion?.id),
     );
 
     if (isVersionUpdated)
