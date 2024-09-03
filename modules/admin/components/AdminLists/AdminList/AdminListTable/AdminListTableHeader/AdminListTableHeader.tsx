@@ -5,12 +5,15 @@ import { useRef } from 'react';
 import { styles } from './AdminListTableHeader.styles';
 import { AdminListTableSortButton } from './AdminListTableSortButton/AdminListTableSortButton';
 import { AdminListFilter } from './AdminListFilter/AdminListFilter';
+import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
 
 type Props = {
   column: AdminListColumn;
   activeSortField: number;
   activeSortOrder: SortOrder;
   scrollPosition: number;
+  listAll: any[];
+  blockchains?: Blockchain[];
   onSortChanged: (sortField: number, sortOrder: SortOrder) => void;
   onFilterChange: (item: AdminFilterDropdownItem, columnName: string) => void;
   onReset: (columName: string) => void;
@@ -21,6 +24,8 @@ export const AdminListTableHeader = ({
   activeSortField,
   activeSortOrder,
   scrollPosition,
+  listAll,
+  blockchains,
   onSortChanged,
   onFilterChange,
   onReset,
@@ -48,8 +53,10 @@ export const AdminListTableHeader = ({
         )}
         {Boolean(column.filterComponent) && (
           <AdminListFilter
+            listAll={listAll}
             column={column}
             headerRef={headerRef}
+            blockchains={blockchains}
             onFilterChange={handleFilterChange}
             onReset={onReset}
             tableScrollPosition={+scrollPosition!}

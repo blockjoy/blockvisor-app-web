@@ -1,5 +1,5 @@
 import { AdminList } from '../AdminList/AdminList';
-import { nodeClient } from '@modules/grpc';
+import { blockchainClient, nodeClient } from '@modules/grpc';
 import { DateTime, NodeStatus } from '@shared/components';
 import {
   AdminNodesFilterBlockchain,
@@ -26,36 +26,31 @@ import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { convertNodeTypeToName } from '@modules/node/utils/convertNodeTypeToName';
 import {
   capitalized,
-  createAdminFilterList,
+  createAdminNodeFilters,
   createDropdownValuesFromEnum,
 } from '@modules/admin';
 import { AdminListColumn } from '@modules/admin/types/AdminListColumn';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
 
 const columns: AdminListColumn[] = [
   {
     name: 'displayName',
-    width: '350px',
+    width: '290px',
     sortField: NodeSortField.NODE_SORT_FIELD_DISPLAY_NAME,
     isVisible: true,
   },
   {
     name: 'nodeName',
-    width: '350px',
+    width: '290px',
     sortField: NodeSortField.NODE_SORT_FIELD_NODE_NAME,
     isVisible: false,
   },
   {
     name: 'dnsName',
-    width: '350px',
+    width: '290px',
     sortField: NodeSortField.NODE_SORT_FIELD_DNS_NAME,
     isVisible: false,
-  },
-  {
-    name: 'ip',
-    width: '180px',
-    isVisible: false,
-    filterComponent: AdminNodesFilterIp,
   },
   {
     name: 'ipGateway',
@@ -85,13 +80,20 @@ const columns: AdminListColumn[] = [
   },
   {
     name: 'syncStatus',
-    width: '200px',
+    width: '180px',
     sortField: NodeSortField.NODE_SORT_FIELD_SYNC_STATUS,
     isVisible: false,
     filterComponent: AdminListFilterControl,
     filterSettings: {
       items: createDropdownValuesFromEnum(SyncStatus, 'SYNC_STATUS_'),
     },
+  },
+  {
+    name: 'orgName',
+    displayName: 'Org',
+    width: '240px',
+    isVisible: true,
+    filterComponent: AdminNodesFilterOrg,
   },
   {
     name: 'host',
@@ -125,6 +127,12 @@ const columns: AdminListColumn[] = [
     sortField: NodeSortField.NODE_SORT_FIELD_BLOCK_HEIGHT,
   },
   {
+    name: 'ip',
+    width: '180px',
+    isVisible: false,
+    filterComponent: AdminNodesFilterIp,
+  },
+  {
     name: 'network',
     width: '180px',
     isVisible: false,
@@ -149,13 +157,6 @@ const columns: AdminListColumn[] = [
     isVisible: false,
   },
   {
-    name: 'orgName',
-    displayName: 'Organization',
-    width: '240px',
-    isVisible: true,
-    filterComponent: AdminNodesFilterOrg,
-  },
-  {
     name: 'createdAt',
     displayName: 'Launched On',
     width: '230px',
@@ -172,6 +173,8 @@ const columns: AdminListColumn[] = [
 ];
 
 export const AdminNodes = () => {
+  const [blockchains, setBlockchains] = useState<Blockchain[]>([]);
+
   const getList = async (
     keyword?: string,
     page?: number,
@@ -179,25 +182,20 @@ export const AdminNodes = () => {
     sortOrder?: SortOrder,
     filters?: AdminListColumn[],
   ) => {
+    const sort =
+      page === -1 ? undefined : [{ field: sortField!, order: sortOrder! }];
+
     const response = await nodeClient.listNodes(
       undefined,
       {
         keyword,
-        blockchain: createAdminFilterList(filters!, 'blockchainName'),
-        nodeStatus: createAdminFilterList(filters!, 'status'),
-        containerStatus: createAdminFilterList(filters!, 'containerStatus'),
-        syncStatus: createAdminFilterList(filters!, 'syncStatus'),
-        nodeType: createAdminFilterList(filters!, 'nodeType'),
-        orgIds: createAdminFilterList(filters!, 'orgName'),
-        userIds: createAdminFilterList(filters!, 'createdBy'),
-        hostIds: createAdminFilterList(filters!, 'host'),
-        regions: createAdminFilterList(filters!, 'region'),
-        ips: createAdminFilterList(filters!, 'ip'),
-        networks: createAdminFilterList(filters!, 'network'),
-        versions: createAdminFilterList(filters!, 'version'),
+        ...createAdminNodeFilters(filters!),
       },
-      { currentPage: page!, itemsPerPage: pageSize },
-      [{ field: sortField!, order: sortOrder! }],
+      {
+        currentPage: page === -1 ? 0 : page!,
+        itemsPerPage: page === -1 ? 50000 : pageSize,
+      },
+      sort,
     );
     return { list: response.nodes, total: response.nodeCount };
   };
@@ -229,10 +227,7 @@ export const AdminNodes = () => {
 
   const [selectedBlockchains, setSelectedBlockchains] = useState<string[]>([]);
 
-  const handleIdAllSelected = (ids: string[]) => {
-    console.log('ids', ids);
-    setSelectedIds(ids);
-  };
+  const handleIdAllSelected = (ids: string[]) => setSelectedIds(ids);
 
   const handleIdSelected = async (nodeId: string, blockchainId?: string) => {
     const selectedBlockchainsCopy = [...selectedBlockchains];
@@ -251,6 +246,13 @@ export const AdminNodes = () => {
     }
   };
 
+  useEffect(() => {
+    (async () => {
+      const blockchainsResponse = await blockchainClient.listBlockchains();
+      setBlockchains(blockchainsResponse.blockchains);
+    })();
+  }, []);
+
   return (
     <AdminList
       name="nodes"
@@ -260,6 +262,7 @@ export const AdminNodes = () => {
       getList={getList}
       listMap={listMap}
       selectedIds={selectedIds}
+      blockchains={blockchains}
       onIdSelected={handleIdSelected}
       onIdAllSelected={handleIdAllSelected}
       additionalHeaderButtons={[AdminNodesUpgrade, AdminNodesOrgAssign]}

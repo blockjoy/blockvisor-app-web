@@ -11,12 +11,15 @@ import {
 import { useClickOutside } from '@shared/hooks/useClickOutside';
 import { styles } from './AdminListFilter.styles';
 import { AdminListColumn } from '@modules/admin/types/AdminListColumn';
+import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
 import IconFilter from '@public/assets/icons/common/Filter.svg';
 
 type Props = {
   column: AdminListColumn;
   tableScrollPosition: number;
   headerRef: RefObject<HTMLSpanElement>;
+  listAll: any[];
+  blockchains?: Blockchain[];
   onFilterChange: (item: AdminFilterDropdownItem) => void;
   onReset: (columnName: string) => void;
 };
@@ -25,6 +28,8 @@ export const AdminListFilter = ({
   column,
   tableScrollPosition,
   headerRef,
+  listAll,
+  blockchains,
   onFilterChange,
   onReset,
 }: Props) => {
@@ -101,6 +106,8 @@ export const AdminListFilter = ({
         `}
       >
         <FilterControls
+          listAll={listAll}
+          blockchains={blockchains}
           isOpen={isOpen}
           columnName={column.name}
           onFilterChange={onFilterChange}

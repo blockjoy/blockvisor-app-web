@@ -81,6 +81,7 @@ export const AdminListHeader = ({
         {Boolean(additionalHeaderButtons) &&
           additionalHeaderButtons?.map((HeaderButton) => (
             <HeaderButton
+              key={HeaderButton.name}
               list={list}
               setList={setList}
               selectedIds={selectedIds}
