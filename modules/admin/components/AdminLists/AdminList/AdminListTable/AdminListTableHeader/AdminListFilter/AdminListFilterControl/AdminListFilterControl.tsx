@@ -3,6 +3,7 @@ import { Checkbox, Scrollbar } from '@shared/components';
 import { useMemo, useState } from 'react';
 import { AdminListFilterSearch } from './AdminListFilterSearch/AdminListFilterSearch';
 import { styles } from './AdminListFilterControl.styles';
+import { AdminFilterControlProps } from '@modules/admin/types/AdminFilterControlProps';
 
 export const AdminListFilterControl = ({
   isOpen,

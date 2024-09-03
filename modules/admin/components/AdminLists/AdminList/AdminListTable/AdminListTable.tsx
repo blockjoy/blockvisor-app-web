@@ -9,6 +9,7 @@ import { AdminListRowCount } from './AdminListRowCount/AdminListRowCount';
 import { MouseEvent, UIEvent, useState } from 'react';
 import { AdminListTableHeader } from './AdminListTableHeader/AdminListTableHeader';
 import { AdminListColumn } from '@modules/admin/types/AdminListColumn';
+import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
 
 type Props = {
   name: string;
@@ -18,9 +19,11 @@ type Props = {
   list: IAdminItem[];
   listTotal?: number;
   listPage: number;
+  listAll: any[];
   activeSortField: number;
   activeSortOrder: SortOrder;
   selectedIds?: string[];
+  blockchains?: Blockchain[];
   onIdSelected?: (id: string, secondId?: string) => void;
   onIdAllSelected?: (ids: string[]) => void;
   onPageChanged: (page: number) => void;
@@ -36,9 +39,11 @@ export const AdminListTable = ({
   list,
   listTotal,
   listPage,
+  listAll,
   activeSortField,
   activeSortOrder,
   selectedIds,
+  blockchains,
   onIdSelected,
   onIdAllSelected,
   onPageChanged,
@@ -165,6 +170,8 @@ export const AdminListTable = ({
                   css={styles.tableCellWidth(column.width!)}
                 >
                   <AdminListTableHeader
+                    listAll={listAll}
+                    blockchains={blockchains}
                     activeSortField={activeSortField}
                     activeSortOrder={activeSortOrder}
                     column={column}
