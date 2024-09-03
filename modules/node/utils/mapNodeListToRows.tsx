@@ -5,6 +5,7 @@ import { TableBlock } from '@shared/components';
 import { BlockchainIcon, NodeStatus } from '@shared/components';
 import { Node, NodeSortField } from '@modules/grpc/library/blockjoy/v1/node';
 import { getNodeJobProgress } from './getNodeJobProgress';
+import { convertNodeTypeToName } from '@modules/node';
 
 const middleRowStyles = css`
   text-transform: capitalize;
@@ -63,7 +64,8 @@ export const mapNodeListToRows = (nodeList?: Node[]) => {
             <TableBlock
               middleRow={
                 <p css={middleRowStyles}>
-                  {node.blockchainName} | {node.network}
+                  {node.blockchainName} | {convertNodeTypeToName(node.nodeType)}{' '}
+                  | {node.network}
                 </p>
               }
               topRow={escapeHtml(node.displayName)}

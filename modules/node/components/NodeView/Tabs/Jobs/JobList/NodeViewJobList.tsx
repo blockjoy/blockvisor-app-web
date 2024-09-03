@@ -57,9 +57,10 @@ export const NodeViewJobList = () => {
             !job?.progress
               ? ''
               : `${
-                  Math.round(
-                    (job?.progress?.current! / job?.progress?.total!) * 100,
-                  ) || 0
+                  (
+                    (job?.progress?.current! / job?.progress?.total!) *
+                    100
+                  ).toFixed(2) || 0
                 }% Complete`}
           </p>
         ),

@@ -31,7 +31,7 @@ export const styles = {
   statusLoading: (minWidth: number) => css`
     position: relative;
     overflow: hidden;
-    min-width: ${minWidth + 74}px;
+    min-width: ${minWidth + 92}px;
   `,
   statusColorGreen: (theme: ITheme) => css`
     color: ${theme.colorPrimary};
