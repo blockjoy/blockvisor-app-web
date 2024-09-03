@@ -12,6 +12,7 @@ import { typo } from 'styles/utils.typography.styles';
 import { styles } from './NodeViewHeader.styles';
 import { BlockchainIcon } from '@shared/components';
 import {
+  convertNodeTypeToName,
   NodeViewReportProblem,
   useNodeDelete,
   useNodeList,
@@ -124,7 +125,6 @@ export const NodeViewHeader = () => {
                   />
                 </div>
                 <div>
-                  {/* <h2 css={styles.detailsHeader}>{node!.displayName}</h2> */}
                   <EditableTitle
                     initialValue={node.displayName}
                     isLoading={isLoading}
@@ -137,6 +137,8 @@ export const NodeViewHeader = () => {
                     <div css={styles.nodeType}>
                       <p>
                         {node.blockchainName}
+                        {' | '}
+                        {convertNodeTypeToName(node.nodeType)}
                         {' | '}
                         {node.network}
                       </p>

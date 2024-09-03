@@ -7,7 +7,7 @@ type Props = {
 
 export const NodeStatusLoader = ({ current, total }: Props) => {
   const percentageWithMinimum = current! > 0 ? (current! / total!) * 100 : 5;
-  const percentage = current! > 0 ? Math.round((current! / total!) * 100) : 0;
+  const percentage = current! > 0 ? ((current! / total!) * 100).toFixed(2) : 0;
 
   return (
     <>
