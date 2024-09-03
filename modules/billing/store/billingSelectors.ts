@@ -2,7 +2,7 @@ import { selector, selectorFamily } from 'recoil';
 import { Invoice } from '@modules/grpc/library/blockjoy/v1/org';
 import { billingAtoms } from '@modules/billing';
 import { organizationSelectors } from '@modules/organization';
-import { authAtoms, authSelectors } from '@modules/auth';
+import { authAtoms } from '@modules/auth';
 
 const settings = selector<BillingSettings>({
   key: 'billing.settings',

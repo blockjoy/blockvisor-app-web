@@ -4,6 +4,7 @@ import {
   BlockchainNodeType,
   BlockchainVersion,
 } from '@modules/grpc/library/blockjoy/v1/blockchain';
+import { NetworkConfig } from '@modules/grpc/library/blockjoy/common/v1/blockchain';
 import { Region } from '@modules/grpc/library/blockjoy/v1/host';
 import { NodeLauncherHost, NodeLauncherState } from '@modules/node';
 
@@ -39,7 +40,7 @@ const selectedHosts = atom<NodeLauncherHost[] | null>({
   default: null,
 });
 
-const selectedNetwork = atom<string | null>({
+const selectedNetwork = atom<NetworkConfig | null>({
   key: 'nodeLauncher.network',
   default: null,
 });
@@ -47,6 +48,11 @@ const selectedNetwork = atom<string | null>({
 const error = atom<string | null>({
   key: 'nodeLauncher.error',
   default: null,
+});
+
+const isLaunchError = atom<boolean>({
+  key: 'nodeLauncher.isLaunching.error',
+  default: false,
 });
 
 const isLaunching = atom<boolean>({
@@ -64,5 +70,6 @@ export const nodeLauncherAtoms = {
   selectedNetwork,
 
   error,
+  isLaunchError,
   isLaunching,
 };

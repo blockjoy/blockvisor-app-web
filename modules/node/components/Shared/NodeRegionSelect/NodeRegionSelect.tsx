@@ -3,6 +3,7 @@ import { useRecoilValue } from 'recoil';
 import { Region } from '@modules/grpc/library/blockjoy/v1/host';
 import { nodeAtoms, nodeLauncherAtoms, nodeSelectors } from '@modules/node';
 import { Dropdown } from '@shared/components';
+import { authSelectors } from '@modules/auth';
 
 type NodeRegionSelectProps = {
   onChange: (region: Region | null) => void;
@@ -14,20 +15,13 @@ export const NodeRegionSelect = ({
   onLoad,
 }: NodeRegionSelectProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const nodeLauncher = useRecoilValue(nodeLauncherAtoms.nodeLauncher);
   const version = useRecoilValue(nodeLauncherAtoms.selectedVersion);
   const region = useRecoilValue(nodeLauncherAtoms.selectedRegion);
-  const { blockchainId, nodeType } = nodeLauncher;
-  const regionsByBlockchain = useRecoilValue(
-    nodeSelectors.regionsByBlockchain({
-      blockchainId,
-      version: version?.version,
-      nodeType,
-    }),
-  );
+  const regionsByBlockchain = useRecoilValue(nodeSelectors.regionsByBlockchain);
   const allRegionsLoadingState = useRecoilValue(
     nodeAtoms.allRegionsLoadingState,
   );
+  const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
 
   const handleOpen = (open: boolean = true) => setIsOpen(open);
 
@@ -49,7 +43,11 @@ export const NodeRegionSelect = ({
       selectedItem={region}
       isLoading={allRegionsLoadingState !== 'finished'}
       disabled={!!error}
-      {...(error && { error })}
+      {...(!region
+        ? isSuperUser
+          ? error && { error }
+          : { defaultText: <p>Auto select</p> }
+        : null)}
       isOpen={isOpen}
       handleOpen={handleOpen}
     />

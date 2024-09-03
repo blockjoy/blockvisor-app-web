@@ -150,18 +150,17 @@ export const AdminBlockchainVersionAddProperties = ({
                 isCompact
                 name={`uiType${index + 1}`}
                 noBottomMargin
-                items={uiTypes
-                  ?.filter((type) => +type?.id! !== UiType.UI_TYPE_FILE_UPLOAD)
-                  ?.map((type) => type?.name!)}
+                items={uiTypes?.filter(
+                  (type) => +type?.id! !== UiType.UI_TYPE_FILE_UPLOAD,
+                )}
                 selectedItem={
-                  uiTypes.find((ui) => ui.id === property.uiType?.toString())
-                    ?.name!
+                  uiTypes.find((ui) => ui.id === property.uiType?.toString())!
                 }
-                onChange={(name: string, value: string) =>
+                onChange={(item) =>
                   handlePropertyChanged(
                     index,
                     'uiType',
-                    uiTypes?.find((type) => type.name === value)?.id!,
+                    uiTypes?.find((type) => type.name === item.name)?.id!,
                     'number',
                   )
                 }

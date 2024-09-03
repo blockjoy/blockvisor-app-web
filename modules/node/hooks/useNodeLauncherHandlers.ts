@@ -19,6 +19,7 @@ import {
   NodeScheduler_ResourceAffinity,
   NodeServiceCreateRequest,
 } from '@modules/grpc/library/blockjoy/v1/node';
+import { NetworkConfig } from '@modules/grpc/library/blockjoy/common/v1/blockchain';
 import { hostAtoms, useHostSelect } from '@modules/host';
 import {
   useNodeAdd,
@@ -28,6 +29,7 @@ import {
   sortNetworks,
   sortVersions,
   NodeLauncherHost,
+  NodeLauncherState,
 } from '@modules/node';
 import { organizationSelectors } from '@modules/organization';
 import { ROUTES, useNavigate } from '@shared/index';
@@ -44,13 +46,16 @@ interface IUseNodeLauncherHandlersHook {
   handleRegionChanged: (region: Region | null) => void;
   handleRegionsLoaded: (region: Region | null) => void;
   handleProtocolSelected: (blockchainId: string, nodeType: NodeType) => void;
-  handleNodePropertyChanged: (name: string, value: any) => void;
+  handleNodePropertyChanged: <K extends keyof NodeLauncherState>(
+    name: K,
+    value: NodeLauncherState[K],
+  ) => void;
   handleNodeConfigPropertyChanged: (
     name: string,
     value: string | boolean,
   ) => void;
   handleVersionChanged: (version: BlockchainVersion | null) => void;
-  handleNetworkChanged: (network: string) => void;
+  handleNetworkChanged: (network: NetworkConfig) => void;
   handleFileUploaded: (e: any) => void;
   handleCreateNodeClicked: () => void;
 }
@@ -73,7 +78,7 @@ export const useNodeLauncherHandlers = ({
   );
   const allHosts = useRecoilValue(hostAtoms.allHosts);
   const blockchains = useRecoilValue(blockchainAtoms.blockchains);
-  const setSelectedNodeType = useSetRecoilState(
+  const [selectedNodeType, setSelectedNodeType] = useRecoilState(
     nodeLauncherAtoms.selectedNodeType,
   );
   const [nodeLauncherState, setNodeLauncherState] = useRecoilState(
@@ -83,6 +88,7 @@ export const useNodeLauncherHandlers = ({
     nodeLauncherAtoms.nodeLauncher,
   );
   const setError = useSetRecoilState(nodeLauncherAtoms.error);
+  const setIsLaunchError = useSetRecoilState(nodeLauncherAtoms.isLaunchError);
   const setIsLaunching = useSetRecoilState(nodeLauncherAtoms.isLaunching);
   const [selectedHosts, setSelectedHosts] = useRecoilState(
     nodeLauncherAtoms.selectedHosts,
@@ -138,167 +144,11 @@ export const useNodeLauncherHandlers = ({
     }));
   }, [isSuperUser, blockchains]);
 
-  const handleHostsChanged = (hosts: NodeLauncherHost[] | null) => {
-    Mixpanel.track('Launch Node - Host Changed');
-    setSelectedHosts(hosts);
-    setSelectedRegion(null);
-  };
+  useEffect(() => {
+    if (!selectedNodeType) return;
 
-  const handleRegionChanged = (region: Region | null) => {
-    Mixpanel.track('Launch Node - Region Changed');
-    setSelectedRegion(region);
-  };
-
-  const handleRegionsLoaded = (region: Region | null) => {
-    setSelectedRegion(region);
-  };
-
-  const handleProtocolSelected = (blockchainId: string, nodeType: NodeType) => {
-    setError(null);
-    setIsLaunching(false);
-
-    setNodeLauncherState((nodeLauncherOldState) => ({
-      ...nodeLauncherOldState,
-      blockchainId,
-      nodeType,
-    }));
-
-    Mixpanel.track('Launch Node - Protocol Selected', {
-      blockchain: blockchains?.find((b) => b.id === blockchainId)?.name,
-      nodeType: NodeType[nodeType],
-    });
-  };
-
-  const handleNodePropertyChanged = (name: string, value: any) => {
-    setNodeLauncherState((nodeLauncherOldState) => ({
-      ...nodeLauncherOldState,
-      [name]: value,
-    }));
-
-    Mixpanel.track('Launch Node - Property Changed', {
-      propertyName: name,
-      propertyValue: value,
-    });
-  };
-
-  const handleNodeConfigPropertyChanged = (
-    name: string,
-    value: boolean | string,
-  ) => {
-    setError('');
-    if (!nodeLauncherState.properties) return;
-
-    const propertiesCopy = [...nodeLauncherState.properties!];
-
-    const propertyIndex = propertiesCopy.findIndex(
-      (property) => property.name === name,
-    );
-
-    if (propertyIndex === -1) return;
-
-    const updatedProperty = {
-      ...propertiesCopy[propertyIndex],
-      value: value?.toString(),
-    };
-
-    propertiesCopy[propertyIndex] = updatedProperty;
-
-    setNodeLauncherState((nodeLauncherOldState) => ({
-      ...nodeLauncherOldState,
-      properties: propertiesCopy,
-    }));
-
-    Mixpanel.track('Launch Node - Node Config Property Changed', {
-      propertyName: updatedProperty.name,
-      propertyValue: value?.toString(),
-    });
-  };
-
-  const handleVersionChanged = (version: BlockchainVersion | null) => {
-    Mixpanel.track('Launch Node - Version Changed');
-    setSelectedVersion(version);
-  };
-
-  const handleNetworkChanged = (network: string) => setSelectedNetwork(network);
-
-  const handleFileUploaded = (e: any) => {
-    setError(null);
-    const keyFilesCopy = [...nodeLauncherState.keyFiles!];
-
-    let foundNodeFiles = keyFilesCopy.find(
-      (files) => files.name === e.target.name,
-    );
-
-    if (!foundNodeFiles) return;
-
-    for (let file of e?.target?.files) {
-      foundNodeFiles?.files.push(file);
-    }
-
-    setNodeLauncherState((nodeLauncherOldState) => ({
-      ...nodeLauncherOldState,
-      keyFiles: keyFilesCopy,
-    }));
-
-    Mixpanel.track('Launch Node - Key File Uploaded');
-  };
-
-  const handleCreateNodeClicked = async () => {
-    setIsLaunching(true);
-
-    const isSingleNode =
-      !selectedHosts ||
-      (selectedHosts?.length === 1 && selectedHosts[0].nodesToLaunch === 1);
-
-    const params: NodeServiceCreateRequest = {
-      orgId: defaultOrganization!.id,
-      version: selectedVersion?.version!,
-      nodeType: +nodeLauncherState.nodeType ?? 0,
-      blockchainId: nodeLauncherState.blockchainId ?? '',
-      properties: nodeLauncherState.properties!,
-      network: selectedNetwork!,
-      allowIps: nodeLauncherState.allowIps,
-      denyIps: nodeLauncherState.denyIps,
-      placement: {},
-    };
-
-    if (selectedHosts?.length!) {
-      params.placement = {
-        multiple: {
-          nodeCounts: selectedHosts.map(
-            ({ host: { id: hostId }, nodesToLaunch: nodeCount }) => ({
-              hostId,
-              nodeCount,
-            }),
-          ),
-        },
-      };
-    } else {
-      params.placement = {
-        scheduler: {
-          region: selectedRegion?.name!,
-          resource:
-            NodeScheduler_ResourceAffinity.RESOURCE_AFFINITY_LEAST_RESOURCES,
-        },
-      };
-    }
-
-    await createNode(
-      params,
-      (nodeId: string) => {
-        Mixpanel.track('Launch Node - Node Launched');
-
-        if (!isSingleNode) toast.success('All nodes launched');
-
-        navigate(isSingleNode ? ROUTES.NODE(nodeId) : ROUTES.NODES, () => {
-          resetNodeLauncherState();
-          resetSelectedVersion();
-          resetSelectedNetwork();
-        });
-      },
-      (error: string) => setError(error!),
-    );
-  };
+    handleNodePropertyChanged('nodeType', selectedNodeType.nodeType);
+  }, [selectedNodeType]);
 
   useEffect(() => {
     const activeBlockchain = blockchains.find(
@@ -370,24 +220,33 @@ export const useNodeLauncherHandlers = ({
 
     const selectedNetworkExists = selectedVersion?.networks
       .map((network) => network.name)
-      .some((network) => network === selectedNetwork);
+      .some((network) => network === selectedNetwork?.name);
 
     if (!selectedNetworkExists)
       setSelectedNetwork(
         sortNetworks(selectedVersion?.networks)?.find(
           (network) => network.name.includes('main')!,
-        )?.name || sortNetworks(selectedVersion?.networks)[0]?.name,
+        ) || sortNetworks(selectedVersion?.networks)[0],
       );
   }, [selectedVersion?.id]);
 
   useEffect(() => {
-    getPrice({
-      blockchainId: nodeLauncherState.blockchainId,
-      version: selectedVersion?.version!,
-      nodeType: nodeLauncherState.nodeType,
-      network: selectedNetwork!,
-      region: selectedHosts?.[0].host?.region ?? selectedRegion?.name!,
-    });
+    const activeBlockchain = blockchains.find(
+      (b) => b.id === nodeLauncherState.blockchainId,
+    );
+
+    const isVersionUpdated = activeBlockchain?.nodeTypes.some((nt) =>
+      nt.versions?.some((v) => v.id === selectedVersion?.id),
+    );
+
+    if (isVersionUpdated)
+      getPrice({
+        blockchainId: nodeLauncherState.blockchainId,
+        version: selectedVersion?.version!,
+        nodeType: nodeLauncherState.nodeType,
+        network: selectedNetwork?.name!,
+        region: selectedHosts?.[0].host?.region ?? selectedRegion?.name!,
+      });
   }, [
     nodeLauncherState.blockchainId,
     selectedVersion?.version,
@@ -407,6 +266,175 @@ export const useNodeLauncherHandlers = ({
   useEffect(() => {
     getHosts();
   }, [defaultOrganization?.id]);
+
+  const handleHostsChanged = (hosts: NodeLauncherHost[] | null) => {
+    Mixpanel.track('Launch Node - Host Changed');
+    setSelectedHosts(hosts);
+    setSelectedRegion(null);
+  };
+
+  const handleRegionChanged = (region: Region | null) => {
+    Mixpanel.track('Launch Node - Region Changed');
+    setSelectedRegion(region);
+  };
+
+  const handleRegionsLoaded = (region: Region | null) => {
+    setSelectedRegion(region);
+  };
+
+  const handleProtocolSelected = (blockchainId: string, nodeType: NodeType) => {
+    setError(null);
+    setIsLaunchError(false);
+    setIsLaunching(false);
+
+    setNodeLauncherState((nodeLauncherOldState) => ({
+      ...nodeLauncherOldState,
+      blockchainId,
+      nodeType,
+    }));
+
+    Mixpanel.track('Launch Node - Protocol Selected', {
+      blockchain: blockchains?.find((b) => b.id === blockchainId)?.name,
+      nodeType: NodeType[nodeType],
+    });
+  };
+
+  const handleNodePropertyChanged = <K extends keyof NodeLauncherState>(
+    name: K,
+    value: NodeLauncherState[K],
+  ) => {
+    setNodeLauncherState((nodeLauncherOldState) => ({
+      ...nodeLauncherOldState,
+      [name]: value,
+    }));
+
+    Mixpanel.track('Launch Node - Property Changed', {
+      propertyName: name,
+      propertyValue: value,
+    });
+  };
+
+  const handleNodeConfigPropertyChanged = (
+    name: string,
+    value: boolean | string,
+  ) => {
+    setError('');
+    setIsLaunchError(false);
+    if (!nodeLauncherState.properties) return;
+
+    const propertiesCopy = [...nodeLauncherState.properties!];
+
+    const propertyIndex = propertiesCopy.findIndex(
+      (property) => property.name === name,
+    );
+
+    if (propertyIndex === -1) return;
+
+    const updatedProperty = {
+      ...propertiesCopy[propertyIndex],
+      value: value?.toString(),
+    };
+
+    propertiesCopy[propertyIndex] = updatedProperty;
+
+    setNodeLauncherState((nodeLauncherOldState) => ({
+      ...nodeLauncherOldState,
+      properties: propertiesCopy,
+    }));
+
+    Mixpanel.track('Launch Node - Node Config Property Changed', {
+      propertyName: updatedProperty.name,
+      propertyValue: value?.toString(),
+    });
+  };
+
+  const handleVersionChanged = (version: BlockchainVersion | null) => {
+    Mixpanel.track('Launch Node - Version Changed');
+    setSelectedVersion(version);
+  };
+
+  const handleNetworkChanged = (network: NetworkConfig) =>
+    setSelectedNetwork(network);
+
+  const handleFileUploaded = (e: any) => {
+    setError(null);
+    setIsLaunchError(false);
+    const keyFilesCopy = [...nodeLauncherState.keyFiles!];
+
+    let foundNodeFiles = keyFilesCopy.find(
+      (files) => files.name === e.target.name,
+    );
+
+    if (!foundNodeFiles) return;
+
+    for (let file of e?.target?.files) {
+      foundNodeFiles?.files.push(file);
+    }
+
+    setNodeLauncherState((nodeLauncherOldState) => ({
+      ...nodeLauncherOldState,
+      keyFiles: keyFilesCopy,
+    }));
+
+    Mixpanel.track('Launch Node - Key File Uploaded');
+  };
+
+  const handleCreateNodeClicked = async () => {
+    setIsLaunching(true);
+
+    const isSingleNode =
+      !selectedHosts ||
+      (selectedHosts?.length === 1 && selectedHosts[0].nodesToLaunch === 1);
+
+    const params: NodeServiceCreateRequest = {
+      orgId: defaultOrganization!.id,
+      version: selectedVersion?.version!,
+      nodeType: +nodeLauncherState.nodeType ?? 0,
+      blockchainId: nodeLauncherState.blockchainId ?? '',
+      properties: nodeLauncherState.properties!,
+      network: selectedNetwork?.name!,
+      allowIps: nodeLauncherState.allowIps,
+      denyIps: nodeLauncherState.denyIps,
+      placement: {},
+    };
+
+    if (selectedHosts?.length!) {
+      params.placement = {
+        multiple: {
+          nodeCounts: selectedHosts.map(
+            ({ host: { id: hostId }, nodesToLaunch: nodeCount }) => ({
+              hostId,
+              nodeCount,
+            }),
+          ),
+        },
+      };
+    } else {
+      params.placement = {
+        scheduler: {
+          region: selectedRegion?.name!,
+          resource:
+            NodeScheduler_ResourceAffinity.RESOURCE_AFFINITY_LEAST_RESOURCES,
+        },
+      };
+    }
+
+    await createNode(
+      params,
+      (nodeId: string) => {
+        Mixpanel.track('Launch Node - Node Launched');
+
+        if (!isSingleNode) toast.success('All nodes launched');
+
+        navigate(isSingleNode ? ROUTES.NODE(nodeId) : ROUTES.NODES, () => {
+          resetNodeLauncherState();
+          resetSelectedVersion();
+          resetSelectedNetwork();
+        });
+      },
+      (error: string) => setError(error!),
+    );
+  };
 
   return {
     handleHostsChanged,
