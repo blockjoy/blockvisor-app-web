@@ -3,7 +3,6 @@ import { blockchainClient, nodeClient } from '@modules/grpc';
 import { DateTime, NodeStatus } from '@shared/components';
 import {
   AdminNodesFilterBlockchain,
-  AdminListFilterControl,
   AdminNodesFilterOrg,
   AdminNodesFilterUser,
   AdminNodesFilterHost,
@@ -11,24 +10,18 @@ import {
   AdminNodesFilterIp,
   AdminNodesFilterNetwork,
   AdminNodesFilterVersion,
+  AdminNodesFilterNodeType,
+  AdminNodesFilterStatus,
+  AdminNodesContainerStatus,
+  AdminNodesSyncStatus,
 } from '@modules/admin/components';
-import {
-  ContainerStatus,
-  NodeStatus as NodeStatusEnum,
-  NodeType,
-  SyncStatus,
-} from '@modules/grpc/library/blockjoy/common/v1/node';
 import { AdminNodesUpgrade } from './AdminNodesUpgrade/AdminNodesUpgrade';
 import { AdminNodesOrgAssign } from './AdminNodesOrgAssign/AdminNodesOrgAssign';
 import { pageSize } from '@modules/admin/constants/constants';
 import { Node, NodeSortField } from '@modules/grpc/library/blockjoy/v1/node';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { convertNodeTypeToName } from '@modules/node/utils/convertNodeTypeToName';
-import {
-  capitalized,
-  createAdminNodeFilters,
-  createDropdownValuesFromEnum,
-} from '@modules/admin';
+import { capitalized, createAdminNodeFilters } from '@modules/admin';
 import { AdminListColumn } from '@modules/admin/types/AdminListColumn';
 import { useEffect, useState } from 'react';
 import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
@@ -53,47 +46,26 @@ const columns: AdminListColumn[] = [
     isVisible: false,
   },
   {
-    name: 'ipGateway',
-    width: '140px',
-    isVisible: false,
-  },
-  {
     name: 'status',
     displayName: 'Node Status',
     width: '240px',
     sortField: NodeSortField.NODE_SORT_FIELD_NODE_STATUS,
     isVisible: true,
-    filterComponent: AdminListFilterControl,
-    filterSettings: {
-      items: createDropdownValuesFromEnum(NodeStatusEnum, 'NODE_STATUS_'),
-    },
+    filterComponent: AdminNodesFilterStatus,
   },
   {
     name: 'containerStatus',
     width: '200px',
     sortField: NodeSortField.NODE_SORT_FIELD_CONTAINER_STATUS,
     isVisible: false,
-    filterComponent: AdminListFilterControl,
-    filterSettings: {
-      items: createDropdownValuesFromEnum(ContainerStatus, 'CONTAINER_STATUS_'),
-    },
+    filterComponent: AdminNodesContainerStatus,
   },
   {
     name: 'syncStatus',
     width: '180px',
     sortField: NodeSortField.NODE_SORT_FIELD_SYNC_STATUS,
     isVisible: false,
-    filterComponent: AdminListFilterControl,
-    filterSettings: {
-      items: createDropdownValuesFromEnum(SyncStatus, 'SYNC_STATUS_'),
-    },
-  },
-  {
-    name: 'orgName',
-    displayName: 'Org',
-    width: '240px',
-    isVisible: true,
-    filterComponent: AdminNodesFilterOrg,
+    filterComponent: AdminNodesSyncStatus,
   },
   {
     name: 'host',
@@ -103,16 +75,11 @@ const columns: AdminListColumn[] = [
     filterComponent: AdminNodesFilterHost,
   },
   {
-    name: 'nodeType',
-    width: '150px',
-    sortField: NodeSortField.NODE_SORT_FIELD_NODE_TYPE,
+    name: 'blockHeight',
+    width: '190px',
     isVisible: false,
-    filterComponent: AdminListFilterControl,
-    filterSettings: {
-      items: createDropdownValuesFromEnum(NodeType, 'NODE_TYPE_'),
-    },
+    sortField: NodeSortField.NODE_SORT_FIELD_BLOCK_HEIGHT,
   },
-
   {
     name: 'blockchainName',
     displayName: 'blockchain',
@@ -121,16 +88,11 @@ const columns: AdminListColumn[] = [
     filterComponent: AdminNodesFilterBlockchain,
   },
   {
-    name: 'blockHeight',
-    width: '190px',
+    name: 'nodeType',
+    width: '150px',
+    sortField: NodeSortField.NODE_SORT_FIELD_NODE_TYPE,
     isVisible: false,
-    sortField: NodeSortField.NODE_SORT_FIELD_BLOCK_HEIGHT,
-  },
-  {
-    name: 'ip',
-    width: '180px',
-    isVisible: false,
-    filterComponent: AdminNodesFilterIp,
+    filterComponent: AdminNodesFilterNodeType,
   },
   {
     name: 'network',
@@ -145,6 +107,17 @@ const columns: AdminListColumn[] = [
     filterComponent: AdminNodesFilterVersion,
   },
   {
+    name: 'ip',
+    width: '180px',
+    isVisible: false,
+    filterComponent: AdminNodesFilterIp,
+  },
+  {
+    name: 'ipGateway',
+    width: '140px',
+    isVisible: false,
+  },
+  {
     name: 'region',
     width: '210px',
     isVisible: false,
@@ -155,6 +128,13 @@ const columns: AdminListColumn[] = [
     width: '350px',
     displayName: 'Node Address',
     isVisible: false,
+  },
+  {
+    name: 'orgName',
+    displayName: 'Org',
+    width: '240px',
+    isVisible: true,
+    filterComponent: AdminNodesFilterOrg,
   },
   {
     name: 'createdAt',

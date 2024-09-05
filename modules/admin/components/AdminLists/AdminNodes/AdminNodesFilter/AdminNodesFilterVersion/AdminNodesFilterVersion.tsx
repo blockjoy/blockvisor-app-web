@@ -3,7 +3,7 @@ import { sortVersionStringArray } from '@modules/admin/utils';
 import { AdminListFilterControl, adminSelectors } from '@modules/admin';
 import { AdminFilterControlProps } from '@modules/admin/types/AdminFilterControlProps';
 import { useRecoilValue } from 'recoil';
-import { sort } from '@shared/components';
+import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 
 export const AdminNodesFilterVersion = ({
   columnName,
@@ -27,15 +27,24 @@ export const AdminNodesFilterVersion = ({
 
   const filteredVersions: AdminFilterDropdownItem[] = Array.from(
     new Set(
-      sort(
+      sortVersionStringArray(
         selectedBlockchains
           ?.flatMap(({ nodeTypes }) => nodeTypes)
-          .flatMap(({ versions }) => versions),
+          .flatMap(({ versions }) => versions)
+          .map((version) => version.version),
       ),
     ),
   )
-    .filter(({ version }) => list.some((item) => item.id === version))
-    .map(({ version }) => ({
+    .filter((version) =>
+      (listAll as Node[])?.some(
+        (item) =>
+          item.version === version &&
+          selectedBlockchains?.some(
+            (blockain) => blockain.id === item.blockchainId,
+          ),
+      ),
+    )
+    .map((version) => ({
       id: version,
       name: version,
     }));

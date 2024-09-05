@@ -4,6 +4,7 @@ import { AdminListFilterControl, adminSelectors } from '@modules/admin';
 import { useRecoilValue } from 'recoil';
 import { blockchainClient } from '@modules/grpc';
 import { AdminFilterControlProps } from '@modules/admin/types/AdminFilterControlProps';
+import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 
 export const AdminNodesFilterNetwork = ({
   columnName,
@@ -36,7 +37,15 @@ export const AdminNodesFilterNetwork = ({
       ),
     ),
   )
-    .filter((network) => list.some((item) => item.id === network))
+    .filter((network) =>
+      (listAll as Node[])?.some(
+        (item) =>
+          item.network === network &&
+          selectedBlockchains?.some(
+            (blockain) => blockain.id === item.blockchainId,
+          ),
+      ),
+    )
     .map((network) => ({
       id: network,
       name: network,
