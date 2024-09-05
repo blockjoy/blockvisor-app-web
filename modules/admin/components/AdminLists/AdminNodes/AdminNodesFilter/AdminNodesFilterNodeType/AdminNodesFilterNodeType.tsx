@@ -5,6 +5,7 @@ import { useRecoilValue } from 'recoil';
 import { AdminFilterControlProps } from '@modules/admin/types/AdminFilterControlProps';
 import { convertNodeTypeToName } from '@modules/node';
 import { capitalize } from 'utils/capitalize';
+import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 
 export const AdminNodesFilterNodeType = ({
   columnName,
@@ -28,10 +29,20 @@ export const AdminNodesFilterNodeType = ({
 
   const filteredNodeTypes: AdminFilterDropdownItem[] = Array.from(
     new Set(sort(selectedBlockchains?.flatMap(({ nodeTypes }) => nodeTypes))),
-  ).map(({ nodeType }) => ({
-    id: nodeType?.toString(),
-    name: capitalize(convertNodeTypeToName(nodeType)),
-  }));
+  )
+    .filter((nodeType) =>
+      (listAll as Node[])?.some(
+        (item) =>
+          item.nodeType === nodeType &&
+          selectedBlockchains?.some(
+            (blockain) => blockain.id === item.blockchainId,
+          ),
+      ),
+    )
+    .map(({ nodeType }) => ({
+      id: nodeType?.toString(),
+      name: capitalize(convertNodeTypeToName(nodeType)),
+    }));
 
   useEffect(() => {
     const nodeTypes = Array.from(

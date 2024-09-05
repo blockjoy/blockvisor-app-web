@@ -2,7 +2,6 @@ import { sort } from '@shared/components';
 import { useEffect, useState } from 'react';
 import { AdminListFilterControl, adminSelectors } from '@modules/admin';
 import { useRecoilValue } from 'recoil';
-import { blockchainClient } from '@modules/grpc';
 import { AdminFilterControlProps } from '@modules/admin/types/AdminFilterControlProps';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 
