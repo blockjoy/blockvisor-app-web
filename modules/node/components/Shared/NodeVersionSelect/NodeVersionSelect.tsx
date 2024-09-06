@@ -43,7 +43,7 @@ export const NodeVersionSelect = ({
             ),
           }
         : isSuperUser
-        ? { error: 'Version List Empty' }
+        ? { error: 'No Versions Available' }
         : { defaultText: <p css={styles.buttonText}>Auto select</p> })}
       renderItem={(item) => (
         <>

@@ -30,11 +30,8 @@ export const NodeRegionSelect = ({
     onLoad(activeRegion);
   }, [regionsByBlockchain]);
 
-  const error = !version?.id
-    ? 'Version List Empty'
-    : !regionsByBlockchain.length
-    ? 'Regions List Empty'
-    : null;
+  const error =
+    !version?.id || !regionsByBlockchain.length ? 'No Hosts Available' : null;
 
   return (
     <Dropdown

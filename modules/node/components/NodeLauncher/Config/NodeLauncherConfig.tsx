@@ -31,6 +31,7 @@ export const NodeLauncherConfig = ({
 }: NodeLauncherConfigProps) => {
   const nodeLauncher = useRecoilValue(nodeLauncherAtoms.nodeLauncher);
   const networks = useRecoilValue(nodeLauncherSelectors.networks);
+  const selectedVersion = useRecoilValue(nodeLauncherAtoms.selectedVersion);
   const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
 
   const { properties, keyFiles } = nodeLauncher;
@@ -46,7 +47,7 @@ export const NodeLauncherConfig = ({
         <FormLabel>Version</FormLabel>
         <NodeVersionSelect onVersionChanged={onVersionChanged} />
 
-        {(networks.length || isSuperUser) && (
+        {(networks.length || isSuperUser) && selectedVersion && (
           <>
             <FormLabel>Network</FormLabel>
             <NodeNetworkSelect onNetworkChanged={onNetworkChanged} />
