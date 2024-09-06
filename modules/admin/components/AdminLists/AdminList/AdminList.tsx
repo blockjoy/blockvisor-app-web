@@ -15,6 +15,7 @@ import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { styles } from './AdminList.styles';
 import { AdminListHeader } from './AdminListHeader/AdminListHeader';
 import { AdminListTable } from './AdminListTable/AdminListTable';
+import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
 
 type Props = {
   name: keyof AdminSettings;
@@ -30,6 +31,7 @@ type Props = {
   selectedIds?: string[];
   tagsAdded?: AdminTags[];
   tagsRemoved?: AdminTags[];
+  blockchains?: Blockchain[];
   setTagsAdded?: Dispatch<SetStateAction<AdminTags[]>>;
   setTagsRemoved?: Dispatch<SetStateAction<AdminTags[]>>;
   onIdSelected?: (id: string, secondId?: string) => void;
@@ -65,6 +67,7 @@ export const AdminList = ({
   additionalHeaderButtons,
   tagsAdded,
   tagsRemoved,
+  blockchains,
   setTagsAdded,
   setTagsRemoved,
   onIdSelected,
@@ -78,6 +81,7 @@ export const AdminList = ({
 
   const [isLoading, setIsLoading] = useState(true);
   const [list, setList] = useState<any[]>([]);
+  const [listAll, setListAll] = useState<any[]>([]);
   const [listTotal, setListTotal] = useState<number>();
 
   const { updateQueryString } = useUpdateQueryString(name);
@@ -117,6 +121,18 @@ export const AdminList = ({
     setList(response.list);
     setListTotal(response.total);
     setIsLoading(false);
+
+    if (columns.some((column) => !!column.filterSettings)) {
+      const everythingResponse = await getList(
+        keyword,
+        -1,
+        undefined,
+        undefined,
+        undefined,
+      );
+
+      setListAll(everythingResponse.list);
+    }
   };
 
   const handleSearch = async (nextSearch: string) => {
@@ -309,11 +325,13 @@ export const AdminList = ({
         list={listMap(list)}
         listTotal={listTotal}
         listPage={listPage!}
+        listAll={listAll}
         columns={columnsState}
         hidePagination={hidePagination}
         activeSortField={sortField}
         activeSortOrder={sortOrder}
         selectedIds={selectedIds}
+        blockchains={blockchains}
         onIdSelected={onIdSelected}
         onIdAllSelected={onIdAllSelected}
         onPageChanged={handlePageChanged}

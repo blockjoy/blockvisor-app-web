@@ -1,5 +1,6 @@
 export * from './components/NodeLauncher/NodeLauncher';
 export * from './components/NodeLauncher/NodeLauncherWithGuard';
+export * from './components/NodeLauncher/Summary/NodeLauncherSummaryDetails';
 export * from './components/NodeList/NodeFilters/NodeFilters';
 export * from './components/NodeList/NodeListHeader/NodeListHeader';
 export * from './components/NodeList/NodeList';

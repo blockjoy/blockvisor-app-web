@@ -13,7 +13,6 @@ import { typo } from 'styles/utils.typography.styles';
 import {
   blockchainAtoms,
   nodeLauncherAtoms,
-  convertNodeTypeToName,
   getNodeTypes,
   nodeLauncherSelectors,
 } from '@modules/node';
@@ -29,6 +28,9 @@ export const NodeLauncherProtocol = ({
   const nodeLauncher = useRecoilValue(nodeLauncherAtoms.nodeLauncher);
   const blockchains = useRecoilValue(blockchainAtoms.blockchains);
   const loadingState = useRecoilValue(blockchainAtoms.blockchainsLoadingState);
+  const selectedBlockchain = useRecoilValue(
+    nodeLauncherSelectors.selectedBlockchain,
+  );
 
   const [isFocused, setIsFocused] = useState(false);
   const handleFocus = useCallback((focus: boolean) => {
@@ -37,10 +39,6 @@ export const NodeLauncherProtocol = ({
 
   const { blockchainId: activeBlockchainId, nodeType: activeNodeType } =
     nodeLauncher;
-
-  const selectedBlockchain = useRecoilValue(
-    nodeLauncherSelectors.selectedBlockchain(activeBlockchainId),
-  );
 
   const handleSelect = useCallback(
     (activeBlockchain: Blockchain, nodeType?: NodeType) => {
@@ -68,8 +66,6 @@ export const NodeLauncherProtocol = ({
 
   // Blockchain component to show in the list
   const renderItem = (blockchain: Blockchain, isFocusedItem?: boolean) => {
-    const nodeTypes = getNodeTypes(blockchain);
-
     const isActiveItem = blockchain.id === activeBlockchainId;
 
     return (
@@ -80,36 +76,12 @@ export const NodeLauncherProtocol = ({
         }`}
         onClick={(e) => handleBlockchainSelected(e, blockchain)}
       >
-        <div css={styles.blockchainWrapper}>
-          <BlockchainIcon
-            size="28px"
-            hideTooltip
-            blockchainName={blockchain.displayName}
-          />
-          <p>{blockchain.displayName}</p>
-        </div>
-        <div css={styles.nodeTypeButtons} className="node-type-buttons">
-          {nodeTypes.map((nodeType) => {
-            const isActive =
-              activeBlockchainId === blockchain.id &&
-              activeNodeType === nodeType.nodeType;
-
-            return (
-              <button
-                key={nodeType.nodeType}
-                className={isActive ? 'active' : ''}
-                onClick={(e) =>
-                  handleBlockchainSelected(e, blockchain, nodeType.nodeType)
-                }
-                type="button"
-                css={styles.createButton}
-                {...(!isActiveItem && { tabIndex: -1 })}
-              >
-                {convertNodeTypeToName(nodeType.nodeType)}
-              </button>
-            );
-          })}
-        </div>
+        <BlockchainIcon
+          size="28px"
+          hideTooltip
+          blockchainName={blockchain.displayName}
+        />
+        <p>{blockchain.displayName}</p>
       </div>
     );
   };

@@ -26,7 +26,7 @@ export const styles = {
     background: transparent;
     font-size: 24px;
     outline: none;
-    min-height: 50px;
+    min-height: 30px;
     min-width: 0;
     margin-right: 11px;
     color: ${theme.colorText};
@@ -53,7 +53,7 @@ export const styles = {
   span: (theme: ITheme) => css`
     color: ${theme.colorText};
     font-size: 24px;
-    min-height: 50px;
+    min-height: 30px;
     display: flex;
     align-items: center;
     margin-right: 11px;

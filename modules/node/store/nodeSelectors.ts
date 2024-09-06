@@ -16,9 +16,9 @@ import {
   nodeAtoms,
   blockchainAtoms,
   blockchainSelectors,
-  BlockchainSimple,
   NetworkConfigSimple,
   InitialNodeQueryParams,
+  nodeLauncherAtoms,
 } from '@modules/node';
 import { authAtoms } from '@modules/auth';
 
@@ -82,22 +82,22 @@ const queryParams = selector<InitialNodeQueryParams>({
   },
 });
 
-const regionsByBlockchain = selectorFamily<Region[], BlockchainSimple>({
+const regionsByBlockchain = selector<Region[]>({
   key: 'node.regions.byBlockchain',
-  get:
-    ({ blockchainId, version, nodeType }) =>
-    ({ get }) => {
-      const regionsList = get(nodeAtoms.allRegions);
+  get: ({ get }) => {
+    const { blockchainId, nodeType } = get(nodeLauncherAtoms.nodeLauncher);
+    const version = get(nodeLauncherAtoms.selectedVersion);
+    const regionsList = get(nodeAtoms.allRegions);
 
-      return (
-        regionsList.find(
-          (region) =>
-            region.blockchainId === blockchainId &&
-            region.version === version &&
-            region.nodeType === nodeType,
-        )?.regions ?? []
-      );
-    },
+    return (
+      regionsList.find(
+        (region) =>
+          region.blockchainId === blockchainId &&
+          region.version === version?.version &&
+          region.nodeType === nodeType,
+      )?.regions ?? []
+    );
+  },
 });
 
 const filtersBlockchainSelectedIds = selector<string[]>({

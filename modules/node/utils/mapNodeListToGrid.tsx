@@ -4,6 +4,7 @@ import { BlockchainIcon } from '@shared/components';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { getNodeJobProgress } from './getNodeJobProgress';
 import { escapeHtml } from '@shared/utils/escapeHtml';
+import { convertNodeTypeToName } from '@modules/node';
 
 const styles = {
   blockchainNetwork: css`
@@ -40,7 +41,8 @@ export const mapNodeListToGrid = (
           }
           middleRow={
             <p css={styles.blockchainNetwork}>
-              {node.blockchainName} | {node.network}
+              {node.blockchainName} | {convertNodeTypeToName(node.nodeType)} |{' '}
+              {node.network}
             </p>
           }
         />

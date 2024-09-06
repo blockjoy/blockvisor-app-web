@@ -1,81 +1,57 @@
 import { Fragment } from 'react';
 import { useRecoilValue } from 'recoil';
-import { FormLabel, FormHeader, PillPicker, SvgIcon } from '@shared/components';
-import { colors } from 'styles/utils.colors.styles';
-import { spacing } from 'styles/utils.spacing.styles';
-import { typo } from 'styles/utils.typography.styles';
-import { styles } from './NodeLauncherConfig.styles';
 import { NodeProperty } from '@modules/grpc/library/blockjoy/v1/node';
 import { renderControls } from '@modules/node/utils/renderNodeLauncherConfigControls';
 import { BlockchainVersion } from '@modules/grpc/library/blockjoy/v1/blockchain';
+import { NetworkConfig } from '@modules/grpc/library/blockjoy/common/v1/blockchain';
+import { FormLabel, FormHeader } from '@shared/components';
 import {
   NodeLauncherPanel,
   NodeVersionSelect,
   nodeLauncherAtoms,
   nodeLauncherSelectors,
+  NodeTypeSelect,
+  NodeNetworkSelect,
 } from '@modules/node';
 import { authSelectors } from '@modules/auth';
+import { styles } from './NodeLauncherConfig.styles';
 
 type NodeLauncherConfigProps = {
-  nodeTypeProperties?: NodeProperty[];
-  nodeFiles?: NodeFiles[];
   onFileUploaded: (e: any) => void;
   onNodeConfigPropertyChanged: (name: string, value: string | boolean) => void;
-  onNodePropertyChanged: (name: string, value: any) => void;
   onVersionChanged: (version: BlockchainVersion | null) => void;
-  onNetworkChanged: (network: string) => void;
+  onNetworkChanged: (network: NetworkConfig) => void;
 };
 
 export const NodeLauncherConfig = ({
   onFileUploaded,
-  onNodePropertyChanged,
   onNodeConfigPropertyChanged,
   onVersionChanged,
   onNetworkChanged,
 }: NodeLauncherConfigProps) => {
   const nodeLauncher = useRecoilValue(nodeLauncherAtoms.nodeLauncher);
   const networks = useRecoilValue(nodeLauncherSelectors.networks);
-  const versions = useRecoilValue(nodeLauncherSelectors.versions);
   const selectedVersion = useRecoilValue(nodeLauncherAtoms.selectedVersion);
-  const selectedNetwork = useRecoilValue(nodeLauncherAtoms.selectedNetwork);
-
   const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
 
   const { properties, keyFiles } = nodeLauncher;
-
-  const handleNetworkChanged = (field: string, value: string) => {
-    onNetworkChanged(value);
-  };
 
   return (
     <NodeLauncherPanel>
       <div css={styles.wrapper}>
         <FormHeader>Configure</FormHeader>
 
-        {selectedVersion && (
-          <>
-            <FormLabel>Version</FormLabel>
-            <NodeVersionSelect
-              versions={versions}
-              onVersionChanged={onVersionChanged}
-            />
-          </>
-        )}
+        <FormLabel>Node Type</FormLabel>
+        <NodeTypeSelect />
 
-        <FormLabel>Network</FormLabel>
-        {selectedVersion && Boolean(networks?.length) ? (
-          <PillPicker
-            name="network"
-            items={networks!.map((n) => n.name)}
-            selectedItem={selectedNetwork!}
-            onChange={handleNetworkChanged}
-          />
-        ) : (
-          <div css={[spacing.bottom.medium, colors.warning, typo.small]}>
-            {selectedVersion
-              ? 'Missing Network Configuration'
-              : 'Version List Empty'}
-          </div>
+        <FormLabel>Version</FormLabel>
+        <NodeVersionSelect onVersionChanged={onVersionChanged} />
+
+        {(networks.length || isSuperUser) && selectedVersion && (
+          <>
+            <FormLabel>Network</FormLabel>
+            <NodeNetworkSelect onNetworkChanged={onNetworkChanged} />
+          </>
         )}
 
         {/* TODO: Add back in when firewall implemented */}
