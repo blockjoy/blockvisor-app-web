@@ -26,6 +26,7 @@ export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
   const selectedHosts = useRecoilValue(nodeLauncherAtoms.selectedHosts);
   const allHosts = useRecoilValue(hostAtoms.allHosts);
   const selectedRegion = useRecoilValue(nodeLauncherAtoms.selectedRegion);
+  const selectedVersion = useRecoilValue(nodeLauncherAtoms.selectedVersion);
 
   const { blockchainId, nodeType, properties } = nodeLauncher;
 
@@ -118,6 +119,7 @@ export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
                 {!hasSummary ? <div>Blockchain</div> : null}
               </>
             ) : null}
+            {!selectedVersion && <div>Version</div>}
           </div>
         </>
       )}
