@@ -18,6 +18,27 @@ type UseAccessibleGridReturnType = {
   handleItemRef: (element: HTMLDivElement, index: number) => void;
 };
 
+const getLastItemsInColumns = (
+  totalItems: number,
+  columns: number,
+): number[] => {
+  const lastItemsInColumns: number[] = [];
+
+  for (let c = 0; c < columns; c++) {
+    let lastItem = c;
+    let k = 1;
+
+    while (c + k * columns < totalItems) {
+      lastItem = c + k * columns;
+      k++;
+    }
+
+    lastItemsInColumns.push(lastItem);
+  }
+
+  return lastItemsInColumns;
+};
+
 export const useAccessibleGrid = <T extends { id?: string; name?: string }>({
   items,
   selectedItem,
@@ -31,10 +52,6 @@ export const useAccessibleGrid = <T extends { id?: string; name?: string }>({
   const selectedItemIndex = selectedItem ? items.indexOf(selectedItem) : 0;
   const [activeIndex, setActiveIndex] = useState(selectedItemIndex);
   const itemRefs = useRef<HTMLDivElement[]>([]);
-
-  useEffect(() => {
-    if (activeIndex !== selectedItemIndex) setActiveIndex(selectedItemIndex);
-  }, [selectedItem, selectedItemIndex]);
 
   useEffect(() => {
     if (searchQuery !== '') setActiveIndex(0);
@@ -51,11 +68,12 @@ export const useAccessibleGrid = <T extends { id?: string; name?: string }>({
             const newIndex = prevIndex - columnsPerPage;
 
             if (newIndex < 0) {
-              const wrappedIndex = items.length + newIndex;
-              const columnOffset = wrappedIndex % columnsPerPage;
-              const finalIndex = wrappedIndex + columnOffset - prevIndex;
+              const lastItems = getLastItemsInColumns(
+                items.length,
+                columnsPerPage,
+              );
 
-              return finalIndex;
+              return lastItems[prevIndex];
             }
 
             return newIndex;
@@ -118,7 +136,7 @@ export const useAccessibleGrid = <T extends { id?: string; name?: string }>({
 
       if (!gridRef?.current) return;
 
-      const divElement = (e.target as HTMLDivElement)?.closest('div');
+      const divElement = (e.target as HTMLDivElement)?.closest('.card');
 
       if (divElement) {
         const index = itemRefs.current.indexOf(divElement as HTMLDivElement);
