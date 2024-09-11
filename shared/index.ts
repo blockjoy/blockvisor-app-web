@@ -6,6 +6,7 @@ export * from './constants/forms';
 export * from './constants/countries';
 export * from './constants/states';
 
+export * from './hooks/useAccessibleGrid';
 export * from './hooks/useAccessibleDropdown';
 export * from './hooks/useAccessibleList';
 export * from './hooks/useClickOutside';

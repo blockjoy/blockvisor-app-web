@@ -15,6 +15,8 @@ export * from './components/NodeView/Tabs/Commands/NodeCommands';
 export * from './components/NodeView/Tabs/Settings/NodeViewSettings';
 export * from './components/Shared';
 
+export * from './constants/constants';
+
 export * from './hooks/useNodeFilters';
 export * from './hooks/useGetBlockchains';
 export * from './hooks/useGetRegions';
@@ -36,6 +38,7 @@ export * from './store/nodeLauncherSelectors';
 
 export * from './types/common';
 
+export * from './utils/calcGrid';
 export * from './utils/convertNodeTypeToName';
 export * from './utils/getNodeTypes';
 export * from './utils/mapNodeListToRows';
