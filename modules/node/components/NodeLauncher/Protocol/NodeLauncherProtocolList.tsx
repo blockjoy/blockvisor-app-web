@@ -186,7 +186,7 @@ export const NodeLauncherProtocolList = <
                     }}
                     css={styles.card}
                     onClick={(e) => handleBlockchainSelected(e, item)}
-                    className={`${isActiveItem ? ' active' : ''}${
+                    className={`card${isActiveItem ? ' active' : ''}${
                       isFocusedItem ? ' focus' : ''
                     }`}
                   >
