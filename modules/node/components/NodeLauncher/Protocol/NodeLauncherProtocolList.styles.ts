@@ -9,7 +9,8 @@ export const styles = {
     overflow-y: auto;
 
     @media ${breakpoints.toXlrg} {
-      max-height: 508px;
+      height: 508px;
+      max-height: 60vh;
     }
 
     @media ${breakpoints.fromXLrg} {
