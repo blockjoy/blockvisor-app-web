@@ -24,6 +24,7 @@ export * from './hooks/useNodeLauncherHandlers';
 export * from './hooks/useNodeList';
 export * from './hooks/useNodeSort';
 export * from './hooks/useNodeView';
+export * from './hooks/useProtocolGrid';
 export * from './hooks/useUpdates';
 
 export * from './store/blockchainAtoms';

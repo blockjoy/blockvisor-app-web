@@ -1,22 +1,16 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useRef } from 'react';
 import { useRecoilValue } from 'recoil';
 import { NodeType } from '@modules/grpc/library/blockjoy/common/v1/node';
 import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
 import {
-  BlockchainIcon,
-  List,
-  EmptyColumn,
-  withSearchList,
-} from '@shared/components';
-import { colors } from 'styles/utils.colors.styles';
-import { typo } from 'styles/utils.typography.styles';
-import {
   blockchainAtoms,
-  nodeLauncherAtoms,
   getNodeTypes,
   nodeLauncherSelectors,
 } from '@modules/node';
+import { NodeLauncherProtocolList } from './NodeLauncherProtocolList';
 import { styles } from './NodeLauncherProtocol.styles';
+import { colors } from 'styles/utils.colors.styles';
+import { typo } from 'styles/utils.typography.styles';
 
 type NodeLauncherProtocolProps = {
   onProtocolSelected: (blockchainId: string, nodeTypeId: NodeType) => void;
@@ -25,20 +19,13 @@ type NodeLauncherProtocolProps = {
 export const NodeLauncherProtocol = ({
   onProtocolSelected,
 }: NodeLauncherProtocolProps) => {
-  const nodeLauncher = useRecoilValue(nodeLauncherAtoms.nodeLauncher);
   const blockchains = useRecoilValue(blockchainAtoms.blockchains);
   const loadingState = useRecoilValue(blockchainAtoms.blockchainsLoadingState);
   const selectedBlockchain = useRecoilValue(
     nodeLauncherSelectors.selectedBlockchain,
   );
 
-  const [isFocused, setIsFocused] = useState(false);
-  const handleFocus = useCallback((focus: boolean) => {
-    setIsFocused(focus);
-  }, []);
-
-  const { blockchainId: activeBlockchainId, nodeType: activeNodeType } =
-    nodeLauncher;
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
   const handleSelect = useCallback(
     (activeBlockchain: Blockchain, nodeType?: NodeType) => {
@@ -51,72 +38,19 @@ export const NodeLauncherProtocol = ({
     [onProtocolSelected],
   );
 
-  const handleBlockchainSelected = useCallback(
-    (
-      e: React.MouseEvent<HTMLDivElement | HTMLButtonElement>,
-      blockchain: Blockchain,
-      nodeType?: NodeType,
-    ) => {
-      e.preventDefault();
-      e.stopPropagation();
-      handleSelect(blockchain, nodeType);
-    },
-    [handleSelect],
-  );
-
-  // Blockchain component to show in the list
-  const renderItem = (blockchain: Blockchain, isFocusedItem?: boolean) => {
-    const isActiveItem = blockchain.id === activeBlockchainId;
-
-    return (
-      <div
-        css={[styles.row, styles.rowHover]}
-        className={`row list-item${isActiveItem ? ' active' : ''}${
-          isFocusedItem ? ' focus' : ''
-        }`}
-        onClick={(e) => handleBlockchainSelected(e, blockchain)}
-      >
-        <BlockchainIcon
-          size="28px"
-          hideTooltip
-          blockchainName={blockchain.displayName}
-        />
-        <p>{blockchain.displayName}</p>
-      </div>
-    );
-  };
-
-  // Empty component to show when there are no blockchains
-  const renderEmpty = () => (
-    <EmptyColumn
-      title="No Blockchains."
-      description="Please refine your search."
-    />
-  );
-
-  const BlockchainsList = useMemo(
-    () => withSearchList<Blockchain>(List),
-    [blockchains],
-  );
-
   return (
-    <div css={styles.wrapper}>
+    <div css={styles.wrapper} ref={wrapperRef}>
       {!blockchains?.length && loadingState === 'finished' ? (
         <div css={[typo.small, colors.warning]} style={{ marginLeft: '16px' }}>
           Error loading data, please contact our support team.
         </div>
       ) : (
-        <BlockchainsList
+        <NodeLauncherProtocolList
           items={blockchains}
           selectedItem={selectedBlockchain}
-          renderItem={renderItem}
-          renderEmpty={renderEmpty}
           handleSelect={handleSelect}
+          wrapperRef={wrapperRef}
           searchPlaceholder="Find a Protocol"
-          isFocused={isFocused}
-          handleFocus={handleFocus}
-          isLoading={loadingState !== 'finished'}
-          additionalyStyles={styles.scrollbar}
         />
       )}
     </div>
