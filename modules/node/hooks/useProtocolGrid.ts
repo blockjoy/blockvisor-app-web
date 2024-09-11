@@ -3,16 +3,12 @@ import { viewportBreakpoints } from '@shared/constants/viewport';
 
 const ITEM_HEIGHT = 120;
 const WRAPPER_OFFSET = 120;
-const MIN_ITEMS_PER_COLUMN = 3;
+const MIN_ROWS_PER_PAGE = 4;
 
-const calculateItemsPerColumn = (wrapperHeight: number) => {
-  const itemsPerColumn = Math.floor(
-    (wrapperHeight - WRAPPER_OFFSET) / ITEM_HEIGHT,
-  );
+const calculateRowsPerPage = (wrapperHeight: number) => {
+  const rowsPerPage = Math.ceil((wrapperHeight - WRAPPER_OFFSET) / ITEM_HEIGHT);
 
-  return itemsPerColumn > MIN_ITEMS_PER_COLUMN
-    ? itemsPerColumn + 2
-    : MIN_ITEMS_PER_COLUMN;
+  return rowsPerPage > MIN_ROWS_PER_PAGE ? rowsPerPage + 1 : MIN_ROWS_PER_PAGE;
 };
 
 export const useProtocolGrid = (
@@ -47,15 +43,13 @@ export const useProtocolGrid = (
         perPage = 30;
         break;
       case width < viewportBreakpoints.huge:
-        perPage =
-          calculateItemsPerColumn(wrapperHeight) * (isSidebarOpen ? 2 : 3);
+        perPage = calculateRowsPerPage(wrapperHeight) * (isSidebarOpen ? 2 : 3);
         break;
       case width < viewportBreakpoints.xHuge:
-        perPage = calculateItemsPerColumn(wrapperHeight) * 3;
+        perPage = calculateRowsPerPage(wrapperHeight) * 3;
         break;
       default:
-        perPage =
-          calculateItemsPerColumn(wrapperHeight) * (isSidebarOpen ? 3 : 4);
+        perPage = calculateRowsPerPage(wrapperHeight) * (isSidebarOpen ? 3 : 4);
     }
 
     setItemsPerPage(perPage);
