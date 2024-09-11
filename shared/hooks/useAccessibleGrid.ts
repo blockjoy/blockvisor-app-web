@@ -47,19 +47,29 @@ export const useAccessibleGrid = <T extends { id?: string; name?: string }>({
       switch (e.key) {
         case 'ArrowUp':
           e.preventDefault();
-          setActiveIndex(
-            activeIndex - columnsPerPage < 0
-              ? items.length - 1
-              : activeIndex - columnsPerPage,
-          );
+          setActiveIndex((prevIndex) => {
+            const newIndex = prevIndex - columnsPerPage;
+
+            if (newIndex < 0) {
+              const wrappedIndex = items.length + newIndex;
+              const columnOffset = wrappedIndex % columnsPerPage;
+              const finalIndex = wrappedIndex + columnOffset - prevIndex;
+
+              return finalIndex;
+            }
+
+            return newIndex;
+          });
           break;
         case 'ArrowDown':
           e.preventDefault();
-          setActiveIndex(
-            activeIndex + columnsPerPage >= items.length
-              ? 0
-              : activeIndex + columnsPerPage,
-          );
+          setActiveIndex((prevIndex) => {
+            const newIndex = prevIndex + columnsPerPage;
+
+            return newIndex >= items.length
+              ? prevIndex % columnsPerPage
+              : newIndex;
+          });
           break;
         case 'ArrowLeft':
           e.preventDefault();
