@@ -47,7 +47,6 @@ export const NodeLauncherProtocolList = <
   wrapperRef,
 }: NodeLauncherProtocolListProps<T>) => {
   const loadingState = useRecoilValue(blockchainAtoms.blockchainsLoadingState);
-  const [isLoading, setIsLoading] = useState(true);
   const isSidebarOpen = useRecoilValue(layoutSelectors.isSidebarOpen);
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -92,8 +91,6 @@ export const NodeLauncherProtocolList = <
 
     const newData = filteredData.slice(0, itemsPerPage);
     setPaginatedData(newData);
-
-    if (isLoading) setIsLoading(false);
   }, [filteredData]);
 
   // RESIZING
@@ -159,7 +156,8 @@ export const NodeLauncherProtocolList = <
       />
 
       <div id="protocol-list" css={styles.scrollbar}>
-        {loadingState === 'initializing' || isLoading ? (
+        {loadingState === 'initializing' ||
+        (filteredData.length && !paginatedData.length) ? (
           <TableSkeleton />
         ) : paginatedData.length > 0 ? (
           <InfiniteScroll
