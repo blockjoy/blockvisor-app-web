@@ -2,11 +2,11 @@ import { RefObject, useEffect } from 'react';
 
 export const useFlashlightGrid = <T extends {}>(
   items?: T,
-  listRef?: RefObject<HTMLUListElement>,
-  cardsRef?: RefObject<HTMLLIElement[]>,
+  gridRef?: RefObject<HTMLDivElement>,
+  cardsRef?: RefObject<HTMLDivElement[]>,
 ) => {
   useEffect(() => {
-    const wrapper = listRef?.current;
+    const wrapper = gridRef?.current;
     if (!wrapper) return;
 
     const handleMouseMove = (event: MouseEvent) => {

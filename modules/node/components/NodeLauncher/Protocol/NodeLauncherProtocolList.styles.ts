@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { NUM_OF_BLOCKCHAIN_COLUMNS } from '@modules/node';
 import { rgba } from 'polished';
 import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
@@ -31,34 +32,47 @@ export const styles = {
       gap: 8px;
       padding: 2px 12px 2px 2px;
 
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(${NUM_OF_BLOCKCHAIN_COLUMNS['min']}, 1fr);
 
       @media ${breakpoints.fromTny} {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(${NUM_OF_BLOCKCHAIN_COLUMNS['tny']}, 1fr);
       }
 
       @media ${breakpoints.fromSml} {
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(${NUM_OF_BLOCKCHAIN_COLUMNS['sml']}, 1fr);
       }
 
       @media ${breakpoints.fromMed} {
-        grid-template-columns: repeat(5, 1fr);
+        grid-template-columns: repeat(${NUM_OF_BLOCKCHAIN_COLUMNS['med']}, 1fr);
       }
 
       @media ${breakpoints.fromLrg} {
-        grid-template-columns: repeat(6, 1fr);
+        grid-template-columns: repeat(${NUM_OF_BLOCKCHAIN_COLUMNS['lrg']}, 1fr);
       }
 
       @media ${breakpoints.fromXLrg} {
-        grid-template-columns: repeat(${isSidebarOpen ? 2 : 3}, 1fr);
+        grid-template-columns: repeat(
+          ${isSidebarOpen
+            ? NUM_OF_BLOCKCHAIN_COLUMNS['xLrgSidebar']
+            : NUM_OF_BLOCKCHAIN_COLUMNS['xLrg']},
+          1fr
+        );
       }
 
       @media ${breakpoints.fromHuge} {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(
+          ${NUM_OF_BLOCKCHAIN_COLUMNS['huge']},
+          1fr
+        );
       }
 
       @media ${breakpoints.fromXHuge} {
-        grid-template-columns: repeat(${isSidebarOpen ? 3 : 4}, 1fr);
+        grid-template-columns: repeat(
+          ${isSidebarOpen
+            ? NUM_OF_BLOCKCHAIN_COLUMNS['xHugeSidebar']
+            : NUM_OF_BLOCKCHAIN_COLUMNS['xHuge']},
+          1fr
+        );
       }
 
       &:hover > li > div {

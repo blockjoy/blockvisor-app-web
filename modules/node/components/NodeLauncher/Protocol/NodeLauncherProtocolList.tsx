@@ -12,7 +12,7 @@ import { isMobile } from 'react-device-detect';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import {
   filterSearch,
-  useAccessibleList,
+  useAccessibleGrid,
   useFlashlightGrid,
 } from '@shared/index';
 import {
@@ -22,7 +22,11 @@ import {
   TableSkeleton,
 } from '@shared/components';
 import { layoutSelectors } from '@modules/layout';
-import { blockchainAtoms, useProtocolGrid } from '@modules/node';
+import {
+  blockchainAtoms,
+  useProtocolGrid,
+  calculateColumnsPerPage,
+} from '@modules/node';
 import { styles } from './NodeLauncherProtocolList.styles';
 
 export type NodeLauncherProtocolListProps<T = any> = {
@@ -51,25 +55,28 @@ export const NodeLauncherProtocolList = <
   const [currentPage, setCurrentPage] = useState(1);
   const [paginatedData, setPaginatedData] = useState<T[]>([]);
 
-  const listRef = useRef<HTMLUListElement>(null);
-  const cardsRef = useRef<HTMLLIElement[]>([]);
+  const gridRef = useRef<HTMLDivElement>(null);
+  const cardsRef = useRef<HTMLDivElement[]>([]);
 
   const { itemsPerPage } = useProtocolGrid(isSidebarOpen, wrapperRef);
 
-  useFlashlightGrid(paginatedData, listRef, cardsRef);
+  useFlashlightGrid(paginatedData, gridRef, cardsRef);
 
   const handleFocus = useCallback((focus: boolean) => {
     setIsFocused(focus);
   }, []);
 
-  const { activeIndex, handleItemRef } = useAccessibleList({
+  const columnsPerPage = calculateColumnsPerPage(isSidebarOpen);
+
+  const { activeIndex, handleItemRef } = useAccessibleGrid({
     items: paginatedData,
     selectedItem,
     handleSelect,
     searchQuery,
     isFocused,
     handleFocus,
-    listRef,
+    gridRef,
+    columnsPerPage,
   });
 
   const filteredData = useMemo(
@@ -151,10 +158,10 @@ export const NodeLauncherProtocolList = <
         placeholder={searchPlaceholder}
       />
 
-      {loadingState === 'initializing' || isLoading ? (
-        <TableSkeleton />
-      ) : paginatedData.length > 0 ? (
-        <div id="protocol-list" css={styles.scrollbar}>
+      <div id="protocol-list" css={styles.scrollbar}>
+        {loadingState === 'initializing' || isLoading ? (
+          <TableSkeleton />
+        ) : paginatedData.length > 0 ? (
           <InfiniteScroll
             dataLength={paginatedData?.length}
             next={loadMore}
@@ -163,7 +170,7 @@ export const NodeLauncherProtocolList = <
             scrollThreshold={0.75}
             loader={''}
           >
-            <ul ref={listRef} css={styles.cards(isSidebarOpen)}>
+            <div ref={gridRef} css={styles.cards(isSidebarOpen)}>
               {paginatedData.map((item, index) => {
                 const isActiveItem = item.id === selectedItem?.id;
                 const isFocusedItem = !isMobile
@@ -171,7 +178,7 @@ export const NodeLauncherProtocolList = <
                   : selectedItem?.id === item.id;
 
                 return (
-                  <li
+                  <div
                     key={item?.id}
                     ref={(el) => {
                       if (el && !cardsRef.current.includes(el)) {
@@ -179,38 +186,35 @@ export const NodeLauncherProtocolList = <
                       }
                       handleItemRef(el!, index);
                     }}
+                    css={styles.card}
+                    onClick={(e) => handleBlockchainSelected(e, item)}
+                    className={`${isActiveItem ? ' active' : ''}${
+                      isFocusedItem ? ' focus' : ''
+                    }`}
                   >
                     <div
-                      css={styles.card}
-                      onClick={(e) => handleBlockchainSelected(e, item)}
-                      className={`${isActiveItem ? ' active' : ''}${
-                        isFocusedItem ? ' focus' : ''
-                      }`}
+                      css={styles.cardContent}
+                      className={isActiveItem ? 'active' : ''}
                     >
-                      <div
-                        css={styles.cardContent}
-                        className={isActiveItem ? 'active' : ''}
-                      >
-                        <BlockchainIcon
-                          size="28px"
-                          hideTooltip
-                          blockchainName={item.name}
-                        />
-                        <p>{item.name}</p>
-                      </div>
+                      <BlockchainIcon
+                        size="28px"
+                        hideTooltip
+                        blockchainName={item.name}
+                      />
+                      <p>{item.name}</p>
                     </div>
-                  </li>
+                  </div>
                 );
               })}
-            </ul>
+            </div>
           </InfiniteScroll>
-        </div>
-      ) : (
-        <EmptyColumn
-          title="No Blockchains."
-          description="Please refine your search."
-        />
-      )}
+        ) : (
+          <EmptyColumn
+            title="No Blockchains."
+            description="Please refine your search."
+          />
+        )}
+      </div>
     </>
   );
 };
