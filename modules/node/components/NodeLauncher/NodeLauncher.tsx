@@ -24,7 +24,6 @@ export const NodeLauncher = ({
     handleRegionChanged,
     handleRegionsLoaded,
     handleProtocolSelected,
-    handleNodePropertyChanged,
     handleNodeConfigPropertyChanged,
     handleVersionChanged,
     handleNetworkChanged,
@@ -57,6 +56,7 @@ export const NodeLauncher = ({
                 onFileUploaded={handleFileUploaded}
                 onNodeConfigPropertyChanged={handleNodeConfigPropertyChanged}
                 onVersionChanged={handleVersionChanged}
+                onProtocolSelected={handleProtocolSelected}
               />
             )}
             {hasSummary && (

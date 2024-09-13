@@ -15,7 +15,7 @@ import {
   sortVersions,
 } from '@modules/node';
 import { authSelectors } from '@modules/auth';
-import { nodeTypeList } from '@shared/index';
+import { BLOCKCHAIN_CLIENTS, nodeTypeList } from '@shared/index';
 import { billingAtoms } from '@modules/billing';
 
 const networks = selector<NetworkConfig[]>({
@@ -33,6 +33,48 @@ const versions = selector<BlockchainVersion[]>({
     const selectedNodeType = get(nodeLauncherAtoms.selectedNodeType);
 
     return sortVersions(selectedNodeType?.versions);
+  },
+});
+
+const clients = selector<BlockchainClient[]>({
+  key: 'blockchain.clients',
+  get: ({ get }) => {
+    const blockchainList = get(blockchainAtoms.blockchains);
+    const selectedBlockchainVal = get(selectedBlockchain);
+
+    const selectedClient = BLOCKCHAIN_CLIENTS.find((client) =>
+      selectedBlockchainVal?.name.includes(client),
+    );
+
+    const cleanName = selectedClient
+      ? selectedBlockchainVal?.name.replace(`-${selectedClient}`, '')
+      : selectedBlockchainVal?.name;
+
+    const possibleBlockchainNames = [
+      cleanName,
+      ...BLOCKCHAIN_CLIENTS.map((client) => {
+        const parts = cleanName?.split('-');
+        parts?.splice(1, 0, client);
+        return parts?.join('-');
+      }),
+    ];
+
+    const allBlockchains = blockchainList.filter((blockchain) => {
+      return possibleBlockchainNames.includes(blockchain.name);
+    });
+
+    const result = allBlockchains.map((blockchain) => {
+      const clientName = BLOCKCHAIN_CLIENTS.find((client) =>
+        blockchain.name.includes(client),
+      );
+
+      return {
+        id: blockchain.id,
+        name: clientName ?? 'Default',
+      };
+    });
+
+    return result;
   },
 });
 
@@ -145,6 +187,19 @@ const selectedBlockchain = selector<Blockchain | null>({
   },
 });
 
+const selectedBlockchainClient = selector<BlockchainClient | null>({
+  key: 'nodeLauncher.blockchain.client',
+  get: ({ get }) => {
+    const selectedBlockchaiVal = get(selectedBlockchain);
+    const clientsVal = get(clients);
+
+    return (
+      clientsVal.find((client) => client.id === selectedBlockchaiVal?.id) ??
+      null
+    );
+  },
+});
+
 const selectedBlockchainNodeTypes = selector<BlockchainNodeType[]>({
   key: 'nodeLauncher.nodeTypes',
   get: ({ get }) => {
@@ -230,6 +285,7 @@ const nodeLauncherStatus = selectorFamily<
 export const nodeLauncherSelectors = {
   networks,
   versions,
+  clients,
 
   hasNetworkList,
   hasProtocol,
@@ -243,6 +299,7 @@ export const nodeLauncherSelectors = {
   totalNodesToLaunch,
 
   selectedBlockchain,
+  selectedBlockchainClient,
   selectedBlockchainNodeTypes,
 
   nodeLauncherInfo,

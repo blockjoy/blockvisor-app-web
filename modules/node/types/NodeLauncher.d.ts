@@ -4,3 +4,8 @@ type NodeLauncherBasicInfo = {
   networkName?: string;
   versionName?: string;
 };
+
+type BlockchainClient = {
+  id: string;
+  name: string;
+};

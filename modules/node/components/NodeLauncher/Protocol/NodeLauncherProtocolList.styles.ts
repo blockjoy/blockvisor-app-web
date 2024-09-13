@@ -143,7 +143,7 @@ export const styles = {
 
     p {
       font-weight: 400;
-      font-size: 14px;
+      font-size: 13px;
       color: ${rgba(theme.colorText || '#ffffff', 0.7)};
     }
 
