@@ -203,7 +203,7 @@ export const NodeLauncherProtocolList = ({
                         hideTooltip
                         blockchainName={item.name}
                       />
-                      <p>{item.name}</p>
+                      <p>{item.displayName}</p>
                     </div>
                   </div>
                 );
