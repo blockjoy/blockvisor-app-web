@@ -54,6 +54,10 @@ export const useAccessibleGrid = <T extends { id?: string; name?: string }>({
   const itemRefs = useRef<HTMLDivElement[]>([]);
 
   useEffect(() => {
+    setActiveIndex(0);
+  }, []);
+
+  useEffect(() => {
     if (searchQuery !== '') setActiveIndex(0);
   }, [searchQuery]);
 
