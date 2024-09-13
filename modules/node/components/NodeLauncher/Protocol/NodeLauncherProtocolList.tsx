@@ -10,6 +10,7 @@ import {
 import { useRecoilValue } from 'recoil';
 import { isMobile } from 'react-device-detect';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
 import {
   filterSearch,
   useAccessibleGrid,
@@ -24,35 +25,34 @@ import {
 import { layoutSelectors } from '@modules/layout';
 import {
   blockchainAtoms,
+  nodeLauncherSelectors,
+  blockchainSelectors,
   useProtocolGrid,
   calculateColumnsPerPage,
 } from '@modules/node';
 import { styles } from './NodeLauncherProtocolList.styles';
 
-export type NodeLauncherProtocolListProps<T = any> = {
-  items: T[];
-  selectedItem?: T | null;
-  handleSelect?: (item: T) => void;
+export type NodeLauncherProtocolListProps = {
+  handleSelect?: (item: Blockchain) => void;
   wrapperRef?: RefObject<HTMLDivElement>;
   searchPlaceholder?: string;
 };
 
-export const NodeLauncherProtocolList = <
-  T extends { id?: string; name?: string },
->({
-  items,
-  selectedItem,
+export const NodeLauncherProtocolList = ({
   handleSelect,
   searchPlaceholder,
   wrapperRef,
-}: NodeLauncherProtocolListProps<T>) => {
+}: NodeLauncherProtocolListProps) => {
+  const blockchains = useRecoilValue(blockchainSelectors.blockchainsNoClient);
+  const clients = useRecoilValue(nodeLauncherSelectors.clients);
+
   const loadingState = useRecoilValue(blockchainAtoms.blockchainsLoadingState);
   const isSidebarOpen = useRecoilValue(layoutSelectors.isSidebarOpen);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [paginatedData, setPaginatedData] = useState<T[]>([]);
+  const [paginatedData, setPaginatedData] = useState<Blockchain[]>([]);
 
   const gridRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<HTMLDivElement[]>([]);
@@ -67,9 +67,13 @@ export const NodeLauncherProtocolList = <
 
   const columnsPerPage = calculateColumnsPerPage(isSidebarOpen);
 
+  const selectedBlockchainVisually = blockchains.find(
+    (b) => b.id === clients?.[0]?.id,
+  );
+
   const { activeIndex, handleItemRef } = useAccessibleGrid({
     items: paginatedData,
-    selectedItem,
+    selectedItem: selectedBlockchainVisually,
     handleSelect,
     searchQuery,
     isFocused,
@@ -79,8 +83,8 @@ export const NodeLauncherProtocolList = <
   });
 
   const filteredData = useMemo(
-    () => filterSearch<T>(items, searchQuery),
-    [items, searchQuery],
+    () => filterSearch<Blockchain>(blockchains, searchQuery),
+    [blockchains, searchQuery],
   );
 
   // FILTERING
@@ -135,7 +139,7 @@ export const NodeLauncherProtocolList = <
   const handleBlockchainSelected = useCallback(
     (
       e: React.MouseEvent<HTMLDivElement | HTMLButtonElement>,
-      blockchain: T,
+      blockchain: Blockchain,
     ) => {
       e.preventDefault();
       handleSelect?.(blockchain);
@@ -170,10 +174,10 @@ export const NodeLauncherProtocolList = <
           >
             <div ref={gridRef} css={styles.cards(isSidebarOpen)}>
               {paginatedData.map((item, index) => {
-                const isActiveItem = item.id === selectedItem?.id;
+                const isActiveItem = item.id === selectedBlockchainVisually?.id;
                 const isFocusedItem = !isMobile
                   ? index === activeIndex
-                  : selectedItem?.id === item.id;
+                  : selectedBlockchainVisually?.id === item.id;
 
                 return (
                   <div

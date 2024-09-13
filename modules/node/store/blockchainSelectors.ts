@@ -8,6 +8,7 @@ import {
 } from '@modules/node';
 import { nodeTypeList } from '@shared/constants/lookups';
 import { sort } from '@shared/components';
+import { BLOCKCHAIN_CLIENTS } from '@shared/index';
 
 const blockchainsHasError = selector<boolean>({
   key: 'blockchains.hasError',
@@ -140,10 +141,43 @@ const blockchainNetworks = selectorFamily<NetworkConfigSimple[], string[]>({
     },
 });
 
+const blockchainsNoClient = selector<Blockchain[]>({
+  key: 'blockchains.withoutClient',
+  get: ({ get }) => {
+    const blockchainList = get(blockchainAtoms.blockchains);
+
+    const uniqueNames = new Set<string>();
+    const result: Blockchain[] = [];
+
+    blockchainList.forEach((blockchain) => {
+      const client = BLOCKCHAIN_CLIENTS.find((client) =>
+        blockchain.name.includes(client),
+      );
+
+      const modifiedName = client
+        ? blockchain.name.replace(`-${client}`, '')
+        : blockchain.name;
+
+      if (!uniqueNames.has(modifiedName)) {
+        result.push({
+          ...blockchain,
+          name: modifiedName,
+        });
+
+        uniqueNames.add(modifiedName);
+      }
+    });
+
+    return result;
+  },
+});
+
 export const blockchainSelectors = {
   blockchainsHasError,
   blockchainsFilteredByName,
   blockchainsByTypeAndVersion,
+
+  blockchainsNoClient,
 
   activeBlockchain,
   filteredBySearchTermBlockchains,

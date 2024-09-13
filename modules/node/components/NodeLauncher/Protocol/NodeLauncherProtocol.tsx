@@ -2,11 +2,7 @@ import { useCallback, useRef } from 'react';
 import { useRecoilValue } from 'recoil';
 import { NodeType } from '@modules/grpc/library/blockjoy/common/v1/node';
 import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
-import {
-  blockchainAtoms,
-  getNodeTypes,
-  nodeLauncherSelectors,
-} from '@modules/node';
+import { blockchainAtoms, getNodeTypes } from '@modules/node';
 import { NodeLauncherProtocolList } from './NodeLauncherProtocolList';
 import { styles } from './NodeLauncherProtocol.styles';
 import { colors } from 'styles/utils.colors.styles';
@@ -21,9 +17,6 @@ export const NodeLauncherProtocol = ({
 }: NodeLauncherProtocolProps) => {
   const blockchains = useRecoilValue(blockchainAtoms.blockchains);
   const loadingState = useRecoilValue(blockchainAtoms.blockchainsLoadingState);
-  const selectedBlockchain = useRecoilValue(
-    nodeLauncherSelectors.selectedBlockchain,
-  );
 
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -46,8 +39,6 @@ export const NodeLauncherProtocol = ({
         </div>
       ) : (
         <NodeLauncherProtocolList
-          items={blockchains}
-          selectedItem={selectedBlockchain}
           handleSelect={handleSelect}
           wrapperRef={wrapperRef}
           searchPlaceholder="Find a Protocol"

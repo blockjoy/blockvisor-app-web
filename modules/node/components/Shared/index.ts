@@ -1,6 +1,7 @@
 export * from './FirewallDropdown/FirewallDropdown';
 export * from './LockedSwitch/LockedSwitch';
 export * from './NodeLauncherPanel/NodeLauncherPanel';
+export * from './NodeClient/NodeClient';
 export * from './NodeNetworkSelect/NodeNetworkSelect';
 export * from './NodeRegionSelect/NodeRegionSelect';
 export * from './NodeTypeConfigLabel/NodeTypeConfigLabel';
