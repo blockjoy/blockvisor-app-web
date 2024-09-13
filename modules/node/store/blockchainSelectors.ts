@@ -151,17 +151,17 @@ const blockchainsNoClient = selector<Blockchain[]>({
 
     blockchainList.forEach((blockchain) => {
       const client = BLOCKCHAIN_CLIENTS.find((client) =>
-        blockchain.name.includes(client),
+        blockchain.displayName.includes(client),
       );
 
       const modifiedName = client
-        ? blockchain.name.replace(`-${client}`, '')
-        : blockchain.name;
+        ? blockchain.displayName.replace(`-${client}`, '')
+        : blockchain.displayName;
 
       if (!uniqueNames.has(modifiedName)) {
         result.push({
           ...blockchain,
-          name: modifiedName,
+          displayName: modifiedName,
         });
 
         uniqueNames.add(modifiedName);
