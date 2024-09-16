@@ -89,14 +89,14 @@ const columns: AdminListColumn[] = [
   },
   {
     name: 'nodeType',
-    width: '150px',
+    width: '190px',
     sortField: NodeSortField.NODE_SORT_FIELD_NODE_TYPE,
     isVisible: false,
     filterComponent: AdminNodesFilterNodeType,
   },
   {
     name: 'network',
-    width: '180px',
+    width: '230px',
     isVisible: false,
     filterComponent: AdminNodesFilterNetwork,
   },
