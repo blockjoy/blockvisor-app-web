@@ -28,7 +28,13 @@ export const AdminNodesFilterNodeType = ({
   );
 
   const filteredNodeTypes: AdminFilterDropdownItem[] = Array.from(
-    new Set(sort(selectedBlockchains?.flatMap(({ nodeTypes }) => nodeTypes))),
+    new Set(
+      sort(
+        selectedBlockchains
+          ?.flatMap(({ nodeTypes }) => nodeTypes)
+          .map((nodeType) => +nodeType.nodeType),
+      ),
+    ),
   )
     .filter((nodeType) =>
       (listAll as Node[])?.some(
@@ -39,7 +45,7 @@ export const AdminNodesFilterNodeType = ({
           ),
       ),
     )
-    .map(({ nodeType }) => ({
+    .map((nodeType) => ({
       id: nodeType?.toString(),
       name: capitalize(convertNodeTypeToName(nodeType)),
     }));
