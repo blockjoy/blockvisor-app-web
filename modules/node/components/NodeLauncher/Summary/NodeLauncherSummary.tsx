@@ -14,7 +14,7 @@ import {
   SvgIcon,
   FormError,
 } from '@shared/components';
-import { HUBSPOT_FORMS, useHubSpotForm } from '@shared/index';
+import { usePipedriveForm } from '@shared/index';
 import { hostAtoms } from '@modules/host';
 import {
   NodeRegionSelect,
@@ -24,7 +24,7 @@ import {
   NodeLauncherPanel,
   NodeLauncherSummaryDetails,
 } from '@modules/node';
-import { authAtoms, authSelectors } from '@modules/auth';
+import { authSelectors } from '@modules/auth';
 import { billingAtoms } from '@modules/billing';
 import { styles } from './NodeLauncherSummary.styles';
 import IconRocket from '@public/assets/icons/app/Rocket.svg';
@@ -54,7 +54,6 @@ export const NodeLauncherSummary = ({
   const [isLaunchError, setIsLaunchError] = useRecoilState(
     nodeLauncherAtoms.isLaunchError,
   );
-  const user = useRecoilValue(authAtoms.user);
   const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
   const error = useRecoilValue(nodeLauncherAtoms.error);
   const selectedHosts = useRecoilValue(nodeLauncherAtoms.selectedHosts);
@@ -74,7 +73,7 @@ export const NodeLauncherSummary = ({
     nodeLauncherSelectors.isPropertiesValid,
   );
 
-  const { submitForm } = useHubSpotForm();
+  const { nodeLauncherForm } = usePipedriveForm();
 
   useEffect(() => {
     setIsLaunching(false);
@@ -84,14 +83,12 @@ export const NodeLauncherSummary = ({
   const handleIssueReport = async () => {
     setIsLaunching(true);
 
-    await submitForm({
-      formId: HUBSPOT_FORMS.requestNodeLaunch,
-      formData: {
-        email: user?.email,
-        node_info: Object.values(nodeLauncherInfo)
+    await nodeLauncherForm({
+      leadData: {
+        nodeInfo: Object.values(nodeLauncherInfo)
           .filter((value) => value)
           .join(' | '),
-        node_issues: nodeLauncherStatus.reasons.join(' | '),
+        nodeIssues: nodeLauncherStatus.reasons.join(' | '),
       },
       callback: (message) => {
         toast(
