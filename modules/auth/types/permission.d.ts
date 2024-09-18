@@ -36,6 +36,8 @@ type Permission =
   | 'command-list'
   | 'command-pending'
   | 'command-update'
+  | 'crypt-get-secret'
+  | 'crypt-put-secret'
   | 'discovery-services'
   | 'host-create'
   | 'host-get'

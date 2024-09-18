@@ -7,6 +7,7 @@ import {
   Skeleton,
   SkeletonGrid,
 } from '@shared/components';
+import { NodeServiceCreateRequest } from '@modules/grpc/library/blockjoy/v1/node';
 import { colors } from 'styles/utils.colors.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { styles } from './NodeViewHeader.styles';
@@ -14,6 +15,7 @@ import { BlockchainIcon } from '@shared/components';
 import {
   convertNodeTypeToName,
   NodeViewReportProblem,
+  useNodeAdd,
   useNodeDelete,
   useNodeList,
   useNodeView,
@@ -35,6 +37,7 @@ export const NodeViewHeader = () => {
   const { removeFromNodeList } = useNodeList();
   const { loadHosts } = useHostList();
   const { deleteNode } = useNodeDelete();
+  const { createNode } = useNodeAdd();
   const [isDeleteMode, setIsDeleteMode] = useState(false);
   const [isReportProblemMode, setIsReportProblemMode] = useState(false);
 
@@ -83,6 +86,29 @@ export const NodeViewHeader = () => {
     });
     toast.success('Node name updated');
     setIsSaving(false);
+  };
+
+  const handleRecreateNode = async () => {
+    if (!node) return;
+
+    const params: NodeServiceCreateRequest = {
+      oldNodeId: node.id,
+      orgId: node.orgId,
+      blockchainId: node.blockchainId,
+      version: node.version,
+      nodeType: node.nodeType,
+      properties: node.properties,
+      network: node.network,
+      placement: node.placement,
+      allowIps: node.allowIps,
+      denyIps: node.denyIps,
+    };
+
+    await createNode(
+      params,
+      () => toast.success('Node successfully recreated'),
+      () => toast.error('Error recreating node. Please try again'),
+    );
   };
 
   const handleEditClicked = () => {
@@ -164,6 +190,7 @@ export const NodeViewHeader = () => {
                   <NodeViewHeaderActions
                     onDeleteClicked={toggleDeleteModalOpen}
                     onReportProblemClicked={toggleReportProblemModalOpen}
+                    onRecreateClicked={handleRecreateNode}
                   />
                 </div>
               </>

@@ -8,17 +8,20 @@ import IconDelete from '@public/assets/icons/common/Trash.svg';
 import IconStop from '@public/assets/icons/app/NodeStop.svg';
 import IconStart from '@public/assets/icons/app/NodeStart.svg';
 import IconRestart from '@public/assets/icons/app/NodeRestart.svg';
+import IconRecreate from '@public/assets/icons/app/NodeRecreate.svg';
 import IconWarning from '@public/assets/icons/common/Warning.svg';
 import IconAdmin from '@public/assets/icons/app/Sliders.svg';
 
 type Props = {
   onDeleteClicked: VoidFunction;
   onReportProblemClicked: VoidFunction;
+  onRecreateClicked: VoidFunction;
 };
 
 export const NodeViewHeaderActions = ({
   onDeleteClicked,
   onReportProblemClicked,
+  onRecreateClicked,
 }: Props) => {
   const router = useRouter();
 
@@ -32,6 +35,14 @@ export const NodeViewHeaderActions = ({
     router.push(`/admin?name=nodes&id=${node?.id}`);
 
   const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
+
+  const canCreate = useRecoilValue(authSelectors.hasPermission('node-create'));
+  const canGetSecret = useRecoilValue(
+    authSelectors.hasPermission('crypt-get-secret'),
+  );
+  const canPutSecret = useRecoilValue(
+    authSelectors.hasPermission('crypt-put-secret'),
+  );
 
   const canDelete = useRecoilValue(authSelectors.hasPermission('node-delete'));
 
@@ -54,6 +65,8 @@ export const NodeViewHeaderActions = ({
   const canReport = useRecoilValue(authSelectors.hasPermission('node-report'));
 
   const items: ActionsDropdownItem[] = [];
+
+  const canRecreate = canCreate && canGetSecret && canPutSecret;
 
   if (isSuperUser) {
     items.push({
@@ -87,12 +100,21 @@ export const NodeViewHeaderActions = ({
     });
   }
 
+  if (canRecreate) {
+    items.push({
+      name: 'Recreate',
+      icon: <IconRecreate />,
+      onClick: onRecreateClicked,
+      hasBorderTop: true,
+    });
+  }
+
   if (canDelete || canDeleteAdmin) {
     items.push({
       name: 'Delete',
       icon: <IconDelete />,
       onClick: onDeleteClicked,
-      hasBorderTop: true,
+      hasBorderTop: !canRecreate,
     });
   }
 

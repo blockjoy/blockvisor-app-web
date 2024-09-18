@@ -6,34 +6,49 @@ import { ImageIdentifier } from "../common/v1/image";
 
 export const protobufPackage = "blockjoy.v1";
 
-export interface BlockchainArchiveServiceHasBlockchainArchiveRequest {
+export interface BlockchainArchiveServiceGetDownloadMetadataRequest {
   /** The archive image identifier. */
   id:
     | ImageIdentifier
     | undefined;
   /** The network name (e.g. "main", "testnet"). */
   network: string;
+  /** The data version (or latest if none). */
+  dataVersion?: number | undefined;
 }
 
-export interface BlockchainArchiveServiceHasBlockchainArchiveResponse {
-  available: boolean;
+export interface BlockchainArchiveServiceGetDownloadMetadataResponse {
+  /** The data version of the download manifest. */
+  dataVersion: number;
+  /** The total size (in bytes) of the uncompressed data. */
+  totalSize: number;
+  /** The chunk compression type. */
+  compression?:
+    | Compression
+    | undefined;
+  /** The total number of download manifest chunks. */
+  chunks: number;
 }
 
-export interface BlockchainArchiveServiceGetDownloadManifestRequest {
+export interface BlockchainArchiveServiceGetDownloadChunksRequest {
   /** The archive image identifier. */
   id:
     | ImageIdentifier
     | undefined;
   /** The network name (e.g. "main", "testnet"). */
   network: string;
+  /** The data version for the download manifest. */
+  dataVersion: number;
+  /** The set of chunk indexes to generate download URLs for. */
+  chunkIndexes: number[];
 }
 
-export interface BlockchainArchiveServiceGetDownloadManifestResponse {
-  manifest: DownloadManifest | undefined;
+export interface BlockchainArchiveServiceGetDownloadChunksResponse {
+  /** Presigned URLs for the requested download manifest chunk indexes. */
+  chunks: ArchiveChunk[];
 }
 
-/** Pre-signed upload URL slots for the blockchain archive data chunks. */
-export interface BlockchainArchiveServiceGetUploadManifestRequest {
+export interface BlockchainArchiveServiceGetUploadSlotsRequest {
   /** The archive image identifier. */
   id:
     | ImageIdentifier
@@ -44,14 +59,29 @@ export interface BlockchainArchiveServiceGetUploadManifestRequest {
   dataVersion?:
     | number
     | undefined;
-  /** Requested number of upload URL slots. */
-  slots: number;
   /** Expiry duration of an upload URL (in seconds). */
-  urlExpires?: number | undefined;
+  urlExpires?:
+    | number
+    | undefined;
+  /** The requested data slot indexes to generate upload URLs for. */
+  slotIndexes: number[];
 }
 
-export interface BlockchainArchiveServiceGetUploadManifestResponse {
-  manifest: UploadManifest | undefined;
+export interface BlockchainArchiveServiceGetUploadSlotsResponse {
+  /** The data version of the upload slots. */
+  dataVersion: number;
+  /** A list of slots for uploading archive chunks. */
+  slots: UploadSlot[];
+}
+
+/** An upload slot for a chunk of data. */
+export interface UploadSlot {
+  /** The index of this upload slot. */
+  index: number;
+  /** The persistent key to an archive chunk. */
+  key: string;
+  /** A temporary, pre-signed upload url for the data. */
+  url: string;
 }
 
 export interface BlockchainArchiveServicePutDownloadManifestRequest {
@@ -61,27 +91,25 @@ export interface BlockchainArchiveServicePutDownloadManifestRequest {
     | undefined;
   /** The network name (e.g. "main", "testnet"). */
   network: string;
-  /** The download manifest to store. */
-  manifest: DownloadManifest | undefined;
+  /** The data version to save. */
+  dataVersion: number;
+  /** The total size (in bytes) of the uncompressed data. */
+  totalSize: number;
+  /** The chunk compression type. */
+  compression?:
+    | Compression
+    | undefined;
+  /** Metadata for each archive data chunk. */
+  chunks: ArchiveChunk[];
 }
 
 export interface BlockchainArchiveServicePutDownloadManifestResponse {
 }
 
-/** Download manifest with metadata and pointers to archive data chunks. */
-export interface DownloadManifest {
-  /** Total size of uncompressed data */
-  totalSize: number;
-  /** Chunk compression type or none */
-  compression?:
-    | Compression
-    | undefined;
-  /** Full list of chunks */
-  chunks: ArchiveChunk[];
-}
-
 /** Metadata describing an archive chunk URL and file mapping. */
 export interface ArchiveChunk {
+  /** The index of this archive chunk. */
+  index: number;
   /** The persistent chunk key. */
   key: string;
   /** A temporary pre-signed download url (or none for a blueprint). */
@@ -121,263 +149,13 @@ export interface Compression {
   zstd?: number | undefined;
 }
 
-/** Upload manifest with slots for uploading archive data chunks. */
-export interface UploadManifest {
-  /** A list of slots for uploading archive chunks. */
-  slots: UploadSlot[];
+function createBaseBlockchainArchiveServiceGetDownloadMetadataRequest(): BlockchainArchiveServiceGetDownloadMetadataRequest {
+  return { id: undefined, network: "", dataVersion: undefined };
 }
 
-/** An upload slot for a chunk of data. */
-export interface UploadSlot {
-  /** The persistent key to an archive chunk. */
-  key: string;
-  /** A temporary, pre-signed upload url for the data. */
-  url: string;
-}
-
-function createBaseBlockchainArchiveServiceHasBlockchainArchiveRequest(): BlockchainArchiveServiceHasBlockchainArchiveRequest {
-  return { id: undefined, network: "" };
-}
-
-export const BlockchainArchiveServiceHasBlockchainArchiveRequest = {
+export const BlockchainArchiveServiceGetDownloadMetadataRequest = {
   encode(
-    message: BlockchainArchiveServiceHasBlockchainArchiveRequest,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
-    if (message.id !== undefined) {
-      ImageIdentifier.encode(message.id, writer.uint32(10).fork()).ldelim();
-    }
-    if (message.network !== "") {
-      writer.uint32(18).string(message.network);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): BlockchainArchiveServiceHasBlockchainArchiveRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseBlockchainArchiveServiceHasBlockchainArchiveRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.id = ImageIdentifier.decode(reader, reader.uint32());
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.network = reader.string();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  create(
-    base?: DeepPartial<BlockchainArchiveServiceHasBlockchainArchiveRequest>,
-  ): BlockchainArchiveServiceHasBlockchainArchiveRequest {
-    return BlockchainArchiveServiceHasBlockchainArchiveRequest.fromPartial(base ?? {});
-  },
-
-  fromPartial(
-    object: DeepPartial<BlockchainArchiveServiceHasBlockchainArchiveRequest>,
-  ): BlockchainArchiveServiceHasBlockchainArchiveRequest {
-    const message = createBaseBlockchainArchiveServiceHasBlockchainArchiveRequest();
-    message.id = (object.id !== undefined && object.id !== null) ? ImageIdentifier.fromPartial(object.id) : undefined;
-    message.network = object.network ?? "";
-    return message;
-  },
-};
-
-function createBaseBlockchainArchiveServiceHasBlockchainArchiveResponse(): BlockchainArchiveServiceHasBlockchainArchiveResponse {
-  return { available: false };
-}
-
-export const BlockchainArchiveServiceHasBlockchainArchiveResponse = {
-  encode(
-    message: BlockchainArchiveServiceHasBlockchainArchiveResponse,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
-    if (message.available === true) {
-      writer.uint32(8).bool(message.available);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): BlockchainArchiveServiceHasBlockchainArchiveResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseBlockchainArchiveServiceHasBlockchainArchiveResponse();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 8) {
-            break;
-          }
-
-          message.available = reader.bool();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  create(
-    base?: DeepPartial<BlockchainArchiveServiceHasBlockchainArchiveResponse>,
-  ): BlockchainArchiveServiceHasBlockchainArchiveResponse {
-    return BlockchainArchiveServiceHasBlockchainArchiveResponse.fromPartial(base ?? {});
-  },
-
-  fromPartial(
-    object: DeepPartial<BlockchainArchiveServiceHasBlockchainArchiveResponse>,
-  ): BlockchainArchiveServiceHasBlockchainArchiveResponse {
-    const message = createBaseBlockchainArchiveServiceHasBlockchainArchiveResponse();
-    message.available = object.available ?? false;
-    return message;
-  },
-};
-
-function createBaseBlockchainArchiveServiceGetDownloadManifestRequest(): BlockchainArchiveServiceGetDownloadManifestRequest {
-  return { id: undefined, network: "" };
-}
-
-export const BlockchainArchiveServiceGetDownloadManifestRequest = {
-  encode(
-    message: BlockchainArchiveServiceGetDownloadManifestRequest,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
-    if (message.id !== undefined) {
-      ImageIdentifier.encode(message.id, writer.uint32(10).fork()).ldelim();
-    }
-    if (message.network !== "") {
-      writer.uint32(18).string(message.network);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): BlockchainArchiveServiceGetDownloadManifestRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseBlockchainArchiveServiceGetDownloadManifestRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.id = ImageIdentifier.decode(reader, reader.uint32());
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.network = reader.string();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  create(
-    base?: DeepPartial<BlockchainArchiveServiceGetDownloadManifestRequest>,
-  ): BlockchainArchiveServiceGetDownloadManifestRequest {
-    return BlockchainArchiveServiceGetDownloadManifestRequest.fromPartial(base ?? {});
-  },
-
-  fromPartial(
-    object: DeepPartial<BlockchainArchiveServiceGetDownloadManifestRequest>,
-  ): BlockchainArchiveServiceGetDownloadManifestRequest {
-    const message = createBaseBlockchainArchiveServiceGetDownloadManifestRequest();
-    message.id = (object.id !== undefined && object.id !== null) ? ImageIdentifier.fromPartial(object.id) : undefined;
-    message.network = object.network ?? "";
-    return message;
-  },
-};
-
-function createBaseBlockchainArchiveServiceGetDownloadManifestResponse(): BlockchainArchiveServiceGetDownloadManifestResponse {
-  return { manifest: undefined };
-}
-
-export const BlockchainArchiveServiceGetDownloadManifestResponse = {
-  encode(
-    message: BlockchainArchiveServiceGetDownloadManifestResponse,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
-    if (message.manifest !== undefined) {
-      DownloadManifest.encode(message.manifest, writer.uint32(10).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): BlockchainArchiveServiceGetDownloadManifestResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseBlockchainArchiveServiceGetDownloadManifestResponse();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.manifest = DownloadManifest.decode(reader, reader.uint32());
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  create(
-    base?: DeepPartial<BlockchainArchiveServiceGetDownloadManifestResponse>,
-  ): BlockchainArchiveServiceGetDownloadManifestResponse {
-    return BlockchainArchiveServiceGetDownloadManifestResponse.fromPartial(base ?? {});
-  },
-
-  fromPartial(
-    object: DeepPartial<BlockchainArchiveServiceGetDownloadManifestResponse>,
-  ): BlockchainArchiveServiceGetDownloadManifestResponse {
-    const message = createBaseBlockchainArchiveServiceGetDownloadManifestResponse();
-    message.manifest = (object.manifest !== undefined && object.manifest !== null)
-      ? DownloadManifest.fromPartial(object.manifest)
-      : undefined;
-    return message;
-  },
-};
-
-function createBaseBlockchainArchiveServiceGetUploadManifestRequest(): BlockchainArchiveServiceGetUploadManifestRequest {
-  return { id: undefined, network: "", dataVersion: undefined, slots: 0, urlExpires: undefined };
-}
-
-export const BlockchainArchiveServiceGetUploadManifestRequest = {
-  encode(
-    message: BlockchainArchiveServiceGetUploadManifestRequest,
+    message: BlockchainArchiveServiceGetDownloadMetadataRequest,
     writer: _m0.Writer = _m0.Writer.create(),
   ): _m0.Writer {
     if (message.id !== undefined) {
@@ -389,19 +167,332 @@ export const BlockchainArchiveServiceGetUploadManifestRequest = {
     if (message.dataVersion !== undefined) {
       writer.uint32(24).uint64(message.dataVersion);
     }
-    if (message.slots !== 0) {
-      writer.uint32(32).uint32(message.slots);
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): BlockchainArchiveServiceGetDownloadMetadataRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseBlockchainArchiveServiceGetDownloadMetadataRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.id = ImageIdentifier.decode(reader, reader.uint32());
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.network = reader.string();
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.dataVersion = longToNumber(reader.uint64() as Long);
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
-    if (message.urlExpires !== undefined) {
-      writer.uint32(40).uint32(message.urlExpires);
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<BlockchainArchiveServiceGetDownloadMetadataRequest>,
+  ): BlockchainArchiveServiceGetDownloadMetadataRequest {
+    return BlockchainArchiveServiceGetDownloadMetadataRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(
+    object: DeepPartial<BlockchainArchiveServiceGetDownloadMetadataRequest>,
+  ): BlockchainArchiveServiceGetDownloadMetadataRequest {
+    const message = createBaseBlockchainArchiveServiceGetDownloadMetadataRequest();
+    message.id = (object.id !== undefined && object.id !== null) ? ImageIdentifier.fromPartial(object.id) : undefined;
+    message.network = object.network ?? "";
+    message.dataVersion = object.dataVersion ?? undefined;
+    return message;
+  },
+};
+
+function createBaseBlockchainArchiveServiceGetDownloadMetadataResponse(): BlockchainArchiveServiceGetDownloadMetadataResponse {
+  return { dataVersion: 0, totalSize: 0, compression: undefined, chunks: 0 };
+}
+
+export const BlockchainArchiveServiceGetDownloadMetadataResponse = {
+  encode(
+    message: BlockchainArchiveServiceGetDownloadMetadataResponse,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    if (message.dataVersion !== 0) {
+      writer.uint32(8).uint64(message.dataVersion);
+    }
+    if (message.totalSize !== 0) {
+      writer.uint32(16).uint64(message.totalSize);
+    }
+    if (message.compression !== undefined) {
+      Compression.encode(message.compression, writer.uint32(26).fork()).ldelim();
+    }
+    if (message.chunks !== 0) {
+      writer.uint32(32).uint32(message.chunks);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): BlockchainArchiveServiceGetUploadManifestRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): BlockchainArchiveServiceGetDownloadMetadataResponse {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseBlockchainArchiveServiceGetUploadManifestRequest();
+    const message = createBaseBlockchainArchiveServiceGetDownloadMetadataResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.dataVersion = longToNumber(reader.uint64() as Long);
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.totalSize = longToNumber(reader.uint64() as Long);
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.compression = Compression.decode(reader, reader.uint32());
+          continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.chunks = reader.uint32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<BlockchainArchiveServiceGetDownloadMetadataResponse>,
+  ): BlockchainArchiveServiceGetDownloadMetadataResponse {
+    return BlockchainArchiveServiceGetDownloadMetadataResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(
+    object: DeepPartial<BlockchainArchiveServiceGetDownloadMetadataResponse>,
+  ): BlockchainArchiveServiceGetDownloadMetadataResponse {
+    const message = createBaseBlockchainArchiveServiceGetDownloadMetadataResponse();
+    message.dataVersion = object.dataVersion ?? 0;
+    message.totalSize = object.totalSize ?? 0;
+    message.compression = (object.compression !== undefined && object.compression !== null)
+      ? Compression.fromPartial(object.compression)
+      : undefined;
+    message.chunks = object.chunks ?? 0;
+    return message;
+  },
+};
+
+function createBaseBlockchainArchiveServiceGetDownloadChunksRequest(): BlockchainArchiveServiceGetDownloadChunksRequest {
+  return { id: undefined, network: "", dataVersion: 0, chunkIndexes: [] };
+}
+
+export const BlockchainArchiveServiceGetDownloadChunksRequest = {
+  encode(
+    message: BlockchainArchiveServiceGetDownloadChunksRequest,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    if (message.id !== undefined) {
+      ImageIdentifier.encode(message.id, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.network !== "") {
+      writer.uint32(18).string(message.network);
+    }
+    if (message.dataVersion !== 0) {
+      writer.uint32(24).uint64(message.dataVersion);
+    }
+    writer.uint32(34).fork();
+    for (const v of message.chunkIndexes) {
+      writer.uint32(v);
+    }
+    writer.ldelim();
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): BlockchainArchiveServiceGetDownloadChunksRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseBlockchainArchiveServiceGetDownloadChunksRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.id = ImageIdentifier.decode(reader, reader.uint32());
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.network = reader.string();
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.dataVersion = longToNumber(reader.uint64() as Long);
+          continue;
+        case 4:
+          if (tag === 32) {
+            message.chunkIndexes.push(reader.uint32());
+
+            continue;
+          }
+
+          if (tag === 34) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.chunkIndexes.push(reader.uint32());
+            }
+
+            continue;
+          }
+
+          break;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<BlockchainArchiveServiceGetDownloadChunksRequest>,
+  ): BlockchainArchiveServiceGetDownloadChunksRequest {
+    return BlockchainArchiveServiceGetDownloadChunksRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(
+    object: DeepPartial<BlockchainArchiveServiceGetDownloadChunksRequest>,
+  ): BlockchainArchiveServiceGetDownloadChunksRequest {
+    const message = createBaseBlockchainArchiveServiceGetDownloadChunksRequest();
+    message.id = (object.id !== undefined && object.id !== null) ? ImageIdentifier.fromPartial(object.id) : undefined;
+    message.network = object.network ?? "";
+    message.dataVersion = object.dataVersion ?? 0;
+    message.chunkIndexes = object.chunkIndexes?.map((e) => e) || [];
+    return message;
+  },
+};
+
+function createBaseBlockchainArchiveServiceGetDownloadChunksResponse(): BlockchainArchiveServiceGetDownloadChunksResponse {
+  return { chunks: [] };
+}
+
+export const BlockchainArchiveServiceGetDownloadChunksResponse = {
+  encode(
+    message: BlockchainArchiveServiceGetDownloadChunksResponse,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    for (const v of message.chunks) {
+      ArchiveChunk.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): BlockchainArchiveServiceGetDownloadChunksResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseBlockchainArchiveServiceGetDownloadChunksResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.chunks.push(ArchiveChunk.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<BlockchainArchiveServiceGetDownloadChunksResponse>,
+  ): BlockchainArchiveServiceGetDownloadChunksResponse {
+    return BlockchainArchiveServiceGetDownloadChunksResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(
+    object: DeepPartial<BlockchainArchiveServiceGetDownloadChunksResponse>,
+  ): BlockchainArchiveServiceGetDownloadChunksResponse {
+    const message = createBaseBlockchainArchiveServiceGetDownloadChunksResponse();
+    message.chunks = object.chunks?.map((e) => ArchiveChunk.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseBlockchainArchiveServiceGetUploadSlotsRequest(): BlockchainArchiveServiceGetUploadSlotsRequest {
+  return { id: undefined, network: "", dataVersion: undefined, urlExpires: undefined, slotIndexes: [] };
+}
+
+export const BlockchainArchiveServiceGetUploadSlotsRequest = {
+  encode(message: BlockchainArchiveServiceGetUploadSlotsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== undefined) {
+      ImageIdentifier.encode(message.id, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.network !== "") {
+      writer.uint32(18).string(message.network);
+    }
+    if (message.dataVersion !== undefined) {
+      writer.uint32(24).uint64(message.dataVersion);
+    }
+    if (message.urlExpires !== undefined) {
+      writer.uint32(32).uint32(message.urlExpires);
+    }
+    writer.uint32(42).fork();
+    for (const v of message.slotIndexes) {
+      writer.uint32(v);
+    }
+    writer.ldelim();
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): BlockchainArchiveServiceGetUploadSlotsRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseBlockchainArchiveServiceGetUploadSlotsRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -431,15 +522,25 @@ export const BlockchainArchiveServiceGetUploadManifestRequest = {
             break;
           }
 
-          message.slots = reader.uint32();
-          continue;
-        case 5:
-          if (tag !== 40) {
-            break;
-          }
-
           message.urlExpires = reader.uint32();
           continue;
+        case 5:
+          if (tag === 40) {
+            message.slotIndexes.push(reader.uint32());
+
+            continue;
+          }
+
+          if (tag === 42) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.slotIndexes.push(reader.uint32());
+            }
+
+            continue;
+          }
+
+          break;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -450,52 +551,62 @@ export const BlockchainArchiveServiceGetUploadManifestRequest = {
   },
 
   create(
-    base?: DeepPartial<BlockchainArchiveServiceGetUploadManifestRequest>,
-  ): BlockchainArchiveServiceGetUploadManifestRequest {
-    return BlockchainArchiveServiceGetUploadManifestRequest.fromPartial(base ?? {});
+    base?: DeepPartial<BlockchainArchiveServiceGetUploadSlotsRequest>,
+  ): BlockchainArchiveServiceGetUploadSlotsRequest {
+    return BlockchainArchiveServiceGetUploadSlotsRequest.fromPartial(base ?? {});
   },
 
   fromPartial(
-    object: DeepPartial<BlockchainArchiveServiceGetUploadManifestRequest>,
-  ): BlockchainArchiveServiceGetUploadManifestRequest {
-    const message = createBaseBlockchainArchiveServiceGetUploadManifestRequest();
+    object: DeepPartial<BlockchainArchiveServiceGetUploadSlotsRequest>,
+  ): BlockchainArchiveServiceGetUploadSlotsRequest {
+    const message = createBaseBlockchainArchiveServiceGetUploadSlotsRequest();
     message.id = (object.id !== undefined && object.id !== null) ? ImageIdentifier.fromPartial(object.id) : undefined;
     message.network = object.network ?? "";
     message.dataVersion = object.dataVersion ?? undefined;
-    message.slots = object.slots ?? 0;
     message.urlExpires = object.urlExpires ?? undefined;
+    message.slotIndexes = object.slotIndexes?.map((e) => e) || [];
     return message;
   },
 };
 
-function createBaseBlockchainArchiveServiceGetUploadManifestResponse(): BlockchainArchiveServiceGetUploadManifestResponse {
-  return { manifest: undefined };
+function createBaseBlockchainArchiveServiceGetUploadSlotsResponse(): BlockchainArchiveServiceGetUploadSlotsResponse {
+  return { dataVersion: 0, slots: [] };
 }
 
-export const BlockchainArchiveServiceGetUploadManifestResponse = {
+export const BlockchainArchiveServiceGetUploadSlotsResponse = {
   encode(
-    message: BlockchainArchiveServiceGetUploadManifestResponse,
+    message: BlockchainArchiveServiceGetUploadSlotsResponse,
     writer: _m0.Writer = _m0.Writer.create(),
   ): _m0.Writer {
-    if (message.manifest !== undefined) {
-      UploadManifest.encode(message.manifest, writer.uint32(10).fork()).ldelim();
+    if (message.dataVersion !== 0) {
+      writer.uint32(8).uint64(message.dataVersion);
+    }
+    for (const v of message.slots) {
+      UploadSlot.encode(v!, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): BlockchainArchiveServiceGetUploadManifestResponse {
+  decode(input: _m0.Reader | Uint8Array, length?: number): BlockchainArchiveServiceGetUploadSlotsResponse {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseBlockchainArchiveServiceGetUploadManifestResponse();
+    const message = createBaseBlockchainArchiveServiceGetUploadSlotsResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.manifest = UploadManifest.decode(reader, reader.uint32());
+          message.dataVersion = longToNumber(reader.uint64() as Long);
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.slots.push(UploadSlot.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -507,24 +618,91 @@ export const BlockchainArchiveServiceGetUploadManifestResponse = {
   },
 
   create(
-    base?: DeepPartial<BlockchainArchiveServiceGetUploadManifestResponse>,
-  ): BlockchainArchiveServiceGetUploadManifestResponse {
-    return BlockchainArchiveServiceGetUploadManifestResponse.fromPartial(base ?? {});
+    base?: DeepPartial<BlockchainArchiveServiceGetUploadSlotsResponse>,
+  ): BlockchainArchiveServiceGetUploadSlotsResponse {
+    return BlockchainArchiveServiceGetUploadSlotsResponse.fromPartial(base ?? {});
   },
 
   fromPartial(
-    object: DeepPartial<BlockchainArchiveServiceGetUploadManifestResponse>,
-  ): BlockchainArchiveServiceGetUploadManifestResponse {
-    const message = createBaseBlockchainArchiveServiceGetUploadManifestResponse();
-    message.manifest = (object.manifest !== undefined && object.manifest !== null)
-      ? UploadManifest.fromPartial(object.manifest)
-      : undefined;
+    object: DeepPartial<BlockchainArchiveServiceGetUploadSlotsResponse>,
+  ): BlockchainArchiveServiceGetUploadSlotsResponse {
+    const message = createBaseBlockchainArchiveServiceGetUploadSlotsResponse();
+    message.dataVersion = object.dataVersion ?? 0;
+    message.slots = object.slots?.map((e) => UploadSlot.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseUploadSlot(): UploadSlot {
+  return { index: 0, key: "", url: "" };
+}
+
+export const UploadSlot = {
+  encode(message: UploadSlot, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.index !== 0) {
+      writer.uint32(8).uint32(message.index);
+    }
+    if (message.key !== "") {
+      writer.uint32(18).string(message.key);
+    }
+    if (message.url !== "") {
+      writer.uint32(26).string(message.url);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UploadSlot {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUploadSlot();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.index = reader.uint32();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.key = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.url = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<UploadSlot>): UploadSlot {
+    return UploadSlot.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<UploadSlot>): UploadSlot {
+    const message = createBaseUploadSlot();
+    message.index = object.index ?? 0;
+    message.key = object.key ?? "";
+    message.url = object.url ?? "";
     return message;
   },
 };
 
 function createBaseBlockchainArchiveServicePutDownloadManifestRequest(): BlockchainArchiveServicePutDownloadManifestRequest {
-  return { id: undefined, network: "", manifest: undefined };
+  return { id: undefined, network: "", dataVersion: 0, totalSize: 0, compression: undefined, chunks: [] };
 }
 
 export const BlockchainArchiveServicePutDownloadManifestRequest = {
@@ -538,8 +716,17 @@ export const BlockchainArchiveServicePutDownloadManifestRequest = {
     if (message.network !== "") {
       writer.uint32(18).string(message.network);
     }
-    if (message.manifest !== undefined) {
-      DownloadManifest.encode(message.manifest, writer.uint32(26).fork()).ldelim();
+    if (message.dataVersion !== 0) {
+      writer.uint32(24).uint64(message.dataVersion);
+    }
+    if (message.totalSize !== 0) {
+      writer.uint32(32).uint64(message.totalSize);
+    }
+    if (message.compression !== undefined) {
+      Compression.encode(message.compression, writer.uint32(42).fork()).ldelim();
+    }
+    for (const v of message.chunks) {
+      ArchiveChunk.encode(v!, writer.uint32(50).fork()).ldelim();
     }
     return writer;
   },
@@ -566,11 +753,32 @@ export const BlockchainArchiveServicePutDownloadManifestRequest = {
           message.network = reader.string();
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.manifest = DownloadManifest.decode(reader, reader.uint32());
+          message.dataVersion = longToNumber(reader.uint64() as Long);
+          continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.totalSize = longToNumber(reader.uint64() as Long);
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.compression = Compression.decode(reader, reader.uint32());
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.chunks.push(ArchiveChunk.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -593,9 +801,12 @@ export const BlockchainArchiveServicePutDownloadManifestRequest = {
     const message = createBaseBlockchainArchiveServicePutDownloadManifestRequest();
     message.id = (object.id !== undefined && object.id !== null) ? ImageIdentifier.fromPartial(object.id) : undefined;
     message.network = object.network ?? "";
-    message.manifest = (object.manifest !== undefined && object.manifest !== null)
-      ? DownloadManifest.fromPartial(object.manifest)
+    message.dataVersion = object.dataVersion ?? 0;
+    message.totalSize = object.totalSize ?? 0;
+    message.compression = (object.compression !== undefined && object.compression !== null)
+      ? Compression.fromPartial(object.compression)
       : undefined;
+    message.chunks = object.chunks?.map((e) => ArchiveChunk.fromPartial(e)) || [];
     return message;
   },
 };
@@ -639,96 +850,29 @@ export const BlockchainArchiveServicePutDownloadManifestResponse = {
   },
 };
 
-function createBaseDownloadManifest(): DownloadManifest {
-  return { totalSize: 0, compression: undefined, chunks: [] };
-}
-
-export const DownloadManifest = {
-  encode(message: DownloadManifest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.totalSize !== 0) {
-      writer.uint32(8).uint64(message.totalSize);
-    }
-    if (message.compression !== undefined) {
-      Compression.encode(message.compression, writer.uint32(18).fork()).ldelim();
-    }
-    for (const v of message.chunks) {
-      ArchiveChunk.encode(v!, writer.uint32(26).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): DownloadManifest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseDownloadManifest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 8) {
-            break;
-          }
-
-          message.totalSize = longToNumber(reader.uint64() as Long);
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.compression = Compression.decode(reader, reader.uint32());
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.chunks.push(ArchiveChunk.decode(reader, reader.uint32()));
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<DownloadManifest>): DownloadManifest {
-    return DownloadManifest.fromPartial(base ?? {});
-  },
-
-  fromPartial(object: DeepPartial<DownloadManifest>): DownloadManifest {
-    const message = createBaseDownloadManifest();
-    message.totalSize = object.totalSize ?? 0;
-    message.compression = (object.compression !== undefined && object.compression !== null)
-      ? Compression.fromPartial(object.compression)
-      : undefined;
-    message.chunks = object.chunks?.map((e) => ArchiveChunk.fromPartial(e)) || [];
-    return message;
-  },
-};
-
 function createBaseArchiveChunk(): ArchiveChunk {
-  return { key: "", url: undefined, checksum: undefined, size: 0, destinations: [] };
+  return { index: 0, key: "", url: undefined, checksum: undefined, size: 0, destinations: [] };
 }
 
 export const ArchiveChunk = {
   encode(message: ArchiveChunk, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.index !== 0) {
+      writer.uint32(8).uint32(message.index);
+    }
     if (message.key !== "") {
-      writer.uint32(10).string(message.key);
+      writer.uint32(18).string(message.key);
     }
     if (message.url !== undefined) {
-      writer.uint32(18).string(message.url);
+      writer.uint32(26).string(message.url);
     }
     if (message.checksum !== undefined) {
-      Checksum.encode(message.checksum, writer.uint32(26).fork()).ldelim();
+      Checksum.encode(message.checksum, writer.uint32(34).fork()).ldelim();
     }
     if (message.size !== 0) {
-      writer.uint32(32).uint64(message.size);
+      writer.uint32(40).uint64(message.size);
     }
     for (const v of message.destinations) {
-      ChunkTarget.encode(v!, writer.uint32(42).fork()).ldelim();
+      ChunkTarget.encode(v!, writer.uint32(50).fork()).ldelim();
     }
     return writer;
   },
@@ -741,35 +885,42 @@ export const ArchiveChunk = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.key = reader.string();
+          message.index = reader.uint32();
           continue;
         case 2:
           if (tag !== 18) {
             break;
           }
 
-          message.url = reader.string();
+          message.key = reader.string();
           continue;
         case 3:
           if (tag !== 26) {
             break;
           }
 
-          message.checksum = Checksum.decode(reader, reader.uint32());
+          message.url = reader.string();
           continue;
         case 4:
-          if (tag !== 32) {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.checksum = Checksum.decode(reader, reader.uint32());
+          continue;
+        case 5:
+          if (tag !== 40) {
             break;
           }
 
           message.size = longToNumber(reader.uint64() as Long);
           continue;
-        case 5:
-          if (tag !== 42) {
+        case 6:
+          if (tag !== 50) {
             break;
           }
 
@@ -790,6 +941,7 @@ export const ArchiveChunk = {
 
   fromPartial(object: DeepPartial<ArchiveChunk>): ArchiveChunk {
     const message = createBaseArchiveChunk();
+    message.index = object.index ?? 0;
     message.key = object.key ?? "";
     message.url = object.url ?? undefined;
     message.checksum = (object.checksum !== undefined && object.checksum !== null)
@@ -983,139 +1135,36 @@ export const Compression = {
   },
 };
 
-function createBaseUploadManifest(): UploadManifest {
-  return { slots: [] };
-}
-
-export const UploadManifest = {
-  encode(message: UploadManifest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.slots) {
-      UploadSlot.encode(v!, writer.uint32(10).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): UploadManifest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseUploadManifest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.slots.push(UploadSlot.decode(reader, reader.uint32()));
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<UploadManifest>): UploadManifest {
-    return UploadManifest.fromPartial(base ?? {});
-  },
-
-  fromPartial(object: DeepPartial<UploadManifest>): UploadManifest {
-    const message = createBaseUploadManifest();
-    message.slots = object.slots?.map((e) => UploadSlot.fromPartial(e)) || [];
-    return message;
-  },
-};
-
-function createBaseUploadSlot(): UploadSlot {
-  return { key: "", url: "" };
-}
-
-export const UploadSlot = {
-  encode(message: UploadSlot, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.key !== "") {
-      writer.uint32(10).string(message.key);
-    }
-    if (message.url !== "") {
-      writer.uint32(18).string(message.url);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): UploadSlot {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseUploadSlot();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.key = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.url = reader.string();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<UploadSlot>): UploadSlot {
-    return UploadSlot.fromPartial(base ?? {});
-  },
-
-  fromPartial(object: DeepPartial<UploadSlot>): UploadSlot {
-    const message = createBaseUploadSlot();
-    message.key = object.key ?? "";
-    message.url = object.url ?? "";
-    return message;
-  },
-};
-
 /** Manage blockchain data archives. */
 export type BlockchainArchiveServiceDefinition = typeof BlockchainArchiveServiceDefinition;
 export const BlockchainArchiveServiceDefinition = {
   name: "BlockchainArchiveService",
   fullName: "blockjoy.v1.BlockchainArchiveService",
   methods: {
-    /** Get the download manifest for a specific image and blockchain network. */
-    hasBlockchainArchive: {
-      name: "HasBlockchainArchive",
-      requestType: BlockchainArchiveServiceHasBlockchainArchiveRequest,
+    /** Get the download manifest metadata for a specific image and blockchain network. */
+    getDownloadMetadata: {
+      name: "GetDownloadMetadata",
+      requestType: BlockchainArchiveServiceGetDownloadMetadataRequest,
       requestStream: false,
-      responseType: BlockchainArchiveServiceHasBlockchainArchiveResponse,
+      responseType: BlockchainArchiveServiceGetDownloadMetadataResponse,
       responseStream: false,
       options: {},
     },
-    /** Get the download manifest for a specific image and blockchain network. */
-    getDownloadManifest: {
-      name: "GetDownloadManifest",
-      requestType: BlockchainArchiveServiceGetDownloadManifestRequest,
+    /** Get presigned download URLs for download manifest data chunks. */
+    getDownloadChunks: {
+      name: "GetDownloadChunks",
+      requestType: BlockchainArchiveServiceGetDownloadChunksRequest,
       requestStream: false,
-      responseType: BlockchainArchiveServiceGetDownloadManifestResponse,
+      responseType: BlockchainArchiveServiceGetDownloadChunksResponse,
       responseStream: false,
       options: {},
     },
-    /** Get an upload manifest for a specific image and blockchain network. */
-    getUploadManifest: {
-      name: "GetUploadManifest",
-      requestType: BlockchainArchiveServiceGetUploadManifestRequest,
+    /** Get presigned upload URLs for blockchain archive data chunks. */
+    getUploadSlots: {
+      name: "GetUploadSlots",
+      requestType: BlockchainArchiveServiceGetUploadSlotsRequest,
       requestStream: false,
-      responseType: BlockchainArchiveServiceGetUploadManifestResponse,
+      responseType: BlockchainArchiveServiceGetUploadSlotsResponse,
       responseStream: false,
       options: {},
     },
@@ -1132,21 +1181,21 @@ export const BlockchainArchiveServiceDefinition = {
 } as const;
 
 export interface BlockchainArchiveServiceImplementation<CallContextExt = {}> {
-  /** Get the download manifest for a specific image and blockchain network. */
-  hasBlockchainArchive(
-    request: BlockchainArchiveServiceHasBlockchainArchiveRequest,
+  /** Get the download manifest metadata for a specific image and blockchain network. */
+  getDownloadMetadata(
+    request: BlockchainArchiveServiceGetDownloadMetadataRequest,
     context: CallContext & CallContextExt,
-  ): Promise<DeepPartial<BlockchainArchiveServiceHasBlockchainArchiveResponse>>;
-  /** Get the download manifest for a specific image and blockchain network. */
-  getDownloadManifest(
-    request: BlockchainArchiveServiceGetDownloadManifestRequest,
+  ): Promise<DeepPartial<BlockchainArchiveServiceGetDownloadMetadataResponse>>;
+  /** Get presigned download URLs for download manifest data chunks. */
+  getDownloadChunks(
+    request: BlockchainArchiveServiceGetDownloadChunksRequest,
     context: CallContext & CallContextExt,
-  ): Promise<DeepPartial<BlockchainArchiveServiceGetDownloadManifestResponse>>;
-  /** Get an upload manifest for a specific image and blockchain network. */
-  getUploadManifest(
-    request: BlockchainArchiveServiceGetUploadManifestRequest,
+  ): Promise<DeepPartial<BlockchainArchiveServiceGetDownloadChunksResponse>>;
+  /** Get presigned upload URLs for blockchain archive data chunks. */
+  getUploadSlots(
+    request: BlockchainArchiveServiceGetUploadSlotsRequest,
     context: CallContext & CallContextExt,
-  ): Promise<DeepPartial<BlockchainArchiveServiceGetUploadManifestResponse>>;
+  ): Promise<DeepPartial<BlockchainArchiveServiceGetUploadSlotsResponse>>;
   /** Put a new download manifest for retrieval with `GetDownloadManifest`. */
   putDownloadManifest(
     request: BlockchainArchiveServicePutDownloadManifestRequest,
@@ -1155,21 +1204,21 @@ export interface BlockchainArchiveServiceImplementation<CallContextExt = {}> {
 }
 
 export interface BlockchainArchiveServiceClient<CallOptionsExt = {}> {
-  /** Get the download manifest for a specific image and blockchain network. */
-  hasBlockchainArchive(
-    request: DeepPartial<BlockchainArchiveServiceHasBlockchainArchiveRequest>,
+  /** Get the download manifest metadata for a specific image and blockchain network. */
+  getDownloadMetadata(
+    request: DeepPartial<BlockchainArchiveServiceGetDownloadMetadataRequest>,
     options?: CallOptions & CallOptionsExt,
-  ): Promise<BlockchainArchiveServiceHasBlockchainArchiveResponse>;
-  /** Get the download manifest for a specific image and blockchain network. */
-  getDownloadManifest(
-    request: DeepPartial<BlockchainArchiveServiceGetDownloadManifestRequest>,
+  ): Promise<BlockchainArchiveServiceGetDownloadMetadataResponse>;
+  /** Get presigned download URLs for download manifest data chunks. */
+  getDownloadChunks(
+    request: DeepPartial<BlockchainArchiveServiceGetDownloadChunksRequest>,
     options?: CallOptions & CallOptionsExt,
-  ): Promise<BlockchainArchiveServiceGetDownloadManifestResponse>;
-  /** Get an upload manifest for a specific image and blockchain network. */
-  getUploadManifest(
-    request: DeepPartial<BlockchainArchiveServiceGetUploadManifestRequest>,
+  ): Promise<BlockchainArchiveServiceGetDownloadChunksResponse>;
+  /** Get presigned upload URLs for blockchain archive data chunks. */
+  getUploadSlots(
+    request: DeepPartial<BlockchainArchiveServiceGetUploadSlotsRequest>,
     options?: CallOptions & CallOptionsExt,
-  ): Promise<BlockchainArchiveServiceGetUploadManifestResponse>;
+  ): Promise<BlockchainArchiveServiceGetUploadSlotsResponse>;
   /** Put a new download manifest for retrieval with `GetDownloadManifest`. */
   putDownloadManifest(
     request: DeepPartial<BlockchainArchiveServicePutDownloadManifestRequest>,
