@@ -4,10 +4,10 @@ export const callPipedriveApi = async (
   body: Record<string, any> | null = null,
   params: Record<string, any> | null = null,
 ): Promise<PipedriveResponse> => {
-  const response = await fetch('/api/pipedrive', {
+  const response = await window?.fetch('/api/pipedrive', {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json;charset=UTF-8',
     },
     body: JSON.stringify({
       endpoint,

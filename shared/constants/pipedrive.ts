@@ -1,12 +1,3 @@
-export const BASE_URL = `https://api.pipedrive.com/v1`;
-
-export const BASE_PARAMS = `api_token=${process.env.PIPEDRIVE_API_KEY}`;
-
-export const BASE_HEADERS = {
-  'Content-Type': 'application/json;charset=UTF-8',
-  Accept: 'application/json;charset=UTF-8',
-};
-
 export const API_ENDPOINTS = {
   ADD_LEAD: 'leads',
   ADD_ORGANIZATION: 'organizations',

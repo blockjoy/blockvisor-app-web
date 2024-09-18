@@ -23,10 +23,7 @@ export const usePipedriveForm = (): UsePipedriveFormHook => {
   const registerForm = async ({ user }: PipedriveRegisterFormParams) => {
     try {
       // Create a person during registration
-      const addPersonResponse = await Pipedrive.addPerson(
-        user,
-        externalOrganizationID.current,
-      );
+      const addPersonResponse = await Pipedrive.addPerson(user);
 
       if (!addPersonResponse.success)
         throw new Error(`AddPerson Error ${addPersonResponse.error}`);
