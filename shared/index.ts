@@ -23,6 +23,7 @@ export * from './hooks/useUpdateSearchParams';
 export * from './services/mixpanel';
 export * from './services/pipedrive';
 
+export * from './utils/callPipedriveApi';
 export * from './utils/computePricing';
 export * from './utils/copyToClipboard';
 export * from './utils/debounce';

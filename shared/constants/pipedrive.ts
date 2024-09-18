@@ -1,6 +1,6 @@
 export const BASE_URL = `https://api.pipedrive.com/v1`;
 
-export const BASE_PARAMS = `api_token=${process.env.NEXT_PUBLIC_PIPEDRIVE_KEY}`;
+export const BASE_PARAMS = `api_token=${process.env.PIPEDRIVE_API_KEY}`;
 
 export const BASE_HEADERS = {
   'Content-Type': 'application/json;charset=UTF-8',
