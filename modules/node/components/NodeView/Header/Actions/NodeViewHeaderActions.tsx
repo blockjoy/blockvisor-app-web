@@ -12,17 +12,13 @@ import IconRecreate from '@public/assets/icons/app/NodeRecreate.svg';
 import IconWarning from '@public/assets/icons/common/Warning.svg';
 import IconAdmin from '@public/assets/icons/app/Sliders.svg';
 
-type Props = {
-  onDeleteClicked: VoidFunction;
-  onReportProblemClicked: VoidFunction;
-  onRecreateClicked: VoidFunction;
+type NodeViewHeaderActionsProps = {
+  handleActionView: (action: NodeAction) => void;
 };
 
 export const NodeViewHeaderActions = ({
-  onDeleteClicked,
-  onReportProblemClicked,
-  onRecreateClicked,
-}: Props) => {
+  handleActionView,
+}: NodeViewHeaderActionsProps) => {
   const router = useRouter();
 
   const { node, stopNode, startNode } = useNodeView();
@@ -68,6 +64,10 @@ export const NodeViewHeaderActions = ({
 
   const canRecreate = canCreate && canGetSecret && canPutSecret;
 
+  const handleDeleteClicked = () => handleActionView('delete');
+  const handleRecreateClicked = () => handleActionView('recreate');
+  const handleReportClicked = () => handleActionView('report');
+
   if (isSuperUser) {
     items.push({
       name: 'Admin',
@@ -96,7 +96,7 @@ export const NodeViewHeaderActions = ({
     items.push({
       name: 'Report Problem',
       icon: <IconWarning />,
-      onClick: onReportProblemClicked,
+      onClick: handleReportClicked,
     });
   }
 
@@ -104,7 +104,7 @@ export const NodeViewHeaderActions = ({
     items.push({
       name: 'Recreate',
       icon: <IconRecreate />,
-      onClick: onRecreateClicked,
+      onClick: handleRecreateClicked,
       hasBorderTop: true,
     });
   }
@@ -113,7 +113,7 @@ export const NodeViewHeaderActions = ({
     items.push({
       name: 'Delete',
       icon: <IconDelete />,
-      onClick: onDeleteClicked,
+      onClick: handleDeleteClicked,
       hasBorderTop: !canRecreate,
     });
   }

@@ -38,21 +38,19 @@ export const NodeViewHeader = () => {
   const { loadHosts } = useHostList();
   const { deleteNode } = useNodeDelete();
   const { createNode } = useNodeAdd();
-  const [isDeleteMode, setIsDeleteMode] = useState(false);
-  const [isReportProblemMode, setIsReportProblemMode] = useState(false);
 
   const [isSaving, setIsSaving] = useState<boolean | null>(null);
   const [error, setError] = useState('');
+  const [actionView, setActionView] = useState<NodeAction | null>(null);
+
+  const handleActionView = (action: NodeAction | null) => setActionView(action);
+  const handleClose = () => setActionView(null);
 
   const progress = getNodeJobProgress(node!);
 
   useEffect(() => {
-    if (!isDeleteMode && error) setError('');
-  }, [isDeleteMode]);
-
-  const toggleDeleteModalOpen = () => setIsDeleteMode(!isDeleteMode);
-  const toggleReportProblemModalOpen = () =>
-    setIsReportProblemMode(!isReportProblemMode);
+    if (!actionView && error) setError('');
+  }, [actionView]);
 
   const handleDeleteNode = () => {
     setError('');
@@ -75,7 +73,7 @@ export const NodeViewHeader = () => {
   const handleReportProblem = async (message: string) => {
     await nodeClient.reportProblem(node?.id!, message);
     toast.success('Problem Reported');
-    toggleReportProblemModalOpen();
+    handleClose();
   };
 
   const handleUpdateNode = async (value: string) => {
@@ -86,6 +84,7 @@ export const NodeViewHeader = () => {
     });
     toast.success('Node name updated');
     setIsSaving(false);
+    handleClose();
   };
 
   const handleRecreateNode = async () => {
@@ -107,8 +106,10 @@ export const NodeViewHeader = () => {
     await createNode(
       params,
       () => toast.success('Node successfully recreated'),
-      () => toast.error('Error recreating node. Please try again'),
+      () => setError('Error recreating node. Please try again'),
     );
+
+    handleClose();
   };
 
   const handleEditClicked = () => {
@@ -117,21 +118,33 @@ export const NodeViewHeader = () => {
 
   return (
     <>
-      {isDeleteMode && (
+      {actionView === 'delete' && (
         <DeleteModal
           portalId="delete-node-modal"
           elementName={escapeHtml(node?.displayName!)}
           entityName="Node"
-          onHide={toggleDeleteModalOpen}
+          onHide={handleClose}
           onSubmit={handleDeleteNode}
           error={error}
         />
       )}
 
-      {isReportProblemMode && (
+      {actionView === 'recreate' && (
+        <DeleteModal
+          portalId="recreate-node-modal"
+          type="Recreate"
+          elementName={escapeHtml(node?.displayName!)}
+          entityName="Node"
+          onHide={handleClose}
+          onSubmit={handleRecreateNode}
+          error={error}
+        />
+      )}
+
+      {actionView === 'report' && (
         <NodeViewReportProblem
           onSubmit={handleReportProblem}
-          onHide={toggleReportProblemModalOpen}
+          onHide={handleClose}
         />
       )}
 
@@ -187,11 +200,7 @@ export const NodeViewHeader = () => {
                   />
                 </div>
                 <div css={styles.actions}>
-                  <NodeViewHeaderActions
-                    onDeleteClicked={toggleDeleteModalOpen}
-                    onReportProblemClicked={toggleReportProblemModalOpen}
-                    onRecreateClicked={handleRecreateNode}
-                  />
+                  <NodeViewHeaderActions handleActionView={handleActionView} />
                 </div>
               </>
             )
