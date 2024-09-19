@@ -54,7 +54,7 @@ export const AdminListTable = ({
 
   const { search, page, field, order } = router.query;
 
-  const [scrollPosition, setScrollPosition] = useState<number>();
+  const [scrollX, setScrollX] = useState(0);
 
   const pageCount = Math.ceil(listTotal! / pageSize);
 
@@ -75,8 +75,8 @@ export const AdminListTable = ({
     });
   };
 
-  const handleTableScroll = (e: UIEvent<HTMLDivElement>) =>
-    setScrollPosition(e.currentTarget.scrollLeft);
+  const handleBodyScroll = (e: UIEvent<HTMLDivElement>) =>
+    setScrollX(e.currentTarget.scrollLeft);
 
   const handleFilterChange = (
     item: AdminFilterDropdownItem,
@@ -134,7 +134,7 @@ export const AdminListTable = ({
 
   return (
     <>
-      <section css={styles.tableWrapper} onScroll={handleTableScroll}>
+      <section css={styles.tableWrapper} onScroll={handleBodyScroll}>
         <table css={styles.table}>
           <thead>
             <tr>
@@ -175,7 +175,7 @@ export const AdminListTable = ({
                     activeSortField={activeSortField}
                     activeSortOrder={activeSortOrder}
                     column={column}
-                    scrollPosition={scrollPosition!}
+                    scrollX={scrollX}
                     onFilterChange={handleFilterChange}
                     onSortChanged={onSortChanged}
                     onReset={handleReset}
@@ -185,80 +185,67 @@ export const AdminListTable = ({
             </tr>
           </thead>
           <tbody>
-            {listTotal === 0 ? (
-              <tr>
-                <td colSpan={1000}>
-                  <p css={[spacing.top.medium, spacing.bottom.medium]}>
-                    No {name} found.
-                  </p>
-                </td>
-              </tr>
-            ) : (
-              list.map((item) => (
-                <tr key={item['id']}>
-                  {Boolean(onIdSelected) && (
-                    <td>
-                      <button
-                        css={styles.checkboxButton}
-                        type="button"
-                        onClick={(e: MouseEvent<HTMLButtonElement>) => {
-                          e.stopPropagation();
-                          onIdSelected?.(item.id);
-                        }}
-                      >
-                        <Checkbox
-                          name={item.id}
-                          checked={selectedIds?.includes(item.id)}
-                          onChange={() => onIdSelected?.(item.id)}
-                        />
-                      </button>
-                    </td>
-                  )}
-                  {columnsVisible.map((column) => (
-                    <td
-                      key={column.name}
-                      css={styles.tableCellWidth(column.width!)}
-                      onClick={() =>
-                        column.isRowClickDisabled ? null : gotoDetails(item.id)
-                      }
+            {list.map((item) => (
+              <tr key={item['id']}>
+                {Boolean(onIdSelected) && (
+                  <td>
+                    <button
+                      css={styles.checkboxButton}
+                      type="button"
+                      onClick={(e: MouseEvent<HTMLButtonElement>) => {
+                        e.stopPropagation();
+                        onIdSelected?.(item.id);
+                      }}
                     >
-                      {column.canCopy ? (
-                        <div css={styles.copyTd}>
-                          {item[column.name] || '-'}
-                          {column.canCopy && (
-                            <span
-                              className="copy-button"
-                              css={styles.copyButton}
-                            >
-                              <Copy
-                                value={item[column.name] || ''}
-                                hideTooltip
-                              />
-                            </span>
-                          )}
-                        </div>
-                      ) : (
-                        item[column.name]
-                      )}
-                    </td>
-                  ))}
-                </tr>
-              ))
-            )}
+                      <Checkbox
+                        name={item.id}
+                        checked={selectedIds?.includes(item.id)}
+                        onChange={() => onIdSelected?.(item.id)}
+                      />
+                    </button>
+                  </td>
+                )}
+                {columnsVisible.map((column) => (
+                  <td
+                    key={column.name}
+                    css={styles.tableCellWidth(column.width!)}
+                    onClick={() =>
+                      column.isRowClickDisabled ? null : gotoDetails(item.id)
+                    }
+                  >
+                    {column.canCopy ? (
+                      <div css={styles.copyTd}>
+                        {item[column.name] || '-'}
+                        {column.canCopy && (
+                          <span className="copy-button" css={styles.copyButton}>
+                            <Copy value={item[column.name] || ''} hideTooltip />
+                          </span>
+                        )}
+                      </div>
+                    ) : (
+                      item[column.name]
+                    )}
+                  </td>
+                ))}
+              </tr>
+            ))}
           </tbody>
         </table>
+        {listTotal === 0 && <p css={styles.emptyMessage}>No {name} found.</p>}
       </section>
-      {listTotal! > 0 && !hidePagination && (
-        <section css={styles.bottomRow}>
-          <AdminListPagination
-            listPage={listPage}
-            totalRowCount={listTotal!}
-            pageCount={pageCount}
-            onPageChanged={onPageChanged}
-          />
-          <AdminListRowCount total={listTotal!} page={listPage} />
-        </section>
-      )}
+      <section css={styles.bottomRow}>
+        {listTotal! > 0 && !hidePagination && (
+          <div css={styles.paginationWrapper}>
+            <AdminListPagination
+              listPage={listPage}
+              totalRowCount={listTotal!}
+              pageCount={pageCount}
+              onPageChanged={onPageChanged}
+            />
+            <AdminListRowCount total={listTotal!} page={listPage} />
+          </div>
+        )}
+      </section>
     </>
   );
 };

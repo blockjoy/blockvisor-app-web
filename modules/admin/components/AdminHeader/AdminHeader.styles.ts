@@ -18,7 +18,7 @@ export const styles = {
       padding-bottom: 20px;
       min-height: 88px;
       border-bottom: 1px solid ${theme.colorBorder};
-      background: ${rgba(theme.colorBackground || '#000', 0.7)};
+      background: ${rgba(theme.colorBackground || '#000', 0.8)};
       backdrop-filter: blur(10px);
     `,
   title: css`

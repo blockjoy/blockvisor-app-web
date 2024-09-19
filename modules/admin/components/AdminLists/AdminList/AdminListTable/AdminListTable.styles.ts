@@ -5,15 +5,31 @@ import { ITheme } from 'types/theme';
 
 export const styles = {
   tableWrapper: css`
+    position: relative;
     overflow: auto;
     flex: 1 1 auto;
-    min-width: 0;
-    max-width: 100%;
-    padding-bottom: 10px;
-    margin-bottom: 10px;
+
+    @media ${breakpoints.fromSml} {
+      max-height: calc(100vh - 230px);
+      margin-bottom: 10px;
+    }
+
+    @media ${breakpoints.toSml} {
+      max-height: calc(100dvh - 230px);
+    }
+
+    *::-webkit-scrollbar,
+    *::-webkit-scrollbar-track {
+      border-radius: 8px;
+    }
 
     ::-webkit-scrollbar {
-      width: 10px;
+      width: 8px;
+      padding-right: 8px;
+    }
+
+    ::-webkit-scrollbar-corner {
+      background: transparent;
     }
 
     ::-webkit-scrollbar-track {
@@ -26,17 +42,15 @@ export const styles = {
 
     ::-webkit-scrollbar-thumb:hover {
       background: rgb(255 255 255 / 20%);
+      cursor: pointer;
     }
-  `,
-  tableHeader: css`
-    display: flex;
-    align-items: center;
   `,
   table: (theme: ITheme) => css`
     text-align: left;
     width: 100%;
     min-width: 500px;
     font-size: 13px;
+    margin-bottom: px;
     border-collapse: collapse;
 
     th {
@@ -48,16 +62,31 @@ export const styles = {
       min-height: 53px;
     }
 
-    th,
-    td {
-      border-bottom: 1px solid ${theme.colorBorder};
+    thead {
+      position: sticky;
+      z-index: 1;
+      top: 0;
+      background: ${rgba(theme.colorBackground || '#000', 0.8)};
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 40px ${rgba(theme.colorBackground || '#000', 1)};
+
+      ::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        height: 1px;
+        background: ${theme.colorBorder};
+      }
     }
 
     tbody tr td {
       vertical-align: middle;
       opacity: 0.8;
-      padding: 0 10px 0 0;
+      border-bottom: 1px solid ${theme.colorBorder};
       height: 50px;
+      padding: 0 10px 0 0;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -93,14 +122,42 @@ export const styles = {
     display: flex;
     align-items: center;
   `,
-  bottomRow: css`
+  emptyMessage: (theme: ITheme) => css`
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
     display: flex;
     align-items: center;
-    gap: 20px;
+    padding: 24px 0;
+    font-size: 14px;
+    margin: 0;
+    border-bottom: 1px solid ${theme.colorBorder};
+  `,
+  bottomRow: (theme: ITheme) => css`
+    display: flex;
+    border-top: 1px solid ${theme.colorBorder};
+
+    @media ${breakpoints.fromSml} {
+      position: sticky;
+      bottom: 0;
+      height: 60px;
+      background: ${theme.colorBackground};
+    }
 
     @media ${breakpoints.toSml} {
       flex-direction: column;
-      margin-top: 10px;
+    }
+  `,
+  paginationWrapper: (theme: ITheme) => css`
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    height: 56px;
+
+    @media ${breakpoints.toSml} {
+      transform: scale(0.875);
+      justify-content: center;
     }
   `,
   checkboxButton: css`

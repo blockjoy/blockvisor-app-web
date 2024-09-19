@@ -9,6 +9,19 @@ export const styles = {
     justify-content: space-between;
     margin-left: 6px;
   `,
+  overlay: (theme: ITheme) => css`
+    position: fixed;
+    z-index: 0;
+    inset: 0;
+    background: rgb(0 0 0 / 20%);
+    visibility: hidden;
+    opacity: 0;
+    transition: 0.3s;
+  `,
+  overlayVisible: css`
+    opacity: 1;
+    visibility: visible;
+  `,
   dropdownButton: (theme: ITheme) => css`
     position: relative;
     background: transparent;
