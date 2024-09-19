@@ -14,6 +14,7 @@ export const NodeLauncherNotification = ({
       portalId="modal-node-launched"
       isOpen={true}
       handleClose={handleClose}
+      additionalStyles={[styles.modal]}
     >
       <h2 css={styles.headline}>Your Request is In!</h2>
       <div css={styles.message}>
@@ -28,7 +29,7 @@ export const NodeLauncherNotification = ({
         </p>
         <p>
           <span>Get ready to supercharge your experience!</span>
-          <SvgIcon size="20px" additionalStyles={styles.icon}>
+          <SvgIcon additionalStyles={styles.icon}>
             <IconRocket />
           </SvgIcon>
         </p>

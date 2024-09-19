@@ -2,6 +2,9 @@ import { css } from '@emotion/react';
 import { ITheme } from 'types/theme';
 
 export const styles = {
+  modal: css`
+    max-width: 440px;
+  `,
   headline: css`
     margin-bottom: 15px;
   `,
