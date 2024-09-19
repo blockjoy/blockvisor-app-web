@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { ITheme } from 'types/theme';
 import { normalize } from './normalize.styles';
 import { breakpoints } from './variables.styles';
 
@@ -6,7 +7,7 @@ import { breakpoints } from './variables.styles';
  * Root CSS
  */
 
-export const globalStyles = css`
+export const globalStyles = (theme: ITheme) => css`
   ${normalize}
 
   :root {
@@ -224,6 +225,23 @@ export const globalStyles = css`
     *::-webkit-scrollbar,
     *::-webkit-scrollbar-track {
       border-radius: 8px;
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+      padding-right: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgb(255 255 255 / 2%);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgb(255 255 255 / 10%);
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgb(255 255 255 / 20%);
     }
   }
   *,

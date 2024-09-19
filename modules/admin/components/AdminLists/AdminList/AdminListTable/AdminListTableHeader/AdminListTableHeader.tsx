@@ -11,7 +11,7 @@ type Props = {
   column: AdminListColumn;
   activeSortField: number;
   activeSortOrder: SortOrder;
-  scrollPosition: number;
+  scrollX: number;
   listAll: any[];
   blockchains?: Blockchain[];
   onSortChanged: (sortField: number, sortOrder: SortOrder) => void;
@@ -23,7 +23,7 @@ export const AdminListTableHeader = ({
   column,
   activeSortField,
   activeSortOrder,
-  scrollPosition,
+  scrollX,
   listAll,
   blockchains,
   onSortChanged,
@@ -59,7 +59,7 @@ export const AdminListTableHeader = ({
             blockchains={blockchains}
             onFilterChange={handleFilterChange}
             onReset={onReset}
-            tableScrollPosition={+scrollPosition!}
+            scrollX={scrollX}
           />
         )}
       </>
