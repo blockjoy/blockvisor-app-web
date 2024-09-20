@@ -29,11 +29,9 @@ export const AdminNodesFilterNodeType = ({
 
   const filteredNodeTypes: AdminFilterDropdownItem[] = Array.from(
     new Set(
-      sort(
-        selectedBlockchains
-          ?.flatMap(({ nodeTypes }) => nodeTypes)
-          .map((nodeType) => +nodeType.nodeType),
-      ),
+      selectedBlockchains
+        ?.flatMap(({ nodeTypes }) => nodeTypes)
+        .map((nodeType) => +nodeType.nodeType),
     ),
   )
     .filter((nodeType) =>
@@ -52,7 +50,7 @@ export const AdminNodesFilterNodeType = ({
 
   useEffect(() => {
     const nodeTypes = Array.from(
-      new Set(sort(listAll?.map((node) => +node.nodeType))),
+      new Set(listAll?.map((node) => +node.nodeType)),
     );
 
     const nodeTypesMapped = nodeTypes.map((nodeType) => ({
@@ -66,7 +64,9 @@ export const AdminNodesFilterNodeType = ({
   return (
     <AdminListFilterControl
       columnName={columnName}
-      items={filteredNodeTypes?.length ? filteredNodeTypes : list}
+      items={sort(filteredNodeTypes?.length ? filteredNodeTypes : list, {
+        field: 'name',
+      })}
       values={values}
       onFilterChange={onFilterChange}
     />

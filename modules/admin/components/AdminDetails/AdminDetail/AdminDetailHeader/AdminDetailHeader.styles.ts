@@ -37,12 +37,14 @@ export const styles = {
   buttons: (theme: ITheme) => css`
     position: relative;
     display: flex;
+    justify-content: flex-end;
     gap: 8px;
     flex: 1 1 auto;
     margin-left: auto;
 
     @media ${breakpoints.fromSml} {
       padding-left: 26px;
+      justify-content: flex-start;
 
       ::before {
         content: '';
