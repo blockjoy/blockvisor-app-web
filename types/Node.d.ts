@@ -18,3 +18,5 @@ type FilteredIpAddr = {
   ip: string;
   description?: string;
 };
+
+type NodeAction = 'delete' | 'report' | 'recreate';

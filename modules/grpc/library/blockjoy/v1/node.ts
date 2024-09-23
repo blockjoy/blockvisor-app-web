@@ -111,10 +111,16 @@ export interface Node {
    * be sent to.
    */
   url: string;
+  /** Set if this node was recreated from an existing one. */
+  oldNodeId?: string | undefined;
 }
 
 /** This message is used to create a new node. */
 export interface NodeServiceCreateRequest {
+  /** Set when recreating a new node from an existing one. */
+  oldNodeId?:
+    | string
+    | undefined;
   /** The id of the organization for which the node should be created. */
   orgId: string;
   /** The id of the blockchain that should be ran inside the node. */
@@ -562,6 +568,7 @@ function createBaseNode(): Node {
     reports: [],
     note: undefined,
     url: "",
+    oldNodeId: undefined,
   };
 }
 
@@ -671,6 +678,9 @@ export const Node = {
     }
     if (message.url !== "") {
       writer.uint32(290).string(message.url);
+    }
+    if (message.oldNodeId !== undefined) {
+      writer.uint32(298).string(message.oldNodeId);
     }
     return writer;
   },
@@ -927,6 +937,13 @@ export const Node = {
 
           message.url = reader.string();
           continue;
+        case 37:
+          if (tag !== 298) {
+            break;
+          }
+
+          message.oldNodeId = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -981,12 +998,14 @@ export const Node = {
     message.reports = object.reports?.map((e) => NodeReport.fromPartial(e)) || [];
     message.note = object.note ?? undefined;
     message.url = object.url ?? "";
+    message.oldNodeId = object.oldNodeId ?? undefined;
     return message;
   },
 };
 
 function createBaseNodeServiceCreateRequest(): NodeServiceCreateRequest {
   return {
+    oldNodeId: undefined,
     orgId: "",
     blockchainId: "",
     version: "",
@@ -1001,6 +1020,9 @@ function createBaseNodeServiceCreateRequest(): NodeServiceCreateRequest {
 
 export const NodeServiceCreateRequest = {
   encode(message: NodeServiceCreateRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.oldNodeId !== undefined) {
+      writer.uint32(10).string(message.oldNodeId);
+    }
     if (message.orgId !== "") {
       writer.uint32(18).string(message.orgId);
     }
@@ -1038,6 +1060,13 @@ export const NodeServiceCreateRequest = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.oldNodeId = reader.string();
+          continue;
         case 2:
           if (tag !== 18) {
             break;
@@ -1116,6 +1145,7 @@ export const NodeServiceCreateRequest = {
 
   fromPartial(object: DeepPartial<NodeServiceCreateRequest>): NodeServiceCreateRequest {
     const message = createBaseNodeServiceCreateRequest();
+    message.oldNodeId = object.oldNodeId ?? undefined;
     message.orgId = object.orgId ?? "";
     message.blockchainId = object.blockchainId ?? "";
     message.version = object.version ?? "";

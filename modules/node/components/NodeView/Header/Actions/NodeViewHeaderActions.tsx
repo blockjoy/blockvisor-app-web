@@ -8,18 +8,17 @@ import IconDelete from '@public/assets/icons/common/Trash.svg';
 import IconStop from '@public/assets/icons/app/NodeStop.svg';
 import IconStart from '@public/assets/icons/app/NodeStart.svg';
 import IconRestart from '@public/assets/icons/app/NodeRestart.svg';
+import IconRecreate from '@public/assets/icons/app/NodeRecreate.svg';
 import IconWarning from '@public/assets/icons/common/Warning.svg';
 import IconAdmin from '@public/assets/icons/app/Sliders.svg';
 
-type Props = {
-  onDeleteClicked: VoidFunction;
-  onReportProblemClicked: VoidFunction;
+type NodeViewHeaderActionsProps = {
+  handleActionView: (action: NodeAction) => void;
 };
 
 export const NodeViewHeaderActions = ({
-  onDeleteClicked,
-  onReportProblemClicked,
-}: Props) => {
+  handleActionView,
+}: NodeViewHeaderActionsProps) => {
   const router = useRouter();
 
   const { node, stopNode, startNode } = useNodeView();
@@ -32,6 +31,14 @@ export const NodeViewHeaderActions = ({
     router.push(`/admin?name=nodes&id=${node?.id}`);
 
   const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
+
+  const canCreate = useRecoilValue(authSelectors.hasPermission('node-create'));
+  const canGetSecret = useRecoilValue(
+    authSelectors.hasPermission('crypt-get-secret'),
+  );
+  const canPutSecret = useRecoilValue(
+    authSelectors.hasPermission('crypt-put-secret'),
+  );
 
   const canDelete = useRecoilValue(authSelectors.hasPermission('node-delete'));
 
@@ -54,6 +61,12 @@ export const NodeViewHeaderActions = ({
   const canReport = useRecoilValue(authSelectors.hasPermission('node-report'));
 
   const items: ActionsDropdownItem[] = [];
+
+  const canRecreate = canCreate && canGetSecret && canPutSecret;
+
+  const handleDeleteClicked = () => handleActionView('delete');
+  const handleRecreateClicked = () => handleActionView('recreate');
+  const handleReportClicked = () => handleActionView('report');
 
   if (isSuperUser) {
     items.push({
@@ -83,7 +96,16 @@ export const NodeViewHeaderActions = ({
     items.push({
       name: 'Report Problem',
       icon: <IconWarning />,
-      onClick: onReportProblemClicked,
+      onClick: handleReportClicked,
+    });
+  }
+
+  if (canRecreate) {
+    items.push({
+      name: 'Recreate',
+      icon: <IconRecreate />,
+      onClick: handleRecreateClicked,
+      hasBorderTop: true,
     });
   }
 
@@ -91,8 +113,8 @@ export const NodeViewHeaderActions = ({
     items.push({
       name: 'Delete',
       icon: <IconDelete />,
-      onClick: onDeleteClicked,
-      hasBorderTop: true,
+      onClick: handleDeleteClicked,
+      hasBorderTop: !canRecreate,
     });
   }
 
