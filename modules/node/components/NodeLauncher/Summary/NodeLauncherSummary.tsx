@@ -1,7 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { isMobile } from 'react-device-detect';
-import { toast } from 'react-toastify';
 import { Host, Region } from '@modules/grpc/library/blockjoy/v1/host';
 import {
   FormHeader,
@@ -11,10 +10,8 @@ import {
   OrganizationSelect,
   Pricing,
   Tooltip,
-  SvgIcon,
-  FormError,
 } from '@shared/components';
-import { HUBSPOT_FORMS, useHubSpotForm } from '@shared/index';
+import { usePipedriveForm } from '@shared/index';
 import { hostAtoms } from '@modules/host';
 import {
   NodeRegionSelect,
@@ -23,8 +20,9 @@ import {
   NodeLauncherHost,
   NodeLauncherPanel,
   NodeLauncherSummaryDetails,
+  NodeLauncherNotification,
 } from '@modules/node';
-import { authAtoms, authSelectors } from '@modules/auth';
+import { authSelectors } from '@modules/auth';
 import { billingAtoms } from '@modules/billing';
 import { styles } from './NodeLauncherSummary.styles';
 import IconRocket from '@public/assets/icons/app/Rocket.svg';
@@ -51,10 +49,6 @@ export const NodeLauncherSummary = ({
   const [isLaunching, setIsLaunching] = useRecoilState(
     nodeLauncherAtoms.isLaunching,
   );
-  const [isLaunchError, setIsLaunchError] = useRecoilState(
-    nodeLauncherAtoms.isLaunchError,
-  );
-  const user = useRecoilValue(authAtoms.user);
   const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
   const error = useRecoilValue(nodeLauncherAtoms.error);
   const selectedHosts = useRecoilValue(nodeLauncherAtoms.selectedHosts);
@@ -74,47 +68,30 @@ export const NodeLauncherSummary = ({
     nodeLauncherSelectors.isPropertiesValid,
   );
 
-  const { submitForm } = useHubSpotForm();
+  const [isLaunched, setIsLaunched] = useState(false);
+
+  const { nodeLauncherForm } = usePipedriveForm();
 
   useEffect(() => {
     setIsLaunching(false);
-    setIsLaunchError(false);
   }, []);
 
   const handleIssueReport = async () => {
     setIsLaunching(true);
 
-    await submitForm({
-      formId: HUBSPOT_FORMS.requestNodeLaunch,
-      formData: {
-        email: user?.email,
-        node_info: Object.values(nodeLauncherInfo)
+    await nodeLauncherForm({
+      leadData: {
+        nodeInfo: Object.values(nodeLauncherInfo)
           .filter((value) => value)
           .join(' | '),
-        node_issues: nodeLauncherStatus.reasons.join(' | '),
+        nodeIssues: nodeLauncherStatus.reasons.join(' | '),
       },
-      callback: (message) => {
-        toast(
-          <div>
-            <h5>
-              <SvgIcon size="20px">
-                <IconRocket />
-              </SvgIcon>
-              <span>Issue reported</span>
-            </h5>
-            <p>{message}</p>
-          </div>,
-          {
-            autoClose: false,
-            hideProgressBar: true,
-            className: 'Toastify__notification',
-          },
-        );
+      callback: () => {
+        setIsLaunched(true);
       },
     });
 
     setIsLaunching(false);
-    setIsLaunchError(true);
   };
 
   const handleNodeClicked = () => {
@@ -133,100 +110,102 @@ export const NodeLauncherSummary = ({
   };
 
   return (
-    <NodeLauncherPanel additionalStyles={styles.nodeLauncherPanel}>
-      <div css={styles.wrapper}>
-        <FormHeader>Launch</FormHeader>
-        {(isSuperUser || Boolean(allHosts?.length)) && (
-          <FormLabel>
-            <span>Host{isSuperUser ? 's' : ''}</span>
-            {selectedHosts !== null ? (
-              <a onClick={() => onHostsChanged(null)} css={styles.autoSelect}>
-                Auto select
-              </a>
-            ) : null}
-          </FormLabel>
-        )}
-        {isSuperUser ? (
-          <HostSelectMultiple onChange={onHostsChanged} />
-        ) : (
-          Boolean(allHosts?.length) && (
-            <HostSelect
-              hosts={allHosts}
-              isLoading={isLoadingAllHosts !== 'finished'}
-              selectedHost={selectedHosts?.[0]?.host!}
-              onChange={handleHostChanged}
-            />
-          )
-        )}
-
-        {!selectedHosts && (
-          <>
-            <FormLabel>Region</FormLabel>
-            <NodeRegionSelect
-              onChange={onRegionChanged}
-              onLoad={onRegionsLoaded}
-            />
-          </>
-        )}
-
-        {isMobile && (
-          <>
-            <FormLabel>Organization</FormLabel>
-            <OrganizationSelect />
-          </>
-        )}
-
-        <FormLabel>Summary</FormLabel>
-        <NodeLauncherSummaryDetails totalNodesToLaunch={totalNodesToLaunch} />
-
-        {price && (
-          <>
-            <FormLabel>Pricing</FormLabel>
-            <Pricing />
-          </>
-        )}
-
-        <div css={styles.buttons}>
-          {!hasPermissionsToCreate && (
-            <Tooltip
-              noWrap
-              top="-30px"
-              left="50%"
-              tooltip="Insufficient permissions to launch a node."
-            />
+    <>
+      <NodeLauncherPanel additionalStyles={styles.nodeLauncherPanel}>
+        <div css={styles.wrapper}>
+          <FormHeader>Launch</FormHeader>
+          {(isSuperUser || Boolean(allHosts?.length)) && (
+            <FormLabel>
+              <span>Host{isSuperUser ? 's' : ''}</span>
+              {selectedHosts !== null ? (
+                <a onClick={() => onHostsChanged(null)} css={styles.autoSelect}>
+                  Auto select
+                </a>
+              ) : null}
+            </FormLabel>
           )}
-          <button
-            onClick={handleNodeClicked}
-            disabled={
-              isLaunching ||
-              (isSuperUser && nodeLauncherStatus.isDisabled) ||
-              isPropertiesValid
-            }
-            css={[
-              styles.createButton,
-              isLaunching && !Boolean(error) && styles.createButtonLoading,
-            ]}
-          >
-            <span css={styles.createButtonInner}>
-              {isLaunching && !Boolean(error) ? (
-                <span css={styles.cogIcon}>
-                  <IconCog />
+          {isSuperUser ? (
+            <HostSelectMultiple onChange={onHostsChanged} />
+          ) : (
+            Boolean(allHosts?.length) && (
+              <HostSelect
+                hosts={allHosts}
+                isLoading={isLoadingAllHosts !== 'finished'}
+                selectedHost={selectedHosts?.[0]?.host!}
+                onChange={handleHostChanged}
+              />
+            )
+          )}
+
+          {!selectedHosts && (
+            <>
+              <FormLabel>Region</FormLabel>
+              <NodeRegionSelect
+                onChange={onRegionChanged}
+                onLoad={onRegionsLoaded}
+              />
+            </>
+          )}
+
+          {isMobile && (
+            <>
+              <FormLabel>Organization</FormLabel>
+              <OrganizationSelect />
+            </>
+          )}
+
+          <FormLabel>Summary</FormLabel>
+          <NodeLauncherSummaryDetails totalNodesToLaunch={totalNodesToLaunch} />
+
+          {price && (
+            <>
+              <FormLabel>Pricing</FormLabel>
+              <Pricing />
+            </>
+          )}
+
+          <div css={styles.buttons}>
+            {!hasPermissionsToCreate && (
+              <Tooltip
+                noWrap
+                top="-30px"
+                left="50%"
+                tooltip="Insufficient permissions to launch a node."
+              />
+            )}
+            <button
+              onClick={handleNodeClicked}
+              disabled={
+                isLaunching ||
+                (isSuperUser && nodeLauncherStatus.isDisabled) ||
+                isPropertiesValid
+              }
+              css={[
+                styles.createButton,
+                isLaunching && !Boolean(error) && styles.createButtonLoading,
+              ]}
+            >
+              <span css={styles.createButtonInner}>
+                {isLaunching && !Boolean(error) ? (
+                  <span css={styles.cogIcon}>
+                    <IconCog />
+                  </span>
+                ) : (
+                  <IconRocket />
+                )}
+                <span>
+                  {isLaunching && !Boolean(error)
+                    ? 'Launching'
+                    : `Launch Your Node${totalNodesToLaunch > 1 ? 's' : ''}`}
                 </span>
-              ) : (
-                <IconRocket />
-              )}
-              <span>
-                {isLaunching && !Boolean(error)
-                  ? 'Launching'
-                  : `Launch Your Node${totalNodesToLaunch > 1 ? 's' : ''}`}
               </span>
-            </span>
-          </button>
+            </button>
+          </div>
         </div>
-        {isLaunchError && (
-          <FormError isVisible={true}>An internal error occured.</FormError>
-        )}
-      </div>
-    </NodeLauncherPanel>
+      </NodeLauncherPanel>
+      {isLaunched && (
+        <NodeLauncherNotification handleClose={() => setIsLaunched(false)} />
+      )}
+    </>
   );
 };
