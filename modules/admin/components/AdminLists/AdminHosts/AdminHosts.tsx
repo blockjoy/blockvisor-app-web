@@ -25,6 +25,7 @@ const columns: AdminListColumn[] = [
     name: 'tags',
     isVisible: true,
     isRowClickDisabled: true,
+    isResizable: false,
   },
   {
     name: 'ip',

@@ -337,6 +337,7 @@ export const AdminList = ({
         onPageChanged={handlePageChanged}
         onSortChanged={handleSortChanged}
         onFiltersChanged={handleFiltersChanged}
+        onColumnsChanged={handleColumnsChanged}
       />
     </article>
   );
