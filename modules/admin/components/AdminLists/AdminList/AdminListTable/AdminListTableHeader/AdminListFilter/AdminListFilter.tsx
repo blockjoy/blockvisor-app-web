@@ -37,7 +37,10 @@ export const AdminListFilter = ({
     const rect = headerRef.current?.getBoundingClientRect();
     const top = rect?.top! + 44;
     const left = rect?.left!;
-    const maxWidth = headerRef.current?.clientWidth;
+    const maxWidth =
+      headerRef.current?.clientWidth! > 160
+        ? headerRef.current?.clientWidth
+        : 160;
     setMenuLeft(`${left! - 22}px`);
     setMenuTop(`${top}px`);
     setMaxWidth(`${maxWidth! + 42}px`);
@@ -46,6 +49,11 @@ export const AdminListFilter = ({
   const handleReset = () => {
     setIsOpen(false);
     onReset(column.name);
+  };
+
+  const handleOpen = () => {
+    setMenuPosition();
+    setIsOpen(true);
   };
 
   const handleClickOutside = () => setIsOpen(false);
@@ -111,13 +119,7 @@ export const AdminListFilter = ({
     <>
       {createPortal(overlay, document.body)}
       <div css={styles.wrapper}>
-        <button
-          css={styles.dropdownButton}
-          type="button"
-          onClick={() => {
-            isOpen === false ? setIsOpen(true) : null;
-          }}
-        >
+        <button css={styles.dropdownButton} type="button" onClick={handleOpen}>
           <SvgIcon size="12px" isDefaultColor>
             <IconFilter />
           </SvgIcon>

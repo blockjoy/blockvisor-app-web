@@ -6,7 +6,15 @@ import { pageSize } from '@modules/admin/constants/constants';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { AdminListPagination } from './AdminListPagination/AdminListPagination';
 import { AdminListRowCount } from './AdminListRowCount/AdminListRowCount';
-import { MouseEvent, UIEvent, useState } from 'react';
+import {
+  createRef,
+  MouseEvent,
+  RefObject,
+  UIEvent,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { AdminListTableHeader } from './AdminListTableHeader/AdminListTableHeader';
 import { AdminListColumn } from '@modules/admin/types/AdminListColumn';
 import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
@@ -29,6 +37,7 @@ type Props = {
   onPageChanged: (page: number) => void;
   onSortChanged: (sortField: number, sortOrder: SortOrder) => void;
   onFiltersChanged: (nextFilters: AdminListColumn[]) => void;
+  onColumnsChanged: (nextColumns: AdminListColumn[]) => void;
 };
 
 export const AdminListTable = ({
@@ -49,14 +58,22 @@ export const AdminListTable = ({
   onPageChanged,
   onSortChanged,
   onFiltersChanged,
+  onColumnsChanged,
 }: Props) => {
   const router = useRouter();
 
   const { search, page, field, order } = router.query;
 
   const [scrollX, setScrollX] = useState(0);
-
   const [isScrolledDown, setIsScrolledDown] = useState(false);
+  const [columnRefs, setColumnRefs] = useState<
+    RefObject<HTMLTableCellElement>[]
+  >([]);
+  const [isResizing, setIsResizing] = useState(false);
+  const [resizeLineLeft, setResizeLineLeft] = useState(0);
+
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const activeIndex = useRef<number>(0);
 
   const pageCount = Math.ceil(listTotal! / pageSize);
 
@@ -132,6 +149,51 @@ export const AdminListTable = ({
     onFiltersChanged(filtersCopy);
   };
 
+  const resize = (e: globalThis.MouseEvent): void => {
+    setIsResizing(true);
+    setResizeLineLeft(e.clientX);
+  };
+
+  const stopResize = (e: globalThis.MouseEvent): void => {
+    setIsResizing(false);
+    document.body.style.cursor = 'default';
+    window.removeEventListener('mousemove', resize);
+    window.removeEventListener('mouseup', stopResize);
+
+    const columnRef = columnRefs[activeIndex.current];
+    const nextWidth =
+      e.clientX -
+      columnRef?.current?.offsetLeft! -
+      (wrapperRef?.current?.offsetLeft! - wrapperRef?.current?.scrollLeft!);
+
+    const columnName = columnsVisible[activeIndex.current].name;
+    const columnsCopy = [...columns];
+    const columnCopy = columnsCopy.find((c) => c.name === columnName);
+
+    if (!columnCopy) return;
+
+    columnCopy.width = `${nextWidth < 100 ? 100 : nextWidth}px`;
+    onColumnsChanged(columnsCopy);
+  };
+
+  const initResize = (e: globalThis.MouseEvent, index: number): void => {
+    activeIndex.current = index;
+    e.stopPropagation();
+    document.body.style.cursor = 'col-resize';
+    window.addEventListener('mousemove', resize);
+    window.addEventListener('mouseup', stopResize);
+  };
+
+  const columnsVisible = columns.filter((column) => column.isVisible);
+
+  useEffect(() => {
+    setColumnRefs(
+      Array(columnsVisible.length)
+        .fill(undefined, 0, columnsVisible.length - 1)
+        .map((_, i) => columnRefs[i] || createRef()),
+    );
+  }, [columnsVisible.length]);
+
   if (isLoading)
     return (
       <div css={spacing.top.medium}>
@@ -139,11 +201,27 @@ export const AdminListTable = ({
       </div>
     );
 
-  const columnsVisible = columns.filter((column) => column.isVisible);
-
   return (
     <>
-      <section css={styles.tableWrapper} onScroll={handleBodyScroll}>
+      <div
+        ref={wrapperRef}
+        css={styles.tableWrapper}
+        onScroll={handleBodyScroll}
+      >
+        {isResizing && (
+          <div
+            css={styles.resizeLine}
+            style={{
+              left: `${resizeLineLeft}px`,
+              top: `${wrapperRef?.current?.offsetTop}px`,
+              bottom: `${
+                window.innerHeight -
+                (wrapperRef?.current?.offsetTop! +
+                  wrapperRef?.current?.clientHeight!)
+              }px`,
+            }}
+          ></div>
+        )}
         <table css={styles.table(isScrolledDown)}>
           <thead>
             <tr>
@@ -180,12 +258,15 @@ export const AdminListTable = ({
                   </button>
                 </th>
               )}
-              {columnsVisible.map((column) => (
+              {columnsVisible.map((column, index) => (
                 <th
+                  ref={columnRefs[index]}
                   key={column.name}
                   css={styles.tableCellWidth(column.width!)}
                 >
                   <AdminListTableHeader
+                    index={index}
+                    initResize={initResize}
                     listAll={listAll}
                     blockchains={blockchains}
                     activeSortField={activeSortField}
@@ -248,8 +329,8 @@ export const AdminListTable = ({
           </tbody>
         </table>
         {listTotal === 0 && <p css={styles.emptyMessage}>No {name} found.</p>}
-      </section>
-      <section css={styles.bottomRow}>
+      </div>
+      <div css={styles.bottomRow}>
         {listTotal! > 0 && !hidePagination && (
           <div css={styles.paginationWrapper}>
             <AdminListPagination
@@ -261,7 +342,7 @@ export const AdminListTable = ({
             <AdminListRowCount total={listTotal!} page={listPage} />
           </div>
         )}
-      </section>
+      </div>
     </>
   );
 };

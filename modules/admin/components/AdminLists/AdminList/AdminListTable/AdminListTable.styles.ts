@@ -13,12 +13,11 @@ export const styles = {
     border-bottom: 1px solid ${theme.colorBorder};
 
     @media ${breakpoints.fromSml} {
-      max-height: calc(100vh - 230px);
-      margin-bottom: 10px;
+      max-height: calc(100vh - 220px);
     }
 
     @media ${breakpoints.toSml} {
-      max-height: calc(100dvh - 230px);
+      max-height: calc(100dvh - 220px);
     }
 
     *::-webkit-scrollbar,
@@ -54,7 +53,6 @@ export const styles = {
       width: 100%;
       min-width: 500px;
       font-size: 13px;
-      margin-bottom: px;
       border-collapse: collapse;
 
       th {
@@ -93,24 +91,24 @@ export const styles = {
       thead tr th,
       tbody tr td {
         border: 1px solid ${theme.colorBorder};
-        padding: 0 10px;
       }
 
-      thead tr th:first-child,
-      tbody tr td:first-child {
+      thead tr th:first-of-type,
+      tbody tr td:first-of-type {
         border-left: 0;
       }
 
       thead tr th {
         border-bottom: 0;
         border-top: 0;
+        user-select: none;
       }
 
-      tbody tr:first-child td {
+      tbody tr:first-of-type td {
         border-top: 0;
       }
 
-      tbody tr:last-child td {
+      tbody tr:last-of-type td {
         border-bottom: 0;
       }
 
@@ -118,6 +116,7 @@ export const styles = {
         vertical-align: middle;
         opacity: 0.8;
         height: 48px;
+        padding: 0 10px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -137,6 +136,15 @@ export const styles = {
         visibility: visible;
       }
     `,
+  resizeLine: (theme: ITheme) => css`
+    position: fixed;
+    z-index: 2;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 1px;
+    background: ${theme.colorBorderGrey};
+  `,
   tableCellWidth: (width: string) => css`
     width: ${width};
     min-width: ${width};

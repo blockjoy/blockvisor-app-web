@@ -11,6 +11,8 @@ export const loadAdminColumns = (
       );
 
       if (foundSettingsColumn) {
+        column.width = foundSettingsColumn.width;
+
         if (foundSettingsColumn.isVisible !== undefined) {
           column.isVisible = foundSettingsColumn.isVisible;
         }

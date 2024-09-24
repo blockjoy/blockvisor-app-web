@@ -8,24 +8,28 @@ import { AdminListFilter } from './AdminListFilter/AdminListFilter';
 import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
 
 type Props = {
+  index: number;
   column: AdminListColumn;
   activeSortField: number;
   activeSortOrder: SortOrder;
   scrollX: number;
   listAll: any[];
   blockchains?: Blockchain[];
+  initResize: any;
   onSortChanged: (sortField: number, sortOrder: SortOrder) => void;
   onFilterChange: (item: AdminFilterDropdownItem, columnName: string) => void;
   onReset: (columName: string) => void;
 };
 
 export const AdminListTableHeader = ({
+  index,
   column,
   activeSortField,
   activeSortOrder,
   scrollX,
   listAll,
   blockchains,
+  initResize,
   onSortChanged,
   onFilterChange,
   onReset,
@@ -38,6 +42,12 @@ export const AdminListTableHeader = ({
   return (
     <span ref={headerRef} css={styles.tableHeader}>
       <>
+        {column.isResizable !== false && (
+          <span
+            css={styles.draggable}
+            onMouseDown={(e) => initResize(e, index)}
+          ></span>
+        )}
         {Boolean(column.sortField) ? (
           <AdminListTableSortButton
             sortField={column.sortField}
@@ -49,7 +59,9 @@ export const AdminListTableHeader = ({
             {capitalized(column.displayName || column.name)}
           </AdminListTableSortButton>
         ) : (
-          capitalized(column.displayName || column.name)
+          <span css={styles.tableHeaderText}>
+            {capitalized(column.displayName || column.name)}
+          </span>
         )}
         {Boolean(column.filterComponent) && (
           <AdminListFilter

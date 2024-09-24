@@ -14,6 +14,7 @@ export const styles = {
     color: ${theme.colorDefault};
     cursor: pointer;
     opacity: 0.8;
+    min-width: 0;
 
     &,
     svg path {
@@ -48,6 +49,9 @@ export const styles = {
     letter-spacing: inherit;
     text-transform: inherit;
     color: inherit;
-    line-height: 1;
+    line-height: 1.5;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
   `,
 };

@@ -89,6 +89,7 @@ const columns: AdminListColumn[] = [
   },
   {
     name: 'nodeType',
+    displayName: 'Type',
     width: '190px',
     sortField: NodeSortField.NODE_SORT_FIELD_NODE_TYPE,
     isVisible: false,
