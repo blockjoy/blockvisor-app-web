@@ -6,7 +6,7 @@ export const styles = {
     display: flex;
     align-items: center;
     gap: 6px;
-    padding: 20px 0;
+    padding: 16px 0;
     border: 0;
     background: transparent;
     letter-spacing: inherit;

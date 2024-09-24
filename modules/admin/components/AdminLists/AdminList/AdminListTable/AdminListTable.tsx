@@ -56,6 +56,8 @@ export const AdminListTable = ({
 
   const [scrollX, setScrollX] = useState(0);
 
+  const [isScrolledDown, setIsScrolledDown] = useState(false);
+
   const pageCount = Math.ceil(listTotal! / pageSize);
 
   const gotoDetails = (id: string) => {
@@ -75,8 +77,15 @@ export const AdminListTable = ({
     });
   };
 
-  const handleBodyScroll = (e: UIEvent<HTMLDivElement>) =>
+  const handleBodyScroll = (e: UIEvent<HTMLDivElement>) => {
     setScrollX(e.currentTarget.scrollLeft);
+
+    if (!isScrolledDown && e.currentTarget.scrollTop > 0) {
+      setIsScrolledDown(true);
+    } else if (isScrolledDown && e.currentTarget.scrollTop <= 0) {
+      setIsScrolledDown(false);
+    }
+  };
 
   const handleFilterChange = (
     item: AdminFilterDropdownItem,
@@ -135,14 +144,20 @@ export const AdminListTable = ({
   return (
     <>
       <section css={styles.tableWrapper} onScroll={handleBodyScroll}>
-        <table css={styles.table}>
+        <table css={styles.table(isScrolledDown)}>
           <thead>
             <tr>
               {Boolean(onIdSelected) && (
                 <th
-                  style={{ width: '40px', minWidth: '40px', maxWidth: '40px' }}
+                  style={{
+                    width: '50px',
+                    minWidth: '50px',
+                    maxWidth: '50px',
+                    padding: 0,
+                  }}
                 >
                   <button
+                    disabled={!list.length}
                     type="button"
                     css={styles.checkboxButton}
                     onClick={(e: MouseEvent<HTMLButtonElement>) => {
@@ -155,6 +170,7 @@ export const AdminListTable = ({
                     }}
                   >
                     <Checkbox
+                      disabled={!list.length}
                       name="check-all"
                       checked={
                         selectedIds?.length! > 0 &&
@@ -188,7 +204,7 @@ export const AdminListTable = ({
             {list.map((item) => (
               <tr key={item['id']}>
                 {Boolean(onIdSelected) && (
-                  <td>
+                  <td style={{ padding: 0 }}>
                     <button
                       css={styles.checkboxButton}
                       type="button"
