@@ -19,7 +19,7 @@ export const styles = {
   `,
   statusText: css`
     position: relative;
-    z-index: 1;
+    z-index: 0;
     white-space: nowrap;
   `,
   statusBorder: (theme: ITheme) => css`

@@ -1,14 +1,7 @@
 import { createPortal } from 'react-dom';
 import { css } from '@emotion/react';
 import { DropdownMenu, SvgIcon, BadgeCircle, Button } from '@shared/components';
-import {
-  MouseEvent,
-  RefObject,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react';
+import { RefObject, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useClickOutside } from '@shared/hooks/useClickOutside';
 import { styles } from './AdminListFilter.styles';
 import { AdminListColumn } from '@modules/admin/types/AdminListColumn';
@@ -42,18 +35,12 @@ export const AdminListFilter = ({
 
   const setMenuPosition = () => {
     const rect = headerRef.current?.getBoundingClientRect();
-    const top = rect?.top! + 50;
+    const top = rect?.top! + 44;
     const left = rect?.left!;
     const maxWidth = headerRef.current?.clientWidth;
-    setMenuLeft(`${left - 10!}px`);
+    setMenuLeft(`${left! - 22}px`);
     setMenuTop(`${top}px`);
-    setMaxWidth(`${maxWidth! + 1}px`);
-  };
-
-  const toggleOpen = (e: MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation();
-    setMenuPosition();
-    setIsOpen(!isOpen);
+    setMaxWidth(`${maxWidth! + 42}px`);
   };
 
   const handleReset = () => {

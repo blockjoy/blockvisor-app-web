@@ -41,8 +41,11 @@ export const NodeViewJobList = () => {
           <p
             css={[
               styles.status,
-              job.status === NodeJobStatus.NODE_JOB_STATUS_RUNNING &&
-                styles.statusSuccess,
+              job.status === NodeJobStatus.NODE_JOB_STATUS_RUNNING
+                ? styles.statusSuccess
+                : job.status === NodeJobStatus.NODE_JOB_STATUS_FAILED
+                ? styles.statusError
+                : null,
             ]}
           >
             {convertNodeJobStatusToName(job.status)}
