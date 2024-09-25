@@ -34,6 +34,15 @@ const nextConfig = {
           },
         ],
       },
+      {
+        source: '/netdata',
+        headers: [
+          {
+            key: 'X-Frame-Options',
+            value: '',
+          },
+        ],
+      },
     ];
   },
   webpack(config) {
