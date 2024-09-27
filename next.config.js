@@ -30,16 +30,7 @@ const nextConfig = {
         headers: [
           {
             key: 'X-Frame-Options',
-            value: 'DENY',
-          },
-        ],
-      },
-      {
-        source: '/netdata',
-        headers: [
-          {
-            key: 'X-Frame-Options',
-            value: '',
+            value: 'SAMEORIGIN',
           },
         ],
       },
