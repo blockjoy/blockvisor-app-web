@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
 const BASE_URL = `https://api.pipedrive.com/v1`;
-const BASE_PARAMS = `api_token=${process.env.PIPEDRIVE_API_KEY}`;
+const BASE_PARAMS = `api_token=${process.env.NEXT_PUBLIC_PIPEDRIVE_API_KEY}`;
 const BASE_HEADERS = {
   'Content-Type': 'application/json;charset=UTF-8',
   Accept: 'application/json;charset=UTF-8',

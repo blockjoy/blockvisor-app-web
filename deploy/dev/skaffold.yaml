@@ -18,7 +18,7 @@ build:
                   NEXT_PUBLIC_MIXPANEL_TOKEN: 'ceb51f9e98426b77862cfd9478415a1c'
                   NEXT_PUBLIC_MIXPANEL_PROJECT_URL: 'https://app.dev.blockjoy.com/mp'
                   NEXT_PUBLIC_STRIPE_KEY: 'pk_test_51KfoP7B5ce1jJsfTc35yyT9MTS6mU8MkaENM5ve4B3DkGF2wj3jJlkkrdTevcV1VxAYfgxt6M924Zdq2OmzVHXQO00zGmzIKkQ'
-                  PIPEDRIVE_API_KEY: '24adcdf4df23eb9af46f8505aceb6f0dd3080606'
+                  NEXT_PUBLIC_PIPEDRIVE_API_KEY: '24adcdf4df23eb9af46f8505aceb6f0dd3080606'
         - image: us-docker.pkg.dev/blockjoy-deployer/blockvisor-ui/blockvisor-ui-testing
           context: ./
           docker:
@@ -29,7 +29,7 @@ build:
                   NEXT_PUBLIC_MQTT_URL: 'wss://mqtt.testing.blockjoy.com:8084/mqtt'
                   NEXT_PUBLIC_SHORT_SHA: '{{.SHORT_SHA}}'
                   NEXT_PUBLIC_STRIPE_KEY: 'pk_test_51KfoP7B5ce1jJsfTc35yyT9MTS6mU8MkaENM5ve4B3DkGF2wj3jJlkkrdTevcV1VxAYfgxt6M924Zdq2OmzVHXQO00zGmzIKkQ'
-                  PIPEDRIVE_API_KEY: '24adcdf4df23eb9af46f8505aceb6f0dd3080606'
+                  NEXT_PUBLIC_PIPEDRIVE_API_KEY: '24adcdf4df23eb9af46f8505aceb6f0dd3080606'
     local:
         push: true
         useDockerCLI: true
