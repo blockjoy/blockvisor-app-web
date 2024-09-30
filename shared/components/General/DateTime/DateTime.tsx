@@ -6,9 +6,9 @@ type Props = {
 
 export const DateTime = ({ date }: Props) => {
   return (
-    <p>{`${formatters.formatDate(date!)} @ ${formatters.formatDate(
+    <>{`${formatters.formatDate(date!)} @ ${formatters.formatDate(
       date!,
       'time',
-    )}`}</p>
+    )}`}</>
   );
 };

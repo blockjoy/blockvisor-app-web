@@ -6,16 +6,17 @@ export const styles = {
     position: relative;
     display: flex;
     align-items: center;
-    padding: 0 10px;
+    padding: 0 10px 0 0;
     width: 100%;
+    height: 48px;
   `,
-  draggable: css`
+  resizer: css`
     position: absolute;
     z-index: 2;
     top: 0;
     right: -1px;
     bottom: 0;
-    width: 6px;
+    width: 20px;
     cursor: col-resize;
 
     @media ${breakpoints.toSml} {
@@ -28,6 +29,5 @@ export const styles = {
     text-overflow: ellipsis;
     line-height: 1.5;
     white-space: nowrap;
-    margin-right: -10px;
   `,
 };

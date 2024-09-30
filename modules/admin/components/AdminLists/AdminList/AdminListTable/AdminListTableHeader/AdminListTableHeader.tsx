@@ -19,6 +19,8 @@ type Props = {
   onSortChanged: (sortField: number, sortOrder: SortOrder) => void;
   onFilterChange: (item: AdminFilterDropdownItem, columnName: string) => void;
   onReset: (columName: string) => void;
+  onResizeMouseEnter: (left: number) => void;
+  onResizeMouseLeave: VoidFunction;
 };
 
 export const AdminListTableHeader = ({
@@ -33,8 +35,11 @@ export const AdminListTableHeader = ({
   onSortChanged,
   onFilterChange,
   onReset,
+  onResizeMouseEnter,
+  onResizeMouseLeave,
 }: Props) => {
   const headerRef = useRef<HTMLSpanElement>(null);
+  const resizerRef = useRef<HTMLSpanElement>(null);
 
   const handleFilterChange = (item: AdminFilterDropdownItem) =>
     onFilterChange(item, column.name);
@@ -44,8 +49,17 @@ export const AdminListTableHeader = ({
       <>
         {column.isResizable !== false && (
           <span
-            css={styles.draggable}
+            ref={resizerRef}
+            css={styles.resizer}
             onMouseDown={(e) => initResize(e, index)}
+            onMouseEnter={() =>
+              onResizeMouseEnter(
+                headerRef?.current?.offsetLeft! +
+                  headerRef?.current?.clientWidth! -
+                  9,
+              )
+            }
+            onMouseLeave={onResizeMouseLeave}
           ></span>
         )}
         {Boolean(column.sortField) ? (

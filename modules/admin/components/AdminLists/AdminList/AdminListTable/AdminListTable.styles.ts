@@ -8,8 +8,6 @@ export const styles = {
     position: relative;
     overflow: auto;
     flex: 1 1 auto;
-    border-left: 1px solid ${theme.colorBorder};
-    border-right: 1px solid ${theme.colorBorder};
     border-bottom: 1px solid ${theme.colorBorder};
 
     @media ${breakpoints.fromSml} {
@@ -90,7 +88,8 @@ export const styles = {
 
       thead tr th,
       tbody tr td {
-        border: 1px solid ${theme.colorBorder};
+        height: 54px;
+        border-bottom: 1px solid ${theme.colorBorder};
       }
 
       thead tr th:first-of-type,
@@ -114,12 +113,13 @@ export const styles = {
 
       tbody tr td {
         vertical-align: middle;
-        opacity: 0.8;
-        height: 48px;
-        padding: 0 10px;
+        opacity: 0.7;
+        padding: 0 12px 0 0;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        transition-property: opacity, border-color;
+        transition-duration: 0.3s;
       }
 
       tbody tr {
@@ -128,7 +128,7 @@ export const styles = {
 
       tbody tr:hover td {
         opacity: 1;
-        background: rgb(255 255 255 / 2%);
+        border-bottom-color: rgb(255 255 255 / 24%);
       }
 
       tbody tr:hover .copy-button {
@@ -136,15 +136,35 @@ export const styles = {
         visibility: visible;
       }
     `,
-  resizeLine: (theme: ITheme) => css`
-    position: fixed;
-    z-index: 2;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    width: 1px;
-    background: ${theme.colorBorderGrey};
-  `,
+  resizeLine:
+    (isResizing: boolean, isTableHeaderHovered: boolean) => (theme: ITheme) =>
+      css`
+        position: fixed;
+        z-index: 2;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 2px;
+        background: ${theme.colorBorderGrey};
+        transition-property: opacity, visibility;
+        transition-duration: 0.175s;
+        cursor: col-resize;
+        pointer-events: none;
+
+        opacity: 0;
+        visibility: hidden;
+
+        ${(isTableHeaderHovered || isResizing) &&
+        css`
+          opacity: 1;
+          visibility: visible;
+        `}
+
+        :hover {
+          opacity: 1;
+          visibility: visible;
+        }
+      `,
   tableCellWidth: (width: string) => css`
     width: ${width};
     min-width: ${width};

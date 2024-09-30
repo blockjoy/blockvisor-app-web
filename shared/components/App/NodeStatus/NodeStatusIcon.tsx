@@ -159,7 +159,8 @@ export const NodeStatusIcon = ({
       {statusName?.includes('PROVISIONING') ||
       status === 0 ||
       status === NodeStatusEnum.NODE_STATUS_UPLOADING ||
-      status === NodeStatusEnum.NODE_STATUS_DOWNLOADING ? (
+      status === NodeStatusEnum.NODE_STATUS_DOWNLOADING ||
+      status === NodeStatusEnum.NODE_STATUS_UPDATING ? (
         <NodeStatusSpinner
           isDefaultColor={isDefaultColor}
           size={size}
