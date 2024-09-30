@@ -78,6 +78,10 @@ const IconGnosis = dynamic(
   () => import(`@public/assets/icons/blockchain/Gnosis.svg`),
 );
 
+const IconGravity = dynamic(
+  () => import(`@public/assets/icons/blockchain/Gravity.svg`),
+);
+
 const IconCosmos = dynamic(
   () => import(`@public/assets/icons/blockchain/Cosmos.svg`),
 );
@@ -134,12 +138,20 @@ const IconSubsquid = dynamic(
   () => import(`@public/assets/icons/blockchain/Subsquid.svg`),
 );
 
+const IconSui = dynamic(
+  () => import(`@public/assets/icons/blockchain/Sui.svg`),
+);
+
 const IconTezos = dynamic(
   () => import(`@public/assets/icons/blockchain/Tezos.svg`),
 );
 
 const IconTon = dynamic(
   () => import(`@public/assets/icons/blockchain/Ton.svg`),
+);
+
+const IconZerogravity = dynamic(
+  () => import(`@public/assets/icons/blockchain/Zerogravity.svg`),
 );
 
 const IconZKSync = dynamic(
@@ -210,6 +222,9 @@ export const BlockchainIcon = ({
     case 'gnosis':
       Component = IconGnosis;
       break;
+    case 'gravity':
+      Component = IconGravity;
+      break;
     case 'cosmos':
       Component = IconCosmos;
       break;
@@ -253,11 +268,17 @@ export const BlockchainIcon = ({
     case 'sqd':
       Component = IconSubsquid;
       break;
+    case 'sui':
+      Component = IconSui;
+      break;
     case 'tezos':
       Component = IconTezos;
       break;
     case 'ton':
       Component = IconTon;
+      break;
+    case 'zerogravity':
+      Component = IconZerogravity;
       break;
     case 'zksync':
       Component = IconZKSync;
