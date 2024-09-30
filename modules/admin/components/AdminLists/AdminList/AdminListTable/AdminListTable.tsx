@@ -66,6 +66,7 @@ export const AdminListTable = ({
 
   const [scrollX, setScrollX] = useState(0);
   const [isScrolledDown, setIsScrolledDown] = useState(false);
+  const [isTableHeaderHovered, setIsTableHeaderHovered] = useState(false);
   const [columnRefs, setColumnRefs] = useState<
     RefObject<HTMLTableCellElement>[]
   >([]);
@@ -149,6 +150,19 @@ export const AdminListTable = ({
     onFiltersChanged(filtersCopy);
   };
 
+  const handleResizeMouseEnter = (left: number) => {
+    setResizeLineLeft(
+      wrapperRef?.current?.offsetLeft! -
+        wrapperRef?.current?.scrollLeft! +
+        left,
+    );
+    setIsTableHeaderHovered(true);
+  };
+
+  const handleResizeMouseLeave = () => {
+    setIsTableHeaderHovered(false);
+  };
+
   const resize = (e: globalThis.MouseEvent): void => {
     setIsResizing(true);
     setResizeLineLeft(e.clientX);
@@ -192,6 +206,11 @@ export const AdminListTable = ({
         .fill(undefined, 0, columnsVisible.length - 1)
         .map((_, i) => columnRefs[i] || createRef()),
     );
+
+    return () => {
+      window.removeEventListener('mousemove', resize);
+      window.removeEventListener('mouseup', stopResize);
+    };
   }, [columnsVisible.length]);
 
   if (isLoading)
@@ -208,20 +227,18 @@ export const AdminListTable = ({
         css={styles.tableWrapper}
         onScroll={handleBodyScroll}
       >
-        {isResizing && (
-          <div
-            css={styles.resizeLine}
-            style={{
-              left: `${resizeLineLeft}px`,
-              top: `${wrapperRef?.current?.offsetTop}px`,
-              bottom: `${
-                window.innerHeight -
-                (wrapperRef?.current?.offsetTop! +
-                  wrapperRef?.current?.clientHeight!)
-              }px`,
-            }}
-          ></div>
-        )}
+        <div
+          css={styles.resizeLine(isResizing, isTableHeaderHovered)}
+          style={{
+            left: `${resizeLineLeft}px`,
+            top: `${wrapperRef?.current?.offsetTop}px`,
+            bottom: `${
+              window.innerHeight -
+              (wrapperRef?.current?.offsetTop! +
+                wrapperRef?.current?.clientHeight!)
+            }px`,
+          }}
+        ></div>
         <table css={styles.table(isScrolledDown)}>
           <thead>
             <tr>
@@ -276,6 +293,8 @@ export const AdminListTable = ({
                     onFilterChange={handleFilterChange}
                     onSortChanged={onSortChanged}
                     onReset={handleReset}
+                    onResizeMouseEnter={handleResizeMouseEnter}
+                    onResizeMouseLeave={handleResizeMouseLeave}
                   />
                 </th>
               ))}

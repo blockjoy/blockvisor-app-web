@@ -38,12 +38,11 @@ export const AdminListFilter = ({
     const top = rect?.top! + 44;
     const left = rect?.left!;
     const maxWidth =
-      headerRef.current?.clientWidth! > 160
-        ? headerRef.current?.clientWidth
-        : 160;
-    setMenuLeft(`${left! - 22}px`);
+      column?.filterDropdownMaxWidth || headerRef.current?.clientWidth!;
+
+    setMenuLeft(`${left! - 10}px`);
     setMenuTop(`${top}px`);
-    setMaxWidth(`${maxWidth! + 42}px`);
+    setMaxWidth(`${maxWidth! + 10}px`);
   };
 
   const handleReset = () => {
@@ -118,16 +117,24 @@ export const AdminListFilter = ({
   return (
     <>
       {createPortal(overlay, document.body)}
-      <div css={styles.wrapper}>
-        <button css={styles.dropdownButton} type="button" onClick={handleOpen}>
-          <SvgIcon size="12px" isDefaultColor>
-            <IconFilter />
-          </SvgIcon>
-          {Boolean(column?.filterSettings?.values?.length) && (
-            <BadgeCircle>{column?.filterSettings?.values?.length}</BadgeCircle>
-          )}
-        </button>
-        {createPortal(dropdownMenu, document.body)}
+      <div css={styles.outerWrapper}>
+        <div css={styles.wrapper}>
+          <button
+            css={styles.dropdownButton}
+            type="button"
+            onClick={handleOpen}
+          >
+            <SvgIcon size="12px" isDefaultColor>
+              <IconFilter />
+            </SvgIcon>
+            {Boolean(column?.filterSettings?.values?.length) && (
+              <BadgeCircle>
+                {column?.filterSettings?.values?.length}
+              </BadgeCircle>
+            )}
+          </button>
+          {createPortal(dropdownMenu, document.body)}
+        </div>
       </div>
     </>
   );

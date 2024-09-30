@@ -7,8 +7,8 @@ export const styles = {
     align-items: center;
     background: ${theme.colorBorderGrey};
     padding: 0 0 0 12px;
-    height: 24px;
-    border-radius: 16px;
+    height: 28px;
+    border-radius: 14px;
     font-size: 12px;
     text-transform: capitalize;
   `,

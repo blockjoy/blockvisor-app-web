@@ -12,4 +12,5 @@ type AdminListColumn = {
   isRowClickDisabled?: boolean;
   filterComponent?: React.FunctionComponent<AdminFilterControlProps>;
   filterSettings?: AdminListColumnFilterSettings;
+  filterDropdownMaxWidth?: number;
 };
