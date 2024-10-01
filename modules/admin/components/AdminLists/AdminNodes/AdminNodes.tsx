@@ -52,6 +52,7 @@ const columns: AdminListColumn[] = [
     sortField: NodeSortField.NODE_SORT_FIELD_NODE_STATUS,
     isVisible: true,
     filterComponent: AdminNodesFilterStatus,
+    filterDropdownMinWidth: 160,
   },
   {
     name: 'containerStatus',
@@ -74,6 +75,7 @@ const columns: AdminListColumn[] = [
     isVisible: true,
     filterComponent: AdminNodesFilterHost,
     filterDropdownMaxWidth: 200,
+    filterDropdownMinWidth: 200,
   },
   {
     name: 'blockHeight',
@@ -87,7 +89,7 @@ const columns: AdminListColumn[] = [
     width: '190px',
     isVisible: true,
     filterComponent: AdminNodesFilterBlockchain,
-    filterDropdownMaxWidth: 160,
+    filterDropdownMinWidth: 200,
   },
   {
     name: 'nodeType',
@@ -96,6 +98,7 @@ const columns: AdminListColumn[] = [
     sortField: NodeSortField.NODE_SORT_FIELD_NODE_TYPE,
     isVisible: false,
     filterComponent: AdminNodesFilterNodeType,
+    filterDropdownMinWidth: 100,
     filterDropdownMaxWidth: 120,
   },
   {
@@ -103,13 +106,14 @@ const columns: AdminListColumn[] = [
     width: '230px',
     isVisible: false,
     filterComponent: AdminNodesFilterNetwork,
-    filterDropdownMaxWidth: 190,
+    filterDropdownMaxWidth: 140,
   },
   {
     name: 'version',
     width: '210px',
     isVisible: false,
     filterComponent: AdminNodesFilterVersion,
+    filterDropdownMinWidth: 140,
     filterDropdownMaxWidth: 160,
   },
   {
@@ -117,6 +121,7 @@ const columns: AdminListColumn[] = [
     width: '180px',
     isVisible: false,
     filterComponent: AdminNodesFilterIp,
+    filterDropdownMinWidth: 140,
   },
   {
     name: 'ipGateway',
@@ -141,6 +146,7 @@ const columns: AdminListColumn[] = [
     width: '240px',
     isVisible: true,
     filterComponent: AdminNodesFilterOrg,
+    filterDropdownMinWidth: 200,
   },
   {
     name: 'createdAt',
@@ -155,7 +161,8 @@ const columns: AdminListColumn[] = [
     width: '230px',
     isVisible: true,
     filterComponent: AdminNodesFilterUser,
-    filterDropdownMaxWidth: 160,
+    filterDropdownMaxWidth: 200,
+    filterDropdownMinWidth: 160,
   },
 ];
 

@@ -25,6 +25,7 @@ export const styles = {
   `,
   tableHeaderText: css`
     min-width: 0;
+    margin-right: 8px;
     overflow: hidden;
     text-overflow: ellipsis;
     line-height: 1.5;
