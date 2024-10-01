@@ -56,7 +56,7 @@ export const AdminListTableHeader = ({
               onResizeMouseEnter(
                 headerRef?.current?.offsetLeft! +
                   headerRef?.current?.clientWidth! -
-                  9,
+                  7,
               )
             }
             onMouseLeave={onResizeMouseLeave}
