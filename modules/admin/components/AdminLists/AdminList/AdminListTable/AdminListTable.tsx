@@ -241,6 +241,7 @@ export const AdminListTable = ({
         ref={wrapperRef}
         css={styles.tableWrapper}
         onScroll={handleBodyScroll}
+        onMouseLeave={() => setIsSelectingCheckboxes(false)}
       >
         <div
           css={styles.resizeLine(isResizing, isTableHeaderHovered)}
@@ -255,7 +256,13 @@ export const AdminListTable = ({
           }}
         ></div>
         <table css={styles.table(isScrolledDown)}>
-          <thead>
+          <thead
+            onMouseEnter={() => {
+              if (isSelectingCheckboxes) {
+                setIsSelectingCheckboxes(false);
+              }
+            }}
+          >
             <tr>
               {Boolean(onIdSelected) && (
                 <th
@@ -313,15 +320,16 @@ export const AdminListTable = ({
               <tr
                 key={item['id']}
                 className={selectedIds?.includes(item.id) ? 'selected' : ''}
+                onMouseEnter={() =>
+                  isSelectingCheckboxes ? onIdSelected?.(item.id) : null
+                }
+                onMouseUp={() => setIsSelectingCheckboxes(false)}
               >
                 {Boolean(onIdSelected) && (
                   <td style={{ padding: 0 }}>
                     <button
                       css={styles.checkboxButton}
                       type="button"
-                      onMouseEnter={() =>
-                        isSelectingCheckboxes ? onIdSelected?.(item.id) : null
-                      }
                       onMouseDown={() => handleCheckboxClick(item.id)}
                       onMouseUp={() => setIsSelectingCheckboxes(false)}
                     >
@@ -339,6 +347,11 @@ export const AdminListTable = ({
                     onClick={() =>
                       column.isRowClickDisabled ? null : gotoDetails(item.id)
                     }
+                    onMouseUp={() => {
+                      if (isSelectingCheckboxes) {
+                        setIsSelectingCheckboxes(false);
+                      }
+                    }}
                   >
                     {column.canCopy ? (
                       <div css={styles.copyTd}>
