@@ -92,23 +92,8 @@ export const styles = {
         border-bottom: 1px solid ${theme.colorBorder};
       }
 
-      thead tr th:first-of-type,
-      tbody tr td:first-of-type {
-        border-left: 0;
-      }
-
       thead tr th {
-        border-bottom: 0;
-        border-top: 0;
         user-select: none;
-      }
-
-      tbody tr:first-of-type td {
-        border-top: 0;
-      }
-
-      tbody tr:last-of-type td {
-        border-bottom: 0;
       }
 
       tbody tr td {
@@ -120,6 +105,14 @@ export const styles = {
         text-overflow: ellipsis;
         transition-property: opacity, border-color;
         transition-duration: 0.3s;
+      }
+
+      tbody tr.selected {
+        background: rgb(255 255 255 / 2%);
+      }
+
+      tbody tr.selected td {
+        opacity: 1;
       }
 
       tbody tr {
@@ -144,7 +137,7 @@ export const styles = {
         top: 0;
         left: 0;
         bottom: 0;
-        width: 2px;
+        width: 1px;
         background: ${theme.colorBorderGrey};
         transition-property: opacity, visibility;
         transition-duration: 0.175s;

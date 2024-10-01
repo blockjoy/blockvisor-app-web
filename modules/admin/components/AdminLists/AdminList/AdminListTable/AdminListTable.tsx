@@ -72,6 +72,7 @@ export const AdminListTable = ({
   >([]);
   const [isResizing, setIsResizing] = useState(false);
   const [resizeLineLeft, setResizeLineLeft] = useState(0);
+  const [isSelectingCheckboxes, setIsSelectingCheckboxes] = useState(false);
 
   const wrapperRef = useRef<HTMLDivElement>(null);
   const activeIndex = useRef<number>(0);
@@ -198,6 +199,20 @@ export const AdminListTable = ({
     window.addEventListener('mouseup', stopResize);
   };
 
+  const handleCheckAllClicked = (e: MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    if (selectedIds?.length === list.length) {
+      onIdAllSelected?.([]);
+    } else {
+      onIdAllSelected?.(list.map((item) => item.id));
+    }
+  };
+
+  const handleCheckboxClick = (id: string) => {
+    setIsSelectingCheckboxes(true);
+    onIdSelected?.(id);
+  };
+
   const columnsVisible = columns.filter((column) => column.isVisible);
 
   useEffect(() => {
@@ -255,14 +270,7 @@ export const AdminListTable = ({
                     disabled={!list.length}
                     type="button"
                     css={styles.checkboxButton}
-                    onClick={(e: MouseEvent<HTMLButtonElement>) => {
-                      e.stopPropagation();
-                      if (selectedIds?.length === list.length) {
-                        onIdAllSelected?.([]);
-                      } else {
-                        onIdAllSelected?.(list.map((item) => item.id));
-                      }
-                    }}
+                    onClick={handleCheckAllClicked}
                   >
                     <Checkbox
                       disabled={!list.length}
@@ -302,21 +310,27 @@ export const AdminListTable = ({
           </thead>
           <tbody>
             {list.map((item) => (
-              <tr key={item['id']}>
+              <tr
+                key={item['id']}
+                className={selectedIds?.includes(item.id) ? 'selected' : ''}
+              >
                 {Boolean(onIdSelected) && (
                   <td style={{ padding: 0 }}>
                     <button
                       css={styles.checkboxButton}
                       type="button"
-                      onClick={(e: MouseEvent<HTMLButtonElement>) => {
-                        e.stopPropagation();
-                        onIdSelected?.(item.id);
+                      onMouseEnter={() =>
+                        isSelectingCheckboxes ? onIdSelected?.(item.id) : null
+                      }
+                      onMouseDown={() => handleCheckboxClick(item.id)}
+                      onMouseUp={() => {
+                        setIsSelectingCheckboxes(false);
+                        console.log('stopped dragging', isSelectingCheckboxes);
                       }}
                     >
                       <Checkbox
                         name={item.id}
                         checked={selectedIds?.includes(item.id)}
-                        onChange={() => onIdSelected?.(item.id)}
                       />
                     </button>
                   </td>

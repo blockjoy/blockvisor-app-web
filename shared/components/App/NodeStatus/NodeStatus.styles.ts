@@ -2,25 +2,36 @@ import { css } from '@emotion/react';
 import { ITheme } from 'types/theme';
 
 export const styles = {
-  status: (theme: ITheme) => css`
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    color: ${theme.colorPrimary};
-    font-size: 11px;
-    line-height: 1;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    max-width: max-content;
+  status: (hasBorder?: boolean) => (theme: ITheme) =>
+    css`
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: ${theme.colorPrimary};
+      font-size: 11px;
+      line-height: 1;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      max-width: max-content;
+      ${hasBorder &&
+      css`
+        width: 100%;
+      `}
 
-    & path {
-      fill: ${theme.colorPrimary};
-    }
-  `,
-  statusText: css`
+      & path {
+        fill: ${theme.colorPrimary};
+      }
+    `,
+  statusText: (hasBorder?: boolean) => css`
     position: relative;
     z-index: 0;
     white-space: nowrap;
+
+    ${hasBorder &&
+    css`
+      overflow: hidden;
+      text-overflow: ellipsis;
+    `}
   `,
   statusBorder: (theme: ITheme) => css`
     border: 1px solid ${theme.colorPrimary};

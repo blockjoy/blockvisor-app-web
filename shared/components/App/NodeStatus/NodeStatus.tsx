@@ -74,7 +74,7 @@ export const NodeStatus = ({
   return (
     <span
       css={[
-        styles.status,
+        styles.status(!hasBorder),
         hasBorder && styles.statusBorder,
         isDownloading && styles.statusLoading(statusNameWidth),
         statusColor,
@@ -87,7 +87,7 @@ export const NodeStatus = ({
         />
       )}
       <NodeStatusIcon size="12px" status={status} type={type} />
-      <p ref={nameRef} css={[styles.statusText, statusColor]}>
+      <p ref={nameRef} css={[styles.statusText(!hasBorder), statusColor]}>
         <NodeStatusName status={status} type={type} />
       </p>
     </span>
