@@ -31,18 +31,22 @@ export const AdminListFilter = ({
   const [isOpen, setIsOpen] = useState(false);
   const [menuTop, setMenuTop] = useState<string>();
   const [menuLeft, setMenuLeft] = useState<string>();
+  const [minWidth, setMinWidth] = useState<string>();
   const [maxWidth, setMaxWidth] = useState<string>();
 
   const setMenuPosition = () => {
     const rect = headerRef.current?.getBoundingClientRect();
     const top = rect?.top! + 44;
     const left = rect?.left!;
+    const minWidth = column?.filterDropdownMinWidth || -1;
     const maxWidth =
-      column?.filterDropdownMaxWidth || headerRef.current?.clientWidth!;
+      column?.filterDropdownMaxWidth ||
+      Math.max(minWidth, headerRef.current?.clientWidth!);
 
     setMenuLeft(`${left! - 10}px`);
     setMenuTop(`${top}px`);
     setMaxWidth(`${maxWidth! + 10}px`);
+    setMinWidth(minWidth > -1 ? `${minWidth}px` : 'auto');
   };
 
   const handleReset = () => {
@@ -83,8 +87,7 @@ export const AdminListFilter = ({
         right: auto;
         overflow: visible;
         max-width: ${maxWidth};
-        width: ${maxWidth};
-        min-width: ${maxWidth};
+        min-width: ${minWidth};
       `}
     >
       <FilterControls

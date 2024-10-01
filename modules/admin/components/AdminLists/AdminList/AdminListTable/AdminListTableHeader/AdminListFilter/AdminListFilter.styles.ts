@@ -4,7 +4,8 @@ import { ITheme } from 'types/theme';
 export const styles = {
   outerWrapper: css`
     min-width: 0;
-    padding: 0 12px 0 2px;
+    flex: 1 0 auto;
+    padding: 0 12px 0 0;
   `,
   wrapper: css`
     position: relative;
@@ -33,9 +34,9 @@ export const styles = {
     padding: 0;
     display: grid;
     place-items: center;
-    width: 36px;
-    min-width: 36px;
-    height: 36px;
+    width: 30px;
+    min-width: 30px;
+    height: 32px;
     border-radius: 6px;
     transition: 0.3s;
 

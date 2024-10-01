@@ -152,17 +152,17 @@ export const AdminListTable = ({
   };
 
   const handleResizeMouseEnter = (left: number) => {
-    setResizeLineLeft(
-      wrapperRef?.current?.offsetLeft! -
-        wrapperRef?.current?.scrollLeft! +
-        left,
-    );
-    setIsTableHeaderHovered(true);
+    if (!isTableHeaderHovered) {
+      setResizeLineLeft(
+        wrapperRef?.current?.offsetLeft! -
+          wrapperRef?.current?.scrollLeft! +
+          left,
+      );
+      setIsTableHeaderHovered(true);
+    }
   };
 
-  const handleResizeMouseLeave = () => {
-    setIsTableHeaderHovered(false);
-  };
+  const handleResizeMouseLeave = () => setIsTableHeaderHovered(false);
 
   const resize = (e: globalThis.MouseEvent): void => {
     setIsResizing(true);
@@ -323,10 +323,7 @@ export const AdminListTable = ({
                         isSelectingCheckboxes ? onIdSelected?.(item.id) : null
                       }
                       onMouseDown={() => handleCheckboxClick(item.id)}
-                      onMouseUp={() => {
-                        setIsSelectingCheckboxes(false);
-                        console.log('stopped dragging', isSelectingCheckboxes);
-                      }}
+                      onMouseUp={() => setIsSelectingCheckboxes(false)}
                     >
                       <Checkbox
                         name={item.id}

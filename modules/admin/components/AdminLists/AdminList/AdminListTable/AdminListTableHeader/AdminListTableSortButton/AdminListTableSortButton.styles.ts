@@ -7,6 +7,7 @@ export const styles = {
     align-items: center;
     gap: 6px;
     padding: 16px 0;
+    margin-right: 8px;
     border: 0;
     background: transparent;
     letter-spacing: inherit;
