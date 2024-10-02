@@ -23,6 +23,8 @@ export const loadAdminColumns = (
           column.filterSettings.values =
             foundSettingsColumn.filterSettings?.values!;
         }
+      } else {
+        column.filterSettings = { values: undefined };
       }
     });
   }
