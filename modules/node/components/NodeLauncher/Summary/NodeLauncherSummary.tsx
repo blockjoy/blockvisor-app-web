@@ -165,14 +165,6 @@ export const NodeLauncherSummary = ({
           )}
 
           <div css={styles.buttons}>
-            {!hasPermissionsToCreate && (
-              <Tooltip
-                noWrap
-                top="-30px"
-                left="50%"
-                tooltip="Insufficient permissions to launch a node."
-              />
-            )}
             <button
               onClick={handleNodeClicked}
               disabled={
