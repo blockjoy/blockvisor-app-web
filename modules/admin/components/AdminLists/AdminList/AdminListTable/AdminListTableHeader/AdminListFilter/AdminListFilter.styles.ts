@@ -5,7 +5,7 @@ export const styles = {
   outerWrapper: css`
     min-width: 0;
     flex: 1 0 auto;
-    padding: 0 12px 0 0;
+    padding: 0 6px 0 0;
   `,
   wrapper: css`
     position: relative;
