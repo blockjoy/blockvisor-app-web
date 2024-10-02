@@ -3,6 +3,7 @@ import { ITheme } from 'types/theme';
 
 export const styles = {
   item: css`
+    word-break: break-word;
     :hover {
       background: rgb(255 255 255 / 5%);
     }

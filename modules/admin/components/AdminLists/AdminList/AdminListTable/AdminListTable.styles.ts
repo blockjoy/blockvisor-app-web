@@ -52,6 +52,7 @@ export const styles = {
       min-width: 500px;
       font-size: 13px;
       border-collapse: collapse;
+      table-layout: fixed;
 
       th {
         color: ${rgba(theme.colorDefault || '#a7a7a7', 0.8)};
@@ -158,10 +159,10 @@ export const styles = {
           visibility: visible;
         }
       `,
-  tableCellWidth: (width: string) => css`
-    width: ${width};
+  tableCell: (width: string) => css`
     min-width: ${width};
     max-width: ${width};
+    width: ${width};
     box-sizing: border-box;
   `,
   copyButton: css`

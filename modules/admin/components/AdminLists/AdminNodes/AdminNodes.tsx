@@ -74,7 +74,7 @@ const columns: AdminListColumn[] = [
     sortField: NodeSortField.NODE_SORT_FIELD_HOST_NAME,
     isVisible: true,
     filterComponent: AdminNodesFilterHost,
-    filterDropdownMaxWidth: 200,
+    filterDropdownMaxWidth: 230,
     filterDropdownMinWidth: 200,
   },
   {
@@ -133,6 +133,7 @@ const columns: AdminListColumn[] = [
     width: '210px',
     isVisible: false,
     filterComponent: AdminNodesFilterRegion,
+    filterDropdownMinWidth: 230,
   },
   {
     name: 'address',
@@ -219,27 +220,18 @@ export const AdminNodes = () => {
 
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
-  const [selectedBlockchains, setSelectedBlockchains] = useState<string[]>([]);
-
   const handleIdAllSelected = (ids: string[]) => setSelectedIds(ids);
 
-  const handleIdSelected = async (nodeId: string, blockchainId?: string) => {
-    const selectedBlockchainsCopy = [...selectedBlockchains];
-
-    if (!selectedBlockchainsCopy.includes(blockchainId!)) {
-      selectedBlockchainsCopy.push(blockchainId!);
-      setSelectedBlockchains(selectedBlockchainsCopy);
-    }
-
-    if (selectedIds.some((id) => id === nodeId)) {
+  const handleIdSelected = async (nodeId: string, isSelected: boolean) => {
+    if (!isSelected) {
       setSelectedIds(selectedIds.filter((id) => id !== nodeId));
-    } else {
+    } else if (!selectedIds?.includes(nodeId)) {
       const selectedIdsCopy = [...selectedIds];
+
       selectedIdsCopy.push(nodeId);
       setSelectedIds(selectedIdsCopy);
     }
   };
-
   useEffect(() => {
     (async () => {
       const blockchainsResponse = await blockchainClient.listBlockchains();

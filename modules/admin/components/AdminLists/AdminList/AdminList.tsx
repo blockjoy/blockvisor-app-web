@@ -34,7 +34,7 @@ type Props = {
   blockchains?: Blockchain[];
   setTagsAdded?: Dispatch<SetStateAction<AdminTags[]>>;
   setTagsRemoved?: Dispatch<SetStateAction<AdminTags[]>>;
-  onIdSelected?: (id: string, secondId?: string) => void;
+  onIdSelected?: (id: string, isSelected: boolean) => void;
   onIdAllSelected?: (ids: string[]) => void;
   listMap: (list: any[]) => any[];
   getList: (

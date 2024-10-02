@@ -6,18 +6,18 @@ export const styles = {
     position: relative;
     display: flex;
     align-items: center;
-    padding: 0 10px 0 0;
-    width: 100%;
+    padding: 0;
     height: 48px;
   `,
   resizer: css`
     position: absolute;
     z-index: 2;
     top: 0;
-    right: -1px;
+    right: 0;
     bottom: 0;
     width: 20px;
     cursor: col-resize;
+    background: rgb(255 255 255 / 5%);
 
     @media ${breakpoints.toSml} {
       display: none;
