@@ -122,7 +122,7 @@ export const AdminList = ({
     setListTotal(response.total);
     setIsLoading(false);
 
-    if (columns.some((column) => !!column.filterSettings)) {
+    if (columns.some((column) => !!column.filterComponent)) {
       const everythingResponse = await getList(
         keyword,
         -1,
