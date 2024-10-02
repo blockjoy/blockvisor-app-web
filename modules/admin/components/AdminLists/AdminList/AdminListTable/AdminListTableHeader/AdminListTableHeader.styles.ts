@@ -4,17 +4,17 @@ import { breakpoints } from 'styles/variables.styles';
 export const styles = {
   tableHeader: css`
     position: relative;
+    z-index: 1;
     display: flex;
     align-items: center;
-    padding: 0 10px 0 0;
-    width: 100%;
+    padding: 0 20px 0 0;
     height: 48px;
   `,
   resizer: css`
     position: absolute;
     z-index: 2;
     top: 0;
-    right: -1px;
+    right: 0;
     bottom: 0;
     width: 20px;
     cursor: col-resize;

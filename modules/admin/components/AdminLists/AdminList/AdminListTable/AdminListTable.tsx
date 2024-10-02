@@ -32,7 +32,7 @@ type Props = {
   activeSortOrder: SortOrder;
   selectedIds?: string[];
   blockchains?: Blockchain[];
-  onIdSelected?: (id: string, secondId?: string) => void;
+  onIdSelected?: (id: string, isSelected: boolean) => void;
   onIdAllSelected?: (ids: string[]) => void;
   onPageChanged: (page: number) => void;
   onSortChanged: (sortField: number, sortOrder: SortOrder) => void;
@@ -73,6 +73,7 @@ export const AdminListTable = ({
   const [isResizing, setIsResizing] = useState(false);
   const [resizeLineLeft, setResizeLineLeft] = useState(0);
   const [isSelectingCheckboxes, setIsSelectingCheckboxes] = useState(false);
+  const [isChecking, setIsChecking] = useState(false);
 
   const wrapperRef = useRef<HTMLDivElement>(null);
   const activeIndex = useRef<number>(0);
@@ -208,9 +209,10 @@ export const AdminListTable = ({
     }
   };
 
-  const handleCheckboxClick = (id: string) => {
+  const handleCheckboxClick = (id: string, isSelected: boolean) => {
+    setIsChecking(isSelected);
     setIsSelectingCheckboxes(true);
-    onIdSelected?.(id);
+    onIdSelected?.(id, isSelected);
   };
 
   const columnsVisible = columns.filter((column) => column.isVisible);
@@ -294,7 +296,7 @@ export const AdminListTable = ({
                 <th
                   ref={columnRefs[index]}
                   key={column.name}
-                  css={styles.tableCellWidth(column.width!)}
+                  css={styles.tableCell(column.width!)}
                 >
                   <AdminListTableHeader
                     index={index}
@@ -321,7 +323,9 @@ export const AdminListTable = ({
                 key={item['id']}
                 className={selectedIds?.includes(item.id) ? 'selected' : ''}
                 onMouseEnter={() =>
-                  isSelectingCheckboxes ? onIdSelected?.(item.id) : null
+                  isSelectingCheckboxes
+                    ? onIdSelected?.(item.id, isChecking)
+                    : null
                 }
                 onMouseUp={() => setIsSelectingCheckboxes(false)}
               >
@@ -330,7 +334,12 @@ export const AdminListTable = ({
                     <button
                       css={styles.checkboxButton}
                       type="button"
-                      onMouseDown={() => handleCheckboxClick(item.id)}
+                      onMouseDown={() =>
+                        handleCheckboxClick(
+                          item.id,
+                          !selectedIds?.includes(item.id),
+                        )
+                      }
                       onMouseUp={() => setIsSelectingCheckboxes(false)}
                     >
                       <Checkbox
@@ -343,7 +352,7 @@ export const AdminListTable = ({
                 {columnsVisible.map((column) => (
                   <td
                     key={column.name}
-                    css={styles.tableCellWidth(column.width!)}
+                    css={styles.tableCell(column.width!)}
                     onClick={() =>
                       column.isRowClickDisabled ? null : gotoDetails(item.id)
                     }

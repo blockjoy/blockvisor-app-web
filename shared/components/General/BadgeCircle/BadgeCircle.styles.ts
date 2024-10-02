@@ -4,8 +4,8 @@ import { ITheme } from 'types/theme';
 export const styles = {
   badge: (theme: ITheme) => css`
     position: absolute;
-    top: 2px;
-    right: 2px;
+    top: -2px;
+    right: -2px;
     width: 18px;
     height: 18px;
     border-radius: 50%;

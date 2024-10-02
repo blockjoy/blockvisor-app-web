@@ -25,7 +25,7 @@ const columns: AdminListColumn[] = [
     name: 'tags',
     isVisible: true,
     isRowClickDisabled: true,
-    isResizable: false,
+    width: '300px',
   },
   {
     name: 'ip',
@@ -110,12 +110,13 @@ export const AdminHosts = () => {
     setSelectedIds(ids);
   };
 
-  const handleIdSelected = async (nodeId: string, blockchainId?: string) => {
-    if (selectedIds.some((id) => id === nodeId)) {
-      setSelectedIds(selectedIds.filter((id) => id !== nodeId));
-    } else {
+  const handleIdSelected = async (hostId: string, isSelected: boolean) => {
+    if (!isSelected) {
+      setSelectedIds(selectedIds.filter((id) => id !== hostId));
+    } else if (!selectedIds?.includes(hostId)) {
       const selectedIdsCopy = [...selectedIds];
-      selectedIdsCopy.push(nodeId);
+
+      selectedIdsCopy.push(hostId);
       setSelectedIds(selectedIdsCopy);
     }
   };
