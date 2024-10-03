@@ -34,7 +34,7 @@ type Props = {
   blockchains?: Blockchain[];
   setTagsAdded?: Dispatch<SetStateAction<AdminTags[]>>;
   setTagsRemoved?: Dispatch<SetStateAction<AdminTags[]>>;
-  onIdSelected?: (id: string, secondId?: string) => void;
+  onIdSelected?: (id: string, isSelected: boolean) => void;
   onIdAllSelected?: (ids: string[]) => void;
   listMap: (list: any[]) => any[];
   getList: (
@@ -122,7 +122,7 @@ export const AdminList = ({
     setListTotal(response.total);
     setIsLoading(false);
 
-    if (columns.some((column) => !!column.filterSettings)) {
+    if (columns.some((column) => !!column.filterComponent)) {
       const everythingResponse = await getList(
         keyword,
         -1,
@@ -337,6 +337,7 @@ export const AdminList = ({
         onPageChanged={handlePageChanged}
         onSortChanged={handleSortChanged}
         onFiltersChanged={handleFiltersChanged}
+        onColumnsChanged={handleColumnsChanged}
       />
     </article>
   );

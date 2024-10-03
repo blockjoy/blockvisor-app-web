@@ -6,7 +6,15 @@ import { pageSize } from '@modules/admin/constants/constants';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { AdminListPagination } from './AdminListPagination/AdminListPagination';
 import { AdminListRowCount } from './AdminListRowCount/AdminListRowCount';
-import { MouseEvent, UIEvent, useState } from 'react';
+import {
+  createRef,
+  MouseEvent,
+  RefObject,
+  UIEvent,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { AdminListTableHeader } from './AdminListTableHeader/AdminListTableHeader';
 import { AdminListColumn } from '@modules/admin/types/AdminListColumn';
 import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
@@ -24,11 +32,12 @@ type Props = {
   activeSortOrder: SortOrder;
   selectedIds?: string[];
   blockchains?: Blockchain[];
-  onIdSelected?: (id: string, secondId?: string) => void;
+  onIdSelected?: (id: string, isSelected: boolean) => void;
   onIdAllSelected?: (ids: string[]) => void;
   onPageChanged: (page: number) => void;
   onSortChanged: (sortField: number, sortOrder: SortOrder) => void;
   onFiltersChanged: (nextFilters: AdminListColumn[]) => void;
+  onColumnsChanged: (nextColumns: AdminListColumn[]) => void;
 };
 
 export const AdminListTable = ({
@@ -49,12 +58,25 @@ export const AdminListTable = ({
   onPageChanged,
   onSortChanged,
   onFiltersChanged,
+  onColumnsChanged,
 }: Props) => {
   const router = useRouter();
 
   const { search, page, field, order } = router.query;
 
   const [scrollX, setScrollX] = useState(0);
+  const [isScrolledDown, setIsScrolledDown] = useState(false);
+  const [isTableHeaderHovered, setIsTableHeaderHovered] = useState(false);
+  const [columnRefs, setColumnRefs] = useState<
+    RefObject<HTMLTableCellElement>[]
+  >([]);
+  const [isResizing, setIsResizing] = useState(false);
+  const [resizeLineLeft, setResizeLineLeft] = useState(0);
+  const [isSelectingCheckboxes, setIsSelectingCheckboxes] = useState(false);
+  const [isChecking, setIsChecking] = useState(false);
+
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const activeIndex = useRef<number>(0);
 
   const pageCount = Math.ceil(listTotal! / pageSize);
 
@@ -75,8 +97,15 @@ export const AdminListTable = ({
     });
   };
 
-  const handleBodyScroll = (e: UIEvent<HTMLDivElement>) =>
+  const handleBodyScroll = (e: UIEvent<HTMLDivElement>) => {
     setScrollX(e.currentTarget.scrollLeft);
+
+    if (!isScrolledDown && e.currentTarget.scrollTop > 0) {
+      setIsScrolledDown(true);
+    } else if (isScrolledDown && e.currentTarget.scrollTop <= 0) {
+      setIsScrolledDown(false);
+    }
+  };
 
   const handleFilterChange = (
     item: AdminFilterDropdownItem,
@@ -123,6 +152,84 @@ export const AdminListTable = ({
     onFiltersChanged(filtersCopy);
   };
 
+  const handleResizeMouseEnter = (left: number) => {
+    if (!isTableHeaderHovered) {
+      setResizeLineLeft(
+        wrapperRef?.current?.offsetLeft! -
+          wrapperRef?.current?.scrollLeft! +
+          left,
+      );
+      setIsTableHeaderHovered(true);
+    }
+  };
+
+  const handleResizeMouseLeave = () => setIsTableHeaderHovered(false);
+
+  const resize = (e: globalThis.MouseEvent): void => {
+    setIsResizing(true);
+    setResizeLineLeft(e.clientX);
+  };
+
+  const stopResize = (e: globalThis.MouseEvent): void => {
+    setIsResizing(false);
+    document.body.style.cursor = 'default';
+    window.removeEventListener('mousemove', resize);
+    window.removeEventListener('mouseup', stopResize);
+
+    const columnRef = columnRefs[activeIndex.current];
+    const nextWidth =
+      e.clientX -
+      columnRef?.current?.offsetLeft! -
+      (wrapperRef?.current?.offsetLeft! - wrapperRef?.current?.scrollLeft!);
+
+    const columnName = columnsVisible[activeIndex.current].name;
+    const columnsCopy = [...columns];
+    const columnCopy = columnsCopy.find((c) => c.name === columnName);
+
+    if (!columnCopy) return;
+
+    columnCopy.width = `${nextWidth < 100 ? 100 : nextWidth}px`;
+    onColumnsChanged(columnsCopy);
+  };
+
+  const initResize = (e: globalThis.MouseEvent, index: number): void => {
+    activeIndex.current = index;
+    e.stopPropagation();
+    document.body.style.cursor = 'col-resize';
+    window.addEventListener('mousemove', resize);
+    window.addEventListener('mouseup', stopResize);
+  };
+
+  const handleCheckAllClicked = (e: MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    if (selectedIds?.length === list.length) {
+      onIdAllSelected?.([]);
+    } else {
+      onIdAllSelected?.(list.map((item) => item.id));
+    }
+  };
+
+  const handleCheckboxClick = (id: string, isSelected: boolean) => {
+    setIsChecking(isSelected);
+    setIsSelectingCheckboxes(true);
+    onIdSelected?.(id, isSelected);
+  };
+
+  const columnsVisible = columns.filter((column) => column.isVisible);
+
+  useEffect(() => {
+    setColumnRefs(
+      Array(columnsVisible.length)
+        .fill(undefined, 0, columnsVisible.length - 1)
+        .map((_, i) => columnRefs[i] || createRef()),
+    );
+
+    return () => {
+      window.removeEventListener('mousemove', resize);
+      window.removeEventListener('mouseup', stopResize);
+    };
+  }, [columnsVisible.length]);
+
   if (isLoading)
     return (
       <div css={spacing.top.medium}>
@@ -130,31 +237,52 @@ export const AdminListTable = ({
       </div>
     );
 
-  const columnsVisible = columns.filter((column) => column.isVisible);
-
   return (
     <>
-      <section css={styles.tableWrapper} onScroll={handleBodyScroll}>
-        <table css={styles.table}>
-          <thead>
+      <div
+        ref={wrapperRef}
+        css={styles.tableWrapper}
+        onScroll={handleBodyScroll}
+        onMouseLeave={() => setIsSelectingCheckboxes(false)}
+      >
+        <div
+          css={styles.resizeLine(isResizing, isTableHeaderHovered)}
+          style={{
+            left: `${resizeLineLeft}px`,
+            top: `${wrapperRef?.current?.offsetTop}px`,
+            bottom: `${
+              window.innerHeight -
+              (wrapperRef?.current?.offsetTop! +
+                wrapperRef?.current?.clientHeight!)
+            }px`,
+          }}
+        ></div>
+        <table css={styles.table(isScrolledDown)}>
+          <thead
+            onMouseEnter={() => {
+              if (isSelectingCheckboxes) {
+                setIsSelectingCheckboxes(false);
+              }
+            }}
+          >
             <tr>
               {Boolean(onIdSelected) && (
                 <th
-                  style={{ width: '40px', minWidth: '40px', maxWidth: '40px' }}
+                  style={{
+                    width: '50px',
+                    minWidth: '50px',
+                    maxWidth: '50px',
+                    padding: 0,
+                  }}
                 >
                   <button
+                    disabled={!list.length}
                     type="button"
                     css={styles.checkboxButton}
-                    onClick={(e: MouseEvent<HTMLButtonElement>) => {
-                      e.stopPropagation();
-                      if (selectedIds?.length === list.length) {
-                        onIdAllSelected?.([]);
-                      } else {
-                        onIdAllSelected?.(list.map((item) => item.id));
-                      }
-                    }}
+                    onClick={handleCheckAllClicked}
                   >
                     <Checkbox
+                      disabled={!list.length}
                       name="check-all"
                       checked={
                         selectedIds?.length! > 0 &&
@@ -164,12 +292,15 @@ export const AdminListTable = ({
                   </button>
                 </th>
               )}
-              {columnsVisible.map((column) => (
+              {columnsVisible.map((column, index) => (
                 <th
+                  ref={columnRefs[index]}
                   key={column.name}
-                  css={styles.tableCellWidth(column.width!)}
+                  css={styles.tableCell(column.width!)}
                 >
                   <AdminListTableHeader
+                    index={index}
+                    initResize={initResize}
                     listAll={listAll}
                     blockchains={blockchains}
                     activeSortField={activeSortField}
@@ -179,6 +310,8 @@ export const AdminListTable = ({
                     onFilterChange={handleFilterChange}
                     onSortChanged={onSortChanged}
                     onReset={handleReset}
+                    onResizeMouseEnter={handleResizeMouseEnter}
+                    onResizeMouseLeave={handleResizeMouseLeave}
                   />
                 </th>
               ))}
@@ -186,21 +319,32 @@ export const AdminListTable = ({
           </thead>
           <tbody>
             {list.map((item) => (
-              <tr key={item['id']}>
+              <tr
+                key={item['id']}
+                className={selectedIds?.includes(item.id) ? 'selected' : ''}
+                onMouseEnter={() =>
+                  isSelectingCheckboxes
+                    ? onIdSelected?.(item.id, isChecking)
+                    : null
+                }
+                onMouseUp={() => setIsSelectingCheckboxes(false)}
+              >
                 {Boolean(onIdSelected) && (
-                  <td>
+                  <td style={{ padding: 0 }}>
                     <button
                       css={styles.checkboxButton}
                       type="button"
-                      onClick={(e: MouseEvent<HTMLButtonElement>) => {
-                        e.stopPropagation();
-                        onIdSelected?.(item.id);
-                      }}
+                      onMouseDown={() =>
+                        handleCheckboxClick(
+                          item.id,
+                          !selectedIds?.includes(item.id),
+                        )
+                      }
+                      onMouseUp={() => setIsSelectingCheckboxes(false)}
                     >
                       <Checkbox
                         name={item.id}
                         checked={selectedIds?.includes(item.id)}
-                        onChange={() => onIdSelected?.(item.id)}
                       />
                     </button>
                   </td>
@@ -208,10 +352,15 @@ export const AdminListTable = ({
                 {columnsVisible.map((column) => (
                   <td
                     key={column.name}
-                    css={styles.tableCellWidth(column.width!)}
+                    css={styles.tableCell(column.width!)}
                     onClick={() =>
                       column.isRowClickDisabled ? null : gotoDetails(item.id)
                     }
+                    onMouseUp={() => {
+                      if (isSelectingCheckboxes) {
+                        setIsSelectingCheckboxes(false);
+                      }
+                    }}
                   >
                     {column.canCopy ? (
                       <div css={styles.copyTd}>
@@ -232,8 +381,8 @@ export const AdminListTable = ({
           </tbody>
         </table>
         {listTotal === 0 && <p css={styles.emptyMessage}>No {name} found.</p>}
-      </section>
-      <section css={styles.bottomRow}>
+      </div>
+      <div css={styles.bottomRow}>
         {listTotal! > 0 && !hidePagination && (
           <div css={styles.paginationWrapper}>
             <AdminListPagination
@@ -245,7 +394,7 @@ export const AdminListTable = ({
             <AdminListRowCount total={listTotal!} page={listPage} />
           </div>
         )}
-      </section>
+      </div>
     </>
   );
 };

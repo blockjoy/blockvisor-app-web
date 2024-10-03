@@ -11,6 +11,8 @@ export const loadAdminColumns = (
       );
 
       if (foundSettingsColumn) {
+        column.width = foundSettingsColumn.width;
+
         if (foundSettingsColumn.isVisible !== undefined) {
           column.isVisible = foundSettingsColumn.isVisible;
         }
@@ -21,6 +23,8 @@ export const loadAdminColumns = (
           column.filterSettings.values =
             foundSettingsColumn.filterSettings?.values!;
         }
+      } else {
+        column.filterSettings = { values: undefined };
       }
     });
   }

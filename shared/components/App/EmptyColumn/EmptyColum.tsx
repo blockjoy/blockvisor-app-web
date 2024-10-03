@@ -1,4 +1,6 @@
+import { SerializedStyles } from '@emotion/react';
 import { typo } from 'styles/utils.typography.styles';
+import { ITheme } from 'types/theme';
 import { AnimatedGraphic } from './AnimatedGraphic';
 import { styles } from './EmptyColumn.styles';
 
@@ -7,7 +9,8 @@ type Props = {
   title: string;
   description: string | React.ReactNode;
   align?: 'left' | 'center';
-  additionalStyles?: any;
+  hasMaxWidth?: boolean;
+  additionalStyles?: SerializedStyles;
 };
 
 export function EmptyColumn({
@@ -15,6 +18,7 @@ export function EmptyColumn({
   title,
   description,
   align = 'center',
+  hasMaxWidth = true,
   additionalStyles,
 }: Props) {
   return (
@@ -29,7 +33,14 @@ export function EmptyColumn({
       <AnimatedGraphic />
       <div>
         <div css={[typo.medium]}>{title}</div>
-        <div css={[styles.description, typo.small]}>{description}</div>
+        <div
+          css={[
+            (theme: ITheme) => styles.description(hasMaxWidth)(theme),
+            typo.small,
+          ]}
+        >
+          {description}
+        </div>
       </div>
     </article>
   );

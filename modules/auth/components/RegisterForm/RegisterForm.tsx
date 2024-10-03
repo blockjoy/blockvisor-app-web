@@ -14,7 +14,7 @@ import { handleTokenFromQueryString } from '@modules/auth/utils/handleTokenFromQ
 import { PasswordField } from '../PasswordField/PasswordField';
 import { usePasswordStrength } from '@modules/auth/hooks/usePasswordStrength';
 import { userClient } from '@modules/grpc';
-import { HUBSPOT_FORMS, useHubSpotForm } from '@shared/index';
+import { usePipedriveForm } from '@shared/index';
 import { styles } from './RegisterForm.styles';
 
 type RegisterForm = {
@@ -49,7 +49,7 @@ export function RegisterForm() {
 
   const { setPassword } = usePasswordStrength();
 
-  const { submitForm } = useHubSpotForm();
+  const { registerForm } = usePipedriveForm();
 
   const onSubmit = handleSubmit(
     async ({ email, password, firstName, lastName }) => {
@@ -70,13 +70,8 @@ export function RegisterForm() {
         return;
       }
 
-      submitForm({
-        formId: HUBSPOT_FORMS.register,
-        formData: {
-          email,
-          firstname: firstName,
-          lastname: lastName,
-        },
+      registerForm({
+        user: { email, firstName, lastName } as User,
       });
 
       setIsLoading(false);

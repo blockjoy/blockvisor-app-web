@@ -42,9 +42,7 @@ export const getNodeStatusColor = (status: number, type?: NodeStatusType) => {
     )
   ) {
     return styles.statusColorGreen;
-  } else if (
-    statusName?.match(/UNDEFINED|STOPPED|DELETED|DELINQUENT|FAILED/g)
-  ) {
+  } else if (statusName?.match(/UNDEFINED|DELETED|DELINQUENT|FAILED/g)) {
     return styles.statusColorRed;
   } else {
     return styles.statusColorDefault;
@@ -76,7 +74,7 @@ export const NodeStatus = ({
   return (
     <span
       css={[
-        styles.status,
+        styles.status(!hasBorder),
         hasBorder && styles.statusBorder,
         isDownloading && styles.statusLoading(statusNameWidth),
         statusColor,
@@ -89,7 +87,7 @@ export const NodeStatus = ({
         />
       )}
       <NodeStatusIcon size="12px" status={status} type={type} />
-      <p ref={nameRef} css={[styles.statusText, statusColor]}>
+      <p ref={nameRef} css={[styles.statusText(!hasBorder), statusColor]}>
         <NodeStatusName status={status} type={type} />
       </p>
     </span>

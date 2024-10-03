@@ -2,12 +2,16 @@ import { css } from '@emotion/react';
 import { ITheme } from 'types/theme';
 
 export const styles = {
+  outerWrapper: css`
+    min-width: 0;
+    flex: 1 0 auto;
+    padding: 0 6px 0 0;
+  `,
   wrapper: css`
     position: relative;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-left: 6px;
   `,
   overlay: (theme: ITheme) => css`
     position: fixed;
@@ -30,8 +34,9 @@ export const styles = {
     padding: 0;
     display: grid;
     place-items: center;
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    min-width: 30px;
+    height: 32px;
     border-radius: 6px;
     transition: 0.3s;
 

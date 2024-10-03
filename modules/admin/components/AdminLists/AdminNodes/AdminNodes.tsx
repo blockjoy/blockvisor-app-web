@@ -29,29 +29,30 @@ import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
 const columns: AdminListColumn[] = [
   {
     name: 'displayName',
-    width: '290px',
+    width: '200px',
     sortField: NodeSortField.NODE_SORT_FIELD_DISPLAY_NAME,
     isVisible: true,
   },
   {
     name: 'nodeName',
-    width: '290px',
+    width: '200px',
     sortField: NodeSortField.NODE_SORT_FIELD_NODE_NAME,
     isVisible: false,
   },
   {
     name: 'dnsName',
-    width: '290px',
+    width: '200px',
     sortField: NodeSortField.NODE_SORT_FIELD_DNS_NAME,
     isVisible: false,
   },
   {
     name: 'status',
     displayName: 'Node Status',
-    width: '240px',
+    width: '200px',
     sortField: NodeSortField.NODE_SORT_FIELD_NODE_STATUS,
     isVisible: true,
     filterComponent: AdminNodesFilterStatus,
+    filterDropdownMinWidth: 160,
   },
   {
     name: 'containerStatus',
@@ -62,17 +63,19 @@ const columns: AdminListColumn[] = [
   },
   {
     name: 'syncStatus',
-    width: '180px',
+    width: '140px',
     sortField: NodeSortField.NODE_SORT_FIELD_SYNC_STATUS,
     isVisible: false,
     filterComponent: AdminNodesSyncStatus,
   },
   {
     name: 'host',
-    width: '270px',
+    width: '200px',
     sortField: NodeSortField.NODE_SORT_FIELD_HOST_NAME,
     isVisible: true,
     filterComponent: AdminNodesFilterHost,
+    filterDropdownMaxWidth: 230,
+    filterDropdownMinWidth: 200,
   },
   {
     name: 'blockHeight',
@@ -83,34 +86,42 @@ const columns: AdminListColumn[] = [
   {
     name: 'blockchainName',
     displayName: 'blockchain',
-    width: '190px',
+    width: '140px',
     isVisible: true,
     filterComponent: AdminNodesFilterBlockchain,
+    filterDropdownMinWidth: 200,
   },
   {
     name: 'nodeType',
-    width: '190px',
+    displayName: 'Node Type',
+    width: '140px',
     sortField: NodeSortField.NODE_SORT_FIELD_NODE_TYPE,
-    isVisible: false,
+    isVisible: true,
     filterComponent: AdminNodesFilterNodeType,
+    filterDropdownMinWidth: 100,
+    filterDropdownMaxWidth: 120,
   },
   {
     name: 'network',
-    width: '230px',
-    isVisible: false,
+    width: '140px',
+    isVisible: true,
     filterComponent: AdminNodesFilterNetwork,
+    filterDropdownMaxWidth: 140,
   },
   {
     name: 'version',
-    width: '210px',
-    isVisible: false,
+    width: '100px',
+    isVisible: true,
     filterComponent: AdminNodesFilterVersion,
+    filterDropdownMinWidth: 140,
+    filterDropdownMaxWidth: 160,
   },
   {
     name: 'ip',
-    width: '180px',
+    width: '140px',
     isVisible: false,
     filterComponent: AdminNodesFilterIp,
+    filterDropdownMinWidth: 140,
   },
   {
     name: 'ipGateway',
@@ -119,36 +130,40 @@ const columns: AdminListColumn[] = [
   },
   {
     name: 'region',
-    width: '210px',
-    isVisible: false,
+    width: '140px',
+    isVisible: true,
     filterComponent: AdminNodesFilterRegion,
+    filterDropdownMinWidth: 230,
   },
   {
     name: 'address',
-    width: '350px',
+    width: '140px',
     displayName: 'Node Address',
     isVisible: false,
   },
   {
     name: 'orgName',
     displayName: 'Org',
-    width: '240px',
+    width: '100px',
     isVisible: true,
     filterComponent: AdminNodesFilterOrg,
+    filterDropdownMinWidth: 200,
   },
   {
     name: 'createdAt',
     displayName: 'Launched On',
-    width: '230px',
+    width: '180px',
     sortField: NodeSortField.NODE_SORT_FIELD_CREATED_AT,
     isVisible: true,
   },
   {
     name: 'createdBy',
     displayName: 'Launched By',
-    width: '230px',
+    width: '140px',
     isVisible: true,
     filterComponent: AdminNodesFilterUser,
+    filterDropdownMaxWidth: 200,
+    filterDropdownMinWidth: 160,
   },
 ];
 
@@ -205,22 +220,14 @@ export const AdminNodes = () => {
 
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
-  const [selectedBlockchains, setSelectedBlockchains] = useState<string[]>([]);
-
   const handleIdAllSelected = (ids: string[]) => setSelectedIds(ids);
 
-  const handleIdSelected = async (nodeId: string, blockchainId?: string) => {
-    const selectedBlockchainsCopy = [...selectedBlockchains];
-
-    if (!selectedBlockchainsCopy.includes(blockchainId!)) {
-      selectedBlockchainsCopy.push(blockchainId!);
-      setSelectedBlockchains(selectedBlockchainsCopy);
-    }
-
-    if (selectedIds.some((id) => id === nodeId)) {
+  const handleIdSelected = async (nodeId: string, isSelected: boolean) => {
+    if (!isSelected) {
       setSelectedIds(selectedIds.filter((id) => id !== nodeId));
-    } else {
+    } else if (!selectedIds?.includes(nodeId)) {
       const selectedIdsCopy = [...selectedIds];
+
       selectedIdsCopy.push(nodeId);
       setSelectedIds(selectedIdsCopy);
     }
@@ -229,6 +236,7 @@ export const AdminNodes = () => {
   useEffect(() => {
     (async () => {
       const blockchainsResponse = await blockchainClient.listBlockchains();
+      console.log('blockchainsResponse', blockchainsResponse);
       setBlockchains(blockchainsResponse.blockchains);
     })();
   }, []);

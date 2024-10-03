@@ -7,6 +7,7 @@ import {
   Skeleton,
   SkeletonGrid,
 } from '@shared/components';
+import { NodeServiceCreateRequest } from '@modules/grpc/library/blockjoy/v1/node';
 import { colors } from 'styles/utils.colors.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { styles } from './NodeViewHeader.styles';
@@ -14,6 +15,7 @@ import { BlockchainIcon } from '@shared/components';
 import {
   convertNodeTypeToName,
   NodeViewReportProblem,
+  useNodeAdd,
   useNodeDelete,
   useNodeList,
   useNodeView,
@@ -35,21 +37,20 @@ export const NodeViewHeader = () => {
   const { removeFromNodeList } = useNodeList();
   const { loadHosts } = useHostList();
   const { deleteNode } = useNodeDelete();
-  const [isDeleteMode, setIsDeleteMode] = useState(false);
-  const [isReportProblemMode, setIsReportProblemMode] = useState(false);
+  const { createNode } = useNodeAdd();
 
   const [isSaving, setIsSaving] = useState<boolean | null>(null);
   const [error, setError] = useState('');
+  const [actionView, setActionView] = useState<NodeAction | null>(null);
+
+  const handleActionView = (action: NodeAction | null) => setActionView(action);
+  const handleClose = () => setActionView(null);
 
   const progress = getNodeJobProgress(node!);
 
   useEffect(() => {
-    if (!isDeleteMode && error) setError('');
-  }, [isDeleteMode]);
-
-  const toggleDeleteModalOpen = () => setIsDeleteMode(!isDeleteMode);
-  const toggleReportProblemModalOpen = () =>
-    setIsReportProblemMode(!isReportProblemMode);
+    if (!actionView && error) setError('');
+  }, [actionView]);
 
   const handleDeleteNode = () => {
     setError('');
@@ -72,7 +73,7 @@ export const NodeViewHeader = () => {
   const handleReportProblem = async (message: string) => {
     await nodeClient.reportProblem(node?.id!, message);
     toast.success('Problem Reported');
-    toggleReportProblemModalOpen();
+    handleClose();
   };
 
   const handleUpdateNode = async (value: string) => {
@@ -83,6 +84,32 @@ export const NodeViewHeader = () => {
     });
     toast.success('Node name updated');
     setIsSaving(false);
+    handleClose();
+  };
+
+  const handleRecreateNode = async () => {
+    if (!node) return;
+
+    const params: NodeServiceCreateRequest = {
+      oldNodeId: node.id,
+      orgId: node.orgId,
+      blockchainId: node.blockchainId,
+      version: node.version,
+      nodeType: node.nodeType,
+      properties: node.properties,
+      network: node.network,
+      placement: node.placement,
+      allowIps: node.allowIps,
+      denyIps: node.denyIps,
+    };
+
+    await createNode(
+      params,
+      () => toast.success('Node successfully recreated'),
+      () => setError('Error recreating node. Please try again'),
+    );
+
+    handleClose();
   };
 
   const handleEditClicked = () => {
@@ -91,21 +118,33 @@ export const NodeViewHeader = () => {
 
   return (
     <>
-      {isDeleteMode && (
+      {actionView === 'delete' && (
         <DeleteModal
           portalId="delete-node-modal"
           elementName={escapeHtml(node?.displayName!)}
           entityName="Node"
-          onHide={toggleDeleteModalOpen}
+          onHide={handleClose}
           onSubmit={handleDeleteNode}
           error={error}
         />
       )}
 
-      {isReportProblemMode && (
+      {actionView === 'recreate' && (
+        <DeleteModal
+          portalId="recreate-node-modal"
+          type="Recreate"
+          elementName={escapeHtml(node?.displayName!)}
+          entityName="Node"
+          onHide={handleClose}
+          onSubmit={handleRecreateNode}
+          error={error}
+        />
+      )}
+
+      {actionView === 'report' && (
         <NodeViewReportProblem
           onSubmit={handleReportProblem}
-          onHide={toggleReportProblemModalOpen}
+          onHide={handleClose}
         />
       )}
 
@@ -161,10 +200,7 @@ export const NodeViewHeader = () => {
                   />
                 </div>
                 <div css={styles.actions}>
-                  <NodeViewHeaderActions
-                    onDeleteClicked={toggleDeleteModalOpen}
-                    onReportProblemClicked={toggleReportProblemModalOpen}
-                  />
+                  <NodeViewHeaderActions handleActionView={handleActionView} />
                 </div>
               </>
             )

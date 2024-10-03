@@ -1,6 +1,6 @@
 import { NextPage } from 'next';
 import { AppProps } from 'next/app';
-import { ReactElement, ReactNode } from 'react';
+import { ReactElement, ReactNode, useEffect, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import { RecoilRoot } from 'recoil';
 import { Global } from '@emotion/react';
@@ -19,6 +19,15 @@ type AppPropsWithLayout = AppProps & {
 
 function MyApp({ Component, pageProps, router }: AppPropsWithLayout) {
   const getLayout = Component?.getLayout || ((page: ReactNode) => page);
+
+  const [isIframe, setIsIframe] = useState(false);
+
+  useEffect(() => {
+    setIsIframe(window.location !== window.parent.location);
+  }, []);
+
+  if (isIframe) return null;
+
   return (
     <RecoilRoot>
       <Global styles={globalStyles} />

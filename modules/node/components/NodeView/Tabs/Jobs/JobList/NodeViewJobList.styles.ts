@@ -22,6 +22,10 @@ export const styles = {
     border-color: ${theme.colorPrimary};
     color: ${theme.colorPrimary};
   `,
+  statusError: (theme: ITheme) => css`
+    border-color: ${theme.colorDanger};
+    color: ${theme.colorDanger};
+  `,
   progress: (theme: ITheme) => css`
     color: ${theme.colorDefault};
     font-size: 12px;

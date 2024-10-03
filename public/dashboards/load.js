@@ -10,7 +10,9 @@ const callback = (nextHost) => {
 
 function loadScript() {
   // let host = `https://magellan-1.slc.blockjoy.com/host/${name}`;
-  let host = `https://netdata.blkjy.io/host/${name}`;
+  // const netdataUrl = `https://netdata.blockjoy.com`;
+  const netdataUrl = `https://netdata.blkjy.io`;
+  let host = `${netdataUrl}/host/${name}`;
   var url = `${host}/dashboard.js`;
   var script = document.createElement( "script" )
   script.type = "text/javascript";
@@ -35,7 +37,7 @@ function loadScript() {
     var nextScript = document.createElement( "script" )
     nextScript.type = "text/javascript";
 
-    const nextHost = `https://netdata.blkjy.io/host/${id}`;
+    const nextHost = `${netdataUrl}/host/${id}`;
 
     nextScript.src = `${nextHost}/dashboard.js`;
     nextScript.onerror = () => console.error("NETDATA failed to load from id");

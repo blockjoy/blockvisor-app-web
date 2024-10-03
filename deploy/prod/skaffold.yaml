@@ -16,6 +16,7 @@ build:
                   NEXT_PUBLIC_MQTT_URL: 'wss://mqtt.staging.blockjoy.com:8084/mqtt'
                   NEXT_PUBLIC_SHORT_SHA: '{{.SHORT_SHA}}'
                   NEXT_PUBLIC_STRIPE_KEY: 'pk_live_51KfoP7B5ce1jJsfT2OL9w1a3mtlGjrzNJScvd4tvO0Xvtz0B02vYucXe94Tq5UwbmiE80a5UzjtApBlTFWx06ozk006BzcoJ5H'
+                  NEXT_PUBLIC_PIPEDRIVE_API_KEY: '24adcdf4df23eb9af46f8505aceb6f0dd3080606'
         - image: us-docker.pkg.dev/blockjoy-deployer/blockvisor-ui/blockvisor-ui-prod
           context: ./
           docker:
@@ -28,6 +29,7 @@ build:
                   NEXT_PUBLIC_MIXPANEL_TOKEN: '12c47463bb293286f0c40ee2e293f89a'
                   NEXT_PUBLIC_MIXPANEL_PROJECT_URL: 'https://app.blockjoy.com/mp'
                   NEXT_PUBLIC_STRIPE_KEY: 'pk_live_51KfoP7B5ce1jJsfT2OL9w1a3mtlGjrzNJScvd4tvO0Xvtz0B02vYucXe94Tq5UwbmiE80a5UzjtApBlTFWx06ozk006BzcoJ5H'
+                  NEXT_PUBLIC_PIPEDRIVE_API_KEY: '24adcdf4df23eb9af46f8505aceb6f0dd3080606'
     local:
         push: true
         useDockerCLI: true

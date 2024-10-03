@@ -5,7 +5,9 @@ import { ITheme } from 'types/theme';
 export const styles = {
   tagList: css`
     display: flex;
+    flex-wrap: wrap;
     gap: 8px;
+    padding: 16px 0;
 
     :hover .add-tag-button {
       opacity: 1;
@@ -21,8 +23,8 @@ export const styles = {
     padding: 0;
     height: 24px;
     padding-right: 20px;
-    width: 100%;
     text-align: left;
+    white-space: nowrap;
     display: block;
     cursor: pointer;
     color: ${theme.colorDefault};
@@ -49,6 +51,7 @@ export const styles = {
       display: flex;
       align-items: center;
       color: ${theme.colorPlaceholder};
+      white-space: nowrap;
     }
   `,
   tagAddInputNotEmpty: css`
@@ -62,7 +65,6 @@ export const styles = {
     display: flex;
     align-items: center;
     height: 24px;
-    width: 100%;
   `,
   iconButton: (theme: ITheme) => css`
     display: grid;
