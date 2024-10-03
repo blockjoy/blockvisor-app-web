@@ -60,6 +60,7 @@ const columns: AdminListColumn[] = [
     sortField: NodeSortField.NODE_SORT_FIELD_CONTAINER_STATUS,
     isVisible: false,
     filterComponent: AdminNodesContainerStatus,
+    filterDropdownMinWidth: 120,
   },
   {
     name: 'syncStatus',
@@ -67,6 +68,7 @@ const columns: AdminListColumn[] = [
     sortField: NodeSortField.NODE_SORT_FIELD_SYNC_STATUS,
     isVisible: false,
     filterComponent: AdminNodesSyncStatus,
+    filterDropdownMinWidth: 120,
   },
   {
     name: 'host',
@@ -74,8 +76,8 @@ const columns: AdminListColumn[] = [
     sortField: NodeSortField.NODE_SORT_FIELD_HOST_NAME,
     isVisible: true,
     filterComponent: AdminNodesFilterHost,
-    filterDropdownMaxWidth: 230,
-    filterDropdownMinWidth: 200,
+    filterDropdownMaxWidth: 250,
+    filterDropdownMinWidth: 220,
   },
   {
     name: 'blockHeight',
@@ -106,15 +108,16 @@ const columns: AdminListColumn[] = [
     width: '140px',
     isVisible: true,
     filterComponent: AdminNodesFilterNetwork,
-    filterDropdownMaxWidth: 140,
+    filterDropdownMinWidth: 160,
+    filterDropdownMaxWidth: 200,
   },
   {
     name: 'version',
     width: '100px',
     isVisible: true,
     filterComponent: AdminNodesFilterVersion,
-    filterDropdownMinWidth: 140,
-    filterDropdownMaxWidth: 160,
+    filterDropdownMinWidth: 190,
+    filterDropdownMaxWidth: 220,
   },
   {
     name: 'ip',
@@ -133,7 +136,7 @@ const columns: AdminListColumn[] = [
     width: '140px',
     isVisible: true,
     filterComponent: AdminNodesFilterRegion,
-    filterDropdownMinWidth: 230,
+    filterDropdownMinWidth: 200,
   },
   {
     name: 'address',

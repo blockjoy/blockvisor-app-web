@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
@@ -11,6 +12,10 @@ export const styles = {
     border-radius: 14px;
     font-size: 12px;
     text-transform: capitalize;
+
+    @media ${breakpoints.toSml} {
+      font-size: 16px;
+    }
   `,
   removeButton: (theme: ITheme) => css`
     background: transparent;
