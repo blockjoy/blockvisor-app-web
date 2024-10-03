@@ -6,6 +6,14 @@ export const styles = {
   modal: css`
     max-width: 640px;
     padding: 0 40px;
+
+    @media ${breakpoints.toMed} {
+      max-width: 60%;
+    }
+
+    @media ${breakpoints.toSml} {
+      max-width: 100%;
+    }
   `,
   emptyColumn: css`
     flex-direction: row-reverse !important;
@@ -17,7 +25,7 @@ export const styles = {
       line-height: 1.4;
     }
 
-    @media ${breakpoints.toSml} {
+    @media ${breakpoints.toMed} {
       flex-direction: column !important;
       align-items: start;
       gap: 20px;
@@ -26,6 +34,17 @@ export const styles = {
 
       > figure {
         flex-basis: auto;
+      }
+    }
+  `,
+  link: (theme: ITheme) => css`
+    color: ${theme.colorPrimary} !important;
+    opacity: 0.8;
+    :hover {
+      opacity: 1;
+
+      ::after {
+        background: ${theme.colorPrimary} !important;
       }
     }
   `,

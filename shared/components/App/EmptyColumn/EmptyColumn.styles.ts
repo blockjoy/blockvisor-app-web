@@ -27,37 +27,38 @@ export const styles = {
       justify-content: ${align === 'center' ? 'center' : 'flex-start'};
     }
   `,
-  description: (theme: ITheme) => css`
-    margin-top: 8px;
-    color: var(--color-text-3);
-    max-width: 300px;
+  description: (hasMaxWidth?: boolean) => (theme: ITheme) =>
+    css`
+      margin-top: 8px;
+      color: var(--color-text-3);
+      ${hasMaxWidth && `max-width: 300px;`}
 
-    a {
-      position: relative;
-      display: inline-block;
-      color: ${theme.colorDefault};
+      a {
+        position: relative;
+        display: inline-block;
+        color: ${theme.colorDefault};
 
-      :hover {
-        color: ${theme.colorText};
+        :hover {
+          color: ${theme.colorText};
+
+          ::after {
+            opacity: 1;
+            background: ${theme.colorText};
+          }
+        }
 
         ::after {
-          opacity: 1;
-          background: ${theme.colorText};
+          content: '';
+          display: block;
+          position: absolute;
+          bottom: -2px;
+          left: 0;
+          width: 100%;
+          height: 1px;
+          background: ${theme.colorDefault};
+          opacity: 0;
+          transition: 0.2s;
         }
       }
-
-      ::after {
-        content: '';
-        display: block;
-        position: absolute;
-        bottom: -2px;
-        left: 0;
-        width: 100%;
-        height: 1px;
-        background: ${theme.colorDefault};
-        opacity: 0;
-        transition: 0.2s;
-      }
-    }
-  `,
+    `,
 };
