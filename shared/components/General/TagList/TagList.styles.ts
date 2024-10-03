@@ -5,37 +5,66 @@ import { ITheme } from 'types/theme';
 export const styles = {
   tagList: css`
     display: flex;
+    align-items: center;
     flex-wrap: wrap;
     gap: 8px;
     padding: 16px 0;
+    width: 100%;
 
     :hover .add-tag-button {
       opacity: 1;
+      scale: 1;
     }
   `,
   tagListWrap: css`
     flex-wrap: wrap;
   `,
-  tagAddButton: (theme: ITheme) => css`
-    background: transparent;
-    border: 0;
-    border-bottom: 1px solid transparent;
-    padding: 0;
-    height: 24px;
-    padding-right: 20px;
-    text-align: left;
-    white-space: nowrap;
-    display: block;
-    cursor: pointer;
-    color: ${theme.colorDefault};
+  tagAddButton: (isTagsEmpty?: boolean) => (theme: ITheme) =>
+    css`
+      background: ${theme.colorInput};
+      border: 0;
+      border-bottom: 1px solid transparent;
+      padding: 0 14px 0 10px;
+      height: 28px;
+      border-radius: 28px;
+      display: flex;
+      gap: 6px;
+      font-size: 12px;
+      align-items: center;
+      white-space: nowrap;
+      cursor: pointer;
+      color: ${theme.colorDefault};
+      transition-property: opacity, visibility;
+      transition-duration: 0.3s;
 
-    :hover {
-      color: ${theme.colorText};
-    }
-  `,
+      @media ${breakpoints.toSml} {
+        font-size: 16px;
+      }
+
+      svg path {
+        transition: 0.3s;
+      }
+
+      :hover {
+        color: ${theme.colorText};
+
+        svg path {
+          fill: ${theme.colorText};
+        }
+      }
+
+      ${!isTagsEmpty &&
+      css`
+        width: 28px;
+        padding: 0;
+        display: grid;
+        place-items: center;
+      `}
+    `,
   tagAddButtonNotEmpty: css`
     @media ${breakpoints.fromLrg} {
       opacity: 0;
+      scale: 0;
     }
   `,
   tagAddInput: (theme: ITheme) => css`
@@ -53,6 +82,10 @@ export const styles = {
       color: ${theme.colorPlaceholder};
       white-space: nowrap;
     }
+
+    @media ${breakpoints.toSml} {
+      font-size: 16px;
+    }
   `,
   tagAddInputNotEmpty: css`
     ::before {
@@ -69,6 +102,7 @@ export const styles = {
   iconButton: (theme: ITheme) => css`
     display: grid;
     place-items: center;
+    padding: 0;
     width: 24px;
     height: 24px;
     margin-left: 6px;
@@ -79,13 +113,23 @@ export const styles = {
     cursor: pointer;
     transition: 0.3s;
 
+    @media ${breakpoints.toSml} {
+      width: 28px;
+      height: 28px;
+    }
+
     :hover {
       opacity: 1;
+      visibility: visible;
     }
 
     :disabled {
       opacity: 0.25;
       cursor: not-allowed;
     }
+  `,
+  addControls: css`
+    display: flex;
+    align-items: center;
   `,
 };

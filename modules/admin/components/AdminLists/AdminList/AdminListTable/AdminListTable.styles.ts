@@ -4,47 +4,48 @@ import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
-  tableWrapper: (theme: ITheme) => css`
-    position: relative;
-    overflow: auto;
-    flex: 1 1 auto;
-    border-bottom: 1px solid ${theme.colorBorder};
+  tableWrapper: (hasPagination: boolean) => (theme: ITheme) =>
+    css`
+      position: relative;
+      overflow: auto;
+      flex: 1 1 auto;
+      border-bottom: 1px solid ${theme.colorBorder};
 
-    @media ${breakpoints.fromSml} {
-      max-height: calc(100vh - 220px);
-    }
+      @media ${breakpoints.fromSml} {
+        max-height: calc(100vh - 220px);
+      }
 
-    @media ${breakpoints.toSml} {
-      max-height: calc(100dvh - 220px);
-    }
+      @media ${breakpoints.toSml} {
+        max-height: calc(100dvh - ${hasPagination ? '220px' : '180px'});
+      }
 
-    *::-webkit-scrollbar,
-    *::-webkit-scrollbar-track {
-      border-radius: 8px;
-    }
+      *::-webkit-scrollbar,
+      *::-webkit-scrollbar-track {
+        border-radius: 8px;
+      }
 
-    ::-webkit-scrollbar {
-      width: 8px;
-      padding-right: 8px;
-    }
+      ::-webkit-scrollbar {
+        width: 8px;
+        padding-right: 8px;
+      }
 
-    ::-webkit-scrollbar-corner {
-      background: transparent;
-    }
+      ::-webkit-scrollbar-corner {
+        background: transparent;
+      }
 
-    ::-webkit-scrollbar-track {
-      background: transparent;
-    }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
 
-    ::-webkit-scrollbar-thumb {
-      background: rgb(255 255 255 / 10%);
-    }
+      ::-webkit-scrollbar-thumb {
+        background: rgb(255 255 255 / 10%);
+      }
 
-    ::-webkit-scrollbar-thumb:hover {
-      background: rgb(255 255 255 / 20%);
-      cursor: pointer;
-    }
-  `,
+      ::-webkit-scrollbar-thumb:hover {
+        background: rgb(255 255 255 / 20%);
+        cursor: pointer;
+      }
+    `,
   table: (isScrolledDown: boolean) => (theme: ITheme) =>
     css`
       text-align: left;
@@ -53,6 +54,10 @@ export const styles = {
       font-size: 13px;
       border-collapse: collapse;
       table-layout: fixed;
+
+      @media ${breakpoints.toSml} {
+        font-size: 16px;
+      }
 
       th {
         color: ${rgba(theme.colorDefault || '#a7a7a7', 0.8)};
