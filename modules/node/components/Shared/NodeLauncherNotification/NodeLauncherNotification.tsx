@@ -13,16 +13,30 @@ export const NodeLauncherNotification = ({
     <Modal
       portalId="modal-node-launched"
       isOpen={true}
+      isActive={false}
       handleClose={handleClose}
       additionalStyles={[styles.modal]}
     >
       <EmptyColumn
+        hasMaxWidth={false}
         title="Your Request is In!"
         description={
           <>
             <p>
               Thanks for choosing to launch a node with us. Our team is already
-              working on it and will be in touch with the details soon!
+              working on it and will be in touch!
+            </p>
+            <br />
+            <p>
+              For immediate assistance please reach out on{' '}
+              <a
+                css={styles.link}
+                href="https://t.me/blockjoyweb3"
+                target="_blank"
+              >
+                Telegram
+              </a>
+              .
             </p>
           </>
         }
