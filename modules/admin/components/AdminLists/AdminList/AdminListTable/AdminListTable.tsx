@@ -241,7 +241,7 @@ export const AdminListTable = ({
     <>
       <div
         ref={wrapperRef}
-        css={styles.tableWrapper}
+        css={styles.tableWrapper(listAll?.length > pageSize)}
         onScroll={handleBodyScroll}
         onMouseLeave={() => setIsSelectingCheckboxes(false)}
       >

@@ -10,6 +10,7 @@ import { styles } from './TagList.styles';
 import { SvgIcon, Tag } from '@shared/components';
 import IconClose from '@public/assets/icons/common/Close.svg';
 import IconCheck from '@public/assets/icons/common/Check2.svg';
+import IconPlus from '@public/assets/icons/common/Plus.svg';
 
 type Props = {
   id?: string;
@@ -87,65 +88,70 @@ export const TagList = ({
   }, [isAddMode]);
 
   return (
-    <ul css={[styles.tagList, shouldWrap && styles.tagListWrap]}>
-      {tags?.map((tag) => (
-        <li key={tag}>
-          <Tag name={tag} onRemove={handleRemove!} />
-        </li>
-      ))}
-      <li css={styles.listItem}>
-        {!isAddMode && (
-          <button
-            className="add-tag-button"
-            css={[
-              styles.tagAddButton,
-              tags?.length && isInTable && styles.tagAddButtonNotEmpty,
-            ]}
-            type="button"
-            onClick={handleAdd}
-          >
-            Add Tag
-          </button>
-        )}
-        {isAddMode && (
-          <>
-            <span
-              ref={inputRef}
-              onInput={handleInput}
-              onKeyUp={handleKeyUp}
-              onKeyDown={handleKeyDown}
+    <>
+      <ul css={[styles.tagList, shouldWrap && styles.tagListWrap]}>
+        {tags?.map((tag) => (
+          <li key={tag}>
+            <Tag name={tag} onRemove={handleRemove!} />
+          </li>
+        ))}
+        <li css={styles.listItem}>
+          {!isAddMode && (
+            <button
+              className="add-tag-button"
               css={[
-                styles.tagAddInput,
-                newTag !== '' && styles.tagAddInputNotEmpty,
+                styles.tagAddButton(!tags?.length),
+                tags?.length && isInTable && styles.tagAddButtonNotEmpty,
               ]}
-              contentEditable={isAddMode}
-            />
-            <button
               type="button"
-              css={styles.iconButton}
-              onClick={handleCancel}
+              onClick={handleAdd}
             >
-              <span>
-                <SvgIcon size="12px">
-                  <IconClose />
-                </SvgIcon>
-              </span>
+              <SvgIcon size="11px" isDefaultColor>
+                <IconPlus />
+              </SvgIcon>
+              {!tags?.length && 'Add Tag'}
             </button>
-            <button
-              type="button"
-              css={styles.iconButton}
-              onClick={handleAddConfirm}
-              disabled={!isValid}
-            >
-              <span>
-                <SvgIcon size="12px">
-                  <IconCheck />
-                </SvgIcon>
-              </span>
-            </button>
-          </>
-        )}
-      </li>
-    </ul>
+          )}
+          {isAddMode && (
+            <div css={styles.addControls}>
+              <span
+                ref={inputRef}
+                onInput={handleInput}
+                onKeyUp={handleKeyUp}
+                onKeyDown={handleKeyDown}
+                css={[
+                  styles.tagAddInput,
+                  newTag !== '' && styles.tagAddInputNotEmpty,
+                ]}
+                contentEditable={isAddMode}
+              />
+              <button
+                type="button"
+                css={styles.iconButton}
+                onClick={handleCancel}
+              >
+                <span>
+                  <SvgIcon size="12px">
+                    <IconClose />
+                  </SvgIcon>
+                </span>
+              </button>
+              <button
+                type="button"
+                css={styles.iconButton}
+                onClick={handleAddConfirm}
+                disabled={!isValid}
+              >
+                <span>
+                  <SvgIcon size="12px">
+                    <IconCheck />
+                  </SvgIcon>
+                </span>
+              </button>
+            </div>
+          )}
+        </li>
+      </ul>
+    </>
   );
 };
