@@ -6,5 +6,6 @@ export const styles = {
     flex-direction: ${hasTags ? 'column' : 'row'};
     ${!hasTags && 'align-items: center; padding-top: 2px; padding-bottom: 2px;'}
     gap: 7px;
+    min-height: 25px;
   `,
 };

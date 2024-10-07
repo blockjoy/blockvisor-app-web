@@ -7,7 +7,7 @@ type Props = {
   isOpen: boolean;
   onClose: VoidFunction;
   noBottomMargin?: boolean;
-  shouldClickOutside?: boolean;
+  isInPortal?: boolean;
 } & React.PropsWithChildren;
 
 export const DropdownWrapper = ({
@@ -16,10 +16,10 @@ export const DropdownWrapper = ({
   onClose,
   children,
   noBottomMargin,
-  shouldClickOutside = true,
+  isInPortal = false,
 }: Props) => {
   const dropdownRef = useRef<HTMLDivElement | null>(null);
-  useClickOutside<HTMLDivElement>(dropdownRef, onClose, shouldClickOutside);
+  useClickOutside<HTMLDivElement>(dropdownRef, onClose, !isInPortal);
 
   return (
     <div

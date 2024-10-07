@@ -34,7 +34,7 @@ export const TagsDropdown = ({
         addNewMessage: 'Press Enter to create a new tag',
         onSubmit: handleNew,
       }),
-    [tags, inactiveTags],
+    [tags?.length, inactiveTags.length],
   );
 
   const handleSelected = (tag: Tag | null) => {

@@ -6,9 +6,9 @@ export const styles = {
     buttonRect?: DOMRect | null,
     isSidebarOpen?: boolean,
   ) => {
-    const top = buttonRect?.top ?? 0;
+    const top = window.scrollY + (buttonRect?.top ?? 0);
     const topOffset = top + 30;
-    const left = buttonRect?.left ?? 0;
+    const left = window.scrollX + (buttonRect?.left ?? 0);
     const leftOffset =
       left < (isSidebarOpen ? 560 : 300)
         ? left
