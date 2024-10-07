@@ -92,8 +92,6 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
   newItem,
 }: DropdownProps<T>) => {
   const isSidebarOpen = useRecoilValue(layoutSelectors.isSidebarOpen);
-  const [dropdownButtonRect, setDropdownButtonRect] =
-    useState<DOMRect | null>(null);
 
   const dropdownRef = useRef<HTMLUListElement>(null);
   const dropdownMenuRef = useRef<HTMLDivElement>(null);
@@ -132,13 +130,16 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
     dropdownRef,
   });
 
+  const dropdownButtonRect = dropdownButtonRef.current?.getBoundingClientRect();
+
   const dropdownStyles = [styles.dropdown];
   const scrollbarStyles = [styles.dropdownInner];
 
   if (dropdownMenuStyles) {
     dropdownStyles.push(...dropdownMenuStyles);
   }
-  if (dropdownMenuPosition) {
+
+  if (dropdownMenuPosition && dropdownButtonRect) {
     dropdownStyles.push(
       dropdownMenuPosition(dropdownButtonRect, isSidebarOpen),
     );
@@ -156,12 +157,6 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
     return () => clearTimeout(timer);
   }, [isOpen, excludeSelectedItem]);
 
-  useLayoutEffect(() => {
-    if (dropdownButtonRef.current) {
-      setDropdownButtonRect(dropdownButtonRef.current.getBoundingClientRect());
-    }
-  }, [isOpen]);
-
   const isPortal = Boolean(dropdownButtonRect && dropdownMenuPosition);
 
   const DropdownMenuElement = (
@@ -169,7 +164,7 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
       isOpen={isOpen}
       additionalStyles={dropdownStyles}
       handleClose={handleClose}
-      shouldClickOutside={isPortal}
+      isInPortal={isPortal}
       dropdownMenuRef={dropdownMenuRef}
     >
       {Boolean(renderHeader) ? renderHeader : null}
@@ -265,11 +260,17 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
       isOpen={isOpen}
       onClose={handleClose}
       {...(noBottomMargin && { noBottomMargin })}
-      shouldClickOutside={!isPortal}
+      isInPortal={isPortal}
     >
       {DropdownButtonElement}
       {isPortal ? (
-        <Portal wrapperId={`dropdown-${itemKey}`}>{DropdownMenuElement}</Portal>
+        <>
+          {isOpen && (
+            <Portal wrapperId={`dropdown-${itemKey}`}>
+              {DropdownMenuElement}
+            </Portal>
+          )}
+        </>
       ) : (
         <>{DropdownMenuElement}</>
       )}

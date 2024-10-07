@@ -24,10 +24,12 @@ export const styles = {
     box-shadow: 0 0 10px rgb(0 0 0 / 30%);
     pointer-events: none;
   `,
-  isOpen: css`
+  isOpen: (isInPortal?: boolean) => css`
+    ${isInPortal ? '&.entered {' : ''}
+    transform: translateY(0);
+    ${isInPortal ? '}' : ''}
     opacity: 1;
     visibility: visible;
-    transform: translateY(0);
     pointer-events: auto;
   `,
 };
