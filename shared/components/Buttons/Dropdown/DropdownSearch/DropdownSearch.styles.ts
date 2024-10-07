@@ -11,7 +11,7 @@ export const styles = {
     outline: none;
     color: ${theme.colorText};
     height: 44px;
-    min-width: 40 0px;
+    width: 100%;
     padding: 20px 12px;
 
     @media ${breakpoints.toMed} {

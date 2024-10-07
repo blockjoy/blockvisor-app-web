@@ -14,6 +14,7 @@ import { styles } from './NodeViewHeader.styles';
 import { BlockchainIcon } from '@shared/components';
 import {
   convertNodeTypeToName,
+  NodeTags,
   NodeViewReportProblem,
   useNodeAdd,
   useNodeDelete,
@@ -163,7 +164,7 @@ export const NodeViewHeader = () => {
                     blockchainName={node.blockchainName}
                   />
                 </div>
-                <div>
+                <div css={styles.name}>
                   <EditableTitle
                     initialValue={node.displayName}
                     isLoading={isLoading}
@@ -172,6 +173,7 @@ export const NodeViewHeader = () => {
                     onEditClicked={handleEditClicked}
                     canUpdate
                   />
+                  <NodeTags node={node} />
                   <div css={styles.detailsFooter}>
                     <div css={styles.nodeType}>
                       <p>

@@ -1,11 +1,9 @@
 import { css } from '@emotion/react';
-import { escapeHtml } from '@shared/utils/escapeHtml';
 import { formatDistanceToNow } from 'date-fns';
-import { TableBlock } from '@shared/components';
-import { BlockchainIcon, NodeStatus } from '@shared/components';
 import { Node, NodeSortField } from '@modules/grpc/library/blockjoy/v1/node';
+import { TableBlock, BlockchainIcon, NodeStatus } from '@shared/components';
 import { getNodeJobProgress } from './getNodeJobProgress';
-import { convertNodeTypeToName } from '@modules/node';
+import { NodeName, convertNodeTypeToName } from '@modules/node';
 
 const middleRowStyles = css`
   text-transform: capitalize;
@@ -68,7 +66,7 @@ export const mapNodeListToRows = (nodeList?: Node[]) => {
                   | {node.network}
                 </p>
               }
-              topRow={escapeHtml(node.displayName)}
+              topRow={<NodeName node={node} />}
               bottomRow={node?.ip!}
             />
           ),

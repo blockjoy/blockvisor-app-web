@@ -33,5 +33,6 @@ export * from './Tabs/Tabs';
 export * from './Tabs/TabNavigation/TabNavigation';
 export * from './Tag/Tag';
 export * from './TagList/TagList';
+export * from './Tags/Tags';
 export * from './Tooltip/Tooltip';
 export * from './Unauthorized/Unauthorized';

@@ -32,7 +32,7 @@ export const Table = <T extends BaseQueryParams>({
   };
 
   return (
-    <div css={styles.wrapper}>
+    <div css={styles.wrapper} className="table-wrapper">
       <table
         css={[
           styles.table,

@@ -20,6 +20,11 @@ export const styles = {
       min-height: auto;
     }
   `,
+  name: css`
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  `,
   detailsHeader: css`
     display: flex;
     gap: 10px;

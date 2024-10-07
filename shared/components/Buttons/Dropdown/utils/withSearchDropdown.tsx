@@ -3,11 +3,21 @@ import { filterSearch } from '@shared/index';
 import { DropdownSearch } from '../DropdownSearch/DropdownSearch';
 import { DropdownProps } from '../Dropdown';
 
+type WithSearchDropdownProps = {
+  searchPlaceholder?: string;
+  emptyMessage?: string;
+  addNewMessage?: string;
+  onSubmit?: (tag: string) => void;
+};
+
 export const withSearchDropdown = <T extends { id?: string; name?: string }>(
   Component: ComponentType<DropdownProps<T>>,
+  customProps?: WithSearchDropdownProps,
 ) => {
-  const WithSearchDropdown = ({ ...props }: DropdownProps<T>) => {
+  const WithSearchDropdown = (props: DropdownProps<T>) => {
     const { items, handleSelected } = props;
+    const { searchPlaceholder, emptyMessage, addNewMessage, onSubmit } =
+      customProps ?? {};
 
     const [searchQuery, setSearchQuery] = useState('');
     const [isTouchedQuery, setIsTouchedQuery] = useState(false);
@@ -33,6 +43,13 @@ export const withSearchDropdown = <T extends { id?: string; name?: string }>(
       }, 300);
     };
 
+    const handleSubmit = (query: string) => {
+      if (filteredData.length) return;
+
+      onSubmit?.(query);
+      setSearchQuery('');
+    };
+
     return (
       <Component
         {...props}
@@ -47,6 +64,11 @@ export const withSearchDropdown = <T extends { id?: string; name?: string }>(
             handleChange={handleSearch}
             isOpen={isOpen}
             isEmpty={!filteredData.length}
+            {...(searchPlaceholder && { placeholder: searchPlaceholder })}
+            {...(emptyMessage && {
+              emptyMessage: searchQuery.length ? addNewMessage : emptyMessage,
+            })}
+            {...(Boolean(onSubmit) && { handleSubmit })}
           />
         )}
       />
