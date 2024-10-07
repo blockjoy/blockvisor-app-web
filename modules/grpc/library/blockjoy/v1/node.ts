@@ -6,6 +6,7 @@ import { Timestamp } from "../../google/protobuf/timestamp";
 import { ContainerStatus, NodeStatus, NodeType, StakingStatus, SyncStatus, UiType } from "../common/v1/node";
 import { EntityUpdate } from "../common/v1/resource";
 import { SearchOperator, SortOrder } from "../common/v1/search";
+import { Tags, UpdateTags } from "../common/v1/tag";
 
 export const protobufPackage = "blockjoy.v1";
 
@@ -112,7 +113,11 @@ export interface Node {
    */
   url: string;
   /** Set if this node was recreated from an existing one. */
-  oldNodeId?: string | undefined;
+  oldNodeId?:
+    | string
+    | undefined;
+  /** A list of tags that are attached to this node. */
+  tags: Tags | undefined;
 }
 
 /** This message is used to create a new node. */
@@ -144,6 +149,8 @@ export interface NodeServiceCreateRequest {
   allowIps: FilteredIpAddr[];
   /** A list of ip addresses denied all access to any ports on this node. */
   denyIps: FilteredIpAddr[];
+  /** A list of tags that are attached to this node. */
+  tags?: Tags | undefined;
 }
 
 /** Message returned when a node is created. */
@@ -292,7 +299,14 @@ export interface NodeServiceUpdateConfigRequest {
     | string
     | undefined;
   /** Update the frontend display name of this node. */
-  displayName?: string | undefined;
+  displayName?:
+    | string
+    | undefined;
+  /**
+   * If this is provided, the tags contained in this will update the existing
+   * tags.
+   */
+  updateTags?: UpdateTags | undefined;
 }
 
 export interface NodeServiceUpdateConfigResponse {
@@ -569,6 +583,7 @@ function createBaseNode(): Node {
     note: undefined,
     url: "",
     oldNodeId: undefined,
+    tags: undefined,
   };
 }
 
@@ -681,6 +696,9 @@ export const Node = {
     }
     if (message.oldNodeId !== undefined) {
       writer.uint32(298).string(message.oldNodeId);
+    }
+    if (message.tags !== undefined) {
+      Tags.encode(message.tags, writer.uint32(306).fork()).ldelim();
     }
     return writer;
   },
@@ -944,6 +962,13 @@ export const Node = {
 
           message.oldNodeId = reader.string();
           continue;
+        case 38:
+          if (tag !== 306) {
+            break;
+          }
+
+          message.tags = Tags.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -999,6 +1024,7 @@ export const Node = {
     message.note = object.note ?? undefined;
     message.url = object.url ?? "";
     message.oldNodeId = object.oldNodeId ?? undefined;
+    message.tags = (object.tags !== undefined && object.tags !== null) ? Tags.fromPartial(object.tags) : undefined;
     return message;
   },
 };
@@ -1015,6 +1041,7 @@ function createBaseNodeServiceCreateRequest(): NodeServiceCreateRequest {
     placement: undefined,
     allowIps: [],
     denyIps: [],
+    tags: undefined,
   };
 }
 
@@ -1049,6 +1076,9 @@ export const NodeServiceCreateRequest = {
     }
     for (const v of message.denyIps) {
       FilteredIpAddr.encode(v!, writer.uint32(82).fork()).ldelim();
+    }
+    if (message.tags !== undefined) {
+      Tags.encode(message.tags, writer.uint32(90).fork()).ldelim();
     }
     return writer;
   },
@@ -1130,6 +1160,13 @@ export const NodeServiceCreateRequest = {
 
           message.denyIps.push(FilteredIpAddr.decode(reader, reader.uint32()));
           continue;
+        case 11:
+          if (tag !== 90) {
+            break;
+          }
+
+          message.tags = Tags.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1157,6 +1194,7 @@ export const NodeServiceCreateRequest = {
       : undefined;
     message.allowIps = object.allowIps?.map((e) => FilteredIpAddr.fromPartial(e)) || [];
     message.denyIps = object.denyIps?.map((e) => FilteredIpAddr.fromPartial(e)) || [];
+    message.tags = (object.tags !== undefined && object.tags !== null) ? Tags.fromPartial(object.tags) : undefined;
     return message;
   },
 };
@@ -1885,7 +1923,14 @@ export const NodeServiceUpgradeResponse = {
 };
 
 function createBaseNodeServiceUpdateConfigRequest(): NodeServiceUpdateConfigRequest {
-  return { ids: [], selfUpdate: undefined, newOrgId: undefined, note: undefined, displayName: undefined };
+  return {
+    ids: [],
+    selfUpdate: undefined,
+    newOrgId: undefined,
+    note: undefined,
+    displayName: undefined,
+    updateTags: undefined,
+  };
 }
 
 export const NodeServiceUpdateConfigRequest = {
@@ -1904,6 +1949,9 @@ export const NodeServiceUpdateConfigRequest = {
     }
     if (message.displayName !== undefined) {
       writer.uint32(42).string(message.displayName);
+    }
+    if (message.updateTags !== undefined) {
+      UpdateTags.encode(message.updateTags, writer.uint32(82).fork()).ldelim();
     }
     return writer;
   },
@@ -1950,6 +1998,13 @@ export const NodeServiceUpdateConfigRequest = {
 
           message.displayName = reader.string();
           continue;
+        case 10:
+          if (tag !== 82) {
+            break;
+          }
+
+          message.updateTags = UpdateTags.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1970,6 +2025,9 @@ export const NodeServiceUpdateConfigRequest = {
     message.newOrgId = object.newOrgId ?? undefined;
     message.note = object.note ?? undefined;
     message.displayName = object.displayName ?? undefined;
+    message.updateTags = (object.updateTags !== undefined && object.updateTags !== null)
+      ? UpdateTags.fromPartial(object.updateTags)
+      : undefined;
     return message;
   },
 };

@@ -4,7 +4,9 @@ export * from './components/NodeLauncher/Summary/NodeLauncherSummaryDetails';
 export * from './components/NodeList/NodeFilters/NodeFilters';
 export * from './components/NodeList/NodeListHeader/NodeListHeader';
 export * from './components/NodeList/NodeList';
+export * from './components/NodeList/NodeName/NodeName';
 export * from './components/NodeList/NodeSorting/NodeSorting';
+export * from './components/NodeList/NodeName/NodeTags/NodeTags';
 export * from './components/NodeView/Header/NodeViewReportProblem/NodeViewReportProblem';
 export * from './components/NodeView/NodeView';
 export * from './components/NodeView/SidePanel/NodeViewSidePanel';
@@ -24,6 +26,7 @@ export * from './hooks/useNodeLauncherHandlers';
 export * from './hooks/useNodeList';
 export * from './hooks/useNodeSort';
 export * from './hooks/useNodeView';
+export * from './hooks/useNodeUpdate';
 export * from './hooks/useUpdates';
 
 export * from './store/blockchainAtoms';

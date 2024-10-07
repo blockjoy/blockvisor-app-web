@@ -6,7 +6,7 @@ import { Timestamp } from "../../google/protobuf/timestamp";
 import { BillingAmount } from "../common/v1/currency";
 import { NodeType } from "../common/v1/node";
 import { SearchOperator, SortOrder } from "../common/v1/search";
-import { Tag, Tags } from "../common/v1/tag";
+import { Tags, UpdateTags } from "../common/v1/tag";
 
 export const protobufPackage = "blockjoy.v1";
 
@@ -266,19 +266,10 @@ export interface HostServiceUpdateRequest {
     | ManagedBy
     | undefined;
   /**
-   * If this is provided, the tags contained in this will overwrite the existing
+   * If this is provided, the tags contained in this will update the existing
    * tags.
    */
   updateTags?: UpdateTags | undefined;
-}
-
-export interface UpdateTags {
-  /** A list of tags that are attached to this host. */
-  overwriteTags?:
-    | Tags
-    | undefined;
-  /** A single tag that is added. */
-  addTag?: Tag | undefined;
 }
 
 export interface HostServiceUpdateResponse {
@@ -1516,67 +1507,6 @@ export const HostServiceUpdateRequest = {
     message.managedBy = object.managedBy ?? undefined;
     message.updateTags = (object.updateTags !== undefined && object.updateTags !== null)
       ? UpdateTags.fromPartial(object.updateTags)
-      : undefined;
-    return message;
-  },
-};
-
-function createBaseUpdateTags(): UpdateTags {
-  return { overwriteTags: undefined, addTag: undefined };
-}
-
-export const UpdateTags = {
-  encode(message: UpdateTags, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.overwriteTags !== undefined) {
-      Tags.encode(message.overwriteTags, writer.uint32(10).fork()).ldelim();
-    }
-    if (message.addTag !== undefined) {
-      Tag.encode(message.addTag, writer.uint32(18).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): UpdateTags {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseUpdateTags();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.overwriteTags = Tags.decode(reader, reader.uint32());
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.addTag = Tag.decode(reader, reader.uint32());
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<UpdateTags>): UpdateTags {
-    return UpdateTags.fromPartial(base ?? {});
-  },
-
-  fromPartial(object: DeepPartial<UpdateTags>): UpdateTags {
-    const message = createBaseUpdateTags();
-    message.overwriteTags = (object.overwriteTags !== undefined && object.overwriteTags !== null)
-      ? Tags.fromPartial(object.overwriteTags)
-      : undefined;
-    message.addTag = (object.addTag !== undefined && object.addTag !== null)
-      ? Tag.fromPartial(object.addTag)
       : undefined;
     return message;
   },

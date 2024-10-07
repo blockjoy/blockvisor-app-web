@@ -64,7 +64,7 @@ export const useAccessibleDropdown = <T>({
           let nextIndex =
             activeIndex - 1 < 0 ? items.length - 1 : activeIndex - 1;
 
-          if (nextIndex === selectedItemIndex) {
+          if (nextIndex === selectedItemIndex && selectedItem !== null) {
             if (nextIndex === items.length) {
               nextIndex = 1;
             } else if (nextIndex === 0) {
@@ -84,7 +84,7 @@ export const useAccessibleDropdown = <T>({
           let nextIndex =
             activeIndex + 1 > items.length - 1 ? 0 : activeIndex + 1;
 
-          if (nextIndex === selectedItemIndex) {
+          if (nextIndex === selectedItemIndex && selectedItem !== null) {
             if (nextIndex + 1 > items.length - 1) {
               nextIndex = 0;
             } else {
@@ -123,8 +123,12 @@ export const useAccessibleDropdown = <T>({
       }
     };
 
-    document.addEventListener('keydown', keyDownCallback);
+    const timeout = setTimeout(() => {
+      document.addEventListener('keydown', keyDownCallback);
+    }, 10);
+
     return () => {
+      clearTimeout(timeout);
       document.removeEventListener('keydown', keyDownCallback);
     };
   }, [isOpen, items, activeIndex]);
@@ -151,8 +155,12 @@ export const useAccessibleDropdown = <T>({
       }
     };
 
-    document.addEventListener('keydown', keyDownCallback);
+    const timeout = setTimeout(() => {
+      document.addEventListener('keydown', keyDownCallback);
+    }, 10);
+
     return () => {
+      clearTimeout(timeout);
       document.removeEventListener('keydown', keyDownCallback);
     };
   }, [isOpen, isFocus]);
@@ -173,8 +181,12 @@ export const useAccessibleDropdown = <T>({
       }
     };
 
-    dropdownRef?.current?.addEventListener('mousemove', mouseOverCallback);
+    const timeout = setTimeout(() => {
+      dropdownRef?.current?.addEventListener('mousemove', mouseOverCallback);
+    }, 10);
+
     return () => {
+      clearTimeout(timeout);
       dropdownRef?.current?.removeEventListener('mousemove', mouseOverCallback);
     };
   }, [items]);
