@@ -106,6 +106,10 @@ const IconHelium = dynamic(
   () => import(`@public/assets/icons/blockchain/Helium.svg`),
 );
 
+const IconMonero = dynamic(
+  () => import(`@public/assets/icons/blockchain/Monero.svg`),
+);
+
 const IconNear = dynamic(
   () => import(`@public/assets/icons/blockchain/Near.svg`),
 );
@@ -151,7 +155,7 @@ const IconTon = dynamic(
 );
 
 const IconZerogravity = dynamic(
-  () => import(`@public/assets/icons/blockchain/Zerogravity.svg`),
+  () => import(`@public/assets/icons/blockchain/0G.svg`),
 );
 
 const IconZKSync = dynamic(
@@ -240,6 +244,9 @@ export const BlockchainIcon = ({
     case 'lightning':
       Component = IconLightning;
       break;
+    case 'monero':
+      Component = IconMonero;
+      break;
     case 'helium':
       Component = IconHelium;
       break;
@@ -278,6 +285,7 @@ export const BlockchainIcon = ({
       Component = IconTon;
       break;
     case 'zerogravity':
+    case '0g':
       Component = IconZerogravity;
       break;
     case 'zksync':
