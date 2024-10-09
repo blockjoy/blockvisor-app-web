@@ -1,22 +1,31 @@
 import { css } from '@emotion/react';
+import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
   dropdownMenuPosition: (
     buttonRect?: DOMRect | null,
     isSidebarOpen?: boolean,
+    tagsLength?: number,
   ) => {
     const top = window.scrollY + (buttonRect?.top ?? 0);
     const topOffset = top + 30;
     const left = window.scrollX + (buttonRect?.left ?? 0);
     const leftOffset =
-      left < (isSidebarOpen ? 560 : 300)
+      left < (isSidebarOpen ? 560 : 300) ||
+      ((tagsLength ?? 0) < 3 && (tagsLength ?? 0) > 0)
         ? left
         : left - 200 + (buttonRect?.width ?? 0);
+
+    const leftOffsetMobile = left > 220 ? left - 180 : left;
 
     return css`
       top: ${topOffset}px;
       left: ${leftOffset}px;
+
+      @media ${breakpoints.toSml} {
+        left: ${leftOffsetMobile}px;
+      }
     `;
   },
   dropdown: css`

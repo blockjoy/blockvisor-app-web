@@ -1,5 +1,7 @@
 import { useMemo, useRef } from 'react';
+import { useRecoilValue } from 'recoil';
 import { Tag } from '@modules/grpc/library/blockjoy/common/v1/tag';
+import { layoutSelectors } from '@modules/layout';
 import { Dropdown, SvgIcon, withSearchDropdown } from '@shared/components';
 import { Tag as SingleTag } from '../Tag';
 import { styles } from './TagsDropdown.styles';
@@ -26,6 +28,7 @@ export const TagsDropdown = ({
   handleNew,
   handleRemove,
 }: TagsProps) => {
+  const isSidebarOpen = useRecoilValue(layoutSelectors.isSidebarOpen);
   const dropdownButtonRef = useRef<HTMLButtonElement | null>(null);
 
   const handleSubmit = (tag: string) => {
@@ -92,6 +95,16 @@ export const TagsDropdown = ({
     [invisibleTags],
   );
 
+  const dropdownButtonRect =
+    dropdownButtonRef?.current?.getBoundingClientRect();
+
+  const dropdownMenuPosition = () =>
+    styles.dropdownMenuPosition(
+      dropdownButtonRect,
+      isSidebarOpen,
+      tags?.length,
+    );
+
   return (
     <TagsDropdownWSearch
       items={inactiveTags}
@@ -113,7 +126,13 @@ export const TagsDropdown = ({
       dropdownMenuStyles={[styles.dropdown]}
       dropdownItemStyles={dropdownItemStyles}
       dropdownScrollbarStyles={[styles.dropdownScrollbar]}
-      dropdownMenuPosition={styles.dropdownMenuPosition}
+      dropdownMenuPosition={[
+        styles.dropdownMenuPosition(
+          dropdownButtonRect,
+          isSidebarOpen,
+          tags?.length,
+        ),
+      ]}
     />
   );
 };

@@ -3,7 +3,7 @@ import { Tag } from '@modules/grpc/library/blockjoy/common/v1/tag';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { useNodeUpdate, nodeSelectors } from '@modules/node';
 import { Tags } from '@shared/components';
-import { TAG_COLORS, DEFAULT_TAG_COLOR } from '@shared/index';
+// import { TAG_COLORS, DEFAULT_TAG_COLOR } from '@shared/index';
 
 type NodeTagsProps = {
   node: Node;
@@ -35,15 +35,15 @@ export const NodeTags = ({ node }: NodeTagsProps) => {
   };
 
   // TODO: reimpl colors when avaible, atm random colors assigned
-  const colors: TagColor = allTags
-    .slice()
-    .sort((a, b) => (a.name > b.name ? 1 : -1))
-    .reduce((acc, tag, i) => {
-      if (tag?.name) {
-        acc[tag.name] = TAG_COLORS[i] ?? DEFAULT_TAG_COLOR;
-      }
-      return acc;
-    }, {});
+  // const colors: TagColor = allTags
+  //   .slice()
+  //   .sort((a, b) => (a.name > b.name ? 1 : -1))
+  //   .reduce((acc, tag, i) => {
+  //     if (tag?.name) {
+  //       acc[tag.name] = TAG_COLORS[i] ?? DEFAULT_TAG_COLOR;
+  //     }
+  //     return acc;
+  //   }, {});
 
   return (
     <Tags
@@ -53,6 +53,7 @@ export const NodeTags = ({ node }: NodeTagsProps) => {
       inactiveTags={inactiveTags}
       handleNew={handleNewTag}
       handleRemove={handleRemoveTag}
+      autoHide
     />
   );
 };

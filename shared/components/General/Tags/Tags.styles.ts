@@ -1,11 +1,12 @@
 import { css } from '@emotion/react';
 
 export const styles = {
-  wrapper: css`
+  wrapper: (shouldAutoHide?: boolean) => css`
     display: inline-flex;
     flex-flow: row nowrap;
     gap: 8px;
     position: relative;
+    ${shouldAutoHide && 'visibility: hidden;'}
   `,
   list: css`
     display: flex;

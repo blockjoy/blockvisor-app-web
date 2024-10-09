@@ -10,6 +10,7 @@ type TagsProps = {
   tags?: Tag[];
   inactiveTags?: Tag[];
   // colors?: TagColor;
+  autoHide?: boolean;
   handleNew?: (tag: string) => void;
   handleRemove?: (tag: Tag) => void;
 };
@@ -19,6 +20,7 @@ export const Tags = ({
   tags,
   inactiveTags = [],
   // colors,
+  autoHide,
   handleNew,
   handleRemove,
 }: TagsProps) => {
@@ -44,10 +46,17 @@ export const Tags = ({
     ? (containerWidth - 32) / visibleTags.length
     : undefined;
 
+  const shouldAutoHide = autoHide && !Boolean(tags?.length) && !isOpen;
+
   return (
     <>
       {isOpen && <Global styles={globalStyles} />}
-      <div css={styles.wrapper} ref={containerRef} onClick={handleWrapperClick}>
+      <div
+        css={styles.wrapper(shouldAutoHide)}
+        ref={containerRef}
+        onClick={handleWrapperClick}
+        className="tags"
+      >
         {Boolean(visibleTags.length) && isContainerAvailable && (
           <div css={styles.list}>
             {visibleTags?.map((tag) => (
