@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { Region } from '@modules/grpc/library/blockjoy/v1/host';
-import { nodeAtoms, nodeLauncherAtoms, nodeSelectors } from '@modules/node';
+import { nodeAtoms, nodeLauncherAtoms } from '@modules/node';
 import { Dropdown } from '@shared/components';
 import { authSelectors } from '@modules/auth';
 
@@ -17,28 +17,25 @@ export const NodeRegionSelect = ({
   const [isOpen, setIsOpen] = useState(false);
   const version = useRecoilValue(nodeLauncherAtoms.selectedVersion);
   const region = useRecoilValue(nodeLauncherAtoms.selectedRegion);
-  const regionsByBlockchain = useRecoilValue(nodeSelectors.regionsByBlockchain);
-  const allRegionsLoadingState = useRecoilValue(
-    nodeAtoms.allRegionsLoadingState,
-  );
+  const regions = useRecoilValue(nodeAtoms.regions);
+  const regionsLoadingState = useRecoilValue(nodeAtoms.regionsLoadingState);
   const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
 
   const handleOpen = (open: boolean = true) => setIsOpen(open);
 
   useEffect(() => {
-    const activeRegion = regionsByBlockchain?.[0] ?? null;
+    const activeRegion = regions?.[0] ?? null;
     onLoad(activeRegion);
-  }, [regionsByBlockchain]);
+  }, [regions]);
 
-  const error =
-    !version?.id || !regionsByBlockchain.length ? 'No Hosts Available' : null;
+  const error = !version?.id || !regions.length ? 'No Hosts Available' : null;
 
   return (
     <Dropdown
-      items={regionsByBlockchain}
+      items={regions}
       handleSelected={onChange}
       selectedItem={region}
-      isLoading={allRegionsLoadingState !== 'finished'}
+      isLoading={regionsLoadingState !== 'finished'}
       disabled={!!error}
       {...(!region
         ? isSuperUser

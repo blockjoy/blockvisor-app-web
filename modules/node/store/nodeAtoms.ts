@@ -60,16 +60,6 @@ const regionsLoadingState = atom<LoadingState>({
   default: 'initializing',
 });
 
-const allRegions = atom<BlockchainSimpleWRegion[]>({
-  key: 'node.regions.all',
-  default: [],
-});
-
-const allRegionsLoadingState = atom<LoadingState>({
-  key: 'node.regions.all.loadingState',
-  default: 'initializing',
-});
-
 const selectedSKU = atom<string>({
   key: 'node.sku',
   default: '',
@@ -100,8 +90,6 @@ export const nodeAtoms = {
 
   regions,
   regionsLoadingState,
-  allRegions,
-  allRegionsLoadingState,
 
   nodeListByHost,
   nodeListByHostCount,
