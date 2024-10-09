@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { ReactNode, RefObject, useEffect, useRef } from 'react';
 import { useRecoilValue } from 'recoil';
 import isEqual from 'lodash/isEqual';
 import { SerializedStyles } from '@emotion/react';
@@ -56,6 +56,7 @@ export type DropdownProps<T = any> = {
     title: string;
     onClick: VoidFunction;
   };
+  dropdownButtonRef?: RefObject<HTMLButtonElement>;
 };
 
 export const Dropdown = <T extends { id?: string; name?: string }>({
@@ -90,12 +91,12 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
   renderItem,
   renderItemLabel,
   newItem,
+  dropdownButtonRef,
 }: DropdownProps<T>) => {
   const isSidebarOpen = useRecoilValue(layoutSelectors.isSidebarOpen);
 
   const dropdownRef = useRef<HTMLUListElement>(null);
   const dropdownMenuRef = useRef<HTMLDivElement>(null);
-  const dropdownButtonRef = useRef<HTMLButtonElement>(null);
 
   const handleClose = () => handleOpen(false);
 
@@ -130,7 +131,8 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
     dropdownRef,
   });
 
-  const dropdownButtonRect = dropdownButtonRef.current?.getBoundingClientRect();
+  const dropdownButtonRect =
+    dropdownButtonRef?.current?.getBoundingClientRect();
 
   const dropdownStyles = [styles.dropdown];
   const scrollbarStyles = [styles.dropdownInner];
