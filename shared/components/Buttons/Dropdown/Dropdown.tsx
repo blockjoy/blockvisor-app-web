@@ -1,5 +1,4 @@
 import { ReactNode, RefObject, useEffect, useRef } from 'react';
-import { useRecoilValue } from 'recoil';
 import isEqual from 'lodash/isEqual';
 import { SerializedStyles } from '@emotion/react';
 import { ITheme } from 'types/theme';
@@ -14,7 +13,6 @@ import {
   Scrollbar,
   Portal,
 } from '@shared/components';
-import { layoutSelectors } from '@modules/layout';
 import { colors } from 'styles/utils.colors.styles';
 import { styles } from './Dropdown.styles';
 
@@ -31,10 +29,7 @@ export type DropdownProps<T = any> = {
   renderButtonText?: ReactNode;
   dropdownButtonStyles?: ((theme: ITheme) => SerializedStyles)[];
   dropdownMenuStyles?: SerializedStyles[];
-  dropdownMenuPosition?: (
-    buttonRect: DOMRect | null,
-    isSidebarOpen?: boolean,
-  ) => SerializedStyles;
+  dropdownMenuPosition?: SerializedStyles[];
   dropdownItemStyles?: (item: T) => SerializedStyles[];
   dropdownScrollbarStyles?: SerializedStyles[];
   hideDropdownIcon?: boolean;
@@ -93,8 +88,6 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
   newItem,
   dropdownButtonRef,
 }: DropdownProps<T>) => {
-  const isSidebarOpen = useRecoilValue(layoutSelectors.isSidebarOpen);
-
   const dropdownRef = useRef<HTMLUListElement>(null);
   const dropdownMenuRef = useRef<HTMLDivElement>(null);
 
@@ -142,9 +135,7 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
   }
 
   if (dropdownMenuPosition && dropdownButtonRect) {
-    dropdownStyles.push(
-      dropdownMenuPosition(dropdownButtonRect, isSidebarOpen),
-    );
+    dropdownStyles.push(...dropdownMenuPosition);
   }
 
   if (dropdownScrollbarStyles) {
