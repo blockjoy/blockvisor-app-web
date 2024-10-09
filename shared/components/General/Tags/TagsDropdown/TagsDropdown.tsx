@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useRef } from 'react';
 import { Tag } from '@modules/grpc/library/blockjoy/common/v1/tag';
 import { Dropdown, SvgIcon, withSearchDropdown } from '@shared/components';
 import { Tag as SingleTag } from '../Tag';
@@ -26,6 +26,8 @@ export const TagsDropdown = ({
   handleNew,
   handleRemove,
 }: TagsProps) => {
+  const dropdownButtonRef = useRef<HTMLButtonElement | null>(null);
+
   const TagsDropdownWSearch = useMemo(
     () =>
       withSearchDropdown<Tag>(Dropdown, {
@@ -98,6 +100,7 @@ export const TagsDropdown = ({
       renderHeader={renderHeader}
       renderButtonText={renderButtonText}
       renderItem={renderItem}
+      dropdownButtonRef={dropdownButtonRef}
       dropdownButtonStyles={[
         styles.dropdownButtonMain(isOpen),
         invisibleTags.length ? styles.dropdownCount : styles.dropdownButton,

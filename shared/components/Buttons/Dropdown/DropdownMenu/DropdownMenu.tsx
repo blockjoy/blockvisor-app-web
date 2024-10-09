@@ -1,4 +1,4 @@
-import { RefObject, useLayoutEffect, useState } from 'react';
+import { RefObject } from 'react';
 import { SerializedStyles } from '@emotion/react';
 import { useClickOutside } from '@shared/index';
 import { styles } from './DropdownMenu.styles';
@@ -19,33 +19,20 @@ export const DropdownMenu = ({
   isInPortal = false,
   handleClose,
 }: Props) => {
-  const [isEntered, setIsEntered] = useState(false);
-
   useClickOutside<HTMLDivElement>(
     dropdownMenuRef!,
     handleClose ?? (() => {}),
     isInPortal && Boolean(dropdownMenuRef),
   );
 
-  useLayoutEffect(() => {
-    setTimeout(() => {
-      setIsEntered(true);
-    }, 10);
-
-    return () => {
-      setIsEntered(false);
-    };
-  }, []);
-
   return (
     <div
       ref={dropdownMenuRef}
-      className={isEntered ? 'entered' : ''}
       css={[
         styles.menu,
         styles.right,
         additionalStyles && additionalStyles,
-        isOpen && styles.isOpen(isInPortal),
+        isOpen && styles.isOpen,
       ]}
     >
       {children}
