@@ -11,9 +11,7 @@ export const Pricing = () => {
   const blockchainsLoadingState = useRecoilValue(
     blockchainAtoms.blockchainsLoadingState,
   );
-  const allRegionsLoadingState = useRecoilValue(
-    nodeAtoms.allRegionsLoadingState,
-  );
+  const regionsLoadingState = useRecoilValue(nodeAtoms.regionsLoadingState);
   const promoCode = useRecoilValue(billingAtoms.promoCode);
   const setPromoCodeError = useSetRecoilState(billingAtoms.promoCodeError);
 
@@ -33,7 +31,7 @@ export const Pricing = () => {
 
   const isLoading =
     blockchainsLoadingState !== 'finished' ||
-    allRegionsLoadingState !== 'finished';
+    regionsLoadingState !== 'finished';
 
   const isDisabled = false;
 

@@ -82,24 +82,6 @@ const queryParams = selector<InitialNodeQueryParams>({
   },
 });
 
-const regionsByBlockchain = selector<Region[]>({
-  key: 'node.regions.byBlockchain',
-  get: ({ get }) => {
-    const { blockchainId, nodeType } = get(nodeLauncherAtoms.nodeLauncher);
-    const version = get(nodeLauncherAtoms.selectedVersion);
-    const regionsList = get(nodeAtoms.allRegions);
-
-    return (
-      regionsList.find(
-        (region) =>
-          region.blockchainId === blockchainId &&
-          region.version === version?.version &&
-          region.nodeType === nodeType,
-      )?.regions ?? []
-    );
-  },
-});
-
 const filtersBlockchainSelectedIds = selector<string[]>({
   key: 'node.filters.blockchain',
   get: ({ get }) => get(filters)?.blockchain ?? [],
@@ -202,8 +184,6 @@ export const nodeSelectors = {
   isFiltersEmpty,
   nodeSort,
   queryParams,
-
-  regionsByBlockchain,
 
   filtersBlockchainSelectedIds,
 
