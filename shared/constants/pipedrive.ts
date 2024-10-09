@@ -7,6 +7,10 @@ export const API_ENDPOINTS = {
   SEARCH_PERSON: 'persons/search',
 };
 
+export const SETTINGS = {
+  ownerId: 21884049,
+};
+
 export const CUSTOM_FIELDS = {
   organization: {
     appOrgID: '183bd0de7e5d141547eb0a342e1a3f6e55fc2491',
