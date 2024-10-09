@@ -20,16 +20,18 @@ export const UPDATE_TAG_FUNCTIONS: TagUpdateItem[] = [
   },
 ];
 
-export const TAG_COLORS = [
-  'rgb(79, 65, 98)',
-  'rgb(45, 115, 123)',
-  'rgb(49, 63, 113)',
-  'rgb(79, 109, 54)',
-  'rgb(98, 65, 65)',
-  'rgb(36, 46, 36)',
-  'rgb(36, 36, 36)',
-  'rgb(125, 45, 85)',
-  'rgb(110, 45, 45)',
-];
+export const TAG_COLORS = [];
+
+// export const TAG_COLORS = [
+//   'rgb(79, 65, 98)',
+//   'rgb(45, 115, 123)',
+//   'rgb(49, 63, 113)',
+//   'rgb(79, 109, 54)',
+//   'rgb(98, 65, 65)',
+//   'rgb(36, 46, 36)',
+//   'rgb(36, 36, 36)',
+//   'rgb(125, 45, 85)',
+//   'rgb(110, 45, 45)',
+// ];
 
 export const DEFAULT_TAG_COLOR = 'rgb(84, 84, 84)';

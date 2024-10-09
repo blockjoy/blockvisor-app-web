@@ -49,7 +49,7 @@ export const NodeTags = ({ node }: NodeTagsProps) => {
     <Tags
       name={node.id}
       tags={nodeTags}
-      colors={colors}
+      // colors={colors}
       inactiveTags={inactiveTags}
       handleNew={handleNewTag}
       handleRemove={handleRemoveTag}
