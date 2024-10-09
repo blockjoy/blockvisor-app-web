@@ -3,7 +3,7 @@ import { SvgIcon } from '@shared/components';
 import { styles } from './Promo.styles';
 import IconDiscount from '@public/assets/icons/common/Discount.svg';
 import { formatters } from '@shared/utils/formatters';
-import { billingAtoms, billingSelectors } from '@modules/billing';
+import { billingAtoms } from '@modules/billing';
 import { Skeleton } from '@shared/components';
 import { blockchainAtoms, nodeAtoms } from '@modules/node';
 import { PromoForm } from './PromoForm';
@@ -12,9 +12,7 @@ export const Promo = () => {
   const blockchainsLoadingState = useRecoilValue(
     blockchainAtoms.blockchainsLoadingState,
   );
-  const allRegionsLoadingState = useRecoilValue(
-    nodeAtoms.allRegionsLoadingState,
-  );
+  const regionsLoadingState = useRecoilValue(nodeAtoms.regionsLoadingState);
   const [promoCode, setPromoCode] = useRecoilState(billingAtoms.promoCode);
   const setPromoCodeError = useSetRecoilState(billingAtoms.promoCodeError);
 
@@ -29,7 +27,7 @@ export const Promo = () => {
 
   const isLoading =
     blockchainsLoadingState !== 'finished' ||
-    allRegionsLoadingState !== 'finished';
+    regionsLoadingState !== 'finished';
 
   return (
     <>

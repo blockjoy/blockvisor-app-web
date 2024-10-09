@@ -68,7 +68,7 @@ export const useNodeLauncherHandlers = ({
 
   const { getHosts } = useHostSelect();
   const { createNode } = useNodeAdd();
-  useGetRegions();
+  const { getRegions } = useGetRegions();
   const { getPrice } = usePricing();
 
   const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
@@ -266,6 +266,10 @@ export const useNodeLauncherHandlers = ({
   useEffect(() => {
     getHosts();
   }, [defaultOrganization?.id]);
+
+  useEffect(() => {
+    getRegions();
+  }, [defaultOrganization?.id, selectedVersion?.id]);
 
   const handleHostsChanged = (hosts: NodeLauncherHost[] | null) => {
     Mixpanel.track('Launch Node - Host Changed');

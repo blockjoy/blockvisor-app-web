@@ -1,77 +1,53 @@
+import { useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import useSWR from 'swr';
+import { Region } from '@modules/grpc/library/blockjoy/v1/host';
 import { hostClient } from '@modules/grpc';
 import { organizationSelectors } from '@modules/organization';
-import {
-  BlockchainSimpleWRegion,
-  blockchainSelectors,
-  nodeAtoms,
-} from '@modules/node';
+import { nodeAtoms, nodeLauncherAtoms } from '@modules/node';
 
-type UseGetRegionHook = {
-  allRegions: BlockchainSimpleWRegion[];
-  allRegionsLoadingState: LoadingState;
+type UseGetRegionsHook = {
+  getRegions: () => Promise<void>;
+  regions: Region[];
+  regionsLoadingState: LoadingState;
 };
 
-export const useGetRegions = (): UseGetRegionHook => {
-  const [allRegions, setAllRegions] = useRecoilState(nodeAtoms.allRegions);
-  const [allRegionsLoadingState, setAllRegionsLoadingState] = useRecoilState(
-    nodeAtoms.allRegionsLoadingState,
-  );
-  const blockchainsByTypeAndVersion = useRecoilValue(
-    blockchainSelectors.blockchainsByTypeAndVersion,
+export const useGetRegions = (): UseGetRegionsHook => {
+  const [regions, setRegions] = useRecoilState(nodeAtoms.regions);
+  const [regionsLoadingState, setRegionsLoadingState] = useRecoilState(
+    nodeAtoms.regionsLoadingState,
   );
 
   const defaultOrganization = useRecoilValue(
     organizationSelectors.defaultOrganization,
   );
+  const nodeLauncher = useRecoilValue(nodeLauncherAtoms.nodeLauncher);
+  const version = useRecoilValue(nodeLauncherAtoms.selectedVersion);
 
-  const fetcher = async () => {
-    const responses = await Promise.all(
-      blockchainsByTypeAndVersion.map(async (item) => {
-        try {
-          const { blockchainId, nodeType, version } = item;
-          const response = await hostClient.listRegions(
-            defaultOrganization?.id!,
-            blockchainId!,
-            nodeType!,
-            version!,
-          );
-          return { blockchainId, version, nodeType, regions: response };
-        } catch (innerErr) {
-          console.log('Error fetching regions for item:', item, innerErr);
-          return [];
-        }
-      }),
-    );
+  const { blockchainId, nodeType } = nodeLauncher;
 
-    return responses.flat();
+  const getRegions = async () => {
+    try {
+      setRegionsLoadingState('loading');
+
+      const response = await hostClient.listRegions(
+        defaultOrganization?.id!,
+        blockchainId!,
+        nodeType!,
+        version?.version!,
+      );
+
+      setRegions(response);
+    } catch (err) {
+      console.log('Error occurred while fetching regions', err);
+      setRegions([]);
+    } finally {
+      setRegionsLoadingState('finished');
+    }
   };
 
-  useSWR(
-    defaultOrganization?.id && Boolean(blockchainsByTypeAndVersion.length)
-      ? `regions_${defaultOrganization.id}`
-      : null,
-    fetcher,
-    {
-      revalidateOnMount: true,
-      revalidateOnFocus: false,
-
-      onSuccess: (data) => {
-        setAllRegions(data);
-        setAllRegionsLoadingState('finished');
-      },
-      onError: (error) => {
-        console.log('Error occured while fetching all regions', error);
-
-        setAllRegions([]);
-        setAllRegionsLoadingState('finished');
-      },
-    },
-  );
-
   return {
-    allRegions,
-    allRegionsLoadingState,
+    getRegions,
+    regions,
+    regionsLoadingState,
   };
 };
