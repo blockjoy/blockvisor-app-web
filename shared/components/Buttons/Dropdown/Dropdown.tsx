@@ -268,7 +268,7 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
       {isPortal ? (
         <>
           {isOpen && (
-            <Portal wrapperId={`dropdown-${itemKey}`}>
+            <Portal wrapperId={`dropdown-${itemKey}`} inContainer>
               {DropdownMenuElement}
             </Portal>
           )}

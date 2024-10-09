@@ -9,7 +9,7 @@ type TagsProps = {
   name?: string;
   tags?: Tag[];
   inactiveTags?: Tag[];
-  colors?: TagColor;
+  // colors?: TagColor;
   handleNew?: (tag: string) => void;
   handleRemove?: (tag: Tag) => void;
 };
@@ -18,7 +18,7 @@ export const Tags = ({
   name,
   tags,
   inactiveTags = [],
-  colors,
+  // colors,
   handleNew,
   handleRemove,
 }: TagsProps) => {
@@ -54,7 +54,7 @@ export const Tags = ({
               <SingleTag
                 key={tag.name}
                 tag={tag}
-                color={colors?.[tag.name]}
+                // color={colors?.[tag.name]}
                 // handleUpdate={handleUpdate}
                 handleRemove={handleRemove}
                 maxWidth={maxWidth}
@@ -67,7 +67,7 @@ export const Tags = ({
           isOpen={isOpen}
           handleOpen={handleOpen}
           tags={tags}
-          colors={colors}
+          // colors={colors}
           inactiveTags={inactiveTags}
           handleNew={handleNew}
           handleRemove={handleRemove}

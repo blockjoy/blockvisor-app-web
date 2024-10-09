@@ -1,14 +1,15 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { themeDefault } from 'themes';
 import { Tag as TagType } from '@modules/grpc/library/blockjoy/common/v1/tag';
 import { escapeHtml } from '@shared/utils/escapeHtml';
 import { DeleteModal, Tooltip } from '@shared/components';
+import { DEFAULT_TAG_COLOR } from '@shared/index';
 import { TagActions } from './TagActions/TagActions';
 import { styles } from './Tag.styles';
 
 type TagProps = {
   tag: TagType;
-  color?: string;
+  // color?: string;
   handleUpdate?: (id: string, tag?: TagType) => void;
   handleRemove?: (tag: TagType) => void;
   maxWidth?: number;
@@ -16,7 +17,7 @@ type TagProps = {
 
 export const Tag = ({
   tag,
-  color,
+  // color,
   handleUpdate,
   handleRemove,
   maxWidth,
@@ -46,7 +47,7 @@ export const Tag = ({
     <>
       <div
         css={styles.wrapper(
-          color ?? themeDefault.colorBorder,
+          DEFAULT_TAG_COLOR ?? themeDefault.colorBorder,
           isOpenActions,
           updateMode === 'change-color',
           maxWidth,

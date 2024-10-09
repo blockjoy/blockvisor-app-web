@@ -6,6 +6,7 @@ import { RecoilRoot } from 'recoil';
 import { Global } from '@emotion/react';
 import { PrivateRoute } from '@modules/auth';
 import ThemeProvider from '@modules/theme/ThemeProvider';
+import { PortalContainer } from '@shared/components';
 import 'react-toastify/dist/ReactToastify.css';
 import { globalStyles } from 'styles/global.styles';
 
@@ -40,6 +41,7 @@ function MyApp({ Component, pageProps, router }: AppPropsWithLayout) {
           autoClose={3000}
           position="bottom-right"
         />
+        <PortalContainer />
       </ThemeProvider>
     </RecoilRoot>
   );

@@ -11,7 +11,7 @@ type TagsProps = {
   handleOpen: (open?: boolean) => void;
   tags?: Tag[];
   inactiveTags?: Tag[];
-  colors?: TagColor;
+  // colors?: TagColor;
   handleNew?: (tag: string) => void;
   handleRemove?: (tag: Tag) => void;
 };
@@ -22,11 +22,16 @@ export const TagsDropdown = ({
   handleOpen,
   tags,
   inactiveTags = [],
-  colors,
+  // colors,
   handleNew,
   handleRemove,
 }: TagsProps) => {
   const dropdownButtonRef = useRef<HTMLButtonElement | null>(null);
+
+  const handleSubmit = (tag: string) => {
+    handleOpen(false);
+    handleNew?.(tag);
+  };
 
   const TagsDropdownWSearch = useMemo(
     () =>
@@ -34,7 +39,7 @@ export const TagsDropdown = ({
         searchPlaceholder: 'Search or Create new',
         emptyMessage: tags?.length ? 'Create a new tag' : 'No tags created',
         addNewMessage: 'Press Enter to create a new tag',
-        onSubmit: handleNew,
+        onSubmit: handleSubmit,
       }),
     [tags?.length, inactiveTags.length],
   );
@@ -48,7 +53,7 @@ export const TagsDropdown = ({
   const renderItem = (item: Tag) => (
     <SingleTag
       tag={item}
-      color={colors?.[item.name]}
+      // color={colors?.[item.name]}
       /*handleUpdate={handleUpdate} */
     />
   );
@@ -65,14 +70,14 @@ export const TagsDropdown = ({
             <SingleTag
               key={tag.name}
               tag={tag}
-              color={colors?.[tag.name]}
+              // color={colors?.[tag.name]}
               // handleUpdate={handleUpdate}
               handleRemove={handleRemove}
             />
           ))}
         </div>
       ) : null,
-    [invisibleTags, colors, handleRemove],
+    [invisibleTags, handleRemove],
   );
 
   const renderButtonText = useMemo(

@@ -5,7 +5,7 @@ import { ITheme } from 'types/theme';
 export const styles = {
   wrapper: (theme: ITheme) => css`
     position: sticky;
-    z-index: 2;
+    z-index: 3;
     top: 71px;
     flex: 1 1 auto;
     display: flex;
