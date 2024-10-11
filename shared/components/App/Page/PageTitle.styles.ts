@@ -5,7 +5,7 @@ import { ITheme } from 'types/theme';
 export const styles = {
   base: (theme: ITheme) => css`
     position: sticky;
-    z-index: 3;
+    z-index: 4;
     top: 0;
     display: flex;
     align-items: center;
