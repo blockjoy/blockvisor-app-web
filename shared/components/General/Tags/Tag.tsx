@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { themeDefault } from 'themes';
 import { Tag as TagType } from '@modules/grpc/library/blockjoy/common/v1/tag';
 import { escapeHtml } from '@shared/utils/escapeHtml';
@@ -9,18 +9,18 @@ import { styles } from './Tag.styles';
 
 type TagProps = {
   tag: TagType;
-  // color?: string;
+  maxWidth?: number;
+  isInner?: boolean;
   handleUpdate?: (id: string, tag?: TagType) => void;
   handleRemove?: (tag: TagType) => void;
-  maxWidth?: number;
 };
 
 export const Tag = ({
   tag,
-  // color,
+  maxWidth,
+  isInner = false,
   handleUpdate,
   handleRemove,
-  maxWidth,
 }: TagProps) => {
   const tagRef = useRef<HTMLDivElement | null>(null);
 
@@ -43,6 +43,17 @@ export const Tag = ({
     setUpdateMode(item?.id!);
   };
 
+  const [hasTooltip, setHasTooltip] = useState(false);
+
+  useEffect(() => {
+    if (
+      tagRef.current &&
+      !isInner &&
+      tagRef.current.scrollWidth > tagRef.current.offsetWidth
+    )
+      setHasTooltip(true);
+  }, [tagRef.current?.offsetWidth]);
+
   return (
     <>
       <div
@@ -53,11 +64,9 @@ export const Tag = ({
           maxWidth,
         )}
       >
-        {tagRef.current &&
-          maxWidth &&
-          tagRef.current.scrollWidth > tagRef.current.offsetWidth && (
-            <Tooltip noWrap customCss={[styles.tooltip]} tooltip={tag.name} />
-          )}
+        {hasTooltip && (
+          <Tooltip noWrap top="-30px" left="50%" tooltip={tag.name} />
+        )}
 
         <span ref={tagRef} css={styles.tagName}>
           {tag.name}

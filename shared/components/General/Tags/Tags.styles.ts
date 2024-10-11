@@ -1,11 +1,12 @@
 import { css } from '@emotion/react';
 
 export const styles = {
-  wrapper: (shouldAutoHide?: boolean) => css`
+  wrapper: (shouldAutoHide?: boolean, hasTags?: boolean) => css`
     display: inline-flex;
     flex-flow: row nowrap;
     gap: 8px;
     position: relative;
+    ${!hasTags && 'max-'}width: 100%;
     ${shouldAutoHide && 'visibility: hidden;'}
   `,
   list: css`
