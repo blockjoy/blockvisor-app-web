@@ -19,11 +19,13 @@ export const styles = {
 };
 
 export const globalStyles = css`
-  .table-wrapper {
-    overflow-x: hidden;
+  .table-wrapper,
+  .grid-wrapper {
+    overflow-x: hidden !important;
   }
 
-  table {
+  table,
+  .grid-wrapper {
     position: relative;
 
     ::after {
