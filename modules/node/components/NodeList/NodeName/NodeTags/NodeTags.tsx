@@ -1,59 +1,62 @@
 import { useRecoilValue } from 'recoil';
+import { SerializedStyles } from '@emotion/react';
 import { Tag } from '@modules/grpc/library/blockjoy/common/v1/tag';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
-import { useNodeUpdate, nodeSelectors } from '@modules/node';
+import { useNodeUpdate, nodeSelectors, nodeAtoms } from '@modules/node';
 import { Tags } from '@shared/components';
-// import { TAG_COLORS, DEFAULT_TAG_COLOR } from '@shared/index';
 
 type NodeTagsProps = {
   node: Node;
+  itemsPerView?: number;
+  autoHide?: boolean;
+  additionalStyles?: SerializedStyles[];
 };
 
-export const NodeTags = ({ node }: NodeTagsProps) => {
+export const NodeTags = ({
+  node,
+  itemsPerView,
+  autoHide = true,
+  additionalStyles,
+}: NodeTagsProps) => {
+  const nodeLoadingState = useRecoilValue(nodeAtoms.nodeLoadingState);
+
   const nodeTags = node?.tags?.tags ?? [];
-  const allTags = useRecoilValue(nodeSelectors.nodesTagsAll);
   const inactiveTags = useRecoilValue(nodeSelectors.inactiveTags(nodeTags));
 
   const { updateNode } = useNodeUpdate();
 
-  const handleNewTag = (tag: string) => {
+  const handleNewTag = async (tag: string) => {
     if (!node?.id) return;
 
-    updateNode({ ids: [node?.id!], updateTags: { addTag: { name: tag } } });
+    await updateNode({
+      ids: [node?.id!],
+      updateTags: { addTag: { name: tag } },
+    });
   };
 
-  const handleRemoveTag = (tag: Tag) => {
+  const handleRemoveTag = async (tag: Tag) => {
     if (!node?.id) return;
 
     const newTags: Tag[] =
       node.tags?.tags.filter((nodeTag) => nodeTag.name !== tag.name) ?? [];
 
-    updateNode({
+    await updateNode({
       ids: [node?.id!],
       updateTags: { overwriteTags: { tags: newTags } },
     });
   };
 
-  // TODO: reimpl colors when avaible, atm random colors assigned
-  // const colors: TagColor = allTags
-  //   .slice()
-  //   .sort((a, b) => (a.name > b.name ? 1 : -1))
-  //   .reduce((acc, tag, i) => {
-  //     if (tag?.name) {
-  //       acc[tag.name] = TAG_COLORS[i] ?? DEFAULT_TAG_COLOR;
-  //     }
-  //     return acc;
-  //   }, {});
-
   return (
     <Tags
       name={node.id}
       tags={nodeTags}
-      // colors={colors}
       inactiveTags={inactiveTags}
+      autoHide={autoHide}
+      itemsPerView={itemsPerView}
+      isLoading={nodeLoadingState !== 'finished'}
       handleNew={handleNewTag}
       handleRemove={handleRemoveTag}
-      autoHide
+      additionalStyles={additionalStyles}
     />
   );
 };

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Global } from '@emotion/react';
+import { Global, SerializedStyles } from '@emotion/react';
 import { Tag } from '@modules/grpc/library/blockjoy/common/v1/tag';
 import { Tag as SingleTag } from './Tag';
 import { TagsDropdown } from './TagsDropdown/TagsDropdown';
@@ -9,8 +9,10 @@ type TagsProps = {
   name?: string;
   tags?: Tag[];
   inactiveTags?: Tag[];
-  // colors?: TagColor;
+  isLoading?: boolean;
   autoHide?: boolean;
+  itemsPerView?: number;
+  additionalStyles?: SerializedStyles[];
   handleNew?: (tag: string) => void;
   handleRemove?: (tag: Tag) => void;
 };
@@ -19,8 +21,10 @@ export const Tags = ({
   name,
   tags,
   inactiveTags = [],
-  // colors,
+  isLoading,
   autoHide,
+  itemsPerView,
+  additionalStyles,
   handleNew,
   handleRemove,
 }: TagsProps) => {
@@ -30,11 +34,11 @@ export const Tags = ({
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    if (containerRef.current) setIsContainerAvailable(true);
-  }, []);
+    if (containerRef.current && !isLoading) setIsContainerAvailable(true);
+  }, [isLoading]);
 
   const containerWidth = containerRef.current?.offsetWidth;
-  const visibleTags = tags?.slice(0, 3) ?? [];
+  const visibleTags = tags?.slice(0, itemsPerView ?? 3) ?? [];
 
   const handleWrapperClick = (e: React.MouseEvent<HTMLSpanElement>) => {
     e.stopPropagation();
@@ -52,7 +56,10 @@ export const Tags = ({
     <>
       {isOpen && <Global styles={globalStyles} />}
       <div
-        css={styles.wrapper(shouldAutoHide)}
+        css={[
+          styles.wrapper(shouldAutoHide, Boolean(tags?.length)),
+          additionalStyles && additionalStyles,
+        ]}
         ref={containerRef}
         onClick={handleWrapperClick}
         className="tags"
@@ -63,7 +70,6 @@ export const Tags = ({
               <SingleTag
                 key={tag.name}
                 tag={tag}
-                // color={colors?.[tag.name]}
                 // handleUpdate={handleUpdate}
                 handleRemove={handleRemove}
                 maxWidth={maxWidth}
@@ -76,10 +82,10 @@ export const Tags = ({
           isOpen={isOpen}
           handleOpen={handleOpen}
           tags={tags}
-          // colors={colors}
           inactiveTags={inactiveTags}
           handleNew={handleNew}
           handleRemove={handleRemove}
+          itemsPerView={itemsPerView}
         />
       </div>
     </>

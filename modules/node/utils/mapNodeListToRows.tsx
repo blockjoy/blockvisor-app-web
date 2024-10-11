@@ -68,6 +68,7 @@ export const mapNodeListToRows = (nodeList?: Node[]) => {
               }
               topRow={<NodeName node={node} />}
               bottomRow={node?.ip!}
+              isOverflow={false}
             />
           ),
         },

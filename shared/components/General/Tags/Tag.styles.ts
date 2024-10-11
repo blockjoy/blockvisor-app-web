@@ -11,7 +11,8 @@ export const styles = {
     display: flex;
     justify-content: center;
     align-items: center;
-    max-width: ${maxWidth ? maxWidth + 'px' : 'max-content'};
+    width: 100%;
+    max-width: ${maxWidth && maxWidth > 0 ? maxWidth + 'px' : 'max-content'};
     padding: 3px 10px;
     background-color: ${bgColor};
     white-space: nowrap;
@@ -48,10 +49,5 @@ export const styles = {
     text-overflow: ellipsis;
     font-size: 12px;
     color: ${theme.colorText};
-  `,
-  tooltip: css`
-    top: -30px;
-    left: 0;
-    translate: 0;
   `,
 };

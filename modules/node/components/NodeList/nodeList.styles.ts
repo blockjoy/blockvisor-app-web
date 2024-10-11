@@ -8,18 +8,7 @@ export const styles = {
     flex-direction: column;
     padding: 0 24px;
 
-    table {
-      tr:hover {
-        .tags {
-          visibility: visible;
-        }
-      }
-    }
-
-    @media ${breakpoints.fromXLrg} {
-      flex-direction: row;
-      padding: 0 30px;
-
+    @media ${breakpoints.toHuge} {
       table {
         tr {
           .tags {
@@ -27,6 +16,21 @@ export const styles = {
           }
         }
       }
+    }
+
+    @media ${breakpoints.fromHuge} {
+      table {
+        tr:hover {
+          .tags {
+            visibility: visible;
+          }
+        }
+      }
+    }
+
+    @media ${breakpoints.fromXLrg} {
+      flex-direction: row;
+      padding: 0 30px;
     }
   `,
   gridWrapper: css`

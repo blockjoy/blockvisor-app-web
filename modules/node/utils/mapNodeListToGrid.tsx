@@ -4,7 +4,7 @@ import { BlockchainIcon } from '@shared/components';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { getNodeJobProgress } from './getNodeJobProgress';
 import { escapeHtml } from '@shared/utils/escapeHtml';
-import { convertNodeTypeToName } from '@modules/node';
+import { convertNodeTypeToName, NodeTags } from '@modules/node';
 
 const styles = {
   blockchainNetwork: css`
@@ -13,6 +13,16 @@ const styles = {
     text-overflow: ellipsis;
     line-height: 1.6;
   `,
+  tags: (hasTags?: boolean) => css`
+    min-width: ${hasTags ? '200px' : '30px'};
+    width: ${hasTags ? '100%' : 'auto'};
+  `,
+  header: css`
+    max-width: calc(100% - 38px);
+    h2 {
+      padding-right: 0;
+    }
+  `,
 };
 
 export const mapNodeListToGrid = (
@@ -20,7 +30,9 @@ export const mapNodeListToGrid = (
   onCellClick: (args0: any) => void,
 ) => {
   return nodeList?.map((node: Node) => {
+    const hasTags = Boolean(node.tags?.tags.length);
     const progress = getNodeJobProgress(node);
+
     return {
       key: node.id,
       component: (
@@ -28,6 +40,8 @@ export const mapNodeListToGrid = (
           key={node.id}
           onCellClick={() => onCellClick(node.id)}
           titleText={escapeHtml(node.displayName)}
+          {...(hasTags && { titleStyle: styles.header })}
+          titleStyle={styles.header}
           titleIcon={
             <BlockchainIcon size="28px" blockchainName={node.blockchainName} />
           }
@@ -39,12 +53,19 @@ export const mapNodeListToGrid = (
               downloadingTotal={progress?.total}
             />
           }
-          middleRow={
-            <p css={styles.blockchainNetwork}>
-              {node.blockchainName} | {convertNodeTypeToName(node.nodeType)} |{' '}
-              {node.network}
-            </p>
+          topRow={
+            <div css={styles.tags(Boolean(node.tags?.tags.length))}>
+              <NodeTags node={node} itemsPerView={2} />
+            </div>
           }
+          {...(!Boolean(node.tags?.tags.length) && {
+            middleRow: (
+              <p css={styles.blockchainNetwork}>
+                {node.blockchainName} | {convertNodeTypeToName(node.nodeType)} |{' '}
+                {node.network}
+              </p>
+            ),
+          })}
         />
       ),
     };

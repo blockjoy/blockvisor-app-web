@@ -28,7 +28,7 @@ import { getNodeJobProgress } from '@modules/node/utils/getNodeJobProgress';
 import { useGetOrganizations } from '@modules/organization';
 import { useHostList } from '@modules/host';
 import { nodeClient } from '@modules/grpc';
-import { escapeHtml, useNavigate } from '@shared/index';
+import { escapeHtml, useNavigate, useViewport } from '@shared/index';
 import { EditableTitle } from '@shared/components';
 
 export const NodeViewHeader = () => {
@@ -39,6 +39,7 @@ export const NodeViewHeader = () => {
   const { loadHosts } = useHostList();
   const { deleteNode } = useNodeDelete();
   const { createNode } = useNodeAdd();
+  useViewport();
 
   const [isSaving, setIsSaving] = useState<boolean | null>(null);
   const [error, setError] = useState('');
@@ -117,6 +118,8 @@ export const NodeViewHeader = () => {
     setIsSaving(null);
   };
 
+  const hasTags = Boolean(node?.tags?.tags.length);
+
   return (
     <>
       {actionView === 'delete' && (
@@ -164,7 +167,7 @@ export const NodeViewHeader = () => {
                     blockchainName={node.blockchainName}
                   />
                 </div>
-                <div css={styles.name}>
+                <div css={styles.name(hasTags)}>
                   <EditableTitle
                     initialValue={node.displayName}
                     isLoading={isLoading}
@@ -173,7 +176,10 @@ export const NodeViewHeader = () => {
                     onEditClicked={handleEditClicked}
                     canUpdate
                   />
-                  <NodeTags node={node} />
+                  <NodeTags
+                    node={node}
+                    additionalStyles={[styles.tags(hasTags)]}
+                  />
                   <div css={styles.detailsFooter}>
                     <div css={styles.nodeType}>
                       <p>

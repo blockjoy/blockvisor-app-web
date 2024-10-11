@@ -20,10 +20,25 @@ export const styles = {
       min-height: auto;
     }
   `,
-  name: css`
+  name: (hasTags?: boolean) => css`
     display: flex;
-    flex-direction: column;
+    flex-direction: ${hasTags ? 'column' : 'row'};
+    flex-wrap: wrap;
     gap: 5px;
+    width: 100%;
+  `,
+  tags: (hasTags?: boolean) => css`
+    min-width: ${hasTags ? '200px' : '30px'};
+    width: ${hasTags ? '100%' : 'auto'};
+    visibility: visible;
+
+    @media ${breakpoints.fromLrg} {
+      max-width: 400px;
+    }
+
+    @media ${breakpoints.fromXLrg} {
+      max-width: 100%;
+    }
   `,
   detailsHeader: css`
     display: flex;
@@ -42,6 +57,7 @@ export const styles = {
     display: flex;
     gap: 16px;
     white-space: nowrap;
+    width: 100%;
 
     @media ${breakpoints.toLrg} {
       gap: 6px;

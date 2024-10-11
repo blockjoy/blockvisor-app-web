@@ -13,7 +13,7 @@ type TagsProps = {
   handleOpen: (open?: boolean) => void;
   tags?: Tag[];
   inactiveTags?: Tag[];
-  // colors?: TagColor;
+  itemsPerView?: number;
   handleNew?: (tag: string) => void;
   handleRemove?: (tag: Tag) => void;
 };
@@ -24,7 +24,7 @@ export const TagsDropdown = ({
   handleOpen,
   tags,
   inactiveTags = [],
-  // colors,
+  itemsPerView,
   handleNew,
   handleRemove,
 }: TagsProps) => {
@@ -56,14 +56,14 @@ export const TagsDropdown = ({
   const renderItem = (item: Tag) => (
     <SingleTag
       tag={item}
-      // color={colors?.[item.name]}
+      isInner
       /*handleUpdate={handleUpdate} */
     />
   );
 
   const dropdownItemStyles = (item: Tag) => [styles.dropdownItem];
 
-  const invisibleTags = tags?.slice(3) ?? [];
+  const invisibleTags = tags?.slice(itemsPerView ?? 3) ?? [];
 
   const renderHeader = useMemo(
     () =>
@@ -73,7 +73,6 @@ export const TagsDropdown = ({
             <SingleTag
               key={tag.name}
               tag={tag}
-              // color={colors?.[tag.name]}
               // handleUpdate={handleUpdate}
               handleRemove={handleRemove}
             />
@@ -97,13 +96,6 @@ export const TagsDropdown = ({
 
   const dropdownButtonRect =
     dropdownButtonRef?.current?.getBoundingClientRect();
-
-  const dropdownMenuPosition = () =>
-    styles.dropdownMenuPosition(
-      dropdownButtonRect,
-      isSidebarOpen,
-      tags?.length,
-    );
 
   return (
     <TagsDropdownWSearch
