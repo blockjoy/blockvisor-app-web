@@ -12,9 +12,7 @@ export const styles = {
     const topOffset = top + 30;
     const left = window.scrollX + (buttonRect?.left ?? 0);
     const leftOffset =
-      (left < (isSidebarOpen ? 560 : 300) ||
-        ((tagsLength ?? 0) < 3 && (tagsLength ?? 0) > 0)) &&
-      window.innerWidth + 200 < left
+      left < (isSidebarOpen ? 560 : 300) && window.innerWidth - 300 > left
         ? left
         : left - 200 + (buttonRect?.width ?? 0);
 
