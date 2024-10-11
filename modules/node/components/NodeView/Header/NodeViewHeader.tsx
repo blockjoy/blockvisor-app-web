@@ -167,7 +167,7 @@ export const NodeViewHeader = () => {
                     blockchainName={node.blockchainName}
                   />
                 </div>
-                <div css={styles.name(hasTags)}>
+                <div css={styles.name}>
                   <EditableTitle
                     initialValue={node.displayName}
                     isLoading={isLoading}
@@ -176,28 +176,30 @@ export const NodeViewHeader = () => {
                     onEditClicked={handleEditClicked}
                     canUpdate
                   />
-                  <NodeTags
-                    node={node}
-                    additionalStyles={[styles.tags(hasTags)]}
-                  />
-                  <div css={styles.detailsFooter}>
-                    <div css={styles.nodeType}>
-                      <p>
-                        {node.blockchainName}
-                        {' | '}
-                        {convertNodeTypeToName(node.nodeType)}
-                        {' | '}
-                        {node.network}
-                      </p>
+                  <div css={styles.content(hasTags)}>
+                    <NodeTags
+                      node={node}
+                      additionalStyles={[styles.tags(hasTags)]}
+                    />
+                    <div css={styles.detailsFooter}>
+                      <div css={styles.nodeType}>
+                        <p>
+                          {node.blockchainName}
+                          {' | '}
+                          {convertNodeTypeToName(node.nodeType)}
+                          {' | '}
+                          {node.network}
+                        </p>
+                      </div>
+                      {node!.createdAt && (
+                        <p css={[typo.small, colors.text2]}>
+                          Launched{' '}
+                          {formatDistanceToNow(node!.createdAt, {
+                            addSuffix: true,
+                          })}
+                        </p>
+                      )}
                     </div>
-                    {node!.createdAt && (
-                      <p css={[typo.small, colors.text2]}>
-                        Launched{' '}
-                        {formatDistanceToNow(node!.createdAt, {
-                          addSuffix: true,
-                        })}
-                      </p>
-                    )}
                   </div>
                 </div>
                 <div css={styles.nodeStatus}>

@@ -20,10 +20,15 @@ export const styles = {
       min-height: auto;
     }
   `,
-  name: (hasTags?: boolean) => css`
+  name: css`
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 100%;
+  `,
+  content: (hasTags?: boolean) => css`
     display: flex;
     flex-direction: ${hasTags ? 'column' : 'row'};
-    flex-wrap: wrap;
     gap: 5px;
     width: 100%;
   `,
@@ -57,7 +62,6 @@ export const styles = {
     display: flex;
     gap: 16px;
     white-space: nowrap;
-    width: 100%;
 
     @media ${breakpoints.toLrg} {
       gap: 6px;
