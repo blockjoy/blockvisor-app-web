@@ -1,3 +1,5 @@
+import { SETTINGS } from '../constants/pipedrive';
+
 export const callPipedriveApi = async (
   endpoint: string,
   method: 'GET' | 'POST' | 'PUT',
@@ -12,7 +14,7 @@ export const callPipedriveApi = async (
     body: JSON.stringify({
       endpoint,
       method,
-      body,
+      body: body && { ...body, owner_id: SETTINGS.ownerId },
       params,
     }),
   });

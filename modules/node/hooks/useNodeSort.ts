@@ -1,8 +1,8 @@
-import { useRecoilValue, useResetRecoilState } from 'recoil';
+import { useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
 import { nodeAtoms, nodeSelectors } from '@modules/node';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { NodeSortField } from '@modules/grpc/library/blockjoy/v1/node';
-import { useSettings } from '@modules/settings';
+import { settingsAtoms, useSettings } from '@modules/settings';
 
 type UseNodeSortHook = {
   updateSorting: (key: NodeSortField) => Promise<void>;
@@ -11,10 +11,13 @@ type UseNodeSortHook = {
 export const useNodeSort = (): UseNodeSortHook => {
   const nodeSort = useRecoilValue(nodeSelectors.nodeSort);
   const resetPagination = useResetRecoilState(nodeAtoms.nodeListPagination);
+  const setAppLoadingState = useSetRecoilState(settingsAtoms.appLoadingState);
 
   const { updateSettings } = useSettings();
 
   const updateSorting = async (key: NodeSortField) => {
+    setAppLoadingState('loading');
+
     const sortingMatch = nodeSort?.find(
       (singleSort) => singleSort.field === key,
     );

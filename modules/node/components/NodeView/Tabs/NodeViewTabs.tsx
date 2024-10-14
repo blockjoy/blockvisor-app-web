@@ -19,14 +19,6 @@ export const NodeViewTabs = () => {
     { href: createPath('commands'), name: 'Commands' },
   ];
 
-  if (node?.blockHeight) {
-    tabs.push({
-      href: createPath('metrics'),
-      name: 'Metrics',
-      className: 'metrics',
-    });
-  }
-
   const isActive = (href: string) => {
     const routerPath = asPath
       .substring(
@@ -51,7 +43,7 @@ export const NodeViewTabs = () => {
 
   return (
     <div css={wrapper.main}>
-      <TabNavigation items={tabItems} sidePanel="Metrics" />
+      <TabNavigation items={tabItems} />
     </div>
   );
 };
