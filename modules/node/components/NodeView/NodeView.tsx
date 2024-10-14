@@ -4,7 +4,6 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { NodeViewTitle } from './Title/NodeViewTitle';
 import { NodeViewHeader } from './Header/NodeViewHeader';
-import { NodeViewSidePanel } from './SidePanel/NodeViewSidePanel';
 import { NodeViewTabs } from './Tabs/NodeViewTabs';
 import { wrapper } from 'styles/wrapper.styles';
 import { EmptyColumn, SkeletonView } from '@shared/components';
@@ -53,14 +52,7 @@ export const NodeView = ({ children, hideEditPanel }: Props) => {
           <NodeViewHeader />
           <NodeViewTabs />
           <div css={[styles.wrapper, wrapper.main]}>
-            <>
-              <div css={styles.content}>{children}</div>
-              {!hideEditPanel && (
-                <div css={styles.sidePanel}>
-                  <NodeViewSidePanel />
-                </div>
-              )}
-            </>
+            <div css={styles.content}>{children}</div>
           </div>
         </>
       )}
