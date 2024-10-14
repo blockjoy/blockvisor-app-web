@@ -61,11 +61,14 @@ export const Tags = ({
           additionalStyles && additionalStyles,
         ]}
         ref={containerRef}
-        onClick={handleWrapperClick}
+        {...(isOpen && { onClick: handleWrapperClick })}
         className="tags"
       >
         {Boolean(visibleTags.length) && isContainerAvailable && (
-          <div css={styles.list}>
+          <div
+            css={styles.list}
+            {...(!isOpen && { onClick: handleWrapperClick })}
+          >
             {visibleTags?.map((tag) => (
               <SingleTag
                 key={tag.name}
