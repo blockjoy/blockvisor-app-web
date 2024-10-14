@@ -46,12 +46,10 @@ export const Tag = ({
   const [hasTooltip, setHasTooltip] = useState(false);
 
   useEffect(() => {
-    if (
-      tagRef.current &&
-      !isInner &&
-      tagRef.current.scrollWidth > tagRef.current.offsetWidth
-    )
-      setHasTooltip(true);
+    if (tagRef.current && !isInner) {
+      const tooltip = tagRef.current.scrollWidth > tagRef.current.offsetWidth;
+      setHasTooltip(tooltip);
+    }
   }, [tagRef.current?.offsetWidth]);
 
   return (
