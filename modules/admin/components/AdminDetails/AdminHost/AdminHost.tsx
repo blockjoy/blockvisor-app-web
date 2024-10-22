@@ -95,7 +95,7 @@ export const AdminHost = () => {
     {
       id: 'ipAddresses',
       label: 'Ip Addresses',
-      data: <HostIps ipAddresses={host.ipAddresses} orgId={host.orgId} />,
+      data: <HostIps ipAddresses={host.ipAddresses} />,
     },
     {
       id: 'orgName',

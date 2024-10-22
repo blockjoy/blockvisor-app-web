@@ -1,10 +1,13 @@
-import { FirewallDropdown } from '@modules/node';
+import { FirewallDropdown, NodeLauncherState } from '@modules/node';
 
 export const AdminDetailEditFirewall = ({
   editSettings,
   onChange,
 }: AdminDetailEditControlProps) => {
-  const handleChange = (name: string, value: FilteredIpAddr[]) => {
+  const handleChange = <K extends keyof NodeLauncherState>(
+    name: K,
+    value: NodeLauncherState[K],
+  ) => {
     onChange(name, JSON.stringify(value));
   };
 

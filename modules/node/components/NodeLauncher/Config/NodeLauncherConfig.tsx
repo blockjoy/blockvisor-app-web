@@ -12,6 +12,8 @@ import {
   nodeLauncherSelectors,
   NodeTypeSelect,
   NodeNetworkSelect,
+  FirewallDropdown,
+  NodeLauncherState,
 } from '@modules/node';
 import { authSelectors } from '@modules/auth';
 import { styles } from './NodeLauncherConfig.styles';
@@ -19,6 +21,10 @@ import { styles } from './NodeLauncherConfig.styles';
 type NodeLauncherConfigProps = {
   onFileUploaded: (e: any) => void;
   onNodeConfigPropertyChanged: (name: string, value: string | boolean) => void;
+  onNodePropertyChanged: <K extends keyof NodeLauncherState>(
+    name: K,
+    value: NodeLauncherState[K],
+  ) => void;
   onVersionChanged: (version: BlockchainVersion | null) => void;
   onNetworkChanged: (network: NetworkConfig) => void;
 };
@@ -26,6 +32,7 @@ type NodeLauncherConfigProps = {
 export const NodeLauncherConfig = ({
   onFileUploaded,
   onNodeConfigPropertyChanged,
+  onNodePropertyChanged,
   onVersionChanged,
   onNetworkChanged,
 }: NodeLauncherConfigProps) => {
@@ -54,8 +61,7 @@ export const NodeLauncherConfig = ({
           </>
         )}
 
-        {/* TODO: Add back in when firewall implemented */}
-        {/* <FormLabel hint="Add IP addresses that are allowed/denied">
+        <FormLabel hint="Add IP addresses that are allowed/denied">
           Firewall Rules
         </FormLabel>
         <FirewallDropdown
@@ -63,7 +69,7 @@ export const NodeLauncherConfig = ({
           onPropertyChanged={onNodePropertyChanged}
           allowedIps={nodeLauncher?.allowIps}
           deniedIps={nodeLauncher?.denyIps}
-        /> */}
+        />
 
         {Boolean(networks?.length) &&
           properties?.map((property: NodeProperty) => {

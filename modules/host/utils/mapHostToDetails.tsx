@@ -35,7 +35,7 @@ export const mapHostToDetails = (host: Host) => {
     {
       label: 'IP Addresses',
       data: host.ipAddresses?.length ? (
-        <HostIps ipAddresses={host.ipAddresses} orgId={host.orgId} />
+        <HostIps ipAddresses={host.ipAddresses} />
       ) : (
         '-'
       ),
