@@ -56,6 +56,7 @@ export const NodeLauncher = ({
                 onNetworkChanged={handleNetworkChanged}
                 onFileUploaded={handleFileUploaded}
                 onNodeConfigPropertyChanged={handleNodeConfigPropertyChanged}
+                onNodePropertyChanged={handleNodePropertyChanged}
                 onVersionChanged={handleVersionChanged}
               />
             )}

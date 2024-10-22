@@ -1,133 +1,77 @@
-import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import Link from 'next/link';
 import { authSelectors } from '@modules/auth';
 import { HostIpAddress } from '@modules/grpc/library/blockjoy/v1/host';
 import { styles } from './HostIps.styles';
 import { sortIps } from '@modules/node';
+import { DetailsTableTabs, DetailsTableTabsList } from '@shared/components';
 
-type Props = {
-  ipAddresses: HostIpAddress[];
-  orgId: string;
-};
+type Props = { ipAddresses: HostIpAddress[] };
 
 type ListType = 'all' | 'available' | 'assigned';
 
-export const HostIps = ({ ipAddresses, orgId }: Props) => {
-  const listRef = useRef<HTMLOListElement>(null);
-
+export const HostIps = ({ ipAddresses }: Props) => {
   const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
 
-  const [listHeight, setListHeight] = useState(0);
-  const [listTypes, setListTypes] = useState<ListType[]>([]);
-  const [isTransitionEnabled, setIsTransitionEnabled] = useState(false);
-  const [ipListType, setIpListType] = useState<ListType>('all');
+  const renderItems = (ips: HostIpAddress[], listType: ListType) => (
+    <DetailsTableTabsList>
+      {sortIps(ips)?.length ? (
+        sortIps(ips).map(({ ip, assigned }) => (
+          <li key={ip} css={styles.ip}>
+            {listType !== 'available' && assigned ? (
+              <>
+                {isSuperUser ? (
+                  <Link
+                    css={[
+                      styles.ipListLink,
+                      styles.ipListLinkAssigned,
+                      listType === 'all' && styles.ipAssigned,
+                    ]}
+                    href={`/admin?name=nodes&page=1&ip=${ip}`}
+                  >
+                    {ip}
+                  </Link>
+                ) : (
+                  <p css={listType === 'all' && styles.ipAssigned}>{ip}</p>
+                )}
+              </>
+            ) : (
+              ip
+            )}
+          </li>
+        ))
+      ) : (
+        <li>None</li>
+      )}
+    </DetailsTableTabsList>
+  );
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setIpListType(e.target.value as ListType);
-  };
+  const ipAddressesAssigned = ipAddresses.filter(({ assigned }) => assigned);
 
-  const getFilteredIps = useCallback(() => {
-    switch (ipListType) {
-      case 'assigned':
-        return ipAddresses.filter(({ assigned }) => assigned);
-      case 'available':
-        return ipAddresses.filter(({ assigned }) => !assigned);
-      default:
-        return ipAddresses;
-    }
-  }, [ipListType]);
-
-  const sortedIps =
-    ipListType === 'all'
-      ? sortIps(ipAddresses)
-      : sortIps([...getFilteredIps()]);
-
-  useEffect(() => {
-    const newListHeight = listRef.current?.clientHeight;
-    setListHeight(newListHeight!);
-    if (ipListType === 'all' && !isTransitionEnabled) {
-      setIsTransitionEnabled(true);
-    }
-  }, [ipListType]);
-
-  useEffect(() => {
-    if (
-      !ipAddresses.every((ip) => ip.assigned) &&
-      !ipAddresses.every((ip) => !ip.assigned)
-    ) {
-      setListTypes(['all', 'available', 'assigned']);
-    }
-  }, [ipAddresses?.length]);
+  const ipAddressesAvailable = ipAddresses.filter(({ assigned }) => !assigned);
 
   if (!ipAddresses?.length) return <>-</>;
 
   return (
-    <div css={styles.wrapper(sortedIps.length > 3)}>
-      {listTypes?.length > 1 && (
-        <ul css={styles.listPicker}>
-          {listTypes.map((type) => (
-            <li key={type}>
-              <input
-                onChange={handleChange}
-                checked={ipListType === type}
-                autoComplete="off"
-                type="radio"
-                value={type}
-                id={type}
-                name="listType"
-              />
-              <label htmlFor={type}>{type}</label>
-            </li>
-          ))}
-        </ul>
-      )}
-      <div
-        css={styles.ipListWrapper}
-        style={{
-          height: isTransitionEnabled ? `${listHeight}px` : undefined,
-          transition: isTransitionEnabled ? '0.4s ease' : '',
-        }}
-      >
-        <ol
-          css={styles.ipList}
-          ref={listRef}
-          style={{
-            position: isTransitionEnabled ? 'absolute' : 'static',
-          }}
-        >
-          {sortedIps?.length ? (
-            sortedIps.map(({ ip, assigned }) => (
-              <li key={ip} css={styles.ip}>
-                {ipListType !== 'available' && assigned ? (
-                  <>
-                    {isSuperUser ? (
-                      <Link
-                        css={[
-                          styles.ipListLink,
-                          styles.ipListLinkAssigned,
-                          ipListType === 'all' && styles.ipAssigned,
-                        ]}
-                        href={`/admin?name=nodes&page=1&ip=${ip}`}
-                      >
-                        {ip}
-                      </Link>
-                    ) : (
-                      <p css={ipListType === 'all' && styles.ipAssigned}>
-                        {ip}
-                      </p>
-                    )}
-                  </>
-                ) : (
-                  ip
-                )}
-              </li>
-            ))
-          ) : (
-            <li>None</li>
-          )}
-        </ol>
-      </div>
-    </div>
+    <DetailsTableTabs
+      tabs={[
+        {
+          name: 'All',
+          items: renderItems(ipAddresses, 'all'),
+        },
+        {
+          name: 'Available',
+          items: renderItems(ipAddressesAvailable, 'available'),
+        },
+        {
+          name: 'Assigned',
+          items: renderItems(ipAddressesAssigned, 'assigned'),
+        },
+      ]}
+      showTabHeader={
+        Boolean(ipAddressesAssigned.length) &&
+        Boolean(ipAddressesAvailable.length)
+      }
+    />
   );
 };

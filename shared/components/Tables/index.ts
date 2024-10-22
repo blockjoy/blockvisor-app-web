@@ -7,6 +7,8 @@ export * from './Table/TableBlock';
 export * from './Pagination/Pagination';
 export * from './DetailsTable/DetailsTable';
 export * from './DetailsTable/DataRow/DataRow';
+export * from './DetailsTable/DetailsTableTabs/DetailsTableTabs';
+export * from './DetailsTable/DetailsTableTabs/DetailsTableTabsList/DetailsTableTabsList';
 export * from './DetailsWrapper/DetailsWrapper';
 export * from './Table/utils/withQuery';
 export * from './Table/utils/paginate';

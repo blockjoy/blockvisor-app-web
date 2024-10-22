@@ -1,7 +1,7 @@
 import { nodeClient } from '@modules/grpc';
 import { useRouter } from 'next/router';
 import { AdminDetail } from '../AdminDetail/AdminDetail';
-import { NextLink, NodeStatus } from '@shared/components';
+import { NextLink, NodeFirewall, NodeStatus } from '@shared/components';
 import { convertNodeTypeToName } from '@modules/node/utils/convertNodeTypeToName';
 import { capitalized } from '@modules/admin/utils/capitalized';
 import {
@@ -238,7 +238,16 @@ export const AdminNode = () => {
         defaultValue: node.selfUpdate?.toString(),
       },
     },
-    // TODO: Hidden as not supported in API
+    {
+      id: 'firewallRules',
+      label: 'Firewall Rules',
+      data:
+        node.allowIps.length || node.denyIps.length ? (
+          <NodeFirewall allowIps={node.allowIps} denyIps={node.denyIps} />
+        ) : (
+          '-'
+        ),
+    },
     // {
     //   id: 'allowIps',
     //   label: 'Allow Ips',
@@ -256,7 +265,7 @@ export const AdminNode = () => {
     //   id: 'denyIps',
     //   label: 'Deny Ips',
     //   data: node.denyIps,
-    //   isHidden: true,
+    //   isHidden: false,
     //   editSettings: {
     //     field: 'denyIps',
     //     displayName: 'Deny Ips',
@@ -264,7 +273,6 @@ export const AdminNode = () => {
     //     controlType: 'firewall',
     //     defaultValue: JSON.stringify(node.denyIps),
     //   },
-    // },
     {
       id: 'region',
       label: 'Region',
