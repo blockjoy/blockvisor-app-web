@@ -3,7 +3,7 @@ import {
   UiType,
 } from '@modules/grpc/library/blockjoy/common/v1/node';
 import { Node, NodeProperty } from '@modules/grpc/library/blockjoy/v1/node';
-import { Copy } from '@shared/components';
+import { Copy, NodeFirewall } from '@shared/components';
 import { escapeHtml } from '@shared/utils/escapeHtml';
 import { LockedSwitch } from '../components/Shared';
 import { styles } from '@shared/components/Buttons/NextLink/NextLink.styles';
@@ -56,6 +56,13 @@ export const mapNodeToDetails = (node: Node) => {
             <Copy value={rpcUrl} />
           </>
         ) || '-',
+    });
+  }
+
+  if (node.allowIps.length || node.denyIps.length) {
+    details.push({
+      label: 'Firewall Rules',
+      data: <NodeFirewall allowIps={node.allowIps} denyIps={node.denyIps} />,
     });
   }
 

@@ -11,6 +11,7 @@ import { styles } from './FirewallDropdown.styles';
 import { FirewallDropdownHeader } from './FirewallDropdownHeader';
 import { FirewallDropdownForm } from './FirewallDropdownForm';
 import { FirewallDropdownItems } from './FirewallDropdownItems';
+import { NodeLauncherState } from '@modules/node';
 
 type FirewallDropdownProps = {
   type?: 'allow' | 'deny' | undefined;
@@ -18,7 +19,10 @@ type FirewallDropdownProps = {
   deniedIps?: FilteredIpAddr[];
   allowedIps?: FilteredIpAddr[];
   isDisabled?: boolean;
-  onPropertyChanged: (name: string, value: FilteredIpAddr[]) => void;
+  onPropertyChanged: <K extends keyof NodeLauncherState>(
+    name: K,
+    value: NodeLauncherState[K],
+  ) => void;
   noBottomMargin?: boolean;
 };
 
