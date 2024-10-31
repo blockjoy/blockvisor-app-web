@@ -11,12 +11,11 @@ const styles = {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    text-transform: capitalize;
-    margin-bottom: 10px;
+    margin: 2px 0 10px;
     line-height: 1.6;
   `,
   tags: (hasTags?: boolean) => css`
-    padding: 2px 0;
+    padding: 2px 0 4px;
     min-width: ${hasTags ? '200px' : '30px'};
     width: ${hasTags ? '100%' : 'auto'};
   `,
@@ -58,23 +57,13 @@ export const mapNodeListToGrid = (
           }
           middleRow={
             <>
-              <div css={styles.tags(Boolean(node.tags?.tags.length))}>
-                <NodeTags autoHide={false} node={node} itemsPerView={3} />
-              </div>
+              <NodeTags autoHide={false} node={node} itemsPerView={3} />
               <p css={styles.blockchainNetwork}>
                 {node.blockchainName} | {convertNodeTypeToName(node.nodeType)} |{' '}
                 {node.network}
               </p>
             </>
           }
-          {...(!Boolean(node.tags?.tags.length) && {
-            middleRow: (
-              <p css={styles.blockchainNetwork}>
-                {node.blockchainName} | {convertNodeTypeToName(node.nodeType)} |{' '}
-                {node.network}
-              </p>
-            ),
-          })}
         />
       ),
     };
