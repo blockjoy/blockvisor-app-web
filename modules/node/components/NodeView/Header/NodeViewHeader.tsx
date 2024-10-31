@@ -24,7 +24,7 @@ import { useGetOrganizations } from '@modules/organization';
 import { useHostList } from '@modules/host';
 import { nodeClient } from '@modules/grpc';
 import { escapeHtml, useNavigate, useViewport } from '@shared/index';
-import { Copy, EditableTitle } from '@shared/components';
+import { Copy, EditableTitle, NodeStatus } from '@shared/components';
 
 export const NodeViewHeader = () => {
   const { navigate } = useNavigate();
@@ -199,13 +199,13 @@ export const NodeViewHeader = () => {
                     </div>
                   </div>
                 </div>
-                {/* <div css={styles.nodeStatus}>
+                <div css={styles.nodeStatus}>
                   <NodeStatus
                     status={node.status}
                     downloadingCurrent={progress?.current}
                     downloadingTotal={progress?.total}
                   />
-                </div> */}
+                </div>
                 <div css={styles.actions}>
                   <NodeViewHeaderActions handleActionView={handleActionView} />
                 </div>

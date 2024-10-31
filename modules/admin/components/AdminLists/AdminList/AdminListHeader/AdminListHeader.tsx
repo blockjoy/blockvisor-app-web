@@ -53,7 +53,7 @@ export const AdminListHeader = ({
   const hasFilterColumns = columns.some((column) => column.filterSettings);
 
   return (
-    <AdminHeader name={name}>
+    <AdminHeader flexWrap name={name}>
       <Search version="instant" onSearch={onSearch} placeholder="Search" />
       <div css={styles.buttons}>
         <AdminListHeaderColumnPicker
