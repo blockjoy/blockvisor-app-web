@@ -75,7 +75,6 @@ export const styles = {
   dropdownButton: (theme: ITheme) => css`
     width: 20px;
     height: 20px;
-
     > span {
       padding: 2px;
     }

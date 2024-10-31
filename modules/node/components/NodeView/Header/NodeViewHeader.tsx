@@ -24,8 +24,7 @@ import { useGetOrganizations } from '@modules/organization';
 import { useHostList } from '@modules/host';
 import { nodeClient } from '@modules/grpc';
 import { escapeHtml, useNavigate, useViewport } from '@shared/index';
-import { Copy } from '@shared/components';
-import { EditableTitle } from '@shared/components';
+import { Copy, EditableTitle } from '@shared/components';
 
 export const NodeViewHeader = () => {
   const { navigate } = useNavigate();
@@ -113,6 +112,8 @@ export const NodeViewHeader = () => {
   const handleEditClicked = () => {
     setIsSaving(null);
   };
+
+  const hasTags = Boolean(node?.tags?.tags.length);
 
   return (
     <>

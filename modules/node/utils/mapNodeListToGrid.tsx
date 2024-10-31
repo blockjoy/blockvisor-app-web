@@ -67,6 +67,14 @@ export const mapNodeListToGrid = (
               </p>
             </>
           }
+          {...(!Boolean(node.tags?.tags.length) && {
+            middleRow: (
+              <p css={styles.blockchainNetwork}>
+                {node.blockchainName} | {convertNodeTypeToName(node.nodeType)} |{' '}
+                {node.network}
+              </p>
+            ),
+          })}
         />
       ),
     };

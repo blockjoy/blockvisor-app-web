@@ -27,7 +27,6 @@ export const Tags = ({
   handleRemove,
 }: TagsProps) => {
   const [isOpen, setIsOpen] = useState(false);
-
   const visibleTags = tags?.slice(0, itemsPerView ?? 3) ?? [];
 
   const handleWrapperClick = (e: React.MouseEvent<HTMLSpanElement>) => {
