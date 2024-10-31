@@ -5,6 +5,7 @@ export const styles = {
     display: flex;
     align-items: center;
     gap: 8px;
+    flex: 1 1 auto;
   `,
   badge: css`
     top: -6px;

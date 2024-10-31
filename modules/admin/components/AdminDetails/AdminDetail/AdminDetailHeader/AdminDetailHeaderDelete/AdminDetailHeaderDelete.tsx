@@ -5,10 +5,11 @@ import { ButtonSpinner } from '@shared/components';
 import IconDelete from '@public/assets/icons/common/Trash.svg';
 
 type Props = {
+  isDisabled?: boolean;
   onDelete: VoidFunction;
 };
 
-export const AdminDetailHeaderDelete = ({ onDelete }: Props) => {
+export const AdminDetailHeaderDelete = ({ isDisabled, onDelete }: Props) => {
   const [step, setStep] = useState<1 | 2>(1);
 
   const [isDeleting, setIsDeleting] = useState(false);
@@ -28,6 +29,7 @@ export const AdminDetailHeaderDelete = ({ onDelete }: Props) => {
       {step === 1 ? (
         <AdminHeaderButton
           isDanger
+          isDisabled={isDisabled}
           icon={<IconDelete />}
           onClick={toggleStep}
           tooltip="Delete"

@@ -17,6 +17,7 @@ import {
 } from '@modules/admin/components';
 import { AdminNodesUpgrade } from './AdminNodesUpgrade/AdminNodesUpgrade';
 import { AdminNodesOrgAssign } from './AdminNodesOrgAssign/AdminNodesOrgAssign';
+import { AdminNodesActions } from './AdminNodesActions/AdminNodesActions';
 import { pageSize } from '@modules/admin/constants/constants';
 import { Node, NodeSortField } from '@modules/grpc/library/blockjoy/v1/node';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
@@ -256,7 +257,11 @@ export const AdminNodes = () => {
       blockchains={blockchains}
       onIdSelected={handleIdSelected}
       onIdAllSelected={handleIdAllSelected}
-      additionalHeaderButtons={[AdminNodesUpgrade, AdminNodesOrgAssign]}
+      additionalHeaderButtons={[
+        AdminNodesUpgrade,
+        AdminNodesOrgAssign,
+        AdminNodesActions,
+      ]}
     />
   );
 };
