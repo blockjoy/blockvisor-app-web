@@ -107,4 +107,7 @@ export const styles = {
     text-overflow: ellipsis;
     min-width: 0;
   `,
+  copyWrapper: css`
+    margin-left: 4px;
+  `,
 };

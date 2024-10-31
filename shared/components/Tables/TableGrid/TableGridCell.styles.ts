@@ -49,9 +49,6 @@ export const styles = {
   cellCenter: css`
     flex: 1 1 auto;
     min-width: 0;
-    display: flex;
-    flex-flow: row wrap;
-    gap: 6px;
   `,
   cellHeader: css`
     min-width: 0;
@@ -84,11 +81,8 @@ export const styles = {
     max-width: 100%;
   `,
   cellMiddle: (theme: ITheme) => css`
-    display: flex;
-    align-items: center;
     color: ${theme.colorDefault};
     font-size: 13px;
-    text-transform: capitalize;
   `,
   cellBottom: (theme: ITheme) => css`
     display: flex;

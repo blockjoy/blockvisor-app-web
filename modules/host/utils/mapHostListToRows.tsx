@@ -5,6 +5,7 @@ import {
   HostManagedBy,
   TableBlock,
 } from '@shared/components';
+import { spacing } from 'styles/utils.spacing.styles';
 
 export const mapHostListToRows = (hostList?: Host[]) => {
   const headers: TableHeader[] = [
@@ -45,7 +46,11 @@ export const mapHostListToRows = (hostList?: Host[]) => {
         component: (
           <TableBlock
             topRow={host.name}
-            middleRow={<HostIpStatus ipAddresses={host.ipAddresses} />}
+            middleRow={
+              <div css={spacing.top.small}>
+                <HostIpStatus ipAddresses={host.ipAddresses} />
+              </div>
+            }
           />
         ),
       },

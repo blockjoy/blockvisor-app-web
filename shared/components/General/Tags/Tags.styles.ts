@@ -3,11 +3,13 @@ import { css } from '@emotion/react';
 export const styles = {
   wrapper: (shouldAutoHide?: boolean, hasTags?: boolean) => css`
     display: inline-flex;
+    align-items: center;
     flex-flow: row nowrap;
-    gap: 8px;
     position: relative;
     ${!hasTags && 'max-'}width: 100%;
     ${shouldAutoHide && 'visibility: hidden;'}
+    min-height: 32px;
+    min-width: 0;
   `,
   list: css`
     display: flex;
@@ -15,6 +17,11 @@ export const styles = {
     gap: 5px;
     padding-top: 2px;
     padding-bottom: 2px;
+    min-width: 0;
+
+    > div:last-of-type {
+      margin-right: 8px;
+    }
   `,
 };
 

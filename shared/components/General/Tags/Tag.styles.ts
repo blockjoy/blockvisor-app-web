@@ -6,13 +6,14 @@ export const styles = {
     bgColor: string,
     isOpen: boolean,
     isOpenDropdown?: boolean,
-    maxWidth?: number,
+    minWidth?: number,
   ) => css`
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
-    max-width: ${maxWidth && maxWidth > 0 ? maxWidth + 'px' : 'max-content'};
+    min-width: ${minWidth && minWidth > 0 ? minWidth + 'px' : 0};
+    max-width: max-content;
     padding: 3px 10px;
     background-color: ${bgColor};
     white-space: nowrap;
@@ -30,8 +31,6 @@ export const styles = {
       display: flex;
     }`}
 
-    transition: all 0.3s ease;
-
     &:hover,
     &:active,
     &:focus {
@@ -47,6 +46,7 @@ export const styles = {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    line-height: 1.5;
     font-size: 12px;
     color: ${theme.colorText};
   `,

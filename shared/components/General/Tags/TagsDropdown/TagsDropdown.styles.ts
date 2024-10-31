@@ -56,17 +56,26 @@ export const styles = {
       justify-content: center;
       align-items: center;
       cursor: pointer;
+      flex: 0 0 auto;
+
+      svg path {
+        transition: 0.175s;
+      }
 
       &:hover,
       &:active,
       &:focus ${isOpen ? `, &` : null} {
         box-shadow: 0px 0px 0px 2px ${theme.colorInputOutline};
+
+        svg path {
+          fill: ${theme.colorText};
+        }
       }
     `,
   dropdownButton: (theme: ITheme) => css`
     width: 20px;
     height: 20px;
-    transform: rotate(-90deg);
+
     > span {
       padding: 2px;
     }

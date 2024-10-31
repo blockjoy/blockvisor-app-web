@@ -10,10 +10,10 @@ import IconTag from '@public/assets/icons/common/Tag.svg';
 type TagsProps = {
   name?: string;
   isOpen: boolean;
-  handleOpen: (open?: boolean) => void;
   tags?: Tag[];
   inactiveTags?: Tag[];
   itemsPerView?: number;
+  handleOpen: (open?: boolean) => void;
   handleNew?: (tag: string) => void;
   handleRemove?: (tag: Tag) => void;
 };
@@ -21,10 +21,10 @@ type TagsProps = {
 export const TagsDropdown = ({
   name,
   isOpen,
-  handleOpen,
   tags,
   inactiveTags = [],
   itemsPerView,
+  handleOpen,
   handleNew,
   handleRemove,
 }: TagsProps) => {

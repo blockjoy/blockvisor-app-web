@@ -2,7 +2,7 @@ import { useRecoilValue } from 'recoil';
 import { SerializedStyles } from '@emotion/react';
 import { Tag } from '@modules/grpc/library/blockjoy/common/v1/tag';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
-import { useNodeUpdate, nodeSelectors, nodeAtoms } from '@modules/node';
+import { useNodeUpdate, nodeSelectors } from '@modules/node';
 import { Tags } from '@shared/components';
 
 type NodeTagsProps = {
@@ -18,8 +18,6 @@ export const NodeTags = ({
   autoHide = true,
   additionalStyles,
 }: NodeTagsProps) => {
-  const nodeLoadingState = useRecoilValue(nodeAtoms.nodeLoadingState);
-
   const nodeTags = node?.tags?.tags ?? [];
   const inactiveTags = useRecoilValue(nodeSelectors.inactiveTags(nodeTags));
 
@@ -53,7 +51,6 @@ export const NodeTags = ({
       inactiveTags={inactiveTags}
       autoHide={autoHide}
       itemsPerView={itemsPerView}
-      isLoading={nodeLoadingState !== 'finished'}
       handleNew={handleNewTag}
       handleRemove={handleRemoveTag}
       additionalStyles={additionalStyles}

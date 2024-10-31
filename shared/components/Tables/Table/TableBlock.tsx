@@ -15,7 +15,6 @@ const styles = {
   topRow: (isOverflow?: boolean) => (theme: ITheme) =>
     css`
       display: block;
-      margin-bottom: 6px;
       color: ${theme.colorText};
       ${isOverflow &&
       `overflow: hidden;

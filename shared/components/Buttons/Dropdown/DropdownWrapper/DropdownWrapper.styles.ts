@@ -4,8 +4,6 @@ import { ITheme } from 'types/theme';
 export const styles = {
   wrapper: (theme: ITheme) => css`
     flex: 1 1 auto;
-    min-width: 0;
-    width: 100%;
     position: relative;
     display: flex;
     align-items: center;

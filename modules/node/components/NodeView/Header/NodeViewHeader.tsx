@@ -1,12 +1,7 @@
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
-import {
-  DeleteModal,
-  NodeStatus,
-  Skeleton,
-  SkeletonGrid,
-} from '@shared/components';
+import { DeleteModal, Skeleton, SkeletonGrid } from '@shared/components';
 import { NodeServiceCreateRequest } from '@modules/grpc/library/blockjoy/v1/node';
 import { colors } from 'styles/utils.colors.styles';
 import { typo } from 'styles/utils.typography.styles';
@@ -29,6 +24,7 @@ import { useGetOrganizations } from '@modules/organization';
 import { useHostList } from '@modules/host';
 import { nodeClient } from '@modules/grpc';
 import { escapeHtml, useNavigate, useViewport } from '@shared/index';
+import { Copy } from '@shared/components';
 import { EditableTitle } from '@shared/components';
 
 export const NodeViewHeader = () => {
@@ -118,8 +114,6 @@ export const NodeViewHeader = () => {
     setIsSaving(null);
   };
 
-  const hasTags = Boolean(node?.tags?.tags.length);
-
   return (
     <>
       {actionView === 'delete' && (
@@ -168,19 +162,21 @@ export const NodeViewHeader = () => {
                   />
                 </div>
                 <div css={styles.name}>
-                  <EditableTitle
-                    initialValue={node.displayName}
-                    isLoading={isLoading}
-                    isSaving={isSaving!}
-                    onSaveClicked={handleUpdateNode}
-                    onEditClicked={handleEditClicked}
-                    canUpdate
-                  />
-                  <div css={styles.content(hasTags)}>
-                    <NodeTags
-                      node={node}
-                      additionalStyles={[styles.tags(hasTags)]}
+                  <div css={styles.title}>
+                    <EditableTitle
+                      initialValue={node.displayName}
+                      isLoading={isLoading}
+                      isSaving={isSaving!}
+                      additionalContentRight={
+                        <Copy value={node?.displayName!} />
+                      }
+                      onSaveClicked={handleUpdateNode}
+                      onEditClicked={handleEditClicked}
+                      canUpdate
                     />
+                  </div>
+                  <div css={styles.content}>
+                    <NodeTags node={node} additionalStyles={[styles.tags]} />
                     <div css={styles.detailsFooter}>
                       <div css={styles.nodeType}>
                         <p>
@@ -202,13 +198,13 @@ export const NodeViewHeader = () => {
                     </div>
                   </div>
                 </div>
-                <div css={styles.nodeStatus}>
+                {/* <div css={styles.nodeStatus}>
                   <NodeStatus
                     status={node.status}
                     downloadingCurrent={progress?.current}
                     downloadingTotal={progress?.total}
                   />
-                </div>
+                </div> */}
                 <div css={styles.actions}>
                   <NodeViewHeaderActions handleActionView={handleActionView} />
                 </div>

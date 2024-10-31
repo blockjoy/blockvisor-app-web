@@ -7,9 +7,6 @@ export const styles = {
     top: 54px;
     right: 5px;
     left: 0;
-    max-width: 100%;
-    min-width: 100%;
-    width: 100%;
   `,
   dropdownInner: css`
     max-height: 200px;
