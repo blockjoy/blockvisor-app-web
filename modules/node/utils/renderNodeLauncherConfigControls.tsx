@@ -22,6 +22,7 @@ export const renderControls = (
     case UiType.UI_TYPE_PASSWORD:
       return (
         <Textbox
+          defaultValue={property.value}
           type="password"
           isRequired={property?.required && !property.value}
           name={property.name}

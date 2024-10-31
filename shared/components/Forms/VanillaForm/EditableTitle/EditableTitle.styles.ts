@@ -6,18 +6,11 @@ export const styles = {
   wrapper: css`
     display: flex;
     align-items: center;
+    min-width: 0;
   `,
   wrapperEditable: css`
     @media ${breakpoints.fromXLrg} {
       cursor: pointer;
-
-      .edit-toggle {
-        opacity: 0;
-      }
-
-      :hover .edit-toggle {
-        opacity: 1;
-      }
     }
   `,
   input: (theme: ITheme) => css`
@@ -28,7 +21,7 @@ export const styles = {
     outline: none;
     min-height: 30px;
     min-width: 0;
-    margin-right: 11px;
+    margin-right: 6px;
     color: ${theme.colorText};
     -webkit-text-fill-color: ${theme.colorText};
     opacity: 1;
@@ -47,8 +40,8 @@ export const styles = {
   `,
   inputEditable: (theme: ITheme) => css``,
   iconWrapper: css`
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
   `,
   span: (theme: ITheme) => css`
     color: ${theme.colorText};
@@ -56,13 +49,17 @@ export const styles = {
     min-height: 30px;
     display: flex;
     align-items: center;
-    margin-right: 11px;
+    margin-right: 6px;
     min-width: 0;
     overflow: hidden;
     word-wrap: break-word;
     word-break: break-all;
   `,
+  buttons: css`
+    display: flex;
+    align-items: center;
+  `,
   button: css`
-    margin-left: 10px;
+    margin-left: 4px;
   `,
 };

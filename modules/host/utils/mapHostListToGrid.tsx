@@ -1,5 +1,6 @@
 import { TableGridCell, HostIcon, HostIpStatus } from '@shared/components';
 import { Host } from '@modules/grpc/library/blockjoy/v1/host';
+import { spacing } from 'styles/utils.spacing.styles';
 
 export const mapHostListToGird = (
   nodeList: Host[],
@@ -15,7 +16,12 @@ export const mapHostListToGird = (
           titleIcon={<HostIcon />}
           titleText={host.name}
           footer={<HostIpStatus ipAddresses={host.ipAddresses} />}
-          middleRow={`Version: ${host.version}`}
+          middleRow={
+            <div css={[spacing.top.micro, spacing.bottom.small]}>
+              {' '}
+              Version: {host.version}
+            </div>
+          }
         />
       ),
     };

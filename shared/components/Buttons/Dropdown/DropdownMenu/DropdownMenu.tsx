@@ -1,19 +1,30 @@
-import { SerializedStyles } from '@emotion/react';
 import { RefObject } from 'react';
+import { SerializedStyles } from '@emotion/react';
+import { useClickOutside } from '@shared/index';
 import { styles } from './DropdownMenu.styles';
 
 type Props = {
-  isOpen?: boolean;
-  additionalStyles?: SerializedStyles[] | SerializedStyles;
+  isOpen: boolean;
   dropdownMenuRef?: RefObject<HTMLDivElement>;
+  additionalStyles?: SerializedStyles[] | SerializedStyles;
+  isInPortal?: boolean;
+  handleClose?: VoidFunction;
 } & React.PropsWithChildren;
 
-export function DropdownMenu({
+export const DropdownMenu = ({
+  children,
   isOpen,
   dropdownMenuRef,
-  children,
   additionalStyles,
-}: Props) {
+  isInPortal = false,
+  handleClose,
+}: Props) => {
+  useClickOutside<HTMLDivElement>(
+    dropdownMenuRef!,
+    handleClose ?? (() => {}),
+    isInPortal && Boolean(dropdownMenuRef),
+  );
+
   return (
     <div
       ref={dropdownMenuRef}
@@ -27,4 +38,4 @@ export function DropdownMenu({
       {children}
     </div>
   );
-}
+};

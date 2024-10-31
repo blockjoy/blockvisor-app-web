@@ -25,9 +25,9 @@ export const styles = {
     pointer-events: none;
   `,
   isOpen: css`
+    transform: translateY(0);
     opacity: 1;
     visibility: visible;
-    transform: translateY(0);
     pointer-events: auto;
   `,
 };

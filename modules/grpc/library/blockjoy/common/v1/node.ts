@@ -65,6 +65,9 @@ export enum NodeStatus {
   NODE_STATUS_DOWNLOADING = 23,
   /** NODE_STATUS_UPLOADING - The node is uploading an archive of its chain data. */
   NODE_STATUS_UPLOADING = 24,
+  NODE_STATUS_STARTING = 25,
+  NODE_STATUS_ACTIVE = 26,
+  NODE_STATUS_JAILED = 27,
   UNRECOGNIZED = -1,
 }
 

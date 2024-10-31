@@ -5,21 +5,24 @@ type Props = {
   middleRow?: string | React.ReactNode;
   bottomRow?: string | React.ReactNode;
   topRow: string | React.ReactNode;
+  isOverflow?: boolean;
 };
 
 const styles = {
   wrapper: css`
     display: block;
   `,
-  topRow: (theme: ITheme) => css`
-    display: block;
-    margin-bottom: 6px;
-    color: ${theme.colorText};
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    max-width: 100%;
-  `,
+  topRow: (isOverflow?: boolean) => (theme: ITheme) =>
+    css`
+      display: block;
+      color: ${theme.colorText};
+      ${isOverflow &&
+      `overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      `}
+      max-width: 100%;
+    `,
   row: css`
     display: flex;
     flex-direction: column;
@@ -41,9 +44,14 @@ const styles = {
   `,
 };
 
-export const TableBlock = ({ topRow, middleRow, bottomRow }: Props) => (
+export const TableBlock = ({
+  topRow,
+  middleRow,
+  bottomRow,
+  isOverflow = true,
+}: Props) => (
   <span css={styles.wrapper}>
-    <span css={styles.topRow} className="has-hover-color">
+    <span css={styles.topRow(isOverflow)} className="has-hover-color">
       {topRow}
     </span>
     <span css={styles.row}>

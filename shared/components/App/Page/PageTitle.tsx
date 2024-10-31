@@ -77,7 +77,11 @@ export const PageTitle = ({
               <>
                 <span css={styles.separator}>/</span>
                 <p css={styles.childTitle}>{childTitle}</p>
-                {canCopyChild && <Copy value={childTitle} hideTooltip />}
+                {canCopyChild && (
+                  <span css={styles.copyWrapper}>
+                    <Copy value={childTitle} hideTooltip />
+                  </span>
+                )}
               </>
             )
           )}

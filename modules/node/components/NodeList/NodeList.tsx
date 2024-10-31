@@ -13,7 +13,6 @@ import {
   TableGrid,
 } from '@shared/components';
 import { debounce, ROUTES, useViewport } from '@shared/index';
-import {} from './NodeListHeader/NodeListHeader';
 import {
   NodeFilters,
   NodeListHeader,
@@ -173,7 +172,6 @@ export const NodeList = () => {
                   headers={headers}
                   preload={0}
                   rows={rows}
-                  fixedRowHeight="120px"
                   queryParams={queryParams}
                   handleSort={updateSorting}
                   onRowClick={handleNodeClicked}

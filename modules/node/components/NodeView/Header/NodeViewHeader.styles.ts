@@ -10,7 +10,7 @@ export const styles = {
     margin-bottom: 0;
     border-bottom: 1px solid ${theme.colorBorder};
     min-height: 100px;
-    padding: 10px 0;
+    padding: 20px 0;
 
     @media ${breakpoints.toLrg} {
       flex-direction: column;
@@ -18,6 +18,37 @@ export const styles = {
       margin-bottom: 16px;
       padding: 20px 0;
       min-height: auto;
+    }
+  `,
+  title: css`
+    min-width: 0;
+  `,
+  name: css`
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+
+    @media ${breakpoints.toLrg} {
+      width: 100%;
+    }
+  `,
+  content: css`
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 5px;
+    width: 100%;
+  `,
+  tags: css`
+    visibility: visible;
+    width: auto;
+
+    @media ${breakpoints.fromLrg} {
+      max-width: 400px;
+    }
+
+    @media ${breakpoints.fromXLrg} {
+      max-width: 100%;
     }
   `,
   detailsHeader: css`
@@ -35,14 +66,14 @@ export const styles = {
   `,
   detailsFooter: css`
     display: flex;
-    gap: 16px;
+    align-items: center;
+    gap: 12px;
     white-space: nowrap;
 
     @media ${breakpoints.toLrg} {
       gap: 6px;
       flex-wrap: wrap;
       max-width: 100%;
-      padding-top: 8px;
     }
   `,
   actions: css`
@@ -58,11 +89,6 @@ export const styles = {
       margin-left: 0;
     }
   `,
-  nodeId: css`
-    max-width: 100px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  `,
   blockchainIcon: css`
     display: grid;
     place-items: center;
@@ -72,36 +98,6 @@ export const styles = {
       width: 40px;
       height: 40px;
     }
-  `,
-  breadcrumb: css`
-    display: flex;
-  `,
-  nodesButton: (theme: ITheme) => css`
-    display: flex;
-    gap: 10px;
-    padding: 0;
-    background: transparent;
-    border: 0;
-    color: ${theme.colorDefault};
-    font-size: 18px;
-    cursor: pointer;
-
-    svg path {
-      fill: ${theme.colorLabel};
-    }
-
-    :hover {
-      color: ${theme.colorText};
-
-      svg path {
-        fill: ${theme.colorDefault};
-      }
-    }
-  `,
-  separator: (theme: ITheme) => css`
-    color: ${theme.colorLabel};
-    margin-right: 8px;
-    margin-left: 8px;
   `,
   nodeType: (theme: ITheme) => css`
     display: flex;
@@ -123,6 +119,36 @@ export const styles = {
     @media ${breakpoints.fromLrg} {
       margin-left: 10px;
       display: block;
+    }
+  `,
+  tagsDropdownWrapper: css`
+    flex: 0 0 auto;
+  `,
+  tagsDropdown: (theme: ITheme) => css`
+    border-radius: 4px;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    display: grid;
+    place-items: center;
+
+    :active {
+      box-shadow: none;
+    }
+
+    :hover {
+      background: ${theme.colorInput};
+      box-shadow: none;
+    }
+
+    :hover svg > :is(path, rect) {
+      color: ${theme.colorText};
+    }
+
+    svg {
+      position: absolute;
+      height: 20px;
+      width: 20px;
     }
   `,
 };

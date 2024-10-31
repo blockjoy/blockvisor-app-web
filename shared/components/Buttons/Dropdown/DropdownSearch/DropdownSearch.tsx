@@ -1,22 +1,26 @@
-import { ChangeEvent, useEffect, useRef } from 'react';
+import { ChangeEvent, useEffect, useRef, KeyboardEvent } from 'react';
 import { styles } from './DropdownSearch.styles';
 
 type DropdownSearchProps = {
   name: string;
   value: string;
-  placeholder?: string;
-  handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  isOpen: boolean;
+  isOpen?: boolean;
   isEmpty?: boolean;
+  placeholder?: string;
+  emptyMessage?: string;
+  handleChange?: (e: ChangeEvent<HTMLInputElement>) => void;
+  handleSubmit?: (e: string) => void;
 };
 
 export const DropdownSearch = ({
   name,
   value,
-  placeholder,
-  handleChange,
   isOpen,
   isEmpty,
+  placeholder,
+  emptyMessage,
+  handleChange,
+  handleSubmit,
 }: DropdownSearchProps) => {
   const searchRef = useRef<HTMLInputElement>(null);
 
@@ -30,6 +34,12 @@ export const DropdownSearch = ({
     return () => clearTimeout(timer);
   }, [isOpen]);
 
+  const handleKeyDown = Boolean(handleSubmit)
+    ? (e: KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') handleSubmit?.(e.target.value);
+      }
+    : null;
+
   return (
     <>
       <input
@@ -41,8 +51,11 @@ export const DropdownSearch = ({
         value={value}
         autoComplete="off"
         onChange={handleChange}
+        {...(handleKeyDown && { onKeyDown: handleKeyDown })}
       />
-      {isEmpty && <p css={styles.empty}>No results found</p>}
+      {isEmpty && (
+        <p css={styles.empty}>{emptyMessage ?? 'No results found'}</p>
+      )}
     </>
   );
 };

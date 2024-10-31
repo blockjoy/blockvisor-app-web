@@ -1,9 +1,13 @@
 import { atom } from 'recoil';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { Region } from '@modules/grpc/library/blockjoy/v1/host';
-import { BlockchainSimpleWRegion } from '@modules/node';
 import { localStorageEffect } from 'utils/store/persist';
 import { NODE_PAGINATION_DEFAULT } from '@shared/index';
+
+const nodeLoadingState = atom<LoadingState>({
+  key: 'node.loadingState',
+  default: 'finished',
+});
 
 const activeNode = atom<Node | null>({
   key: 'node.activeNode',
@@ -77,6 +81,8 @@ const filtersSearchQuery = atom<string>({
 });
 
 export const nodeAtoms = {
+  nodeLoadingState,
+
   activeNode,
   nodeList,
   nodeListPagination,

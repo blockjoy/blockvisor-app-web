@@ -52,8 +52,11 @@ export const mapNodeToDetails = (node: Node) => {
               href={rpcUrl}
             >
               {rpcUrl}
+
+              <span css={styles.copyButton}>
+                <Copy value={rpcUrl} />
+              </span>
             </a>
-            <Copy value={rpcUrl} />
           </>
         ) || '-',
     });

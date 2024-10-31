@@ -14,6 +14,12 @@ export const styles = {
     background: ${theme.colorCard};
     cursor: pointer;
 
+    &:hover {
+      .tags {
+        visibility: visible;
+      }
+    }
+
     @media ${breakpoints.fromLrg} {
       :hover,
       :active {
@@ -43,9 +49,6 @@ export const styles = {
   cellCenter: css`
     flex: 1 1 auto;
     min-width: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
   `,
   cellHeader: css`
     min-width: 0;
@@ -68,17 +71,18 @@ export const styles = {
     font-size: 14px;
     overflow: hidden;
     text-overflow: ellipsis;
-    padding-right: 20px;
+    padding-right: 10px;
   `,
   cellStatus: css`
     display: inline-block;
   `,
-  cellMiddle: (theme: ITheme) => css`
+  cellTop: css`
     display: flex;
-    align-items: center;
+    max-width: 100%;
+  `,
+  cellMiddle: (theme: ITheme) => css`
     color: ${theme.colorDefault};
     font-size: 13px;
-    text-transform: capitalize;
   `,
   cellBottom: (theme: ITheme) => css`
     display: flex;
@@ -89,10 +93,6 @@ export const styles = {
   `,
   cellFooter: css`
     margin-top: 4px;
-  `,
-  moreIcon: css`
-    rotate: 90deg;
-    width: 32px;
-    height: 32px;
+    width: 100%;
   `,
 };

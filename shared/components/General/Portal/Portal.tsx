@@ -1,9 +1,16 @@
 import { useLayoutEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 
-type Props = { wrapperId?: string } & React.PropsWithChildren;
+type Props = {
+  wrapperId?: string;
+  inContainer?: boolean;
+} & React.PropsWithChildren;
 
-export function Portal({ children, wrapperId = 'modal' }: Props) {
+export function Portal({
+  children,
+  wrapperId = 'modal',
+  inContainer = false,
+}: Props) {
   const [wrapper, setWrapper] = useState<Element | null>(null);
 
   useLayoutEffect(() => {
@@ -14,7 +21,10 @@ export function Portal({ children, wrapperId = 'modal' }: Props) {
       created = true;
       const wrapper = document.createElement('div');
       wrapper.setAttribute('id', wrapperId);
-      document.body.appendChild(wrapper);
+      const container = inContainer
+        ? document.querySelector('.portal-container')
+        : document.body;
+      container?.appendChild(wrapper);
       element = wrapper;
     }
 
