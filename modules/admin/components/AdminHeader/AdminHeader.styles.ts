@@ -11,7 +11,7 @@ export const styles = {
       top: 72px;
       display: flex;
       align-items: center;
-      ${flexWrap && `flex-wrap: wrap;`}
+      ${flexWrap && `flex-wrap: wrap;`};
       gap: 10px;
       width: 100%;
       padding-top: 22px;

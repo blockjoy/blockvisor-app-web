@@ -19,7 +19,8 @@ export const styles = {
     cursor: pointer;
     transition: 0.3s;
 
-    path {
+    path,
+    rect {
       fill: ${theme.colorText};
       transition: 0.3s;
     }
@@ -30,7 +31,8 @@ export const styles = {
     }
 
     @media ${breakpoints.fromLrg} {
-      path {
+      path,
+      rect {
         fill: ${theme.colorDefault};
       }
 

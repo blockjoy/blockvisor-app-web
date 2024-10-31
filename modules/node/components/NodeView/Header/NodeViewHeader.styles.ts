@@ -31,6 +31,10 @@ export const styles = {
     @media ${breakpoints.toLrg} {
       width: 100%;
     }
+
+    @media ${breakpoints.fromLrg} {
+      max-width: 600px;
+    }
   `,
   content: css`
     display: flex;

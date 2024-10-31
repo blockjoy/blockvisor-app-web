@@ -11,6 +11,7 @@ const styles = {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    text-transform: capitalize;
     margin: 2px 0 10px;
     line-height: 1.6;
   `,

@@ -7,8 +7,9 @@ export const styles = {
     flex-flow: row nowrap;
     position: relative;
     ${!hasTags && 'max-'}width: 100%;
-    ${shouldAutoHide && 'visibility: hidden;'}
-    min-height: 32px;
+    ${shouldAutoHide && 'visibility: hidden;'};
+    padding: 4px 0 2px;
+    min-height: 24px;
     min-width: 0;
   `,
   list: css`
