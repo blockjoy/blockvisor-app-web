@@ -5,6 +5,7 @@ export * from './constants/routes';
 export * from './constants/countries';
 export * from './constants/pipedrive';
 export * from './constants/states';
+export * from './constants/tag';
 
 export * from './hooks/useAccessibleDropdown';
 export * from './hooks/useAccessibleList';

@@ -10,6 +10,7 @@ type Props = {
   isLoading?: boolean;
   isSaving?: boolean;
   initialValue: string;
+  additionalContentRight?: React.ReactNode;
   onSaveClicked: (value: string) => void;
   onEditClicked: VoidFunction;
   canUpdate: boolean;
@@ -36,6 +37,7 @@ export const EditableTitle = ({
   isLoading,
   isSaving,
   initialValue,
+  additionalContentRight,
   onSaveClicked,
   onEditClicked,
   canUpdate,
@@ -133,35 +135,41 @@ export const EditableTitle = ({
         <span css={styles.span}>{escapeHtml(initialValue)}</span>
       )}
 
-      {canUpdate && !isLoading && initialValue?.length && (
-        <Button
-          onClick={handleEditToggled}
-          className={isEditMode ? '' : 'edit-toggle'}
-          style="icon"
-          tooltip={isEditMode ? 'Cancel' : 'Edit Name'}
-        >
-          <span css={styles.iconWrapper}>
-            <SvgIcon size="24px">
-              {isEditMode ? <IconClose /> : <IconPencil />}
-            </SvgIcon>
-          </span>
-        </Button>
-      )}
-
-      {isEditMode && canUpdate && (
-        <>
+      <div css={styles.buttons}>
+        {canUpdate && !isLoading && initialValue?.length && (
           <Button
-            disabled={isSaving || !isValid || !isDirty}
-            loading={isSaving !== null}
-            onClick={handleSaveClicked}
-            size="small"
-            style="secondary"
-            customCss={[styles.button]}
+            onClick={handleEditToggled}
+            className={isEditMode ? '' : 'edit-toggle'}
+            style="icon"
+            tooltip={isEditMode ? 'Cancel' : 'Edit Name'}
           >
-            Save
+            <span css={styles.iconWrapper}>
+              <SvgIcon size="20px">
+                {isEditMode ? <IconClose /> : <IconPencil />}
+              </SvgIcon>
+            </span>
           </Button>
-        </>
-      )}
+        )}
+
+        {isEditMode && canUpdate && (
+          <>
+            <Button
+              disabled={isSaving || !isValid || !isDirty}
+              loading={isSaving !== null}
+              onClick={handleSaveClicked}
+              size="small"
+              style="secondary"
+              customCss={[styles.button]}
+            >
+              Save
+            </Button>
+          </>
+        )}
+
+        {Boolean(additionalContentRight) &&
+          !isEditMode &&
+          additionalContentRight}
+      </div>
     </div>
   );
 };

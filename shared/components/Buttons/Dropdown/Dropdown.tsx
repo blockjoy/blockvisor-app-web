@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useRef } from 'react';
+import { ReactNode, RefObject, useEffect, useRef } from 'react';
 import isEqual from 'lodash/isEqual';
 import { SerializedStyles } from '@emotion/react';
 import { ITheme } from 'types/theme';
@@ -11,6 +11,7 @@ import {
   DropdownMenu,
   DropdownCreate,
   Scrollbar,
+  Portal,
 } from '@shared/components';
 import { colors } from 'styles/utils.colors.styles';
 import { styles } from './Dropdown.styles';
@@ -28,6 +29,7 @@ export type DropdownProps<T = any> = {
   renderButtonText?: ReactNode;
   dropdownButtonStyles?: ((theme: ITheme) => SerializedStyles)[];
   dropdownMenuStyles?: SerializedStyles[];
+  dropdownMenuPosition?: SerializedStyles[];
   dropdownItemStyles?: (item: T) => SerializedStyles[];
   dropdownScrollbarStyles?: SerializedStyles[];
   hideDropdownIcon?: boolean;
@@ -49,6 +51,7 @@ export type DropdownProps<T = any> = {
     title: string;
     onClick: VoidFunction;
   };
+  dropdownButtonRef?: RefObject<HTMLButtonElement>;
 };
 
 export const Dropdown = <T extends { id?: string; name?: string }>({
@@ -64,6 +67,7 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
   renderButtonText,
   dropdownButtonStyles,
   dropdownMenuStyles,
+  dropdownMenuPosition,
   dropdownItemStyles,
   dropdownScrollbarStyles,
   hideDropdownIcon,
@@ -82,8 +86,10 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
   renderItem,
   renderItemLabel,
   newItem,
+  dropdownButtonRef,
 }: DropdownProps<T>) => {
   const dropdownRef = useRef<HTMLUListElement>(null);
+  const dropdownMenuRef = useRef<HTMLDivElement>(null);
 
   const handleClose = () => handleOpen(false);
 
@@ -118,11 +124,18 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
     dropdownRef,
   });
 
+  const dropdownButtonRect =
+    dropdownButtonRef?.current?.getBoundingClientRect();
+
   const dropdownStyles = [styles.dropdown];
   const scrollbarStyles = [styles.dropdownInner];
 
   if (dropdownMenuStyles) {
     dropdownStyles.push(...dropdownMenuStyles);
+  }
+
+  if (dropdownMenuPosition && dropdownButtonRect) {
+    dropdownStyles.push(...dropdownMenuPosition);
   }
 
   if (dropdownScrollbarStyles) {
@@ -137,95 +150,123 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
     return () => clearTimeout(timer);
   }, [isOpen, excludeSelectedItem]);
 
+  const isPortal = Boolean(dropdownButtonRect && dropdownMenuPosition);
+
+  const DropdownMenuElement = (
+    <DropdownMenu
+      isOpen={isOpen}
+      additionalStyles={dropdownStyles}
+      handleClose={handleClose}
+      isInPortal={isPortal}
+      dropdownMenuRef={dropdownMenuRef}
+    >
+      {Boolean(renderHeader) ? renderHeader : null}
+      {!hideSearch && renderSearch ? renderSearch(isOpen) : null}
+      <Scrollbar additionalStyles={scrollbarStyles}>
+        <ul ref={dropdownRef}>
+          {filteredItems?.map((item: T, index: number) => {
+            const isDisabled = checkDisabledItem
+              ? checkDisabledItem(item)
+              : isEqual(item, selectedItem);
+
+            return (
+              <li
+                key={item.id || item.name}
+                ref={(el: HTMLLIElement) => handleItemRef(el, index)}
+                css={[
+                  selectedItem?.id === item.id ? styles.active : null,
+                  activeIndex === index ? styles.focus : null,
+                ]}
+              >
+                <DropdownItem
+                  size={size}
+                  type="button"
+                  onButtonClick={() => handleSelectAccessible(item)}
+                  tabIndex={-1}
+                  isDisabled={isDisabled}
+                  isAccessible
+                  {...(dropdownItemStyles && {
+                    additionalStyles: dropdownItemStyles(item),
+                  })}
+                >
+                  {renderItem ? (
+                    renderItem(item)
+                  ) : (
+                    <>
+                      <p>{escapeHtml(item[itemKey])}</p>
+                      {renderItemLabel && renderItemLabel(item)}
+                    </>
+                  )}
+                </DropdownItem>
+              </li>
+            );
+          })}
+        </ul>
+      </Scrollbar>
+      {newItem && (
+        <DropdownCreate title={newItem.title} handleClick={newItem.onClick} />
+      )}
+    </DropdownMenu>
+  );
+
+  const DropdownButtonElement = (
+    <DropdownButton
+      ref={dropdownButtonRef}
+      isOpen={isOpen}
+      isLoading={isLoading}
+      type={buttonType}
+      {...(dropdownButtonStyles
+        ? { buttonStyles: dropdownButtonStyles }
+        : null)}
+      hideDropdownIcon={hideDropdownIcon}
+      text={
+        Boolean(renderButtonText) && !isLoading ? (
+          renderButtonText
+        ) : isLoading ? (
+          <p>Loading...</p>
+        ) : error ? (
+          <div css={[colors.warning]}>{error}</div>
+        ) : (
+          <>
+            {selectedItem ? (
+              renderItem ? (
+                renderItem(selectedItem)
+              ) : (
+                <p>{escapeHtml(selectedItem[itemKey]!)}</p>
+              )
+            ) : (
+              <p css={styles.placeholder}>{defaultText || 'Select'}</p>
+            )}
+          </>
+        )
+      }
+      {...(disabled && { disabled })}
+      onClick={() => handleOpen(!isOpen)}
+      {...(handleFocus && { onFocus: handleFocus })}
+      {...(handleBlur && { onBlur: handleBlur })}
+    />
+  );
+
   return (
     <DropdownWrapper
       isEmpty={isEmpty}
       isOpen={isOpen}
       onClose={handleClose}
       {...(noBottomMargin && { noBottomMargin })}
+      isInPortal={isPortal}
     >
-      <DropdownButton
-        isOpen={isOpen}
-        isLoading={isLoading}
-        type={buttonType}
-        {...(dropdownButtonStyles
-          ? { buttonStyles: dropdownButtonStyles }
-          : null)}
-        hideDropdownIcon={hideDropdownIcon}
-        text={
-          Boolean(renderButtonText) && !isLoading ? (
-            renderButtonText
-          ) : isLoading ? (
-            <p>Loading...</p>
-          ) : error ? (
-            <div css={[colors.warning]}>{error}</div>
-          ) : (
-            <>
-              {selectedItem ? (
-                renderItem ? (
-                  renderItem(selectedItem)
-                ) : (
-                  <p>{escapeHtml(selectedItem[itemKey]!)}</p>
-                )
-              ) : (
-                <p css={styles.placeholder}>{defaultText || 'Select'}</p>
-              )}
-            </>
-          )
-        }
-        {...(disabled && { disabled })}
-        onClick={() => handleOpen(!isOpen)}
-        {...(handleFocus && { onFocus: handleFocus })}
-        {...(handleBlur && { onBlur: handleBlur })}
-      />
-      <DropdownMenu isOpen={isOpen} additionalStyles={dropdownStyles}>
-        {Boolean(renderHeader) ? renderHeader : null}
-        {!hideSearch && renderSearch ? renderSearch(isOpen) : null}
-        <Scrollbar additionalStyles={scrollbarStyles}>
-          <ul ref={dropdownRef}>
-            {filteredItems?.map((item: T, index: number) => {
-              const isDisabled = checkDisabledItem
-                ? checkDisabledItem(item)
-                : isEqual(item, selectedItem);
-
-              return (
-                <li
-                  key={item.id || item.name}
-                  ref={(el: HTMLLIElement) => handleItemRef(el, index)}
-                  css={[
-                    selectedItem?.id === item.id ? styles.active : null,
-                    activeIndex === index ? styles.focus : null,
-                  ]}
-                >
-                  <DropdownItem
-                    size={size}
-                    type="button"
-                    onButtonClick={() => handleSelectAccessible(item)}
-                    tabIndex={-1}
-                    isDisabled={isDisabled}
-                    isAccessible
-                    {...(dropdownItemStyles && {
-                      additionalStyles: dropdownItemStyles(item),
-                    })}
-                  >
-                    {renderItem ? (
-                      renderItem(item)
-                    ) : (
-                      <>
-                        <p>{escapeHtml(item[itemKey])}</p>
-                        {renderItemLabel && renderItemLabel(item)}
-                      </>
-                    )}
-                  </DropdownItem>
-                </li>
-              );
-            })}
-          </ul>
-        </Scrollbar>
-        {newItem && (
-          <DropdownCreate title={newItem.title} handleClick={newItem.onClick} />
-        )}
-      </DropdownMenu>
+      {DropdownButtonElement}
+      {isPortal ? (
+        <>
+          {isOpen && (
+            <Portal wrapperId={`dropdown-${itemKey}`} inContainer>
+              {DropdownMenuElement}
+            </Portal>
+          )}
+        </>
+      ) : (
+        <>{DropdownMenuElement}</>
+      )}
     </DropdownWrapper>
   );
 };

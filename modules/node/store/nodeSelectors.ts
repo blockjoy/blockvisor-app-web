@@ -4,6 +4,7 @@ import { Region } from '@modules/grpc/library/blockjoy/v1/host';
 import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { NodeSort } from '@modules/grpc/library/blockjoy/v1/node';
+import { Tag } from '@modules/grpc/library/blockjoy/common/v1/tag';
 import { UINodeFilterCriteria } from '@modules/grpc';
 import { nodeStatusList } from '@shared/constants/nodeStatusList';
 import {
@@ -178,6 +179,38 @@ const filtersNetworksAll = selectorFamily<
     },
 });
 
+const inactiveTags = selectorFamily<Tag[], any[]>({
+  key: 'node.tags.inactive',
+  get:
+    (tags: Tag[]) =>
+    ({ get }) => {
+      const allTags = get(nodesTagsAll);
+
+      const activeTagNames = new Set(tags.map((tag) => tag.name));
+
+      return allTags.filter((allTag) => !activeTagNames.has(allTag.name));
+    },
+});
+
+const nodesTagsAll = selector<Tag[]>({
+  key: 'nodes.tags.all',
+  get: ({ get }) => {
+    const nodeList = get(nodeAtoms.nodeList);
+
+    const tagMap = new Map<string, Tag>();
+
+    nodeList.forEach((node) => {
+      node.tags?.tags?.forEach((tag) => {
+        if (tag?.name && !tagMap.has(tag.name)) {
+          tagMap.set(tag.name, tag);
+        }
+      });
+    });
+
+    return Array.from(tagMap.values());
+  },
+});
+
 export const nodeSelectors = {
   settings,
   filters,
@@ -191,4 +224,8 @@ export const nodeSelectors = {
   filtersStatusAll,
   filtersTypeAll,
   filtersNetworksAll,
+
+  inactiveTags,
+
+  nodesTagsAll,
 };

@@ -38,6 +38,11 @@ export const DropdownButton = forwardRef(
     }: DropdownButtonProps,
     ref: Ref<HTMLButtonElement>,
   ) => {
+    const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.stopPropagation();
+      onClick();
+    };
+
     return (
       <button
         ref={ref}
@@ -52,7 +57,7 @@ export const DropdownButton = forwardRef(
                 type === 'input' && styles.buttonInput,
               ]
         }
-        onClick={onClick}
+        onClick={(e) => handleClick(e)}
         onFocus={onFocus}
         onBlur={onBlur}
         {...(tabIndex && { tabIndex })}

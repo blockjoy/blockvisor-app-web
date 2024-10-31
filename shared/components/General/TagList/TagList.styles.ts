@@ -113,6 +113,10 @@ export const styles = {
     cursor: pointer;
     transition: 0.3s;
 
+    svg path {
+      fill: ${theme.colorText};
+    }
+
     @media ${breakpoints.toSml} {
       width: 28px;
       height: 28px;

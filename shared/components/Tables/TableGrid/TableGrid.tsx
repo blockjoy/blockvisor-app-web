@@ -27,7 +27,10 @@ export const TableGrid = ({
       <TableGridLoader length={preload || 0} />
     </div>
   ) : (
-    <div css={[styles.base, styles[entityName](isSidebarOpen, isFiltersOpen)]}>
+    <div
+      css={[styles.base, styles[entityName](isSidebarOpen, isFiltersOpen)]}
+      className="grid-wrapper"
+    >
       {cells?.map(({ component: Component }) => Component)}
       {isLoading === 'loading' && preload ? (
         <TableGridLoader length={preload} />

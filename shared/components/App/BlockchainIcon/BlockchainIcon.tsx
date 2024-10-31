@@ -82,6 +82,10 @@ const IconGravity = dynamic(
   () => import(`@public/assets/icons/blockchain/Gravity.svg`),
 );
 
+const IconHuddle01 = dynamic(
+  () => import(`@public/assets/icons/blockchain/Huddle01.svg`),
+);
+
 const IconCosmos = dynamic(
   () => import(`@public/assets/icons/blockchain/Cosmos.svg`),
 );
@@ -228,6 +232,9 @@ export const BlockchainIcon = ({
       break;
     case 'gravity':
       Component = IconGravity;
+      break;
+    case 'huddle01':
+      Component = IconHuddle01;
       break;
     case 'cosmos':
       Component = IconCosmos;
