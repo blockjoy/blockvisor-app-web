@@ -72,7 +72,7 @@ export const styles = {
         }
       }
     `,
-  dropdownButton: css`
+  dropdownButton: (theme: ITheme) => css`
     width: 20px;
     height: 20px;
     > span {
