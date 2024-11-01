@@ -17,7 +17,7 @@ export const styles = {
     visibility: hidden;
     transform: translateY(-16px) translateZ(0);
     border-radius: 4px;
-    min-width: max-content;
+    min-width: 100%;
     transition-property: transform, opacity, visibility;
     transition-duration: 0.4s;
     background-color: ${theme.colorLightGrey};
