@@ -12,6 +12,7 @@ interface CopyButtonProps {
 export const Copy = ({ disabled, value, hideTooltip }: CopyButtonProps) => {
   const handleCopy = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
+    e.preventDefault();
     copyToClipboard(value);
   };
 
