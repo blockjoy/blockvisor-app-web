@@ -468,7 +468,7 @@ export const Node = {
       BillingAmount.encode(message.cost, writer.uint32(306).fork()).ldelim();
     }
     if (message.cost !== undefined) {
-      BillingAmount.encode(message.cost, writer.uint32(290).fork()).ldelim();
+      BillingAmount.encode(message.cost, writer.uint32(314).fork()).ldelim();
     }
     return writer;
   },
@@ -754,8 +754,8 @@ export const Node = {
 
           message.cost = BillingAmount.decode(reader, reader.uint32());
           continue;
-        case 36:
-          if (tag !== 290) {
+        case 39:
+          if (tag !== 314) {
             break;
           }
 
@@ -2058,6 +2058,9 @@ export const NodeServiceUpdateConfigRequest = {
     }
     if (message.cost !== undefined) {
       BillingAmount.encode(message.cost, writer.uint32(74).fork()).ldelim();
+    }
+    if (message.cost !== undefined) {
+      BillingAmount.encode(message.cost, writer.uint32(90).fork()).ldelim();
     }
     return writer;
   },

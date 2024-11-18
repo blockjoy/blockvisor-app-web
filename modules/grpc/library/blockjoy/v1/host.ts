@@ -390,7 +390,7 @@ export const Host = {
       BillingAmount.encode(message.cost, writer.uint32(178).fork()).ldelim();
     }
     if (message.cost !== undefined) {
-      BillingAmount.encode(message.cost, writer.uint32(178).fork()).ldelim();
+      BillingAmount.encode(message.cost, writer.uint32(202).fork()).ldelim();
     }
     return writer;
   },
@@ -563,8 +563,8 @@ export const Host = {
 
           message.cost = BillingAmount.decode(reader, reader.uint32());
           continue;
-        case 22:
-          if (tag !== 178) {
+        case 25:
+          if (tag !== 202) {
             break;
           }
 
@@ -2063,6 +2063,9 @@ export const HostServiceUpdateHostRequest = {
     }
     if (message.cost !== undefined) {
       BillingAmount.encode(message.cost, writer.uint32(106).fork()).ldelim();
+    }
+    if (message.cost !== undefined) {
+      BillingAmount.encode(message.cost, writer.uint32(90).fork()).ldelim();
     }
     return writer;
   },

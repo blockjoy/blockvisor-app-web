@@ -25,6 +25,11 @@ const columns: AdminListColumn[] = [
     isVisible: true,
   },
   {
+    name: 'cost',
+    width: '100px',
+    isVisible: true,
+  },
+  {
     name: 'tags',
     isVisible: true,
     isRowClickDisabled: true,
