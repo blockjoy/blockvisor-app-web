@@ -1,8 +1,7 @@
 import { nodeClient } from '@modules/grpc';
 import { useRouter } from 'next/router';
 import { AdminDetail } from '../AdminDetail/AdminDetail';
-import { NextLink, NodeFirewall, NodeStatus } from '@shared/components';
-import { capitalized } from '@modules/admin/utils/capitalized';
+import { NextLink, Currency, NodeStatus } from '@shared/components';
 import {
   Node,
   NodeServiceUpdateConfigRequest,
@@ -110,6 +109,11 @@ export const AdminNode = () => {
       label: 'Id',
       data: node.nodeId,
       copyValue: node.nodeId,
+    },
+    {
+      id: 'cost',
+      label: 'Cost',
+      data: <Currency cents={node.cost?.amount?.amountMinorUnits} />,
     },
     {
       id: 'ip',

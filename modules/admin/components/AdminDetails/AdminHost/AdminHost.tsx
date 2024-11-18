@@ -15,6 +15,7 @@ import {
   HostIpStatus,
   HostManagedBy,
   NextLink,
+  Currency,
 } from '@shared/components';
 
 export const AdminHost = () => {
@@ -66,6 +67,11 @@ export const AdminHost = () => {
       label: 'Id',
       data: host.hostId,
       copyValue: host.hostId,
+    },
+    {
+      id: 'cost',
+      label: 'Cost',
+      data: <Currency cents={host.cost?.amount?.amountMinorUnits!} />,
     },
     // {
     //   id: 'managedBy',

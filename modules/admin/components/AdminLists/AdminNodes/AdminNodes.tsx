@@ -1,6 +1,6 @@
 import { AdminList } from '../AdminList/AdminList';
 import { protocolClient, nodeClient } from '@modules/grpc';
-import { DateTime, NodeStatus } from '@shared/components';
+import { DateTime, NodeStatus, Currency } from '@shared/components';
 import {
   AdminNodesFilterProtocol,
   AdminNodesFilterOrg,
@@ -50,6 +50,10 @@ const columns: AdminListColumn[] = [
     isVisible: true,
     // filterComponent: AdminNodesFilterStatus,
     // filterDropdownMinWidth: 160,
+  },
+  {
+    name: 'cost',
+    width: '100px',
   },
   {
     name: 'host',
@@ -189,21 +193,11 @@ export const AdminNodes = () => {
         nodeState: (
           <NodeStatus status={node.nodeStatus?.state!} hasBorder={false} />
         ),
-        // containerStatus: (
-        //   <NodeStatus
-        //     status={node.containerStatus}
-        //     type="container"
-        //     hasBorder={false}
-        //   />
-        // ),
-        // syncStatus: (
-        //   <NodeStatus status={node.syncStatus} type="sync" hasBorder={false} />
-        // ),
-        // nodeType: capitalized(convertNodeTypeToName(node.nodeType)),
         region: node.placement?.scheduler?.region,
         createdAt: <DateTime date={node.createdAt!} />,
         // createdBy: node.createdBy?.resourceId,
         host: node.hostDisplayName || node.hostNetworkName,
+        cost: <Currency cents={node.cost?.amount?.amountMinorUnits!} />,
       };
     });
 

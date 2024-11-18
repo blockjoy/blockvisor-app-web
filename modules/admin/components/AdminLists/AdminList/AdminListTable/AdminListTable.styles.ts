@@ -190,7 +190,7 @@ export const styles = {
     right: 0;
     display: flex;
     align-items: center;
-    padding: 24px 16px;
+    padding: 24px 16px 24px 0;
     font-size: 14px;
     margin: 0;
     border-bottom: 1px solid ${theme.colorBorder};

@@ -10,6 +10,7 @@ import IconUser from '@public/assets/icons/common/Person.svg';
 import IconDashboard from '@public/assets/icons/common/Grid.svg';
 import IconCog from '@public/assets/icons/common/Cog.svg';
 import IconBlockchain from '@public/assets/icons/app/Blockchain.svg';
+import IconBilling from '@public/assets/icons/common/Billing.svg';
 
 type LinkItem = {
   id?: string;
@@ -26,6 +27,7 @@ export const PageTitleAdminNav = () => {
       { id: 'protocols', name: 'Protocols', icon: <IconBlockchain /> },
       { id: 'orgs', name: 'Orgs', icon: <IconOrganization /> },
       { id: 'users', name: 'Users', icon: <IconUser /> },
+      { id: 'costs', name: 'Costs', icon: <IconBilling /> },
       { id: 'settings', name: 'Settings', icon: <IconCog /> },
     ],
     [],
