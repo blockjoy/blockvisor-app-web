@@ -74,6 +74,10 @@ const columns: AdminListColumn[] = [
     isRowClickDisabled: true,
   },
   {
+    name: 'cost',
+    width: '100px',
+  },
+  {
     name: 'host',
     width: '200px',
     // sortField: NodeSortField.NODE_SORT_FIELD_HOST_NAME,

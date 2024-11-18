@@ -38,6 +38,7 @@ export const PageTitleAdminNav = () => {
       { id: 'protocols', name: 'Protocols', icon: <IconBlockchain /> },
       { id: 'orgs', name: 'Orgs', icon: <IconOrganization /> },
       { id: 'users', name: 'Users', icon: <IconUser /> },
+      { id: 'costs', name: 'Costs', icon: <IconBilling /> },
       { id: 'settings', name: 'Settings', icon: <IconCog /> },
     ],
     [],
