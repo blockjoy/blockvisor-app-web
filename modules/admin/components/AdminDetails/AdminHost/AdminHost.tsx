@@ -104,6 +104,11 @@ export const AdminHost = () => {
       data: host.hostId,
       copyValue: host.hostId,
     },
+    {
+      id: 'cost',
+      label: 'Cost',
+      data: <Currency cents={host.cost?.amount?.amountMinorUnits!} />,
+    },
     // {
     //   id: 'managedBy',
     //   label: 'Managed By',

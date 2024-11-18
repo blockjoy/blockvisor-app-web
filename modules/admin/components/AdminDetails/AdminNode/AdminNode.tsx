@@ -1,8 +1,7 @@
 import { nodeClient } from '@modules/grpc';
 import { useRouter } from 'next/router';
 import { AdminDetail } from '../AdminDetail/AdminDetail';
-import { NextLink, NodeFirewall, NodeStatus } from '@shared/components';
-import { capitalized } from '@modules/admin/utils/capitalized';
+import { NextLink, Currency, NodeStatus } from '@shared/components';
 import {
   Node,
   NodeServiceUpdateConfigRequest,

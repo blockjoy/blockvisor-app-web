@@ -366,10 +366,10 @@ export const Host = {
       ).ldelim();
     }
     if (message.cost !== undefined) {
-      BillingAmount.encode(message.cost, writer.uint32(202).fork()).ldelim();
+      BillingAmount.encode(message.cost, writer.uint32(178).fork()).ldelim();
     }
     if (message.cost !== undefined) {
-      BillingAmount.encode(message.cost, writer.uint32(178).fork()).ldelim();
+      BillingAmount.encode(message.cost, writer.uint32(202).fork()).ldelim();
     }
     return writer;
   },
@@ -535,15 +535,15 @@ export const Host = {
             Timestamp.decode(reader, reader.uint32()),
           );
           continue;
-        case 25:
-          if (tag !== 202) {
+        case 22:
+          if (tag !== 178) {
             break;
           }
 
           message.cost = BillingAmount.decode(reader, reader.uint32());
           continue;
-        case 22:
-          if (tag !== 178) {
+        case 25:
+          if (tag !== 202) {
             break;
           }
 
@@ -1480,6 +1480,9 @@ export const HostServiceUpdateRequest = {
     }
     if (message.cost !== undefined) {
       BillingAmount.encode(message.cost, writer.uint32(106).fork()).ldelim();
+    }
+    if (message.cost !== undefined) {
+      BillingAmount.encode(message.cost, writer.uint32(90).fork()).ldelim();
     }
     return writer;
   },

@@ -51,7 +51,7 @@ export const AdminListTableHeader = ({
   return (
     <span ref={headerRef} css={styles.tableHeader}>
       <>
-        {column.isResizable !== false && canResize && (
+        {column.isResizable !== false && canResize && !isLastColumn && (
           <span
             ref={resizerRef}
             css={styles.resizer}
