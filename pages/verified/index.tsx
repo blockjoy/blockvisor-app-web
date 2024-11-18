@@ -34,7 +34,7 @@ const Verified: NextPage = () => {
           const emailTokenObject = readToken(emailToken as string);
           const user = await userClient.getUser(accessTokenObject.resource_id);
 
-          await getOrganizations(true, false, user.id);
+          await getOrganizations(true, false, user.userId);
 
           const invitationId = emailTokenObject?.data?.invitation_id;
 
@@ -43,7 +43,7 @@ const Verified: NextPage = () => {
               await invitationClient.receivedInvitations(user?.email!);
 
             const invitation = receivedInvitations.find(
-              (invitation) => invitation.id === invitationId,
+              (invitation) => invitation.invitationId === invitationId,
             );
 
             await acceptInvitation(invitationId);
@@ -52,10 +52,10 @@ const Verified: NextPage = () => {
             if (invitation) {
               await setDefaultOrganization(
                 {
-                  id: invitation.orgId,
+                  orgId: invitation.orgId,
                   name: invitation.orgName,
                 },
-                user.id,
+                user.userId,
               );
             }
           }

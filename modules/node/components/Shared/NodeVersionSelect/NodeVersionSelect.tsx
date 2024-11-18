@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { css } from '@emotion/react';
-import { BlockchainVersion } from '@modules/grpc/library/blockjoy/v1/blockchain';
+import { ProtocolVersion } from '@modules/grpc/library/blockjoy/v1/protocol';
 import { Dropdown } from '@shared/components';
 import { nodeLauncherAtoms, nodeLauncherSelectors } from '@modules/node';
 import { authSelectors } from '@modules/auth';
 import { ITheme } from 'types/theme';
 
 type NodeVersionSelectProps = {
-  onVersionChanged: (version: BlockchainVersion | null) => void;
+  onVersionChanged: (version: ProtocolVersion | null) => void;
 };
 
 const styles = {
@@ -23,23 +23,36 @@ const styles = {
 export const NodeVersionSelect = ({
   onVersionChanged,
 }: NodeVersionSelectProps) => {
-  const versions = useRecoilValue(nodeLauncherSelectors.versions);
+  const selectedProtocol = useRecoilValue(nodeLauncherAtoms.selectedProtocol);
   const selectedVersion = useRecoilValue(nodeLauncherAtoms.selectedVersion);
+
+  const { versions } = selectedProtocol!;
+
   const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
 
   const [isOpen, setIsOpen] = useState(false);
 
   const handleOpen = (open: boolean = true) => setIsOpen(open);
 
+  const handleSelect = (protocolVersionId: string) => {
+    const currentVersion = versions.find(
+      (version) => version.protocolVersionId,
+    )!;
+    onVersionChanged(currentVersion);
+  };
+
   return (
     <Dropdown
       disabled={!isSuperUser || versions.length < 2}
-      items={versions}
+      items={versions.map((version) => ({
+        id: version.protocolVersionId,
+        name: version.semanticVersion,
+      }))}
       itemKey="version"
-      {...(selectedVersion
+      {...(selectedProtocol
         ? {
             renderButtonText: (
-              <p css={styles.buttonText}>{selectedVersion?.version}</p>
+              <p css={styles.buttonText}>{selectedVersion?.semanticVersion}</p>
             ),
           }
         : isSuperUser
@@ -47,16 +60,22 @@ export const NodeVersionSelect = ({
         : { defaultText: <p css={styles.buttonText}>Auto select</p> })}
       renderItem={(item) => (
         <>
-          {item.version}
+          {item.name}
           {isSuperUser && (
-            <span css={styles.versionDescription}> {item.description}</span>
+            <span css={styles.versionDescription}> {item.name}</span>
           )}
         </>
       )}
       isOpen={isOpen}
       handleOpen={handleOpen}
-      handleSelected={onVersionChanged}
-      selectedItem={selectedVersion}
+      handleSelected={(item: {
+        id?: string | undefined;
+        name?: string | undefined;
+      }) => handleSelect(item.id!)}
+      selectedItem={{
+        id: selectedVersion?.protocolVersionId,
+        name: selectedVersion?.semanticVersion,
+      }}
     />
   );
 };

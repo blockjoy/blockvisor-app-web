@@ -41,7 +41,7 @@ export const HostLauncher = ({
     : provisionToken?.replace(/./g, '*');
 
   const handleHostCreation = async () => {
-    await resetProvisionToken(defaultOrganization?.id!);
+    await resetProvisionToken(defaultOrganization?.orgId!);
     resetFulfilReqs();
   };
 

@@ -16,7 +16,7 @@ export const useInviteMembers = () => {
     try {
       await invitationClient.inviteOrgMember(
         formattedEmail,
-        defaultOrganization?.id!,
+        defaultOrganization?.orgId!,
       );
       toast.success('Invitation Sent');
       onComplete();

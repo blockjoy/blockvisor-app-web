@@ -25,7 +25,7 @@ export const useInvoices = (): IInvoicesHook => {
 
     try {
       const data = await organizationClient.getInvoices(
-        defaultOrganization?.id!,
+        defaultOrganization?.orgId!,
       );
 
       console.log('%cGetInvoices', 'color: #bff589', data);

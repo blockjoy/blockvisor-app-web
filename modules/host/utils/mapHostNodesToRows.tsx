@@ -1,12 +1,11 @@
 import { useRecoilValue } from 'recoil';
 import { css } from '@emotion/react';
 import { TableBlock } from '@shared/components';
-import { BlockchainIcon, NodeStatus } from '@shared/components';
+import { ProtocolIcon, NodeStatus } from '@shared/components';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { getNodeJobProgress } from '@modules/node/utils/getNodeJobProgress';
 import { escapeHtml } from '@shared/utils/escapeHtml';
 import { authSelectors } from '@modules/auth';
-import { convertNodeTypeToName } from '@modules/node';
 
 const middleRowStyles = css`
   text-transform: capitalize;
@@ -36,16 +35,13 @@ export const mapHostNodesToRows = (nodeList: Node[]) => {
   const rows = nodeList?.map((node: Node) => {
     const progress = getNodeJobProgress(node);
     return {
-      key: node.id,
+      key: node.nodeId,
       cells: [
         {
           key: '1',
           component: (
             <div style={{ marginTop: '4px', marginLeft: '8px' }}>
-              <BlockchainIcon
-                size="32px"
-                blockchainName={node.blockchainName}
-              />
+              <ProtocolIcon size="32px" protocolName={node.protocolName} />
             </div>
           ),
         },
@@ -55,13 +51,16 @@ export const mapHostNodesToRows = (nodeList: Node[]) => {
             <div style={{ maxWidth: '400px' }}>
               <TableBlock
                 middleRow={
+                  // <p css={middleRowStyles}>
+                  //   {node.protocolName} | {convertNodeTypeToName(node.nodeType)}{' '}
+                  //   | {node.network}
+                  // </p>
                   <p css={middleRowStyles}>
-                    {node.blockchainName} |{' '}
-                    {convertNodeTypeToName(node.nodeType)} | {node.network}
+                    {node.protocolName} | {node.hostNetworkName}
                   </p>
                 }
-                topRow={escapeHtml(node.displayName)}
-                bottomRow={isSuperUser ? node.orgName : node?.ip!}
+                topRow={escapeHtml(node.displayName!)}
+                bottomRow={isSuperUser ? node.orgName : node.ipAddress}
               />
             </div>
           ),
@@ -70,7 +69,7 @@ export const mapHostNodesToRows = (nodeList: Node[]) => {
           key: '3',
           component: (
             <NodeStatus
-              status={node.status}
+              status={node.nodeStatus?.state!}
               downloadingCurrent={progress?.current}
               downloadingTotal={progress?.total}
             />

@@ -1,7 +1,7 @@
 import { createAdminFilterList } from './createAdminFilterList';
 
 export const createAdminNodeFilters = (filters: AdminListColumn[]) => ({
-  blockchain: createAdminFilterList(filters!, 'blockchainName'),
+  blockchain: createAdminFilterList(filters!, 'protocolName'),
   nodeStatus: createAdminFilterList(filters!, 'status'),
   containerStatus: createAdminFilterList(filters!, 'containerStatus'),
   syncStatus: createAdminFilterList(filters!, 'syncStatus'),

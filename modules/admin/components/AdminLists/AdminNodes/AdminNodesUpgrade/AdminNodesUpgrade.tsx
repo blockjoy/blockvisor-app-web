@@ -10,9 +10,9 @@ import {
   Scrollbar,
 } from '@shared/components';
 import { AdminDropdownHeader } from '@modules/admin/components';
-import { blockchainClient, nodeClient } from '@modules/grpc';
+import { protocolClient, nodeClient } from '@modules/grpc';
 import { toast } from 'react-toastify';
-import { BlockchainVersion } from '@modules/grpc/library/blockjoy/v1/blockchain';
+import { ProtocolVersion } from '@modules/grpc/library/blockjoy/v1/protocol';
 import IconUpgrade from '@public/assets/icons/app/NodeUpgrade.svg';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 
@@ -25,9 +25,9 @@ type Props = {
 export const AdminNodesUpgrade = ({ selectedIds, list, setList }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const [selectedVersion, setSelectedVersion] = useState<BlockchainVersion>();
+  const [selectedVersion, setSelectedVersion] = useState<ProtocolVersion>();
 
-  const [versions, setVersions] = useState<BlockchainVersion[]>([]);
+  const [versions, setVersions] = useState<ProtocolVersion[]>([]);
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -39,12 +39,15 @@ export const AdminNodesUpgrade = ({ selectedIds, list, setList }: Props) => {
     const listCopy = [...list];
 
     try {
-      await nodeClient.upgradeNode(selectedIds, selectedVersion?.version!);
+      await nodeClient.upgradeNode(
+        selectedIds,
+        selectedVersion?.semanticVersion!,
+      );
 
       for (const id of selectedIds) {
-        const foundNode = list.find((n) => n.id === id);
+        const foundNode = list.find((n) => n.nodeId === id);
         if (!foundNode) return;
-        foundNode.version = selectedVersion?.version!;
+        foundNode.semanticVersion = selectedVersion?.semanticVersion!;
       }
 
       setList(listCopy);
@@ -63,11 +66,11 @@ export const AdminNodesUpgrade = ({ selectedIds, list, setList }: Props) => {
   useEffect(() => {
     (async () => {
       if (selectedIds.length && !versions.length) {
-        const blockchainId = (await nodeClient.getNode(selectedIds[0]))
-          .blockchainId!;
+        const protocolId = (await nodeClient.getNode(selectedIds[0]))
+          .protocolId!;
 
-        const versions = (await blockchainClient.getBlockchain(blockchainId))
-          .nodeTypes[0].versions;
+        const versions = (await protocolClient.getProtocol(protocolId))
+          .versions;
 
         setVersions(versions);
       }
@@ -89,13 +92,13 @@ export const AdminNodesUpgrade = ({ selectedIds, list, setList }: Props) => {
         <Scrollbar additionalStyles={[styles.dropdownInner]}>
           {versions.map((version) => (
             <DropdownItem
-              key={version.version}
+              key={version.semanticVersion}
               onButtonClick={() => setSelectedVersion(version)}
               type="button"
               size="medium"
             >
               <div>
-                {version.version}
+                {version.semanticVersion}
                 {selectedVersion === version && (
                   <Badge style="outline">Selected</Badge>
                 )}

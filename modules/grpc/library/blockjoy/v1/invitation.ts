@@ -2,27 +2,18 @@
 import type { CallContext, CallOptions } from "nice-grpc-common";
 import _m0 from "protobufjs/minimal";
 import { Timestamp } from "../../google/protobuf/timestamp";
-import { EntityUpdate } from "../common/v1/resource";
+import { Resource } from "../common/v1/resource";
 
 export const protobufPackage = "blockjoy.v1";
 
 /** The status of an invitation. */
 export enum InvitationStatus {
   INVITATION_STATUS_UNSPECIFIED = 0,
-  /**
-   * INVITATION_STATUS_OPEN - This invitation has not been used yet. The user may still accept or decline
-   * it.
-   */
+  /** INVITATION_STATUS_OPEN - The invitation has not yet been accepted or declined. */
   INVITATION_STATUS_OPEN = 1,
-  /**
-   * INVITATION_STATUS_ACCEPTED - This invitation has been accepted. The user is now a member of the
-   * specified organization and this invitation is not useful anymore.
-   */
+  /** INVITATION_STATUS_ACCEPTED - The invitation has been accepted. */
   INVITATION_STATUS_ACCEPTED = 2,
-  /**
-   * INVITATION_STATUS_DECLINED - This invitation has been declined. This means that the user can no longer
-   * use this invitation anymore to join the organization.
-   */
+  /** INVITATION_STATUS_DECLINED - The invitation has been declined. */
   INVITATION_STATUS_DECLINED = 3,
   UNRECOGNIZED = -1,
 }
@@ -30,56 +21,36 @@ export enum InvitationStatus {
 /** An invitation for a user to some organization. */
 export interface Invitation {
   /** A uuid that uniquely determines the invitation. */
-  id: string;
-  /** The id of the organization the invitee is being invited to. */
+  invitationId: string;
+  /** The org id that the user is being invited to. */
   orgId: string;
-  /**
-   * This is the name of the organization that this invitation has been created
-   * for.
-   */
+  /** The org name this invitation has been created for. */
   orgName: string;
-  /**
-   * The id of the person that is being invited here. Note that this is not the
-   * uuid of some user, because the person that is being invited might not have
-   * an account (yet).
-   */
+  /** The email of the person being invited. */
   inviteeEmail: string;
-  /**
-   * The status of the invitation, indicating what user action has been taken
-   * with this invitation.
-   */
+  /** The current status of the invitation. */
   status: InvitationStatus;
   /** The resource that created this invitation. */
   invitedBy:
-    | EntityUpdate
+    | Resource
     | undefined;
   /** The timestamp when this invitation was created. */
   createdAt:
     | Date
     | undefined;
-  /**
-   * If this invitation has been accepted, this field is set to the moment of
-   * acceptance.
-   */
+  /** When this invitation was accepted. */
   acceptedAt?:
     | Date
     | undefined;
-  /**
-   * If this invitation has been declined, this field is set to the moment of
-   * declination.
-   */
+  /** When this invitation was declined. */
   declinedAt?: Date | undefined;
 }
 
-/** Use this message to create a new invitation. */
+/** Create a new invitation. */
 export interface InvitationServiceCreateRequest {
-  /**
-   * The id of the person that is being invited here. Note that this is not the
-   * uuid of some user, because the person that is being invited might not have
-   * an account (yet).
-   */
+  /** The email of the person being invited. */
   inviteeEmail: string;
-  /** The id of the organization that the user is being invited to. */
+  /** The org id that the user is being invited to. */
   orgId: string;
 }
 
@@ -90,7 +61,7 @@ export interface InvitationServiceCreateResponse {
 export interface InvitationServiceListRequest {
   orgId?: string | undefined;
   inviteeEmail?: string | undefined;
-  invitedBy: EntityUpdate | undefined;
+  invitedBy: Resource | undefined;
   status: InvitationStatus;
 }
 
@@ -121,7 +92,7 @@ export interface InvitationServiceRevokeResponse {
 
 function createBaseInvitation(): Invitation {
   return {
-    id: "",
+    invitationId: "",
     orgId: "",
     orgName: "",
     inviteeEmail: "",
@@ -135,8 +106,8 @@ function createBaseInvitation(): Invitation {
 
 export const Invitation = {
   encode(message: Invitation, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.invitationId !== "") {
+      writer.uint32(10).string(message.invitationId);
     }
     if (message.orgId !== "") {
       writer.uint32(18).string(message.orgId);
@@ -151,7 +122,7 @@ export const Invitation = {
       writer.uint32(40).int32(message.status);
     }
     if (message.invitedBy !== undefined) {
-      EntityUpdate.encode(message.invitedBy, writer.uint32(50).fork()).ldelim();
+      Resource.encode(message.invitedBy, writer.uint32(50).fork()).ldelim();
     }
     if (message.createdAt !== undefined) {
       Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(58).fork()).ldelim();
@@ -177,7 +148,7 @@ export const Invitation = {
             break;
           }
 
-          message.id = reader.string();
+          message.invitationId = reader.string();
           continue;
         case 2:
           if (tag !== 18) {
@@ -212,7 +183,7 @@ export const Invitation = {
             break;
           }
 
-          message.invitedBy = EntityUpdate.decode(reader, reader.uint32());
+          message.invitedBy = Resource.decode(reader, reader.uint32());
           continue;
         case 7:
           if (tag !== 58) {
@@ -250,13 +221,13 @@ export const Invitation = {
 
   fromPartial(object: DeepPartial<Invitation>): Invitation {
     const message = createBaseInvitation();
-    message.id = object.id ?? "";
+    message.invitationId = object.invitationId ?? "";
     message.orgId = object.orgId ?? "";
     message.orgName = object.orgName ?? "";
     message.inviteeEmail = object.inviteeEmail ?? "";
     message.status = object.status ?? 0;
     message.invitedBy = (object.invitedBy !== undefined && object.invitedBy !== null)
-      ? EntityUpdate.fromPartial(object.invitedBy)
+      ? Resource.fromPartial(object.invitedBy)
       : undefined;
     message.createdAt = object.createdAt ?? undefined;
     message.acceptedAt = object.acceptedAt ?? undefined;
@@ -383,7 +354,7 @@ export const InvitationServiceListRequest = {
       writer.uint32(18).string(message.inviteeEmail);
     }
     if (message.invitedBy !== undefined) {
-      EntityUpdate.encode(message.invitedBy, writer.uint32(26).fork()).ldelim();
+      Resource.encode(message.invitedBy, writer.uint32(26).fork()).ldelim();
     }
     if (message.status !== 0) {
       writer.uint32(32).int32(message.status);
@@ -417,7 +388,7 @@ export const InvitationServiceListRequest = {
             break;
           }
 
-          message.invitedBy = EntityUpdate.decode(reader, reader.uint32());
+          message.invitedBy = Resource.decode(reader, reader.uint32());
           continue;
         case 4:
           if (tag !== 32) {
@@ -444,7 +415,7 @@ export const InvitationServiceListRequest = {
     message.orgId = object.orgId ?? undefined;
     message.inviteeEmail = object.inviteeEmail ?? undefined;
     message.invitedBy = (object.invitedBy !== undefined && object.invitedBy !== null)
-      ? EntityUpdate.fromPartial(object.invitedBy)
+      ? Resource.fromPartial(object.invitedBy)
       : undefined;
     message.status = object.status ?? 0;
     return message;
@@ -740,7 +711,7 @@ export const InvitationServiceRevokeResponse = {
   },
 };
 
-/** Manage invitations */
+/** Service to manage invitations */
 export type InvitationServiceDefinition = typeof InvitationServiceDefinition;
 export const InvitationServiceDefinition = {
   name: "InvitationService",

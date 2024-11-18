@@ -23,10 +23,10 @@ export const OrganizationSelect = () => {
   const handleChange = async (nextOrg: Org | null) => {
     if (!nextOrg) return;
 
-    await switchOrganization(nextOrg.id, nextOrg.name);
+    await switchOrganization(nextOrg.orgId, nextOrg.name);
 
     selectedOrg.current = allOrganizations.find(
-      (org) => org.id === nextOrg?.id,
+      (org) => org.orgId === nextOrg?.orgId,
     )!;
 
     setIsOpen(false);
@@ -38,18 +38,20 @@ export const OrganizationSelect = () => {
   );
 
   useEffect(() => {
-    if (defaultOrganization?.id && allOrganizations?.length) {
+    if (defaultOrganization?.orgId && allOrganizations?.length) {
       selectedOrg.current = allOrganizations.find(
-        (org) => org.id === defaultOrganization?.id,
+        (org) => org.orgId === defaultOrganization?.orgId,
       )!;
     }
-  }, [defaultOrganization?.id, allOrganizations]);
+  }, [defaultOrganization?.orgId, allOrganizations]);
 
   return (
     <OrgSelectDropdown
       items={allOrganizations}
       selectedItem={
-        allOrganizations.find((org) => org.id === defaultOrganization?.id)!
+        allOrganizations.find(
+          (org) => org.orgId === defaultOrganization?.orgId,
+        )!
       }
       handleSelected={handleChange}
       isOpen={isOpen}

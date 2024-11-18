@@ -11,9 +11,9 @@ export const NodeViewSettings = () => {
 
   const handleUpdateNode = (args: any) => {
     updateNode({
-      id: node!.id,
-      allowIps: node?.allowIps,
-      denyIps: node?.denyIps,
+      id: node!.nodeId,
+      // allowIps: node?.allowIps,
+      // denyIps: node?.denyIps,
       ...args,
     });
   };
@@ -25,14 +25,14 @@ export const NodeViewSettings = () => {
 
   const handleAutoUpdatesChanged = (name: string, value: boolean) =>
     handleUpdateNode({
-      selfUpdate: value,
+      autoUpgrade: value,
     });
 
-  return isLoading && !node?.id ? (
+  return isLoading && !node?.nodeId ? (
     <TableSkeleton />
   ) : (
     <div css={styles.wrapper}>
-      {/* TODO: Add back in once firewall implemented */}
+      {/* TODO: implement new node firewall */}
       {/* <div css={styles.row}>
         <FormLabelCaps noBottomMargin>Firewall Rules</FormLabelCaps>
         <div css={styles.firewallWrapper}>
@@ -50,14 +50,15 @@ export const NodeViewSettings = () => {
         {isSuperUser ? (
           <Switch
             noBottomMargin
-            checked={node!.selfUpdate}
+            // checked={node!.autoUpgrade}
+            checked={node!.autoUpgrade}
             tooltip=""
             disabled={false}
             name="autoUpdates"
             onChange={handleAutoUpdatesChanged}
           />
         ) : (
-          <LockedSwitch isChecked={node!.selfUpdate} />
+          <LockedSwitch isChecked={node!.autoUpgrade} />
         )}
       </div>
     </div>

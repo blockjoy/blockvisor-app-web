@@ -28,7 +28,7 @@ export const NodeRegionSelect = ({
     onLoad(activeRegion);
   }, [regions]);
 
-  const error = !version?.id || !regions.length ? 'No Hosts Available' : null;
+  const error = !version || !regions.length ? 'No Hosts Available' : null;
 
   return (
     <Dropdown

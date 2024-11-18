@@ -18,7 +18,7 @@ export * from './components/NodeView/Tabs/Settings/NodeViewSettings';
 export * from './components/Shared';
 
 export * from './hooks/useNodeFilters';
-export * from './hooks/useGetBlockchains';
+export * from './hooks/useGetProtocols';
 export * from './hooks/useGetRegions';
 export * from './hooks/useNodeAdd';
 export * from './hooks/useNodeDelete';
@@ -29,8 +29,8 @@ export * from './hooks/useNodeView';
 export * from './hooks/useNodeUpdate';
 export * from './hooks/useUpdates';
 
-export * from './store/blockchainAtoms';
-export * from './store/blockchainSelectors';
+export * from './store/protocolAtoms';
+export * from './store/protocolSelectors';
 export * from './store/nodeAtoms';
 export * from './store/nodeSelectors';
 export * from './store/nodeLauncherAtoms';
@@ -38,8 +38,6 @@ export * from './store/nodeLauncherSelectors';
 
 export * from './types/common';
 
-export * from './utils/convertNodeTypeToName';
-export * from './utils/getNodeTypes';
 export * from './utils/mapNodeListToRows';
 export * from './utils/resultsStatus';
 export * from './utils/sortLists';

@@ -11,7 +11,7 @@ import {
   HostServiceUpdateRequest,
   HostSort,
   HostSortField,
-  HostType,
+  // HostType,
   Region,
 } from '../library/blockjoy/v1/host';
 import {
@@ -21,7 +21,6 @@ import {
   handleError,
 } from '@modules/grpc';
 import { createChannel, createClient } from 'nice-grpc-web';
-import { NodeType } from '../library/blockjoy/common/v1/node';
 import {
   SearchOperator,
   SortOrder,
@@ -56,12 +55,12 @@ class HostClient {
   ): Promise<HostServiceListResponse> {
     const request: HostServiceListRequest = {
       orgIds: orgId ? [orgId!] : [],
-      versions: [],
+      bvVersions: [],
       offset: getPaginationOffset(pagination!),
       limit: pagination?.itemsPerPage!,
       sort: sort || [
         {
-          field: HostSortField.HOST_SORT_FIELD_HOST_NAME,
+          field: HostSortField.HOST_SORT_FIELD_DISPLAY_NAME,
           order: SortOrder.SORT_ORDER_ASCENDING,
         },
       ],
@@ -70,9 +69,9 @@ class HostClient {
     if (filter?.keyword) {
       const { keyword } = filter;
       const search: HostSearch = {
-        id: createSearch(keyword),
+        hostId: createSearch(keyword),
         ip: createSearch(keyword),
-        name: createSearch(keyword),
+        displayName: createSearch(keyword),
         operator: SearchOperator.SEARCH_OPERATOR_OR,
       };
       request.search = search;
@@ -92,8 +91,8 @@ class HostClient {
     }
   }
 
-  async getHost(id: string): Promise<Host> {
-    const request: HostServiceGetRequest = { id };
+  async getHost(hostId: string): Promise<Host> {
+    const request: HostServiceGetRequest = { hostId };
     console.log('getHostRequest', request);
     try {
       const response = await callWithTokenRefresh(
@@ -123,31 +122,36 @@ class HostClient {
 
   async listRegions(
     orgId: string,
-    blockchainId: string,
-    nodeType: NodeType,
-    version: string,
+    imageId: string,
+    // blockchainId: string,
+    // nodeType: NodeType,
+    // version: string,
   ): Promise<Region[]> {
     const request: HostServiceRegionsRequest = {
-      blockchainId,
-      nodeType,
-      version,
+      // blockchainId,
+      // nodeType,
+      // version,
       orgId,
-      hostType: HostType.HOST_TYPE_CLOUD,
+      imageId,
+      // hostType: HostType.HOST_TYPE_CLOUD,
     };
+
+    console.log('listRegionsRequest', request);
 
     try {
       const response = await callWithTokenRefresh(
         this.client.regions.bind(this.client),
         request,
       );
+      console.log('listRegionsResponse', response);
       return response.regions!;
     } catch (err) {
       return handleError(err);
     }
   }
 
-  async deleteHost(id: string): Promise<void> {
-    const request: HostServiceDeleteRequest = { id };
+  async deleteHost(hostId: string): Promise<void> {
+    const request: HostServiceDeleteRequest = { hostId };
     await callWithTokenRefresh(this.client.delete.bind(this.client), request);
   }
 }

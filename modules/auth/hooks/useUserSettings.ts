@@ -19,10 +19,10 @@ export const useUserSettings = (): UseUserSettingsHook => {
   const fetcher = async () => {
     setUserSettingsLoadingState('loading');
 
-    return await userClient.getSettings(user?.id!);
+    return await userClient.getSettings(user?.userId!);
   };
 
-  useSWR(user?.id ? `settings_${user?.id}` : null, fetcher, {
+  useSWR(user?.userId ? `settings_${user?.userId}` : null, fetcher, {
     revalidateOnFocus: false,
 
     onSuccess: (data) => {

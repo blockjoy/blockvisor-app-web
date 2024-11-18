@@ -89,7 +89,7 @@ export function useInvitations() {
 
   const deleteFromSentInvitations = (invitationId: string) => {
     const newSentInvitations = sentInvitations.filter(
-      (invitation) => invitation.id !== invitationId,
+      (invitation) => invitation.invitationId !== invitationId,
     );
     setSentInvitations(newSentInvitations);
   };

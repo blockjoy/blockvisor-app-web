@@ -5,10 +5,10 @@ export function useSwitchOrganization() {
   const { setDefaultOrganization } = useDefaultOrganization();
   const { getProvisionToken } = useProvisionToken();
 
-  const switchOrganization = async (id: string, name: string) => {
+  const switchOrganization = async (orgId: string, name: string) => {
     try {
-      setDefaultOrganization({ id, name });
-      getProvisionToken(id);
+      setDefaultOrganization({ orgId, name });
+      getProvisionToken(orgId);
     } catch (error) {
       console.log('Error changing organization: ', error);
     }

@@ -9,8 +9,8 @@ export const protobufPackage = "blockjoy.v1";
 export interface ApiKeyServiceCreateRequest {
   /** The (non-unique) label for this api key. */
   label: string;
-  /** The scope of the api key. */
-  scope: ApiKeyScope | undefined;
+  /** The resource of this api key. */
+  resource: Resource | undefined;
 }
 
 export interface ApiKeyServiceCreateResponse {
@@ -32,16 +32,16 @@ export interface ApiKeyServiceListResponse {
 
 export interface ListApiKey {
   /** The unique identifier to this api key. */
-  id?:
+  apiKeyId?:
     | string
     | undefined;
   /** The (non-unique) label for this api key. */
   label?:
     | string
     | undefined;
-  /** The scope of this api key. */
-  scope:
-    | ApiKeyScope
+  /** The resource of this api key. */
+  resource:
+    | Resource
     | undefined;
   /** The time this api key was created. */
   createdAt:
@@ -53,13 +53,9 @@ export interface ListApiKey {
 
 export interface ApiKeyServiceUpdateRequest {
   /** The unique identifier to the api key to update. */
-  id: string;
+  apiKeyId: string;
   /** The (non-unique) new label for this api key. */
-  label?:
-    | string
-    | undefined;
-  /** The new scope of this api key. */
-  scope: ApiKeyScope | undefined;
+  label?: string | undefined;
 }
 
 export interface ApiKeyServiceUpdateResponse {
@@ -69,7 +65,7 @@ export interface ApiKeyServiceUpdateResponse {
 
 export interface ApiKeyServiceRegenerateRequest {
   /** The unique identifier to the api key to regenerate. */
-  id: string;
+  apiKeyId: string;
 }
 
 export interface ApiKeyServiceRegenerateResponse {
@@ -83,21 +79,14 @@ export interface ApiKeyServiceRegenerateResponse {
 
 export interface ApiKeyServiceDeleteRequest {
   /** The unique identifier to the api key to delete. */
-  id: string;
+  apiKeyId: string;
 }
 
 export interface ApiKeyServiceDeleteResponse {
 }
 
-export interface ApiKeyScope {
-  /** The resource scope of this api key. */
-  resource: Resource;
-  /** The resource identifier of this api key. */
-  resourceId?: string | undefined;
-}
-
 function createBaseApiKeyServiceCreateRequest(): ApiKeyServiceCreateRequest {
-  return { label: "", scope: undefined };
+  return { label: "", resource: undefined };
 }
 
 export const ApiKeyServiceCreateRequest = {
@@ -105,8 +94,8 @@ export const ApiKeyServiceCreateRequest = {
     if (message.label !== "") {
       writer.uint32(10).string(message.label);
     }
-    if (message.scope !== undefined) {
-      ApiKeyScope.encode(message.scope, writer.uint32(18).fork()).ldelim();
+    if (message.resource !== undefined) {
+      Resource.encode(message.resource, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -130,7 +119,7 @@ export const ApiKeyServiceCreateRequest = {
             break;
           }
 
-          message.scope = ApiKeyScope.decode(reader, reader.uint32());
+          message.resource = Resource.decode(reader, reader.uint32());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -148,8 +137,8 @@ export const ApiKeyServiceCreateRequest = {
   fromPartial(object: DeepPartial<ApiKeyServiceCreateRequest>): ApiKeyServiceCreateRequest {
     const message = createBaseApiKeyServiceCreateRequest();
     message.label = object.label ?? "";
-    message.scope = (object.scope !== undefined && object.scope !== null)
-      ? ApiKeyScope.fromPartial(object.scope)
+    message.resource = (object.resource !== undefined && object.resource !== null)
+      ? Resource.fromPartial(object.resource)
       : undefined;
     return message;
   },
@@ -294,19 +283,19 @@ export const ApiKeyServiceListResponse = {
 };
 
 function createBaseListApiKey(): ListApiKey {
-  return { id: undefined, label: undefined, scope: undefined, createdAt: undefined, updatedAt: undefined };
+  return { apiKeyId: undefined, label: undefined, resource: undefined, createdAt: undefined, updatedAt: undefined };
 }
 
 export const ListApiKey = {
   encode(message: ListApiKey, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined) {
-      writer.uint32(10).string(message.id);
+    if (message.apiKeyId !== undefined) {
+      writer.uint32(10).string(message.apiKeyId);
     }
     if (message.label !== undefined) {
       writer.uint32(18).string(message.label);
     }
-    if (message.scope !== undefined) {
-      ApiKeyScope.encode(message.scope, writer.uint32(26).fork()).ldelim();
+    if (message.resource !== undefined) {
+      Resource.encode(message.resource, writer.uint32(26).fork()).ldelim();
     }
     if (message.createdAt !== undefined) {
       Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(34).fork()).ldelim();
@@ -329,7 +318,7 @@ export const ListApiKey = {
             break;
           }
 
-          message.id = reader.string();
+          message.apiKeyId = reader.string();
           continue;
         case 2:
           if (tag !== 18) {
@@ -343,7 +332,7 @@ export const ListApiKey = {
             break;
           }
 
-          message.scope = ApiKeyScope.decode(reader, reader.uint32());
+          message.resource = Resource.decode(reader, reader.uint32());
           continue;
         case 4:
           if (tag !== 34) {
@@ -374,10 +363,10 @@ export const ListApiKey = {
 
   fromPartial(object: DeepPartial<ListApiKey>): ListApiKey {
     const message = createBaseListApiKey();
-    message.id = object.id ?? undefined;
+    message.apiKeyId = object.apiKeyId ?? undefined;
     message.label = object.label ?? undefined;
-    message.scope = (object.scope !== undefined && object.scope !== null)
-      ? ApiKeyScope.fromPartial(object.scope)
+    message.resource = (object.resource !== undefined && object.resource !== null)
+      ? Resource.fromPartial(object.resource)
       : undefined;
     message.createdAt = object.createdAt ?? undefined;
     message.updatedAt = object.updatedAt ?? undefined;
@@ -386,19 +375,16 @@ export const ListApiKey = {
 };
 
 function createBaseApiKeyServiceUpdateRequest(): ApiKeyServiceUpdateRequest {
-  return { id: "", label: undefined, scope: undefined };
+  return { apiKeyId: "", label: undefined };
 }
 
 export const ApiKeyServiceUpdateRequest = {
   encode(message: ApiKeyServiceUpdateRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.apiKeyId !== "") {
+      writer.uint32(10).string(message.apiKeyId);
     }
     if (message.label !== undefined) {
       writer.uint32(18).string(message.label);
-    }
-    if (message.scope !== undefined) {
-      ApiKeyScope.encode(message.scope, writer.uint32(26).fork()).ldelim();
     }
     return writer;
   },
@@ -415,7 +401,7 @@ export const ApiKeyServiceUpdateRequest = {
             break;
           }
 
-          message.id = reader.string();
+          message.apiKeyId = reader.string();
           continue;
         case 2:
           if (tag !== 18) {
@@ -423,13 +409,6 @@ export const ApiKeyServiceUpdateRequest = {
           }
 
           message.label = reader.string();
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.scope = ApiKeyScope.decode(reader, reader.uint32());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -446,11 +425,8 @@ export const ApiKeyServiceUpdateRequest = {
 
   fromPartial(object: DeepPartial<ApiKeyServiceUpdateRequest>): ApiKeyServiceUpdateRequest {
     const message = createBaseApiKeyServiceUpdateRequest();
-    message.id = object.id ?? "";
+    message.apiKeyId = object.apiKeyId ?? "";
     message.label = object.label ?? undefined;
-    message.scope = (object.scope !== undefined && object.scope !== null)
-      ? ApiKeyScope.fromPartial(object.scope)
-      : undefined;
     return message;
   },
 };
@@ -502,13 +478,13 @@ export const ApiKeyServiceUpdateResponse = {
 };
 
 function createBaseApiKeyServiceRegenerateRequest(): ApiKeyServiceRegenerateRequest {
-  return { id: "" };
+  return { apiKeyId: "" };
 }
 
 export const ApiKeyServiceRegenerateRequest = {
   encode(message: ApiKeyServiceRegenerateRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.apiKeyId !== "") {
+      writer.uint32(10).string(message.apiKeyId);
     }
     return writer;
   },
@@ -525,7 +501,7 @@ export const ApiKeyServiceRegenerateRequest = {
             break;
           }
 
-          message.id = reader.string();
+          message.apiKeyId = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -542,7 +518,7 @@ export const ApiKeyServiceRegenerateRequest = {
 
   fromPartial(object: DeepPartial<ApiKeyServiceRegenerateRequest>): ApiKeyServiceRegenerateRequest {
     const message = createBaseApiKeyServiceRegenerateRequest();
-    message.id = object.id ?? "";
+    message.apiKeyId = object.apiKeyId ?? "";
     return message;
   },
 };
@@ -605,13 +581,13 @@ export const ApiKeyServiceRegenerateResponse = {
 };
 
 function createBaseApiKeyServiceDeleteRequest(): ApiKeyServiceDeleteRequest {
-  return { id: "" };
+  return { apiKeyId: "" };
 }
 
 export const ApiKeyServiceDeleteRequest = {
   encode(message: ApiKeyServiceDeleteRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.apiKeyId !== "") {
+      writer.uint32(10).string(message.apiKeyId);
     }
     return writer;
   },
@@ -628,7 +604,7 @@ export const ApiKeyServiceDeleteRequest = {
             break;
           }
 
-          message.id = reader.string();
+          message.apiKeyId = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -645,7 +621,7 @@ export const ApiKeyServiceDeleteRequest = {
 
   fromPartial(object: DeepPartial<ApiKeyServiceDeleteRequest>): ApiKeyServiceDeleteRequest {
     const message = createBaseApiKeyServiceDeleteRequest();
-    message.id = object.id ?? "";
+    message.apiKeyId = object.apiKeyId ?? "";
     return message;
   },
 };
@@ -681,63 +657,6 @@ export const ApiKeyServiceDeleteResponse = {
 
   fromPartial(_: DeepPartial<ApiKeyServiceDeleteResponse>): ApiKeyServiceDeleteResponse {
     const message = createBaseApiKeyServiceDeleteResponse();
-    return message;
-  },
-};
-
-function createBaseApiKeyScope(): ApiKeyScope {
-  return { resource: 0, resourceId: undefined };
-}
-
-export const ApiKeyScope = {
-  encode(message: ApiKeyScope, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.resource !== 0) {
-      writer.uint32(8).int32(message.resource);
-    }
-    if (message.resourceId !== undefined) {
-      writer.uint32(18).string(message.resourceId);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): ApiKeyScope {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseApiKeyScope();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 8) {
-            break;
-          }
-
-          message.resource = reader.int32() as any;
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.resourceId = reader.string();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<ApiKeyScope>): ApiKeyScope {
-    return ApiKeyScope.fromPartial(base ?? {});
-  },
-
-  fromPartial(object: DeepPartial<ApiKeyScope>): ApiKeyScope {
-    const message = createBaseApiKeyScope();
-    message.resource = object.resource ?? 0;
-    message.resourceId = object.resourceId ?? undefined;
     return message;
   },
 };

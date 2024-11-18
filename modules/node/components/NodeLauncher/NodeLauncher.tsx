@@ -27,8 +27,6 @@ export const NodeLauncher = ({
     handleNodePropertyChanged,
     handleNodeConfigPropertyChanged,
     handleVersionChanged,
-    handleNetworkChanged,
-    handleFileUploaded,
   } = useNodeLauncherHandlers({ fulfilReqs });
 
   const hasProtocol = useRecoilValue(nodeLauncherSelectors.hasProtocol);
@@ -45,16 +43,12 @@ export const NodeLauncher = ({
   return (
     <>
       <PageTitle title="Launch Node" icon={<IconRocket />} />
-
       <div css={[wrapper.main, styles.wrapper]}>
         <NodeLauncherProtocol onProtocolSelected={handleProtocolSelected} />
-
         {hasProtocol ? (
           <>
             {hasConfig && (
               <NodeLauncherConfig
-                onNetworkChanged={handleNetworkChanged}
-                onFileUploaded={handleFileUploaded}
                 onNodeConfigPropertyChanged={handleNodeConfigPropertyChanged}
                 onNodePropertyChanged={handleNodePropertyChanged}
                 onVersionChanged={handleVersionChanged}

@@ -46,10 +46,11 @@ export const useUpdates = () => {
 
         addToNodeList(node!);
 
-        if (node?.createdBy?.resourceId === user?.id) break;
+        if (node?.createdBy?.resourceId === user?.userId) break;
 
-        const message = node?.createdBy?.name ? (
-          `${node?.createdBy?.name} launched a node `
+        // TODO: createdBy name is missing
+        const message = node?.createdBy?.resourceId ? (
+          `${node?.createdBy?.resourceId} launched a node `
         ) : (
           <>
             Node launched from CLI for Host{' '}
@@ -58,7 +59,7 @@ export const useUpdates = () => {
                 css={styles.linkToHost}
                 onClick={() => router.push(`/hosts/${node?.hostId}`)}
               >
-                {node?.hostName}
+                {node?.hostNetworkName}
               </a>
             ) : (
               ''
@@ -67,7 +68,7 @@ export const useUpdates = () => {
         );
 
         const content = canGetNode ? (
-          <a onClick={() => router.push(`/nodes/${node?.id}`)}>View Node</a>
+          <a onClick={() => router.push(`/nodes/${node?.nodeId}`)}>View Node</a>
         ) : (
           ''
         );
@@ -84,7 +85,7 @@ export const useUpdates = () => {
 
         const { node: mqttNode }: NodeUpdated = payloadDeserialized.updated!;
 
-        if (mqttNode?.id === activeNode?.id) {
+        if (mqttNode?.nodeId === activeNode?.nodeId) {
           modifyNode(mqttNode!);
         }
 
@@ -102,14 +103,15 @@ export const useUpdates = () => {
 
         removeFromNodeList(nodeId);
 
-        if (activeNode?.id === nodeId) {
+        if (activeNode?.nodeId === nodeId) {
           unloadNode();
         }
 
-        if (deletedBy?.resourceId === user?.id) break;
+        if (deletedBy?.resourceId === user?.userId) break;
 
-        const message = deletedBy?.name
-          ? `${deletedBy?.name} just deleted a node`
+        // TODO: deletedBy name is missing
+        const message = deletedBy?.resourceId
+          ? `${deletedBy?.resourceId} just deleted a node`
           : 'Node deleted from CLI';
 
         showNotification(type, message);

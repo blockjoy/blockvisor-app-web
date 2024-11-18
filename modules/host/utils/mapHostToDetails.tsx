@@ -17,12 +17,12 @@ export const mapHostToDetails = (host: Host) => {
   const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
 
   const details: { label: string; data: any | undefined }[] = [
-    { label: 'Version', data: host?.version || '-' },
+    { label: 'Version', data: host?.bvVersion || '-' },
     {
       label: 'OS',
       data: <HostOs os={host.os} osVersion={host.osVersion} /> || '-',
     },
-    { label: 'IP Address', data: host?.ip || '-' },
+    { label: 'IP Address', data: host?.ipAddress || '-' },
     { label: 'Gateway IP', data: host?.ipGateway || '-' },
     {
       label: `Available IP's`,
@@ -41,18 +41,18 @@ export const mapHostToDetails = (host: Host) => {
       ),
     },
     {
-      label: 'CPU Count',
+      label: 'CPU Cores',
       data:
-        `${host?.cpuCount} Core${host?.cpuCount && host.cpuCount > 1 && 's'}` ||
+        `${host?.cpuCores} Core${host?.cpuCores && host.cpuCores > 1 && 's'}` ||
         '-',
     },
     {
       label: 'Memory',
-      data: formatters.formatSize(host?.memSizeBytes!, 'bytes') || '-',
+      data: formatters.formatSize(host?.memoryBytes!, 'bytes') || '-',
     },
     {
       label: 'Disk Size',
-      data: formatters.formatSize(host?.diskSizeBytes!, 'bytes') || '-',
+      data: formatters.formatSize(host?.diskBytes!, 'bytes') || '-',
     },
   ];
 
@@ -63,12 +63,12 @@ export const mapHostToDetails = (host: Host) => {
     });
   }
 
-  if (host?.billingAmount)
-    details.push({
-      label: 'Monthly Cost',
-      data:
-        formatters.formatAmount(host?.billingAmount?.amount!, 'amount') || '-',
-    });
+  // if (host?billingAmount)
+  //   details.push({
+  //     label: 'Monthly Cost',
+  //     data:
+  //       formatters.formatAmount(host?.billingAmount?.amount!, 'amount') || '-',
+  //   });
 
   return details;
 };
@@ -78,7 +78,7 @@ export const mapHostToDetailsLaunch = (host: Host) => {
     {
       label: 'Organization',
       data: (
-        <NextLink href={ROUTES.ORGANIZATION(host.orgId)}>
+        <NextLink href={ROUTES.ORGANIZATION(host.orgId!)}>
           {host.orgName}
         </NextLink>
       ),
@@ -87,10 +87,10 @@ export const mapHostToDetailsLaunch = (host: Host) => {
       label: 'Launched On',
       data: !host.createdAt ? '-' : <DateTime date={host.createdAt} />,
     },
-    {
-      label: 'Managed By',
-      data: <HostManagedBy managedBy={host.managedBy} />,
-    },
+    // {
+    //   label: 'Managed By',
+    //   data: <HostManagedBy managedBy={host.managedBy} />,
+    // },
   ];
 
   return details;

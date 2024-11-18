@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { Region } from '@modules/grpc/library/blockjoy/v1/host';
 import { hostClient } from '@modules/grpc';
@@ -22,18 +21,15 @@ export const useGetRegions = (): UseGetRegionsHook => {
   );
   const nodeLauncher = useRecoilValue(nodeLauncherAtoms.nodeLauncher);
   const version = useRecoilValue(nodeLauncherAtoms.selectedVersion);
-
-  const { blockchainId, nodeType } = nodeLauncher;
+  const image = useRecoilValue(nodeLauncherAtoms.selectedImage);
 
   const getRegions = async () => {
     try {
       setRegionsLoadingState('loading');
 
       const response = await hostClient.listRegions(
-        defaultOrganization?.id!,
-        blockchainId!,
-        nodeType!,
-        version?.version!,
+        defaultOrganization?.orgId!,
+        image?.imageId!,
       );
 
       setRegions(response);

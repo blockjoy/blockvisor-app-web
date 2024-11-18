@@ -8,18 +8,18 @@ export const mapHostListToGird = (
 ) => {
   return nodeList?.map((host: Host) => {
     return {
-      key: host.id,
+      key: host.hostId,
       component: (
         <TableGridCell
-          key={host.id}
-          onCellClick={() => onCellClick(host.id)}
+          key={host.hostId}
+          onCellClick={() => onCellClick(host.hostId)}
           titleIcon={<HostIcon />}
-          titleText={host.name}
+          titleText={host.displayName || host.networkName}
           footer={<HostIpStatus ipAddresses={host.ipAddresses} />}
           middleRow={
             <div css={[spacing.top.micro, spacing.bottom.small]}>
               {' '}
-              Version: {host.version}
+              Version: {host.bvVersion}
             </div>
           }
         />

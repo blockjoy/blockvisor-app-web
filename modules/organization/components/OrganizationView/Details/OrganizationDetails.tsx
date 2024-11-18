@@ -9,7 +9,7 @@ export function OrganizationDetails() {
 
   const { user } = useIdentity();
 
-  const details = mapOrganizationDetails(organization, user?.id!);
+  const details = mapOrganizationDetails(organization, user?.userId!);
 
   return (
     <section css={styles.section}>

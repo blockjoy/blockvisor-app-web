@@ -19,7 +19,7 @@ export const useBillingAddress = () => {
 
     try {
       const data = await organizationClient.getBillingAddress(
-        defaultOrganization?.id!,
+        defaultOrganization?.orgId!,
       );
 
       setBillingAddress(data);
@@ -41,7 +41,7 @@ export const useBillingAddress = () => {
     setBillingAddressLoadingState('loading');
     try {
       await organizationClient.createBillingAddress(
-        defaultOrganization?.id!,
+        defaultOrganization?.orgId!,
         address,
       );
 

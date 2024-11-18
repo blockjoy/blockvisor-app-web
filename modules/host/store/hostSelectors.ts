@@ -86,7 +86,7 @@ const hostById = selectorFamily<Host | null, string | undefined>({
       if (!id) return null;
 
       const hosts = get(hostAtoms.hostList);
-      const host = hosts.find((host) => host.id === id);
+      const host = hosts.find((host) => host.hostId === id);
 
       if (host) return host;
 
@@ -116,9 +116,15 @@ const hostListSorted = selector<Host[]>({
   get: ({ get }) => {
     const hosts = get(hostAtoms.hostList);
     return [...hosts].sort((orgA: Host, orgB: Host) => {
-      if (orgA.name!.toLocaleLowerCase() < orgB.name!.toLocaleLowerCase())
+      if (
+        orgA.displayName!.toLocaleLowerCase() <
+        orgB.displayName!.toLocaleLowerCase()
+      )
         return -1;
-      if (orgA.name!.toLocaleLowerCase() > orgB.name!.toLocaleLowerCase())
+      if (
+        orgA.displayName!.toLocaleLowerCase() >
+        orgB.displayName!.toLocaleLowerCase()
+      )
         return 1;
       return 0;
     });

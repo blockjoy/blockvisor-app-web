@@ -1,6 +1,5 @@
 import { readToken } from '@shared/utils/readToken';
 import { UseFormSetValue } from 'react-hook-form';
-import { removeTokenFromUrl } from './removeTokenFromUrl';
 
 export const handleTokenFromQueryString = async (
   token: string,
@@ -18,6 +17,4 @@ export const handleTokenFromQueryString = async (
   } catch (error) {
     console.log('error reading token', error);
   }
-  // TODO: Needs some thought on how to do this
-  // removeTokenFromUrl();
 };

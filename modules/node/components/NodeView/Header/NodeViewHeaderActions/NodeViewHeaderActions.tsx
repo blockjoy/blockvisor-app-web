@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useNodeView } from '@modules/node';
 import { ActionsDropdown, ActionsDropdownItem } from '@shared/components';
 import { authSelectors } from '@modules/auth';
-import { ContainerStatus } from '@modules/grpc/library/blockjoy/common/v1/node';
+
 import IconDelete from '@public/assets/icons/common/Trash.svg';
 import IconStop from '@public/assets/icons/app/NodeStop.svg';
 import IconStart from '@public/assets/icons/app/NodeStart.svg';
@@ -11,6 +11,7 @@ import IconRestart from '@public/assets/icons/app/NodeRestart.svg';
 import IconRecreate from '@public/assets/icons/app/NodeRecreate.svg';
 import IconWarning from '@public/assets/icons/common/Warning.svg';
 import IconAdmin from '@public/assets/icons/app/Sliders.svg';
+import { NodeState } from '@modules/grpc/library/blockjoy/common/v1/node';
 
 type NodeViewHeaderActionsProps = {
   handleActionView: (action: NodeAction) => void;
@@ -23,12 +24,12 @@ export const NodeViewHeaderActions = ({
 
   const { node, stopNode, startNode } = useNodeView();
 
-  const handleStop = () => stopNode(node?.id);
+  const handleStop = () => stopNode(node?.nodeId);
 
-  const handleStart = () => startNode(node?.id);
+  const handleStart = () => startNode(node?.nodeId);
 
   const handleAdminClicked = () =>
-    router.push(`/admin?name=nodes&id=${node?.id}`);
+    router.push(`/admin?name=nodes&id=${node?.nodeId}`);
 
   const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
 
@@ -81,7 +82,7 @@ export const NodeViewHeaderActions = ({
   }
 
   if (canStart || canStartAdmin) {
-    if (node?.containerStatus === ContainerStatus.CONTAINER_STATUS_STOPPED) {
+    if (node?.nodeStatus?.state === NodeState.NODE_STATE_STOPPED) {
       items.push({ name: 'Start', icon: <IconStart />, onClick: handleStart });
     } else {
       items.push({

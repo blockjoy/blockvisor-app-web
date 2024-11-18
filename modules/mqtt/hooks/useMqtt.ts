@@ -58,6 +58,7 @@ export const useMqtt = (): IMqttHook => {
     try {
       const mqttClient = mqtt.connect(env.mqttUrl!, options);
       setClient(mqttClient);
+      console.log('Connected to MQTT');
     } catch (err: any) {
       console.error('Error while connecting to MQTT client', error);
     }
@@ -67,8 +68,8 @@ export const useMqtt = (): IMqttHook => {
     if (!client || !client.connected || !defaultOrganization) return;
 
     const topics = [
-      `/orgs/${defaultOrganization.id}`,
-      `/orgs/${defaultOrganization.id}/nodes`,
+      `/orgs/${defaultOrganization.orgId}`,
+      `/orgs/${defaultOrganization.orgId}/nodes`,
     ];
 
     if (subscribedTopics.current.length) mqttUnSubscribe();

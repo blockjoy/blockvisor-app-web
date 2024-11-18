@@ -6,9 +6,8 @@ import { NodeServiceCreateRequest } from '@modules/grpc/library/blockjoy/v1/node
 import { colors } from 'styles/utils.colors.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { styles } from './NodeViewHeader.styles';
-import { BlockchainIcon } from '@shared/components';
+import { ProtocolIcon } from '@shared/components';
 import {
-  convertNodeTypeToName,
   NodeTags,
   NodeViewReportProblem,
   useNodeAdd,
@@ -18,7 +17,7 @@ import {
 } from '@modules/node';
 import { wrapper } from 'styles/wrapper.styles';
 import { ROUTES } from '@shared/constants/routes';
-import { NodeViewHeaderActions } from './Actions/NodeViewHeaderActions';
+import { NodeViewHeaderActions } from './NodeViewHeaderActions/NodeViewHeaderActions';
 import { getNodeJobProgress } from '@modules/node/utils/getNodeJobProgress';
 import { useGetOrganizations } from '@modules/organization';
 import { useHostList } from '@modules/host';
@@ -56,7 +55,7 @@ export const NodeViewHeader = () => {
       node!,
       () => {
         toast.success('Node Deleted');
-        removeFromNodeList(node!.id);
+        removeFromNodeList(node!.nodeId);
 
         navigate(ROUTES.NODES, () => {
           loadHosts();
@@ -68,7 +67,7 @@ export const NodeViewHeader = () => {
   };
 
   const handleReportProblem = async (message: string) => {
-    await nodeClient.reportProblem(node?.id!, message);
+    await nodeClient.reportProblem(node?.nodeId!, message);
     toast.success('Problem Reported');
     handleClose();
   };
@@ -76,8 +75,9 @@ export const NodeViewHeader = () => {
   const handleUpdateNode = async (value: string) => {
     setIsSaving(true);
     await updateNode({
-      displayName: value,
-      ids: [node?.id!],
+      newDisplayName: value,
+      nodeId: node?.nodeId!,
+      newValues: [],
     });
     toast.success('Node name updated');
     setIsSaving(false);
@@ -88,16 +88,20 @@ export const NodeViewHeader = () => {
     if (!node) return;
 
     const params: NodeServiceCreateRequest = {
-      oldNodeId: node.id,
+      oldNodeId: node.nodeId,
       orgId: node.orgId,
-      blockchainId: node.blockchainId,
-      version: node.version,
-      nodeType: node.nodeType,
-      properties: node.properties,
-      network: node.network,
       placement: node.placement,
-      allowIps: node.allowIps,
-      denyIps: node.denyIps,
+      imageId: node.protocolId,
+      addRules: [],
+      newValues: [],
+      tags: node.tags,
+      // blockchainId: node.protocolId,
+      // version: node.version,
+      // nodeType: node.nodeType,
+      // properties: node.properties,
+      // network: node.network,
+      // allowIps: node.allowIps,
+      // denyIps: node.denyIps,
     };
 
     await createNode(
@@ -149,23 +153,20 @@ export const NodeViewHeader = () => {
 
       <section css={wrapper.main}>
         <header css={styles.header}>
-          {isLoading && !node?.id ? (
+          {isLoading && !node?.nodeId ? (
             <SkeletonGrid>
               <Skeleton width="400px" />
             </SkeletonGrid>
           ) : (
-            node?.id && (
+            node?.nodeId && (
               <>
                 <div css={styles.blockchainIcon}>
-                  <BlockchainIcon
-                    size="40px"
-                    blockchainName={node.blockchainName}
-                  />
+                  <ProtocolIcon size="40px" protocolName={node.protocolName} />
                 </div>
                 <div css={styles.name}>
                   <div css={styles.title}>
                     <EditableTitle
-                      initialValue={node.displayName}
+                      initialValue={node.displayName!}
                       isLoading={isLoading}
                       isSaving={isSaving!}
                       additionalContentRight={
@@ -180,12 +181,15 @@ export const NodeViewHeader = () => {
                     <NodeTags node={node} additionalStyles={[styles.tags]} />
                     <div css={styles.detailsFooter}>
                       <div css={styles.nodeType}>
-                        <p>
-                          {node.blockchainName}
+                        {/* <p>
+                          {node.protocolName}
                           {' | '}
                           {convertNodeTypeToName(node.nodeType)}
                           {' | '}
                           {node.network}
+                        </p> */}
+                        <p>
+                          {node.protocolName} | {node.versionKey?.variantKey}
                         </p>
                       </div>
                       {node!.createdAt && (
@@ -201,7 +205,7 @@ export const NodeViewHeader = () => {
                 </div>
                 <div css={styles.nodeStatus}>
                   <NodeStatus
-                    status={node.status}
+                    status={node.nodeStatus?.state!}
                     downloadingCurrent={progress?.current}
                     downloadingTotal={progress?.total}
                   />
