@@ -1,17 +1,24 @@
 /* eslint-disable */
-import Long from "long";
-import type { CallContext, CallOptions } from "nice-grpc-common";
-import _m0 from "protobufjs/minimal";
-import { Timestamp } from "../../google/protobuf/timestamp";
-import { FirewallConfig, FirewallRule, NodeConfig } from "../common/v1/config";
-import { BillingAmount } from "../common/v1/currency";
-import { NextState, NodeJob, NodeLauncher, NodeReport, NodeState, NodeStatus } from "../common/v1/node";
-import { ProtocolVersionKey } from "../common/v1/protocol";
-import { Resource } from "../common/v1/resource";
-import { SearchOperator, SortOrder } from "../common/v1/search";
-import { Tags, UpdateTags } from "../common/v1/tag";
+import Long from 'long';
+import type { CallContext, CallOptions } from 'nice-grpc-common';
+import _m0 from 'protobufjs/minimal';
+import { Timestamp } from '../../google/protobuf/timestamp';
+import { FirewallConfig, FirewallRule, NodeConfig } from '../common/v1/config';
+import { BillingAmount } from '../common/v1/currency';
+import {
+  NextState,
+  NodeJob,
+  NodeLauncher,
+  NodeReport,
+  NodeState,
+  NodeStatus,
+} from '../common/v1/node';
+import { ProtocolVersionKey } from '../common/v1/protocol';
+import { Resource } from '../common/v1/resource';
+import { SearchOperator, SortOrder } from '../common/v1/search';
+import { Tags, UpdateTags } from '../common/v1/tag';
 
-export const protobufPackage = "blockjoy.v1";
+export const protobufPackage = 'blockjoy.v1';
 
 export enum NodeSortField {
   NODE_SORT_FIELD_UNSPECIFIED = 0,
@@ -76,13 +83,9 @@ export interface NodeServiceCreateRequest {
   /** The image id of the node to create. */
   imageId: string;
   /** Recreate a new node with the config from an existing one. */
-  oldNodeId?:
-    | string
-    | undefined;
+  oldNodeId?: string | undefined;
   /** Determines how and where nodes are created. */
-  launcher:
-    | NodeLauncher
-    | undefined;
+  launcher: NodeLauncher | undefined;
   /** The image properties changed from their default values. */
   newValues: NewImagePropertyValue[];
   /** Additional firewall rules to add to the node. */
@@ -120,9 +123,7 @@ export interface NodeServiceListRequest {
   /** Limit the number of results. */
   limit: number;
   /** Search these parameters. */
-  search?:
-    | NodeSearch
-    | undefined;
+  search?: NodeSearch | undefined;
   /** Sort the results in this order. */
   sort: NodeSort[];
   /** If non-empty, only return nodes for these protocol ids. */
@@ -148,37 +149,21 @@ export interface NodeSearch {
   /** How to combine the parameters. */
   operator: SearchOperator;
   /** Search for the node id. */
-  nodeId?:
-    | string
-    | undefined;
+  nodeId?: string | undefined;
   /** Search for the node name. */
-  nodeName?:
-    | string
-    | undefined;
+  nodeName?: string | undefined;
   /** Search for the display name. */
-  displayName?:
-    | string
-    | undefined;
+  displayName?: string | undefined;
   /** Search for the DNS name. */
-  dnsName?:
-    | string
-    | undefined;
+  dnsName?: string | undefined;
   /** Search for the node state. */
-  nodeState?:
-    | NodeState
-    | undefined;
+  nodeState?: NodeState | undefined;
   /** Search for the next state. */
-  nextState?:
-    | NextState
-    | undefined;
+  nextState?: NextState | undefined;
   /** Search for the protocol state. */
-  protocolState?:
-    | string
-    | undefined;
+  protocolState?: string | undefined;
   /** Search for the protocol health. */
-  protocolHealth?:
-    | string
-    | undefined;
+  protocolHealth?: string | undefined;
   /** Search for the node ip address. */
   ip?: string | undefined;
 }
@@ -201,24 +186,19 @@ export interface NodeServiceReportStatusRequest {
   /** The running config of the node. */
   configId: string;
   /** Update the node status. */
-  status?:
-    | NodeStatus
-    | undefined;
+  status?: NodeStatus | undefined;
   /** Update the peer-to-peer address. */
   p2pAddress?: string | undefined;
 }
 
-export interface NodeServiceReportStatusResponse {
-}
+export interface NodeServiceReportStatusResponse {}
 
 /** Report an error with the node. */
 export interface NodeServiceReportErrorRequest {
   /** The node id of the report. */
   nodeId: string;
   /** The resource creating the report. */
-  createdBy:
-    | Resource
-    | undefined;
+  createdBy: Resource | undefined;
   /** An error description of the problem. */
   message: string;
 }
@@ -231,37 +211,24 @@ export interface NodeServiceUpdateConfigRequest {
   /** The id of the node to update. */
   nodeId: string;
   /** Whether the node should automatically be upgraded. */
-  autoUpgrade?:
-    | boolean
-    | undefined;
+  autoUpgrade?: boolean | undefined;
   /** Move this node to a new org. */
-  newOrgId?:
-    | string
-    | undefined;
+  newOrgId?: string | undefined;
   /** Update the display name of this node. */
-  newDisplayName?:
-    | string
-    | undefined;
+  newDisplayName?: string | undefined;
   /** Update the note that explains what this node is for. */
-  newNote?:
-    | string
-    | undefined;
+  newNote?: string | undefined;
   /** Update these property keys to these values. */
   newValues: NewImagePropertyValue[];
   /** Replace the firewall config with a new one. */
-  newFirewall?:
-    | FirewallConfig
-    | undefined;
+  newFirewall?: FirewallConfig | undefined;
   /** Update the node tags. */
-  updateTags?:
-    | UpdateTags
-    | undefined;
+  updateTags?: UpdateTags | undefined;
   /** The cost of this node. */
   cost?: BillingAmount | undefined;
 }
 
-export interface NodeServiceUpdateConfigResponse {
-}
+export interface NodeServiceUpdateConfigResponse {}
 
 export interface NodeServiceUpgradeImageRequest {
   /** The ids of the nodes that you want to upgrade. */
@@ -272,64 +239,91 @@ export interface NodeServiceUpgradeImageRequest {
   orgId?: string | undefined;
 }
 
-export interface NodeServiceUpgradeImageResponse {
+export interface NodeServiceUpgradeImageResponse {}
+
+export interface NodeServiceUpdateConfigRequest {
+  /** The id of the node to update. */
+  nodeId: string;
+  /** Whether the node should automatically be upgraded. */
+  autoUpgrade?: boolean | undefined;
+  /** Move this node to a new org. */
+  newOrgId?: string | undefined;
+  /** Update the display name of this node. */
+  newDisplayName?: string | undefined;
+  /** Update the note that explains what this node is for. */
+  newNote?: string | undefined;
+  /** Update these property keys to these values. */
+  newValues: ImagePropertyValue[];
+  /** Replace the firewall config with a new one. */
+  newFirewall?: FirewallConfig | undefined;
+  /** Update the node tags. */
+  updateTags?: UpdateTags | undefined;
 }
+
+export interface NodeServiceUpdateConfigResponse {}
+
+export interface NodeServiceUpgradeImageRequest {
+  /** The ids of the nodes that you want to upgrade. */
+  nodeIds: string[];
+  /** The image_id to upgrade the nodes to. */
+  imageId: string;
+  /** The org_id of a private image. */
+  orgId?: string | undefined;
+}
+
+export interface NodeServiceUpgradeImageResponse {}
 
 export interface NodeServiceStartRequest {
   nodeId: string;
 }
 
-export interface NodeServiceStartResponse {
-}
+export interface NodeServiceStartResponse {}
 
 export interface NodeServiceStopRequest {
   nodeId: string;
 }
 
-export interface NodeServiceStopResponse {
-}
+export interface NodeServiceStopResponse {}
 
 export interface NodeServiceRestartRequest {
   nodeId: string;
 }
 
-export interface NodeServiceRestartResponse {
-}
+export interface NodeServiceRestartResponse {}
 
 export interface NodeServiceDeleteRequest {
   nodeId: string;
 }
 
-export interface NodeServiceDeleteResponse {
-}
+export interface NodeServiceDeleteResponse {}
 
 function createBaseNode(): Node {
   return {
-    nodeId: "",
-    nodeName: "",
-    displayName: "",
+    nodeId: '',
+    nodeName: '',
+    displayName: '',
     oldNodeId: undefined,
-    imageId: "",
-    configId: "",
+    imageId: '',
+    configId: '',
     config: undefined,
-    orgId: "",
-    orgName: "",
-    hostId: "",
+    orgId: '',
+    orgName: '',
+    hostId: '',
     hostOrgId: undefined,
-    hostNetworkName: "",
+    hostNetworkName: '',
     hostDisplayName: undefined,
-    regionId: "",
-    regionKey: "",
-    regionName: "",
-    protocolId: "",
-    protocolName: "",
-    protocolVersionId: "",
+    regionId: '',
+    regionKey: '',
+    regionName: '',
+    protocolId: '',
+    protocolName: '',
+    protocolVersionId: '',
     versionKey: undefined,
-    semanticVersion: "",
+    semanticVersion: '',
     autoUpgrade: false,
-    ipAddress: "",
-    ipGateway: "",
-    dnsName: "",
+    ipAddress: '',
+    ipGateway: '',
+    dnsName: '',
     p2pAddress: undefined,
     dnsUrl: undefined,
     blockHeight: undefined,
@@ -348,79 +342,82 @@ function createBaseNode(): Node {
 
 export const Node = {
   encode(message: Node, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.nodeId !== "") {
+    if (message.nodeId !== '') {
       writer.uint32(10).string(message.nodeId);
     }
-    if (message.nodeName !== "") {
+    if (message.nodeName !== '') {
       writer.uint32(18).string(message.nodeName);
     }
-    if (message.displayName !== "") {
+    if (message.displayName !== '') {
       writer.uint32(26).string(message.displayName);
     }
     if (message.oldNodeId !== undefined) {
       writer.uint32(34).string(message.oldNodeId);
     }
-    if (message.imageId !== "") {
+    if (message.imageId !== '') {
       writer.uint32(42).string(message.imageId);
     }
-    if (message.configId !== "") {
+    if (message.configId !== '') {
       writer.uint32(50).string(message.configId);
     }
     if (message.config !== undefined) {
       NodeConfig.encode(message.config, writer.uint32(58).fork()).ldelim();
     }
-    if (message.orgId !== "") {
+    if (message.orgId !== '') {
       writer.uint32(66).string(message.orgId);
     }
-    if (message.orgName !== "") {
+    if (message.orgName !== '') {
       writer.uint32(74).string(message.orgName);
     }
-    if (message.hostId !== "") {
+    if (message.hostId !== '') {
       writer.uint32(82).string(message.hostId);
     }
     if (message.hostOrgId !== undefined) {
       writer.uint32(90).string(message.hostOrgId);
     }
-    if (message.hostNetworkName !== "") {
+    if (message.hostNetworkName !== '') {
       writer.uint32(98).string(message.hostNetworkName);
     }
     if (message.hostDisplayName !== undefined) {
       writer.uint32(106).string(message.hostDisplayName);
     }
-    if (message.regionId !== "") {
+    if (message.regionId !== '') {
       writer.uint32(114).string(message.regionId);
     }
-    if (message.regionKey !== "") {
+    if (message.regionKey !== '') {
       writer.uint32(122).string(message.regionKey);
     }
-    if (message.regionName !== "") {
+    if (message.regionName !== '') {
       writer.uint32(130).string(message.regionName);
     }
-    if (message.protocolId !== "") {
+    if (message.protocolId !== '') {
       writer.uint32(138).string(message.protocolId);
     }
-    if (message.protocolName !== "") {
+    if (message.protocolName !== '') {
       writer.uint32(146).string(message.protocolName);
     }
-    if (message.protocolVersionId !== "") {
+    if (message.protocolVersionId !== '') {
       writer.uint32(154).string(message.protocolVersionId);
     }
     if (message.versionKey !== undefined) {
-      ProtocolVersionKey.encode(message.versionKey, writer.uint32(162).fork()).ldelim();
+      ProtocolVersionKey.encode(
+        message.versionKey,
+        writer.uint32(162).fork(),
+      ).ldelim();
     }
-    if (message.semanticVersion !== "") {
+    if (message.semanticVersion !== '') {
       writer.uint32(170).string(message.semanticVersion);
     }
     if (message.autoUpgrade === true) {
       writer.uint32(176).bool(message.autoUpgrade);
     }
-    if (message.ipAddress !== "") {
+    if (message.ipAddress !== '') {
       writer.uint32(186).string(message.ipAddress);
     }
-    if (message.ipGateway !== "") {
+    if (message.ipGateway !== '') {
       writer.uint32(194).string(message.ipGateway);
     }
-    if (message.dnsName !== "") {
+    if (message.dnsName !== '') {
       writer.uint32(202).string(message.dnsName);
     }
     if (message.p2pAddress !== undefined) {
@@ -454,10 +451,16 @@ export const Node = {
       Resource.encode(message.createdBy, writer.uint32(282).fork()).ldelim();
     }
     if (message.createdAt !== undefined) {
-      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(290).fork()).ldelim();
+      Timestamp.encode(
+        toTimestamp(message.createdAt),
+        writer.uint32(290).fork(),
+      ).ldelim();
     }
     if (message.updatedAt !== undefined) {
-      Timestamp.encode(toTimestamp(message.updatedAt), writer.uint32(298).fork()).ldelim();
+      Timestamp.encode(
+        toTimestamp(message.updatedAt),
+        writer.uint32(298).fork(),
+      ).ldelim();
     }
     if (message.cost !== undefined) {
       BillingAmount.encode(message.cost, writer.uint32(306).fork()).ldelim();
@@ -466,7 +469,8 @@ export const Node = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Node {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNode();
     while (reader.pos < end) {
@@ -599,7 +603,7 @@ export const Node = {
           message.protocolName = reader.string();
           continue;
         case 19:
-          if (tag !== 154) {
+          if (tag !== 152) {
             break;
           }
 
@@ -610,7 +614,10 @@ export const Node = {
             break;
           }
 
-          message.versionKey = ProtocolVersionKey.decode(reader, reader.uint32());
+          message.versionKey = ProtocolVersionKey.decode(
+            reader,
+            reader.uint32(),
+          );
           continue;
         case 21:
           if (tag !== 170) {
@@ -620,7 +627,7 @@ export const Node = {
           message.semanticVersion = reader.string();
           continue;
         case 22:
-          if (tag !== 176) {
+          if (tag !== 178) {
             break;
           }
 
@@ -638,7 +645,7 @@ export const Node = {
             break;
           }
 
-          message.ipGateway = reader.string();
+          message.dnsUrl = reader.string();
           continue;
         case 25:
           if (tag !== 202) {
@@ -648,7 +655,7 @@ export const Node = {
           message.dnsName = reader.string();
           continue;
         case 26:
-          if (tag !== 210) {
+          if (tag !== 208) {
             break;
           }
 
@@ -722,14 +729,18 @@ export const Node = {
             break;
           }
 
-          message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.createdAt = fromTimestamp(
+            Timestamp.decode(reader, reader.uint32()),
+          );
           continue;
         case 37:
           if (tag !== 298) {
             break;
           }
 
-          message.updatedAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.updatedAt = fromTimestamp(
+            Timestamp.decode(reader, reader.uint32()),
+          );
           continue;
         case 38:
           if (tag !== 306) {
@@ -753,62 +764,71 @@ export const Node = {
 
   fromPartial(object: DeepPartial<Node>): Node {
     const message = createBaseNode();
-    message.nodeId = object.nodeId ?? "";
-    message.nodeName = object.nodeName ?? "";
-    message.displayName = object.displayName ?? "";
+    message.nodeId = object.nodeId ?? '';
+    message.nodeName = object.nodeName ?? '';
+    message.displayName = object.displayName ?? '';
     message.oldNodeId = object.oldNodeId ?? undefined;
-    message.imageId = object.imageId ?? "";
-    message.configId = object.configId ?? "";
-    message.config = (object.config !== undefined && object.config !== null)
-      ? NodeConfig.fromPartial(object.config)
-      : undefined;
-    message.orgId = object.orgId ?? "";
-    message.orgName = object.orgName ?? "";
-    message.hostId = object.hostId ?? "";
+    message.imageId = object.imageId ?? '';
+    message.configId = object.configId ?? '';
+    message.config =
+      object.config !== undefined && object.config !== null
+        ? NodeConfig.fromPartial(object.config)
+        : undefined;
+    message.orgId = object.orgId ?? '';
+    message.orgName = object.orgName ?? '';
+    message.hostId = object.hostId ?? '';
     message.hostOrgId = object.hostOrgId ?? undefined;
-    message.hostNetworkName = object.hostNetworkName ?? "";
+    message.hostNetworkName = object.hostNetworkName ?? '';
     message.hostDisplayName = object.hostDisplayName ?? undefined;
-    message.regionId = object.regionId ?? "";
-    message.regionKey = object.regionKey ?? "";
-    message.regionName = object.regionName ?? "";
-    message.protocolId = object.protocolId ?? "";
-    message.protocolName = object.protocolName ?? "";
-    message.protocolVersionId = object.protocolVersionId ?? "";
-    message.versionKey = (object.versionKey !== undefined && object.versionKey !== null)
-      ? ProtocolVersionKey.fromPartial(object.versionKey)
-      : undefined;
-    message.semanticVersion = object.semanticVersion ?? "";
+    message.regionId = object.regionId ?? '';
+    message.regionKey = object.regionKey ?? '';
+    message.regionName = object.regionName ?? '';
+    message.protocolId = object.protocolId ?? '';
+    message.protocolName = object.protocolName ?? '';
+    message.protocolVersionId = object.protocolVersionId ?? '';
+    message.versionKey =
+      object.versionKey !== undefined && object.versionKey !== null
+        ? ProtocolVersionKey.fromPartial(object.versionKey)
+        : undefined;
+    message.semanticVersion = object.semanticVersion ?? '';
     message.autoUpgrade = object.autoUpgrade ?? false;
-    message.ipAddress = object.ipAddress ?? "";
-    message.ipGateway = object.ipGateway ?? "";
-    message.dnsName = object.dnsName ?? "";
+    message.ipAddress = object.ipAddress ?? '';
+    message.ipGateway = object.ipGateway ?? '';
+    message.dnsName = object.dnsName ?? '';
     message.p2pAddress = object.p2pAddress ?? undefined;
     message.dnsUrl = object.dnsUrl ?? undefined;
     message.blockHeight = object.blockHeight ?? undefined;
     message.blockAge = object.blockAge ?? undefined;
     message.note = object.note ?? undefined;
-    message.nodeStatus = (object.nodeStatus !== undefined && object.nodeStatus !== null)
-      ? NodeStatus.fromPartial(object.nodeStatus)
-      : undefined;
+    message.nodeStatus =
+      object.nodeStatus !== undefined && object.nodeStatus !== null
+        ? NodeStatus.fromPartial(object.nodeStatus)
+        : undefined;
     message.jobs = object.jobs?.map((e) => NodeJob.fromPartial(e)) || [];
-    message.reports = object.reports?.map((e) => NodeReport.fromPartial(e)) || [];
-    message.tags = (object.tags !== undefined && object.tags !== null) ? Tags.fromPartial(object.tags) : undefined;
-    message.createdBy = (object.createdBy !== undefined && object.createdBy !== null)
-      ? Resource.fromPartial(object.createdBy)
-      : undefined;
+    message.reports =
+      object.reports?.map((e) => NodeReport.fromPartial(e)) || [];
+    message.tags =
+      object.tags !== undefined && object.tags !== null
+        ? Tags.fromPartial(object.tags)
+        : undefined;
+    message.createdBy =
+      object.createdBy !== undefined && object.createdBy !== null
+        ? Resource.fromPartial(object.createdBy)
+        : undefined;
     message.createdAt = object.createdAt ?? undefined;
     message.updatedAt = object.updatedAt ?? undefined;
-    message.cost = (object.cost !== undefined && object.cost !== null)
-      ? BillingAmount.fromPartial(object.cost)
-      : undefined;
+    message.cost =
+      object.cost !== undefined && object.cost !== null
+        ? BillingAmount.fromPartial(object.cost)
+        : undefined;
     return message;
   },
 };
 
 function createBaseNodeServiceCreateRequest(): NodeServiceCreateRequest {
   return {
-    orgId: "",
-    imageId: "",
+    orgId: '',
+    imageId: '',
     oldNodeId: undefined,
     launcher: undefined,
     newValues: [],
@@ -818,11 +838,14 @@ function createBaseNodeServiceCreateRequest(): NodeServiceCreateRequest {
 }
 
 export const NodeServiceCreateRequest = {
-  encode(message: NodeServiceCreateRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.orgId !== "") {
+  encode(
+    message: NodeServiceCreateRequest,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    if (message.orgId !== '') {
       writer.uint32(10).string(message.orgId);
     }
-    if (message.imageId !== "") {
+    if (message.imageId !== '') {
       writer.uint32(18).string(message.imageId);
     }
     if (message.oldNodeId !== undefined) {
@@ -843,8 +866,12 @@ export const NodeServiceCreateRequest = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): NodeServiceCreateRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): NodeServiceCreateRequest {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNodeServiceCreateRequest();
     while (reader.pos < end) {
@@ -883,7 +910,9 @@ export const NodeServiceCreateRequest = {
             break;
           }
 
-          message.newValues.push(NewImagePropertyValue.decode(reader, reader.uint32()));
+          message.newValues.push(
+            NewImagePropertyValue.decode(reader, reader.uint32()),
+          );
           continue;
         case 6:
           if (tag !== 50) {
@@ -908,42 +937,59 @@ export const NodeServiceCreateRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<NodeServiceCreateRequest>): NodeServiceCreateRequest {
+  create(
+    base?: DeepPartial<NodeServiceCreateRequest>,
+  ): NodeServiceCreateRequest {
     return NodeServiceCreateRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<NodeServiceCreateRequest>): NodeServiceCreateRequest {
+  fromPartial(
+    object: DeepPartial<NodeServiceCreateRequest>,
+  ): NodeServiceCreateRequest {
     const message = createBaseNodeServiceCreateRequest();
-    message.orgId = object.orgId ?? "";
-    message.imageId = object.imageId ?? "";
+    message.orgId = object.orgId ?? '';
+    message.imageId = object.imageId ?? '';
     message.oldNodeId = object.oldNodeId ?? undefined;
-    message.launcher = (object.launcher !== undefined && object.launcher !== null)
-      ? NodeLauncher.fromPartial(object.launcher)
-      : undefined;
-    message.newValues = object.newValues?.map((e) => NewImagePropertyValue.fromPartial(e)) || [];
-    message.addRules = object.addRules?.map((e) => FirewallRule.fromPartial(e)) || [];
-    message.tags = (object.tags !== undefined && object.tags !== null) ? Tags.fromPartial(object.tags) : undefined;
+    message.launcher =
+      object.launcher !== undefined && object.launcher !== null
+        ? NodeLauncher.fromPartial(object.launcher)
+        : undefined;
+    message.newValues =
+      object.newValues?.map((e) => NewImagePropertyValue.fromPartial(e)) || [];
+    message.addRules =
+      object.addRules?.map((e) => FirewallRule.fromPartial(e)) || [];
+    message.tags =
+      object.tags !== undefined && object.tags !== null
+        ? Tags.fromPartial(object.tags)
+        : undefined;
     return message;
   },
 };
 
 function createBaseNewImagePropertyValue(): NewImagePropertyValue {
-  return { key: "", value: "" };
+  return { key: '', value: '' };
 }
 
 export const NewImagePropertyValue = {
-  encode(message: NewImagePropertyValue, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.key !== "") {
+  encode(
+    message: NewImagePropertyValue,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    if (message.key !== '') {
       writer.uint32(10).string(message.key);
     }
-    if (message.value !== "") {
+    if (message.value !== '') {
       writer.uint32(18).string(message.value);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): NewImagePropertyValue {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): NewImagePropertyValue {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNewImagePropertyValue();
     while (reader.pos < end) {
@@ -976,10 +1022,12 @@ export const NewImagePropertyValue = {
     return NewImagePropertyValue.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<NewImagePropertyValue>): NewImagePropertyValue {
+  fromPartial(
+    object: DeepPartial<NewImagePropertyValue>,
+  ): NewImagePropertyValue {
     const message = createBaseNewImagePropertyValue();
-    message.key = object.key ?? "";
-    message.value = object.value ?? "";
+    message.key = object.key ?? '';
+    message.value = object.value ?? '';
     return message;
   },
 };
@@ -989,15 +1037,22 @@ function createBaseNodeServiceCreateResponse(): NodeServiceCreateResponse {
 }
 
 export const NodeServiceCreateResponse = {
-  encode(message: NodeServiceCreateResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: NodeServiceCreateResponse,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     for (const v of message.nodes) {
       Node.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): NodeServiceCreateResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): NodeServiceCreateResponse {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNodeServiceCreateResponse();
     while (reader.pos < end) {
@@ -1019,11 +1074,15 @@ export const NodeServiceCreateResponse = {
     return message;
   },
 
-  create(base?: DeepPartial<NodeServiceCreateResponse>): NodeServiceCreateResponse {
+  create(
+    base?: DeepPartial<NodeServiceCreateResponse>,
+  ): NodeServiceCreateResponse {
     return NodeServiceCreateResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<NodeServiceCreateResponse>): NodeServiceCreateResponse {
+  fromPartial(
+    object: DeepPartial<NodeServiceCreateResponse>,
+  ): NodeServiceCreateResponse {
     const message = createBaseNodeServiceCreateResponse();
     message.nodes = object.nodes?.map((e) => Node.fromPartial(e)) || [];
     return message;
@@ -1031,19 +1090,26 @@ export const NodeServiceCreateResponse = {
 };
 
 function createBaseNodeServiceGetRequest(): NodeServiceGetRequest {
-  return { nodeId: "" };
+  return { nodeId: '' };
 }
 
 export const NodeServiceGetRequest = {
-  encode(message: NodeServiceGetRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.nodeId !== "") {
+  encode(
+    message: NodeServiceGetRequest,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    if (message.nodeId !== '') {
       writer.uint32(10).string(message.nodeId);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): NodeServiceGetRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): NodeServiceGetRequest {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNodeServiceGetRequest();
     while (reader.pos < end) {
@@ -1069,9 +1135,11 @@ export const NodeServiceGetRequest = {
     return NodeServiceGetRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<NodeServiceGetRequest>): NodeServiceGetRequest {
+  fromPartial(
+    object: DeepPartial<NodeServiceGetRequest>,
+  ): NodeServiceGetRequest {
     const message = createBaseNodeServiceGetRequest();
-    message.nodeId = object.nodeId ?? "";
+    message.nodeId = object.nodeId ?? '';
     return message;
   },
 };
@@ -1081,15 +1149,22 @@ function createBaseNodeServiceGetResponse(): NodeServiceGetResponse {
 }
 
 export const NodeServiceGetResponse = {
-  encode(message: NodeServiceGetResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: NodeServiceGetResponse,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     if (message.node !== undefined) {
       Node.encode(message.node, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): NodeServiceGetResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): NodeServiceGetResponse {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNodeServiceGetResponse();
     while (reader.pos < end) {
@@ -1115,9 +1190,14 @@ export const NodeServiceGetResponse = {
     return NodeServiceGetResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<NodeServiceGetResponse>): NodeServiceGetResponse {
+  fromPartial(
+    object: DeepPartial<NodeServiceGetResponse>,
+  ): NodeServiceGetResponse {
     const message = createBaseNodeServiceGetResponse();
-    message.node = (object.node !== undefined && object.node !== null) ? Node.fromPartial(object.node) : undefined;
+    message.node =
+      object.node !== undefined && object.node !== null
+        ? Node.fromPartial(object.node)
+        : undefined;
     return message;
   },
 };
@@ -1141,7 +1221,10 @@ function createBaseNodeServiceListRequest(): NodeServiceListRequest {
 }
 
 export const NodeServiceListRequest = {
-  encode(message: NodeServiceListRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: NodeServiceListRequest,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     for (const v of message.orgIds) {
       writer.uint32(10).string(v!);
     }
@@ -1170,10 +1253,10 @@ export const NodeServiceListRequest = {
       writer.uint32(74).string(v!);
     }
     for (const v of message.userIds) {
-      writer.uint32(82).string(v!);
+      writer.uint32(66).string(v!);
     }
     for (const v of message.ipAddresses) {
-      writer.uint32(90).string(v!);
+      writer.uint32(74).string(v!);
     }
     writer.uint32(98).fork();
     for (const v of message.nodeStates) {
@@ -1188,8 +1271,12 @@ export const NodeServiceListRequest = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): NodeServiceListRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): NodeServiceListRequest {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNodeServiceListRequest();
     while (reader.pos < end) {
@@ -1242,7 +1329,9 @@ export const NodeServiceListRequest = {
             break;
           }
 
-          message.versionKeys.push(ProtocolVersionKey.decode(reader, reader.uint32()));
+          message.versionKeys.push(
+            ProtocolVersionKey.decode(reader, reader.uint32()),
+          );
           continue;
         case 8:
           if (tag !== 66) {
@@ -1319,17 +1408,21 @@ export const NodeServiceListRequest = {
     return NodeServiceListRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<NodeServiceListRequest>): NodeServiceListRequest {
+  fromPartial(
+    object: DeepPartial<NodeServiceListRequest>,
+  ): NodeServiceListRequest {
     const message = createBaseNodeServiceListRequest();
     message.orgIds = object.orgIds?.map((e) => e) || [];
     message.offset = object.offset ?? 0;
     message.limit = object.limit ?? 0;
-    message.search = (object.search !== undefined && object.search !== null)
-      ? NodeSearch.fromPartial(object.search)
-      : undefined;
+    message.search =
+      object.search !== undefined && object.search !== null
+        ? NodeSearch.fromPartial(object.search)
+        : undefined;
     message.sort = object.sort?.map((e) => NodeSort.fromPartial(e)) || [];
     message.protocolIds = object.protocolIds?.map((e) => e) || [];
-    message.versionKeys = object.versionKeys?.map((e) => ProtocolVersionKey.fromPartial(e)) || [];
+    message.versionKeys =
+      object.versionKeys?.map((e) => ProtocolVersionKey.fromPartial(e)) || [];
     message.semanticVersions = object.semanticVersions?.map((e) => e) || [];
     message.hostIds = object.hostIds?.map((e) => e) || [];
     message.userIds = object.userIds?.map((e) => e) || [];
@@ -1356,7 +1449,10 @@ function createBaseNodeSearch(): NodeSearch {
 }
 
 export const NodeSearch = {
-  encode(message: NodeSearch, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: NodeSearch,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     if (message.operator !== 0) {
       writer.uint32(8).int32(message.operator);
     }
@@ -1391,7 +1487,8 @@ export const NodeSearch = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): NodeSearch {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNodeSearch();
     while (reader.pos < end) {
@@ -1501,7 +1598,10 @@ function createBaseNodeSort(): NodeSort {
 }
 
 export const NodeSort = {
-  encode(message: NodeSort, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: NodeSort,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     if (message.field !== 0) {
       writer.uint32(8).int32(message.field);
     }
@@ -1512,7 +1612,8 @@ export const NodeSort = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): NodeSort {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNodeSort();
     while (reader.pos < end) {
@@ -1558,7 +1659,10 @@ function createBaseNodeServiceListResponse(): NodeServiceListResponse {
 }
 
 export const NodeServiceListResponse = {
-  encode(message: NodeServiceListResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: NodeServiceListResponse,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     for (const v of message.nodes) {
       Node.encode(v!, writer.uint32(10).fork()).ldelim();
     }
@@ -1568,8 +1672,12 @@ export const NodeServiceListResponse = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): NodeServiceListResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): NodeServiceListResponse {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNodeServiceListResponse();
     while (reader.pos < end) {
@@ -1602,7 +1710,9 @@ export const NodeServiceListResponse = {
     return NodeServiceListResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<NodeServiceListResponse>): NodeServiceListResponse {
+  fromPartial(
+    object: DeepPartial<NodeServiceListResponse>,
+  ): NodeServiceListResponse {
     const message = createBaseNodeServiceListResponse();
     message.nodes = object.nodes?.map((e) => Node.fromPartial(e)) || [];
     message.total = object.total ?? 0;
@@ -1611,15 +1721,18 @@ export const NodeServiceListResponse = {
 };
 
 function createBaseNodeServiceReportStatusRequest(): NodeServiceReportStatusRequest {
-  return { nodeId: "", configId: "", status: undefined, p2pAddress: undefined };
+  return { nodeId: '', configId: '', status: undefined, p2pAddress: undefined };
 }
 
 export const NodeServiceReportStatusRequest = {
-  encode(message: NodeServiceReportStatusRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.nodeId !== "") {
+  encode(
+    message: NodeServiceReportStatusRequest,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    if (message.nodeId !== '') {
       writer.uint32(10).string(message.nodeId);
     }
-    if (message.configId !== "") {
+    if (message.configId !== '') {
       writer.uint32(18).string(message.configId);
     }
     if (message.status !== undefined) {
@@ -1631,8 +1744,12 @@ export const NodeServiceReportStatusRequest = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): NodeServiceReportStatusRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): NodeServiceReportStatusRequest {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNodeServiceReportStatusRequest();
     while (reader.pos < end) {
@@ -1675,17 +1792,22 @@ export const NodeServiceReportStatusRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<NodeServiceReportStatusRequest>): NodeServiceReportStatusRequest {
+  create(
+    base?: DeepPartial<NodeServiceReportStatusRequest>,
+  ): NodeServiceReportStatusRequest {
     return NodeServiceReportStatusRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<NodeServiceReportStatusRequest>): NodeServiceReportStatusRequest {
+  fromPartial(
+    object: DeepPartial<NodeServiceReportStatusRequest>,
+  ): NodeServiceReportStatusRequest {
     const message = createBaseNodeServiceReportStatusRequest();
-    message.nodeId = object.nodeId ?? "";
-    message.configId = object.configId ?? "";
-    message.status = (object.status !== undefined && object.status !== null)
-      ? NodeStatus.fromPartial(object.status)
-      : undefined;
+    message.nodeId = object.nodeId ?? '';
+    message.configId = object.configId ?? '';
+    message.status =
+      object.status !== undefined && object.status !== null
+        ? NodeStatus.fromPartial(object.status)
+        : undefined;
     message.p2pAddress = object.p2pAddress ?? undefined;
     return message;
   },
@@ -1696,12 +1818,19 @@ function createBaseNodeServiceReportStatusResponse(): NodeServiceReportStatusRes
 }
 
 export const NodeServiceReportStatusResponse = {
-  encode(_: NodeServiceReportStatusResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    _: NodeServiceReportStatusResponse,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): NodeServiceReportStatusResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): NodeServiceReportStatusResponse {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNodeServiceReportStatusResponse();
     while (reader.pos < end) {
@@ -1716,36 +1845,47 @@ export const NodeServiceReportStatusResponse = {
     return message;
   },
 
-  create(base?: DeepPartial<NodeServiceReportStatusResponse>): NodeServiceReportStatusResponse {
+  create(
+    base?: DeepPartial<NodeServiceReportStatusResponse>,
+  ): NodeServiceReportStatusResponse {
     return NodeServiceReportStatusResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(_: DeepPartial<NodeServiceReportStatusResponse>): NodeServiceReportStatusResponse {
+  fromPartial(
+    _: DeepPartial<NodeServiceReportStatusResponse>,
+  ): NodeServiceReportStatusResponse {
     const message = createBaseNodeServiceReportStatusResponse();
     return message;
   },
 };
 
 function createBaseNodeServiceReportErrorRequest(): NodeServiceReportErrorRequest {
-  return { nodeId: "", createdBy: undefined, message: "" };
+  return { nodeId: '', createdBy: undefined, message: '' };
 }
 
 export const NodeServiceReportErrorRequest = {
-  encode(message: NodeServiceReportErrorRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.nodeId !== "") {
+  encode(
+    message: NodeServiceReportErrorRequest,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    if (message.nodeId !== '') {
       writer.uint32(10).string(message.nodeId);
     }
     if (message.createdBy !== undefined) {
       Resource.encode(message.createdBy, writer.uint32(18).fork()).ldelim();
     }
-    if (message.message !== "") {
+    if (message.message !== '') {
       writer.uint32(26).string(message.message);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): NodeServiceReportErrorRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): NodeServiceReportErrorRequest {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNodeServiceReportErrorRequest();
     while (reader.pos < end) {
@@ -1781,35 +1921,47 @@ export const NodeServiceReportErrorRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<NodeServiceReportErrorRequest>): NodeServiceReportErrorRequest {
+  create(
+    base?: DeepPartial<NodeServiceReportErrorRequest>,
+  ): NodeServiceReportErrorRequest {
     return NodeServiceReportErrorRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<NodeServiceReportErrorRequest>): NodeServiceReportErrorRequest {
+  fromPartial(
+    object: DeepPartial<NodeServiceReportErrorRequest>,
+  ): NodeServiceReportErrorRequest {
     const message = createBaseNodeServiceReportErrorRequest();
-    message.nodeId = object.nodeId ?? "";
-    message.createdBy = (object.createdBy !== undefined && object.createdBy !== null)
-      ? Resource.fromPartial(object.createdBy)
-      : undefined;
-    message.message = object.message ?? "";
+    message.nodeId = object.nodeId ?? '';
+    message.createdBy =
+      object.createdBy !== undefined && object.createdBy !== null
+        ? Resource.fromPartial(object.createdBy)
+        : undefined;
+    message.message = object.message ?? '';
     return message;
   },
 };
 
 function createBaseNodeServiceReportErrorResponse(): NodeServiceReportErrorResponse {
-  return { reportId: "" };
+  return { reportId: '' };
 }
 
 export const NodeServiceReportErrorResponse = {
-  encode(message: NodeServiceReportErrorResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.reportId !== "") {
+  encode(
+    message: NodeServiceReportErrorResponse,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    if (message.reportId !== '') {
       writer.uint32(10).string(message.reportId);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): NodeServiceReportErrorResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): NodeServiceReportErrorResponse {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNodeServiceReportErrorResponse();
     while (reader.pos < end) {
@@ -1831,20 +1983,24 @@ export const NodeServiceReportErrorResponse = {
     return message;
   },
 
-  create(base?: DeepPartial<NodeServiceReportErrorResponse>): NodeServiceReportErrorResponse {
+  create(
+    base?: DeepPartial<NodeServiceReportErrorResponse>,
+  ): NodeServiceReportErrorResponse {
     return NodeServiceReportErrorResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<NodeServiceReportErrorResponse>): NodeServiceReportErrorResponse {
+  fromPartial(
+    object: DeepPartial<NodeServiceReportErrorResponse>,
+  ): NodeServiceReportErrorResponse {
     const message = createBaseNodeServiceReportErrorResponse();
-    message.reportId = object.reportId ?? "";
+    message.reportId = object.reportId ?? '';
     return message;
   },
 };
 
 function createBaseNodeServiceUpdateConfigRequest(): NodeServiceUpdateConfigRequest {
   return {
-    nodeId: "",
+    nodeId: '',
     autoUpgrade: undefined,
     newOrgId: undefined,
     newDisplayName: undefined,
@@ -1857,8 +2013,11 @@ function createBaseNodeServiceUpdateConfigRequest(): NodeServiceUpdateConfigRequ
 }
 
 export const NodeServiceUpdateConfigRequest = {
-  encode(message: NodeServiceUpdateConfigRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.nodeId !== "") {
+  encode(
+    message: NodeServiceUpdateConfigRequest,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    if (message.nodeId !== '') {
       writer.uint32(10).string(message.nodeId);
     }
     if (message.autoUpgrade !== undefined) {
@@ -1877,7 +2036,10 @@ export const NodeServiceUpdateConfigRequest = {
       NewImagePropertyValue.encode(v!, writer.uint32(50).fork()).ldelim();
     }
     if (message.newFirewall !== undefined) {
-      FirewallConfig.encode(message.newFirewall, writer.uint32(58).fork()).ldelim();
+      FirewallConfig.encode(
+        message.newFirewall,
+        writer.uint32(58).fork(),
+      ).ldelim();
     }
     if (message.updateTags !== undefined) {
       UpdateTags.encode(message.updateTags, writer.uint32(66).fork()).ldelim();
@@ -1888,8 +2050,12 @@ export const NodeServiceUpdateConfigRequest = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): NodeServiceUpdateConfigRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): NodeServiceUpdateConfigRequest {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNodeServiceUpdateConfigRequest();
     while (reader.pos < end) {
@@ -1935,7 +2101,9 @@ export const NodeServiceUpdateConfigRequest = {
             break;
           }
 
-          message.newValues.push(NewImagePropertyValue.decode(reader, reader.uint32()));
+          message.newValues.push(
+            NewImagePropertyValue.decode(reader, reader.uint32()),
+          );
           continue;
         case 7:
           if (tag !== 58) {
@@ -1967,27 +2135,35 @@ export const NodeServiceUpdateConfigRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<NodeServiceUpdateConfigRequest>): NodeServiceUpdateConfigRequest {
+  create(
+    base?: DeepPartial<NodeServiceUpdateConfigRequest>,
+  ): NodeServiceUpdateConfigRequest {
     return NodeServiceUpdateConfigRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<NodeServiceUpdateConfigRequest>): NodeServiceUpdateConfigRequest {
+  fromPartial(
+    object: DeepPartial<NodeServiceUpdateConfigRequest>,
+  ): NodeServiceUpdateConfigRequest {
     const message = createBaseNodeServiceUpdateConfigRequest();
-    message.nodeId = object.nodeId ?? "";
+    message.nodeId = object.nodeId ?? '';
     message.autoUpgrade = object.autoUpgrade ?? undefined;
     message.newOrgId = object.newOrgId ?? undefined;
     message.newDisplayName = object.newDisplayName ?? undefined;
     message.newNote = object.newNote ?? undefined;
-    message.newValues = object.newValues?.map((e) => NewImagePropertyValue.fromPartial(e)) || [];
-    message.newFirewall = (object.newFirewall !== undefined && object.newFirewall !== null)
-      ? FirewallConfig.fromPartial(object.newFirewall)
-      : undefined;
-    message.updateTags = (object.updateTags !== undefined && object.updateTags !== null)
-      ? UpdateTags.fromPartial(object.updateTags)
-      : undefined;
-    message.cost = (object.cost !== undefined && object.cost !== null)
-      ? BillingAmount.fromPartial(object.cost)
-      : undefined;
+    message.newValues =
+      object.newValues?.map((e) => NewImagePropertyValue.fromPartial(e)) || [];
+    message.newFirewall =
+      object.newFirewall !== undefined && object.newFirewall !== null
+        ? FirewallConfig.fromPartial(object.newFirewall)
+        : undefined;
+    message.updateTags =
+      object.updateTags !== undefined && object.updateTags !== null
+        ? UpdateTags.fromPartial(object.updateTags)
+        : undefined;
+    message.cost =
+      object.cost !== undefined && object.cost !== null
+        ? BillingAmount.fromPartial(object.cost)
+        : undefined;
     return message;
   },
 };
@@ -1997,12 +2173,19 @@ function createBaseNodeServiceUpdateConfigResponse(): NodeServiceUpdateConfigRes
 }
 
 export const NodeServiceUpdateConfigResponse = {
-  encode(_: NodeServiceUpdateConfigResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    _: NodeServiceUpdateConfigResponse,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): NodeServiceUpdateConfigResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): NodeServiceUpdateConfigResponse {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNodeServiceUpdateConfigResponse();
     while (reader.pos < end) {
@@ -2017,26 +2200,33 @@ export const NodeServiceUpdateConfigResponse = {
     return message;
   },
 
-  create(base?: DeepPartial<NodeServiceUpdateConfigResponse>): NodeServiceUpdateConfigResponse {
+  create(
+    base?: DeepPartial<NodeServiceUpdateConfigResponse>,
+  ): NodeServiceUpdateConfigResponse {
     return NodeServiceUpdateConfigResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(_: DeepPartial<NodeServiceUpdateConfigResponse>): NodeServiceUpdateConfigResponse {
+  fromPartial(
+    _: DeepPartial<NodeServiceUpdateConfigResponse>,
+  ): NodeServiceUpdateConfigResponse {
     const message = createBaseNodeServiceUpdateConfigResponse();
     return message;
   },
 };
 
 function createBaseNodeServiceUpgradeImageRequest(): NodeServiceUpgradeImageRequest {
-  return { nodeIds: [], imageId: "", orgId: undefined };
+  return { nodeIds: [], imageId: '', orgId: undefined };
 }
 
 export const NodeServiceUpgradeImageRequest = {
-  encode(message: NodeServiceUpgradeImageRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: NodeServiceUpgradeImageRequest,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     for (const v of message.nodeIds) {
       writer.uint32(10).string(v!);
     }
-    if (message.imageId !== "") {
+    if (message.imageId !== '') {
       writer.uint32(18).string(message.imageId);
     }
     if (message.orgId !== undefined) {
@@ -2045,8 +2235,12 @@ export const NodeServiceUpgradeImageRequest = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): NodeServiceUpgradeImageRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): NodeServiceUpgradeImageRequest {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNodeServiceUpgradeImageRequest();
     while (reader.pos < end) {
@@ -2082,14 +2276,18 @@ export const NodeServiceUpgradeImageRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<NodeServiceUpgradeImageRequest>): NodeServiceUpgradeImageRequest {
+  create(
+    base?: DeepPartial<NodeServiceUpgradeImageRequest>,
+  ): NodeServiceUpgradeImageRequest {
     return NodeServiceUpgradeImageRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<NodeServiceUpgradeImageRequest>): NodeServiceUpgradeImageRequest {
+  fromPartial(
+    object: DeepPartial<NodeServiceUpgradeImageRequest>,
+  ): NodeServiceUpgradeImageRequest {
     const message = createBaseNodeServiceUpgradeImageRequest();
     message.nodeIds = object.nodeIds?.map((e) => e) || [];
-    message.imageId = object.imageId ?? "";
+    message.imageId = object.imageId ?? '';
     message.orgId = object.orgId ?? undefined;
     return message;
   },
@@ -2100,12 +2298,19 @@ function createBaseNodeServiceUpgradeImageResponse(): NodeServiceUpgradeImageRes
 }
 
 export const NodeServiceUpgradeImageResponse = {
-  encode(_: NodeServiceUpgradeImageResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    _: NodeServiceUpgradeImageResponse,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): NodeServiceUpgradeImageResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): NodeServiceUpgradeImageResponse {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNodeServiceUpgradeImageResponse();
     while (reader.pos < end) {
@@ -2120,30 +2325,41 @@ export const NodeServiceUpgradeImageResponse = {
     return message;
   },
 
-  create(base?: DeepPartial<NodeServiceUpgradeImageResponse>): NodeServiceUpgradeImageResponse {
+  create(
+    base?: DeepPartial<NodeServiceUpgradeImageResponse>,
+  ): NodeServiceUpgradeImageResponse {
     return NodeServiceUpgradeImageResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(_: DeepPartial<NodeServiceUpgradeImageResponse>): NodeServiceUpgradeImageResponse {
+  fromPartial(
+    _: DeepPartial<NodeServiceUpgradeImageResponse>,
+  ): NodeServiceUpgradeImageResponse {
     const message = createBaseNodeServiceUpgradeImageResponse();
     return message;
   },
 };
 
 function createBaseNodeServiceStartRequest(): NodeServiceStartRequest {
-  return { nodeId: "" };
+  return { nodeId: '' };
 }
 
 export const NodeServiceStartRequest = {
-  encode(message: NodeServiceStartRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.nodeId !== "") {
+  encode(
+    message: NodeServiceStartRequest,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    if (message.nodeId !== '') {
       writer.uint32(10).string(message.nodeId);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): NodeServiceStartRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): NodeServiceStartRequest {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNodeServiceStartRequest();
     while (reader.pos < end) {
@@ -2169,9 +2385,11 @@ export const NodeServiceStartRequest = {
     return NodeServiceStartRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<NodeServiceStartRequest>): NodeServiceStartRequest {
+  fromPartial(
+    object: DeepPartial<NodeServiceStartRequest>,
+  ): NodeServiceStartRequest {
     const message = createBaseNodeServiceStartRequest();
-    message.nodeId = object.nodeId ?? "";
+    message.nodeId = object.nodeId ?? '';
     return message;
   },
 };
@@ -2181,12 +2399,19 @@ function createBaseNodeServiceStartResponse(): NodeServiceStartResponse {
 }
 
 export const NodeServiceStartResponse = {
-  encode(_: NodeServiceStartResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    _: NodeServiceStartResponse,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): NodeServiceStartResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): NodeServiceStartResponse {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNodeServiceStartResponse();
     while (reader.pos < end) {
@@ -2201,30 +2426,41 @@ export const NodeServiceStartResponse = {
     return message;
   },
 
-  create(base?: DeepPartial<NodeServiceStartResponse>): NodeServiceStartResponse {
+  create(
+    base?: DeepPartial<NodeServiceStartResponse>,
+  ): NodeServiceStartResponse {
     return NodeServiceStartResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(_: DeepPartial<NodeServiceStartResponse>): NodeServiceStartResponse {
+  fromPartial(
+    _: DeepPartial<NodeServiceStartResponse>,
+  ): NodeServiceStartResponse {
     const message = createBaseNodeServiceStartResponse();
     return message;
   },
 };
 
 function createBaseNodeServiceStopRequest(): NodeServiceStopRequest {
-  return { nodeId: "" };
+  return { nodeId: '' };
 }
 
 export const NodeServiceStopRequest = {
-  encode(message: NodeServiceStopRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.nodeId !== "") {
+  encode(
+    message: NodeServiceStopRequest,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    if (message.nodeId !== '') {
       writer.uint32(10).string(message.nodeId);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): NodeServiceStopRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): NodeServiceStopRequest {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNodeServiceStopRequest();
     while (reader.pos < end) {
@@ -2250,9 +2486,11 @@ export const NodeServiceStopRequest = {
     return NodeServiceStopRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<NodeServiceStopRequest>): NodeServiceStopRequest {
+  fromPartial(
+    object: DeepPartial<NodeServiceStopRequest>,
+  ): NodeServiceStopRequest {
     const message = createBaseNodeServiceStopRequest();
-    message.nodeId = object.nodeId ?? "";
+    message.nodeId = object.nodeId ?? '';
     return message;
   },
 };
@@ -2262,12 +2500,19 @@ function createBaseNodeServiceStopResponse(): NodeServiceStopResponse {
 }
 
 export const NodeServiceStopResponse = {
-  encode(_: NodeServiceStopResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    _: NodeServiceStopResponse,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): NodeServiceStopResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): NodeServiceStopResponse {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNodeServiceStopResponse();
     while (reader.pos < end) {
@@ -2286,26 +2531,35 @@ export const NodeServiceStopResponse = {
     return NodeServiceStopResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(_: DeepPartial<NodeServiceStopResponse>): NodeServiceStopResponse {
+  fromPartial(
+    _: DeepPartial<NodeServiceStopResponse>,
+  ): NodeServiceStopResponse {
     const message = createBaseNodeServiceStopResponse();
     return message;
   },
 };
 
 function createBaseNodeServiceRestartRequest(): NodeServiceRestartRequest {
-  return { nodeId: "" };
+  return { nodeId: '' };
 }
 
 export const NodeServiceRestartRequest = {
-  encode(message: NodeServiceRestartRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.nodeId !== "") {
+  encode(
+    message: NodeServiceRestartRequest,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    if (message.nodeId !== '') {
       writer.uint32(10).string(message.nodeId);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): NodeServiceRestartRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): NodeServiceRestartRequest {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNodeServiceRestartRequest();
     while (reader.pos < end) {
@@ -2327,13 +2581,17 @@ export const NodeServiceRestartRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<NodeServiceRestartRequest>): NodeServiceRestartRequest {
+  create(
+    base?: DeepPartial<NodeServiceRestartRequest>,
+  ): NodeServiceRestartRequest {
     return NodeServiceRestartRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<NodeServiceRestartRequest>): NodeServiceRestartRequest {
+  fromPartial(
+    object: DeepPartial<NodeServiceRestartRequest>,
+  ): NodeServiceRestartRequest {
     const message = createBaseNodeServiceRestartRequest();
-    message.nodeId = object.nodeId ?? "";
+    message.nodeId = object.nodeId ?? '';
     return message;
   },
 };
@@ -2343,12 +2601,19 @@ function createBaseNodeServiceRestartResponse(): NodeServiceRestartResponse {
 }
 
 export const NodeServiceRestartResponse = {
-  encode(_: NodeServiceRestartResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    _: NodeServiceRestartResponse,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): NodeServiceRestartResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): NodeServiceRestartResponse {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNodeServiceRestartResponse();
     while (reader.pos < end) {
@@ -2363,30 +2628,41 @@ export const NodeServiceRestartResponse = {
     return message;
   },
 
-  create(base?: DeepPartial<NodeServiceRestartResponse>): NodeServiceRestartResponse {
+  create(
+    base?: DeepPartial<NodeServiceRestartResponse>,
+  ): NodeServiceRestartResponse {
     return NodeServiceRestartResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(_: DeepPartial<NodeServiceRestartResponse>): NodeServiceRestartResponse {
+  fromPartial(
+    _: DeepPartial<NodeServiceRestartResponse>,
+  ): NodeServiceRestartResponse {
     const message = createBaseNodeServiceRestartResponse();
     return message;
   },
 };
 
 function createBaseNodeServiceDeleteRequest(): NodeServiceDeleteRequest {
-  return { nodeId: "" };
+  return { nodeId: '' };
 }
 
 export const NodeServiceDeleteRequest = {
-  encode(message: NodeServiceDeleteRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.nodeId !== "") {
+  encode(
+    message: NodeServiceDeleteRequest,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    if (message.nodeId !== '') {
       writer.uint32(10).string(message.nodeId);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): NodeServiceDeleteRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): NodeServiceDeleteRequest {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNodeServiceDeleteRequest();
     while (reader.pos < end) {
@@ -2408,13 +2684,17 @@ export const NodeServiceDeleteRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<NodeServiceDeleteRequest>): NodeServiceDeleteRequest {
+  create(
+    base?: DeepPartial<NodeServiceDeleteRequest>,
+  ): NodeServiceDeleteRequest {
     return NodeServiceDeleteRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<NodeServiceDeleteRequest>): NodeServiceDeleteRequest {
+  fromPartial(
+    object: DeepPartial<NodeServiceDeleteRequest>,
+  ): NodeServiceDeleteRequest {
     const message = createBaseNodeServiceDeleteRequest();
-    message.nodeId = object.nodeId ?? "";
+    message.nodeId = object.nodeId ?? '';
     return message;
   },
 };
@@ -2424,12 +2704,19 @@ function createBaseNodeServiceDeleteResponse(): NodeServiceDeleteResponse {
 }
 
 export const NodeServiceDeleteResponse = {
-  encode(_: NodeServiceDeleteResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    _: NodeServiceDeleteResponse,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): NodeServiceDeleteResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): NodeServiceDeleteResponse {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNodeServiceDeleteResponse();
     while (reader.pos < end) {
@@ -2444,11 +2731,15 @@ export const NodeServiceDeleteResponse = {
     return message;
   },
 
-  create(base?: DeepPartial<NodeServiceDeleteResponse>): NodeServiceDeleteResponse {
+  create(
+    base?: DeepPartial<NodeServiceDeleteResponse>,
+  ): NodeServiceDeleteResponse {
     return NodeServiceDeleteResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(_: DeepPartial<NodeServiceDeleteResponse>): NodeServiceDeleteResponse {
+  fromPartial(
+    _: DeepPartial<NodeServiceDeleteResponse>,
+  ): NodeServiceDeleteResponse {
     const message = createBaseNodeServiceDeleteResponse();
     return message;
   },
@@ -2457,12 +2748,12 @@ export const NodeServiceDeleteResponse = {
 /** Service for interacting with a node. */
 export type NodeServiceDefinition = typeof NodeServiceDefinition;
 export const NodeServiceDefinition = {
-  name: "NodeService",
-  fullName: "blockjoy.v1.NodeService",
+  name: 'NodeService',
+  fullName: 'blockjoy.v1.NodeService',
   methods: {
     /** Create a new node. */
     create: {
-      name: "Create",
+      name: 'Create',
       requestType: NodeServiceCreateRequest,
       requestStream: false,
       responseType: NodeServiceCreateResponse,
@@ -2471,7 +2762,7 @@ export const NodeServiceDefinition = {
     },
     /** Get details for a node. */
     get: {
-      name: "Get",
+      name: 'Get',
       requestType: NodeServiceGetRequest,
       requestStream: false,
       responseType: NodeServiceGetResponse,
@@ -2480,7 +2771,7 @@ export const NodeServiceDefinition = {
     },
     /** List all nodes belonging to an org. */
     list: {
-      name: "List",
+      name: 'List',
       requestType: NodeServiceListRequest,
       requestStream: false,
       responseType: NodeServiceListResponse,
@@ -2489,7 +2780,7 @@ export const NodeServiceDefinition = {
     },
     /** Report the current status of a node. */
     reportStatus: {
-      name: "ReportStatus",
+      name: 'ReportStatus',
       requestType: NodeServiceReportStatusRequest,
       requestStream: false,
       responseType: NodeServiceReportStatusResponse,
@@ -2498,7 +2789,7 @@ export const NodeServiceDefinition = {
     },
     /** Report an error about this node. */
     reportError: {
-      name: "ReportError",
+      name: 'ReportError',
       requestType: NodeServiceReportErrorRequest,
       requestStream: false,
       responseType: NodeServiceReportErrorResponse,
@@ -2507,7 +2798,7 @@ export const NodeServiceDefinition = {
     },
     /** Update a node configuration. */
     updateConfig: {
-      name: "UpdateConfig",
+      name: 'UpdateConfig',
       requestType: NodeServiceUpdateConfigRequest,
       requestStream: false,
       responseType: NodeServiceUpdateConfigResponse,
@@ -2516,7 +2807,7 @@ export const NodeServiceDefinition = {
     },
     /** Upgrade a node to a new image. */
     upgradeImage: {
-      name: "UpgradeImage",
+      name: 'UpgradeImage',
       requestType: NodeServiceUpgradeImageRequest,
       requestStream: false,
       responseType: NodeServiceUpgradeImageResponse,
@@ -2525,7 +2816,7 @@ export const NodeServiceDefinition = {
     },
     /** Start a node. */
     start: {
-      name: "Start",
+      name: 'Start',
       requestType: NodeServiceStartRequest,
       requestStream: false,
       responseType: NodeServiceStartResponse,
@@ -2534,7 +2825,7 @@ export const NodeServiceDefinition = {
     },
     /** Stop a node. */
     stop: {
-      name: "Stop",
+      name: 'Stop',
       requestType: NodeServiceStopRequest,
       requestStream: false,
       responseType: NodeServiceStopResponse,
@@ -2543,7 +2834,7 @@ export const NodeServiceDefinition = {
     },
     /** Restart a node. */
     restart: {
-      name: "Restart",
+      name: 'Restart',
       requestType: NodeServiceRestartRequest,
       requestStream: false,
       responseType: NodeServiceRestartResponse,
@@ -2552,7 +2843,7 @@ export const NodeServiceDefinition = {
     },
     /** Delete a node. */
     delete: {
-      name: "Delete",
+      name: 'Delete',
       requestType: NodeServiceDeleteRequest,
       requestStream: false,
       responseType: NodeServiceDeleteResponse,
@@ -2682,26 +2973,38 @@ declare const self: any | undefined;
 declare const window: any | undefined;
 declare const global: any | undefined;
 const tsProtoGlobalThis: any = (() => {
-  if (typeof globalThis !== "undefined") {
+  if (typeof globalThis !== 'undefined') {
     return globalThis;
   }
-  if (typeof self !== "undefined") {
+  if (typeof self !== 'undefined') {
     return self;
   }
-  if (typeof window !== "undefined") {
+  if (typeof window !== 'undefined') {
     return window;
   }
-  if (typeof global !== "undefined") {
+  if (typeof global !== 'undefined') {
     return global;
   }
-  throw "Unable to locate global object";
+  throw 'Unable to locate global object';
 })();
 
-type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
+type Builtin =
+  | Date
+  | Function
+  | Uint8Array
+  | string
+  | number
+  | boolean
+  | undefined;
 
-export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
-  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin
+  ? T
+  : T extends Array<infer U>
+  ? Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U>
+  ? ReadonlyArray<DeepPartial<U>>
+  : T extends {}
+  ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 function toTimestamp(date: Date): Timestamp {
@@ -2718,7 +3021,9 @@ function fromTimestamp(t: Timestamp): Date {
 
 function longToNumber(long: Long): number {
   if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+    throw new tsProtoGlobalThis.Error(
+      'Value is larger than Number.MAX_SAFE_INTEGER',
+    );
   }
   return long.toNumber();
 }

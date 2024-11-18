@@ -158,28 +158,13 @@ export const styles = {
           visibility: visible;
         }
       `,
-  tableCell: (
-    width: string,
-    isLastColumn: boolean,
-    isRowClickDisabled: boolean,
-    isOverflowHidden: boolean,
-  ) => css`
+  tableCell: (width?: string, isLastColumn?: boolean) => css`
+    min-width: ${width};
+
     ${!isLastColumn &&
     css`
       max-width: ${width};
       width: ${width};
-    `};
-
-    ${isOverflowHidden &&
-    css`
-      overflow: hidden;
-    `}
-
-    min-width: ${width};
-
-    ${!isRowClickDisabled &&
-    css`
-      cursor: pointer;
     `}
 
     box-sizing: border-box;

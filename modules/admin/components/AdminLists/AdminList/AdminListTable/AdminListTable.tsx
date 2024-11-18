@@ -304,8 +304,6 @@ export const AdminListTable = ({
                   css={styles.tableCell(
                     column.width!,
                     index === columnsVisible.length - 1,
-                    true,
-                    true,
                   )}
                 >
                   <AdminListTableHeader
@@ -370,8 +368,6 @@ export const AdminListTable = ({
                     css={styles.tableCell(
                       column.width!,
                       index === columnsVisible.length - 1,
-                      column.isRowClickDisabled!,
-                      column.isOverflowHidden !== false,
                     )}
                     onClick={() =>
                       column.isRowClickDisabled

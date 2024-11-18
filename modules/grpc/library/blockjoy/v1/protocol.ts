@@ -1,14 +1,14 @@
 /* eslint-disable */
-import Long from "long";
-import type { CallContext, CallOptions } from "nice-grpc-common";
-import _m0 from "protobufjs/minimal";
-import { Empty } from "../../google/protobuf/empty";
-import { Timestamp } from "../../google/protobuf/timestamp";
-import { BillingAmount } from "../common/v1/currency";
-import { ProtocolVersionKey, Visibility } from "../common/v1/protocol";
-import { SearchOperator, SortOrder } from "../common/v1/search";
+import Long from 'long';
+import type { CallContext, CallOptions } from 'nice-grpc-common';
+import _m0 from 'protobufjs/minimal';
+import { Empty } from '../../google/protobuf/empty';
+import { Timestamp } from '../../google/protobuf/timestamp';
+import { BillingAmount } from '../common/v1/currency';
+import { ProtocolVersionKey, Visibility } from '../common/v1/protocol';
+import { SearchOperator, SortOrder } from '../common/v1/search';
 
-export const protobufPackage = "blockjoy.v1";
+export const protobufPackage = 'blockjoy.v1';
 
 export enum ProtocolSortField {
   PROTOCOL_SORT_FIELD_UNSPECIFIED = 0,
@@ -45,17 +45,13 @@ export interface ProtocolVersion {
 
 export interface ProtocolServiceAddProtocolRequest {
   /** Whether this is public or private protocol. */
-  orgId?:
-    | string
-    | undefined;
+  orgId?: string | undefined;
   /** The lookup key for this protocol (in lower-kebab-case). */
   key: string;
   /** The display name for this protocol. */
   name: string;
   /** A readable description of this protocol. */
-  description?:
-    | string
-    | undefined;
+  description?: string | undefined;
   /** The ticker symbol for blockchain protocols (e.g. ETH). */
   ticker?: string | undefined;
 }
@@ -66,13 +62,9 @@ export interface ProtocolServiceAddProtocolResponse {
 
 export interface ProtocolServiceAddVersionRequest {
   /** Whether this is a public or private version. */
-  orgId?:
-    | string
-    | undefined;
+  orgId?: string | undefined;
   /** The lookup key of this version. */
-  versionKey:
-    | ProtocolVersionKey
-    | undefined;
+  versionKey: ProtocolVersionKey | undefined;
   /** A semantic version of the protocol software. */
   semanticVersion: string;
   /** The SKU code for this version (e.g. ETH-MN). */
@@ -87,9 +79,7 @@ export interface ProtocolServiceAddVersionResponse {
 
 export interface ProtocolServiceGetLatestRequest {
   /** The version key to get the latest version of. */
-  versionKey:
-    | ProtocolVersionKey
-    | undefined;
+  versionKey: ProtocolVersionKey | undefined;
   /** The org id for private protocols or versions. */
   orgId?: string | undefined;
 }
@@ -100,13 +90,9 @@ export interface ProtocolServiceGetLatestResponse {
 
 export interface ProtocolServiceGetPricingRequest {
   /** The version key to get the pricing for. */
-  versionKey:
-    | ProtocolVersionKey
-    | undefined;
+  versionKey: ProtocolVersionKey | undefined;
   /** The org id for private protocols or versions. */
-  orgId?:
-    | string
-    | undefined;
+  orgId?: string | undefined;
   /** The region id to request an instance for. */
   regionId: string;
 }
@@ -117,13 +103,9 @@ export interface ProtocolServiceGetPricingResponse {
 
 export interface ProtocolServiceGetProtocolRequest {
   /** The protocol id to retrieve. */
-  protocolId?:
-    | string
-    | undefined;
+  protocolId?: string | undefined;
   /** The protocol key to retrieve. */
-  protocolKey?:
-    | string
-    | undefined;
+  protocolKey?: string | undefined;
   /** The org id for private protocols. */
   orgId?: string | undefined;
 }
@@ -134,21 +116,13 @@ export interface ProtocolServiceGetProtocolResponse {
 
 export interface ProtocolServiceGetStatsRequest {
   /** The org id for private protocols or versions. */
-  orgId?:
-    | string
-    | undefined;
+  orgId?: string | undefined;
   /** Get stats for some protocol. */
-  protocolId?:
-    | string
-    | undefined;
+  protocolId?: string | undefined;
   /** Get stats for some protocol version. */
-  protocolVersionId?:
-    | string
-    | undefined;
+  protocolVersionId?: string | undefined;
   /** Get stats for all protocols; */
-  allProtocols?:
-    | Empty
-    | undefined;
+  allProtocols?: Empty | undefined;
   /** Get stats for all protocol versions; */
   allVersions?: Empty | undefined;
 }
@@ -186,9 +160,7 @@ export interface ProtocolServiceListProtocolsRequest {
   /** Limit the number of results. */
   limit: number;
   /** Search these parameters. */
-  search?:
-    | ProtocolSearch
-    | undefined;
+  search?: ProtocolSearch | undefined;
   /** Sort the results in this order. */
   sort: ProtocolSort[];
 }
@@ -222,9 +194,7 @@ export interface ProtocolServiceListVariantsResponse {
 
 export interface ProtocolServiceListVersionsRequest {
   /** The version key to list the versions of. */
-  versionKey:
-    | ProtocolVersionKey
-    | undefined;
+  versionKey: ProtocolVersionKey | undefined;
   /** The org id for private protocols or versions. */
   orgId?: string | undefined;
 }
@@ -237,13 +207,9 @@ export interface ProtocolServiceUpdateProtocolRequest {
   /** The protocol id to update. */
   protocolId: string;
   /** Update the name. */
-  name?:
-    | string
-    | undefined;
+  name?: string | undefined;
   /** Update the description. */
-  description?:
-    | string
-    | undefined;
+  description?: string | undefined;
   /** Update the visibility. */
   visibility?: Visibility | undefined;
 }
@@ -256,13 +222,9 @@ export interface ProtocolServiceUpdateVersionRequest {
   /** The protocol version id to update. */
   protocolVersionId: string;
   /** Update the SKU code. */
-  skuCode?:
-    | string
-    | undefined;
+  skuCode?: string | undefined;
   /** Update the description. */
-  description?:
-    | string
-    | undefined;
+  description?: string | undefined;
   /** Update the visibility. */
   visibility?: Visibility | undefined;
 }
@@ -273,10 +235,10 @@ export interface ProtocolServiceUpdateVersionResponse {
 
 function createBaseProtocol(): Protocol {
   return {
-    protocolId: "",
+    protocolId: '',
     orgId: undefined,
-    key: "",
-    name: "",
+    key: '',
+    name: '',
     description: undefined,
     ticker: undefined,
     visibility: 0,
@@ -287,17 +249,20 @@ function createBaseProtocol(): Protocol {
 }
 
 export const Protocol = {
-  encode(message: Protocol, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.protocolId !== "") {
+  encode(
+    message: Protocol,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    if (message.protocolId !== '') {
       writer.uint32(10).string(message.protocolId);
     }
     if (message.orgId !== undefined) {
       writer.uint32(18).string(message.orgId);
     }
-    if (message.key !== "") {
+    if (message.key !== '') {
       writer.uint32(26).string(message.key);
     }
-    if (message.name !== "") {
+    if (message.name !== '') {
       writer.uint32(34).string(message.name);
     }
     if (message.description !== undefined) {
@@ -310,10 +275,16 @@ export const Protocol = {
       writer.uint32(56).int32(message.visibility);
     }
     if (message.createdAt !== undefined) {
-      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(66).fork()).ldelim();
+      Timestamp.encode(
+        toTimestamp(message.createdAt),
+        writer.uint32(66).fork(),
+      ).ldelim();
     }
     if (message.updatedAt !== undefined) {
-      Timestamp.encode(toTimestamp(message.updatedAt), writer.uint32(74).fork()).ldelim();
+      Timestamp.encode(
+        toTimestamp(message.updatedAt),
+        writer.uint32(74).fork(),
+      ).ldelim();
     }
     for (const v of message.versions) {
       ProtocolVersion.encode(v!, writer.uint32(82).fork()).ldelim();
@@ -322,7 +293,8 @@ export const Protocol = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Protocol {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseProtocol();
     while (reader.pos < end) {
@@ -382,21 +354,27 @@ export const Protocol = {
             break;
           }
 
-          message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.createdAt = fromTimestamp(
+            Timestamp.decode(reader, reader.uint32()),
+          );
           continue;
         case 9:
           if (tag !== 74) {
             break;
           }
 
-          message.updatedAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.updatedAt = fromTimestamp(
+            Timestamp.decode(reader, reader.uint32()),
+          );
           continue;
         case 10:
           if (tag !== 82) {
             break;
           }
 
-          message.versions.push(ProtocolVersion.decode(reader, reader.uint32()));
+          message.versions.push(
+            ProtocolVersion.decode(reader, reader.uint32()),
+          );
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -413,28 +391,29 @@ export const Protocol = {
 
   fromPartial(object: DeepPartial<Protocol>): Protocol {
     const message = createBaseProtocol();
-    message.protocolId = object.protocolId ?? "";
+    message.protocolId = object.protocolId ?? '';
     message.orgId = object.orgId ?? undefined;
-    message.key = object.key ?? "";
-    message.name = object.name ?? "";
+    message.key = object.key ?? '';
+    message.name = object.name ?? '';
     message.description = object.description ?? undefined;
     message.ticker = object.ticker ?? undefined;
     message.visibility = object.visibility ?? 0;
     message.createdAt = object.createdAt ?? undefined;
     message.updatedAt = object.updatedAt ?? undefined;
-    message.versions = object.versions?.map((e) => ProtocolVersion.fromPartial(e)) || [];
+    message.versions =
+      object.versions?.map((e) => ProtocolVersion.fromPartial(e)) || [];
     return message;
   },
 };
 
 function createBaseProtocolVersion(): ProtocolVersion {
   return {
-    protocolVersionId: "",
+    protocolVersionId: '',
     orgId: undefined,
-    protocolId: "",
+    protocolId: '',
     versionKey: undefined,
-    semanticVersion: "",
-    skuCode: "",
+    semanticVersion: '',
+    skuCode: '',
     description: undefined,
     visibility: 0,
     createdAt: undefined,
@@ -443,23 +422,29 @@ function createBaseProtocolVersion(): ProtocolVersion {
 }
 
 export const ProtocolVersion = {
-  encode(message: ProtocolVersion, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.protocolVersionId !== "") {
+  encode(
+    message: ProtocolVersion,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    if (message.protocolVersionId !== '') {
       writer.uint32(10).string(message.protocolVersionId);
     }
     if (message.orgId !== undefined) {
       writer.uint32(18).string(message.orgId);
     }
-    if (message.protocolId !== "") {
+    if (message.protocolId !== '') {
       writer.uint32(26).string(message.protocolId);
     }
     if (message.versionKey !== undefined) {
-      ProtocolVersionKey.encode(message.versionKey, writer.uint32(34).fork()).ldelim();
+      ProtocolVersionKey.encode(
+        message.versionKey,
+        writer.uint32(34).fork(),
+      ).ldelim();
     }
-    if (message.semanticVersion !== "") {
+    if (message.semanticVersion !== '') {
       writer.uint32(42).string(message.semanticVersion);
     }
-    if (message.skuCode !== "") {
+    if (message.skuCode !== '') {
       writer.uint32(50).string(message.skuCode);
     }
     if (message.description !== undefined) {
@@ -469,16 +454,23 @@ export const ProtocolVersion = {
       writer.uint32(64).int32(message.visibility);
     }
     if (message.createdAt !== undefined) {
-      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(74).fork()).ldelim();
+      Timestamp.encode(
+        toTimestamp(message.createdAt),
+        writer.uint32(74).fork(),
+      ).ldelim();
     }
     if (message.updatedAt !== undefined) {
-      Timestamp.encode(toTimestamp(message.updatedAt), writer.uint32(82).fork()).ldelim();
+      Timestamp.encode(
+        toTimestamp(message.updatedAt),
+        writer.uint32(82).fork(),
+      ).ldelim();
     }
     return writer;
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ProtocolVersion {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseProtocolVersion();
     while (reader.pos < end) {
@@ -510,7 +502,10 @@ export const ProtocolVersion = {
             break;
           }
 
-          message.versionKey = ProtocolVersionKey.decode(reader, reader.uint32());
+          message.versionKey = ProtocolVersionKey.decode(
+            reader,
+            reader.uint32(),
+          );
           continue;
         case 5:
           if (tag !== 42) {
@@ -545,14 +540,18 @@ export const ProtocolVersion = {
             break;
           }
 
-          message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.createdAt = fromTimestamp(
+            Timestamp.decode(reader, reader.uint32()),
+          );
           continue;
         case 10:
           if (tag !== 82) {
             break;
           }
 
-          message.updatedAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.updatedAt = fromTimestamp(
+            Timestamp.decode(reader, reader.uint32()),
+          );
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -569,14 +568,15 @@ export const ProtocolVersion = {
 
   fromPartial(object: DeepPartial<ProtocolVersion>): ProtocolVersion {
     const message = createBaseProtocolVersion();
-    message.protocolVersionId = object.protocolVersionId ?? "";
+    message.protocolVersionId = object.protocolVersionId ?? '';
     message.orgId = object.orgId ?? undefined;
-    message.protocolId = object.protocolId ?? "";
-    message.versionKey = (object.versionKey !== undefined && object.versionKey !== null)
-      ? ProtocolVersionKey.fromPartial(object.versionKey)
-      : undefined;
-    message.semanticVersion = object.semanticVersion ?? "";
-    message.skuCode = object.skuCode ?? "";
+    message.protocolId = object.protocolId ?? '';
+    message.versionKey =
+      object.versionKey !== undefined && object.versionKey !== null
+        ? ProtocolVersionKey.fromPartial(object.versionKey)
+        : undefined;
+    message.semanticVersion = object.semanticVersion ?? '';
+    message.skuCode = object.skuCode ?? '';
     message.description = object.description ?? undefined;
     message.visibility = object.visibility ?? 0;
     message.createdAt = object.createdAt ?? undefined;
@@ -586,18 +586,27 @@ export const ProtocolVersion = {
 };
 
 function createBaseProtocolServiceAddProtocolRequest(): ProtocolServiceAddProtocolRequest {
-  return { orgId: undefined, key: "", name: "", description: undefined, ticker: undefined };
+  return {
+    orgId: undefined,
+    key: '',
+    name: '',
+    description: undefined,
+    ticker: undefined,
+  };
 }
 
 export const ProtocolServiceAddProtocolRequest = {
-  encode(message: ProtocolServiceAddProtocolRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: ProtocolServiceAddProtocolRequest,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     if (message.orgId !== undefined) {
       writer.uint32(10).string(message.orgId);
     }
-    if (message.key !== "") {
+    if (message.key !== '') {
       writer.uint32(18).string(message.key);
     }
-    if (message.name !== "") {
+    if (message.name !== '') {
       writer.uint32(26).string(message.name);
     }
     if (message.description !== undefined) {
@@ -609,8 +618,12 @@ export const ProtocolServiceAddProtocolRequest = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ProtocolServiceAddProtocolRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): ProtocolServiceAddProtocolRequest {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseProtocolServiceAddProtocolRequest();
     while (reader.pos < end) {
@@ -660,15 +673,19 @@ export const ProtocolServiceAddProtocolRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<ProtocolServiceAddProtocolRequest>): ProtocolServiceAddProtocolRequest {
+  create(
+    base?: DeepPartial<ProtocolServiceAddProtocolRequest>,
+  ): ProtocolServiceAddProtocolRequest {
     return ProtocolServiceAddProtocolRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<ProtocolServiceAddProtocolRequest>): ProtocolServiceAddProtocolRequest {
+  fromPartial(
+    object: DeepPartial<ProtocolServiceAddProtocolRequest>,
+  ): ProtocolServiceAddProtocolRequest {
     const message = createBaseProtocolServiceAddProtocolRequest();
     message.orgId = object.orgId ?? undefined;
-    message.key = object.key ?? "";
-    message.name = object.name ?? "";
+    message.key = object.key ?? '';
+    message.name = object.name ?? '';
     message.description = object.description ?? undefined;
     message.ticker = object.ticker ?? undefined;
     return message;
@@ -680,15 +697,22 @@ function createBaseProtocolServiceAddProtocolResponse(): ProtocolServiceAddProto
 }
 
 export const ProtocolServiceAddProtocolResponse = {
-  encode(message: ProtocolServiceAddProtocolResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: ProtocolServiceAddProtocolResponse,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     if (message.protocol !== undefined) {
       Protocol.encode(message.protocol, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ProtocolServiceAddProtocolResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): ProtocolServiceAddProtocolResponse {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseProtocolServiceAddProtocolResponse();
     while (reader.pos < end) {
@@ -710,35 +734,52 @@ export const ProtocolServiceAddProtocolResponse = {
     return message;
   },
 
-  create(base?: DeepPartial<ProtocolServiceAddProtocolResponse>): ProtocolServiceAddProtocolResponse {
+  create(
+    base?: DeepPartial<ProtocolServiceAddProtocolResponse>,
+  ): ProtocolServiceAddProtocolResponse {
     return ProtocolServiceAddProtocolResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<ProtocolServiceAddProtocolResponse>): ProtocolServiceAddProtocolResponse {
+  fromPartial(
+    object: DeepPartial<ProtocolServiceAddProtocolResponse>,
+  ): ProtocolServiceAddProtocolResponse {
     const message = createBaseProtocolServiceAddProtocolResponse();
-    message.protocol = (object.protocol !== undefined && object.protocol !== null)
-      ? Protocol.fromPartial(object.protocol)
-      : undefined;
+    message.protocol =
+      object.protocol !== undefined && object.protocol !== null
+        ? Protocol.fromPartial(object.protocol)
+        : undefined;
     return message;
   },
 };
 
 function createBaseProtocolServiceAddVersionRequest(): ProtocolServiceAddVersionRequest {
-  return { orgId: undefined, versionKey: undefined, semanticVersion: "", skuCode: "", description: undefined };
+  return {
+    orgId: undefined,
+    versionKey: undefined,
+    semanticVersion: '',
+    skuCode: '',
+    description: undefined,
+  };
 }
 
 export const ProtocolServiceAddVersionRequest = {
-  encode(message: ProtocolServiceAddVersionRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: ProtocolServiceAddVersionRequest,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     if (message.orgId !== undefined) {
       writer.uint32(10).string(message.orgId);
     }
     if (message.versionKey !== undefined) {
-      ProtocolVersionKey.encode(message.versionKey, writer.uint32(18).fork()).ldelim();
+      ProtocolVersionKey.encode(
+        message.versionKey,
+        writer.uint32(18).fork(),
+      ).ldelim();
     }
-    if (message.semanticVersion !== "") {
+    if (message.semanticVersion !== '') {
       writer.uint32(26).string(message.semanticVersion);
     }
-    if (message.skuCode !== "") {
+    if (message.skuCode !== '') {
       writer.uint32(34).string(message.skuCode);
     }
     if (message.description !== undefined) {
@@ -747,8 +788,12 @@ export const ProtocolServiceAddVersionRequest = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ProtocolServiceAddVersionRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): ProtocolServiceAddVersionRequest {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseProtocolServiceAddVersionRequest();
     while (reader.pos < end) {
@@ -766,7 +811,10 @@ export const ProtocolServiceAddVersionRequest = {
             break;
           }
 
-          message.versionKey = ProtocolVersionKey.decode(reader, reader.uint32());
+          message.versionKey = ProtocolVersionKey.decode(
+            reader,
+            reader.uint32(),
+          );
           continue;
         case 3:
           if (tag !== 26) {
@@ -798,18 +846,23 @@ export const ProtocolServiceAddVersionRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<ProtocolServiceAddVersionRequest>): ProtocolServiceAddVersionRequest {
+  create(
+    base?: DeepPartial<ProtocolServiceAddVersionRequest>,
+  ): ProtocolServiceAddVersionRequest {
     return ProtocolServiceAddVersionRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<ProtocolServiceAddVersionRequest>): ProtocolServiceAddVersionRequest {
+  fromPartial(
+    object: DeepPartial<ProtocolServiceAddVersionRequest>,
+  ): ProtocolServiceAddVersionRequest {
     const message = createBaseProtocolServiceAddVersionRequest();
     message.orgId = object.orgId ?? undefined;
-    message.versionKey = (object.versionKey !== undefined && object.versionKey !== null)
-      ? ProtocolVersionKey.fromPartial(object.versionKey)
-      : undefined;
-    message.semanticVersion = object.semanticVersion ?? "";
-    message.skuCode = object.skuCode ?? "";
+    message.versionKey =
+      object.versionKey !== undefined && object.versionKey !== null
+        ? ProtocolVersionKey.fromPartial(object.versionKey)
+        : undefined;
+    message.semanticVersion = object.semanticVersion ?? '';
+    message.skuCode = object.skuCode ?? '';
     message.description = object.description ?? undefined;
     return message;
   },
@@ -820,15 +873,25 @@ function createBaseProtocolServiceAddVersionResponse(): ProtocolServiceAddVersio
 }
 
 export const ProtocolServiceAddVersionResponse = {
-  encode(message: ProtocolServiceAddVersionResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: ProtocolServiceAddVersionResponse,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     if (message.version !== undefined) {
-      ProtocolVersion.encode(message.version, writer.uint32(10).fork()).ldelim();
+      ProtocolVersion.encode(
+        message.version,
+        writer.uint32(10).fork(),
+      ).ldelim();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ProtocolServiceAddVersionResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): ProtocolServiceAddVersionResponse {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseProtocolServiceAddVersionResponse();
     while (reader.pos < end) {
@@ -850,15 +913,20 @@ export const ProtocolServiceAddVersionResponse = {
     return message;
   },
 
-  create(base?: DeepPartial<ProtocolServiceAddVersionResponse>): ProtocolServiceAddVersionResponse {
+  create(
+    base?: DeepPartial<ProtocolServiceAddVersionResponse>,
+  ): ProtocolServiceAddVersionResponse {
     return ProtocolServiceAddVersionResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<ProtocolServiceAddVersionResponse>): ProtocolServiceAddVersionResponse {
+  fromPartial(
+    object: DeepPartial<ProtocolServiceAddVersionResponse>,
+  ): ProtocolServiceAddVersionResponse {
     const message = createBaseProtocolServiceAddVersionResponse();
-    message.version = (object.version !== undefined && object.version !== null)
-      ? ProtocolVersion.fromPartial(object.version)
-      : undefined;
+    message.version =
+      object.version !== undefined && object.version !== null
+        ? ProtocolVersion.fromPartial(object.version)
+        : undefined;
     return message;
   },
 };
@@ -868,9 +936,15 @@ function createBaseProtocolServiceGetLatestRequest(): ProtocolServiceGetLatestRe
 }
 
 export const ProtocolServiceGetLatestRequest = {
-  encode(message: ProtocolServiceGetLatestRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: ProtocolServiceGetLatestRequest,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     if (message.versionKey !== undefined) {
-      ProtocolVersionKey.encode(message.versionKey, writer.uint32(10).fork()).ldelim();
+      ProtocolVersionKey.encode(
+        message.versionKey,
+        writer.uint32(10).fork(),
+      ).ldelim();
     }
     if (message.orgId !== undefined) {
       writer.uint32(18).string(message.orgId);
@@ -878,8 +952,12 @@ export const ProtocolServiceGetLatestRequest = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ProtocolServiceGetLatestRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): ProtocolServiceGetLatestRequest {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseProtocolServiceGetLatestRequest();
     while (reader.pos < end) {
@@ -890,7 +968,10 @@ export const ProtocolServiceGetLatestRequest = {
             break;
           }
 
-          message.versionKey = ProtocolVersionKey.decode(reader, reader.uint32());
+          message.versionKey = ProtocolVersionKey.decode(
+            reader,
+            reader.uint32(),
+          );
           continue;
         case 2:
           if (tag !== 18) {
@@ -908,15 +989,20 @@ export const ProtocolServiceGetLatestRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<ProtocolServiceGetLatestRequest>): ProtocolServiceGetLatestRequest {
+  create(
+    base?: DeepPartial<ProtocolServiceGetLatestRequest>,
+  ): ProtocolServiceGetLatestRequest {
     return ProtocolServiceGetLatestRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<ProtocolServiceGetLatestRequest>): ProtocolServiceGetLatestRequest {
+  fromPartial(
+    object: DeepPartial<ProtocolServiceGetLatestRequest>,
+  ): ProtocolServiceGetLatestRequest {
     const message = createBaseProtocolServiceGetLatestRequest();
-    message.versionKey = (object.versionKey !== undefined && object.versionKey !== null)
-      ? ProtocolVersionKey.fromPartial(object.versionKey)
-      : undefined;
+    message.versionKey =
+      object.versionKey !== undefined && object.versionKey !== null
+        ? ProtocolVersionKey.fromPartial(object.versionKey)
+        : undefined;
     message.orgId = object.orgId ?? undefined;
     return message;
   },
@@ -927,15 +1013,25 @@ function createBaseProtocolServiceGetLatestResponse(): ProtocolServiceGetLatestR
 }
 
 export const ProtocolServiceGetLatestResponse = {
-  encode(message: ProtocolServiceGetLatestResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: ProtocolServiceGetLatestResponse,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     if (message.protocolVersion !== undefined) {
-      ProtocolVersion.encode(message.protocolVersion, writer.uint32(10).fork()).ldelim();
+      ProtocolVersion.encode(
+        message.protocolVersion,
+        writer.uint32(10).fork(),
+      ).ldelim();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ProtocolServiceGetLatestResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): ProtocolServiceGetLatestResponse {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseProtocolServiceGetLatestResponse();
     while (reader.pos < end) {
@@ -946,7 +1042,10 @@ export const ProtocolServiceGetLatestResponse = {
             break;
           }
 
-          message.protocolVersion = ProtocolVersion.decode(reader, reader.uint32());
+          message.protocolVersion = ProtocolVersion.decode(
+            reader,
+            reader.uint32(),
+          );
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -957,39 +1056,54 @@ export const ProtocolServiceGetLatestResponse = {
     return message;
   },
 
-  create(base?: DeepPartial<ProtocolServiceGetLatestResponse>): ProtocolServiceGetLatestResponse {
+  create(
+    base?: DeepPartial<ProtocolServiceGetLatestResponse>,
+  ): ProtocolServiceGetLatestResponse {
     return ProtocolServiceGetLatestResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<ProtocolServiceGetLatestResponse>): ProtocolServiceGetLatestResponse {
+  fromPartial(
+    object: DeepPartial<ProtocolServiceGetLatestResponse>,
+  ): ProtocolServiceGetLatestResponse {
     const message = createBaseProtocolServiceGetLatestResponse();
-    message.protocolVersion = (object.protocolVersion !== undefined && object.protocolVersion !== null)
-      ? ProtocolVersion.fromPartial(object.protocolVersion)
-      : undefined;
+    message.protocolVersion =
+      object.protocolVersion !== undefined && object.protocolVersion !== null
+        ? ProtocolVersion.fromPartial(object.protocolVersion)
+        : undefined;
     return message;
   },
 };
 
 function createBaseProtocolServiceGetPricingRequest(): ProtocolServiceGetPricingRequest {
-  return { versionKey: undefined, orgId: undefined, regionId: "" };
+  return { versionKey: undefined, orgId: undefined, regionId: '' };
 }
 
 export const ProtocolServiceGetPricingRequest = {
-  encode(message: ProtocolServiceGetPricingRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: ProtocolServiceGetPricingRequest,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     if (message.versionKey !== undefined) {
-      ProtocolVersionKey.encode(message.versionKey, writer.uint32(10).fork()).ldelim();
+      ProtocolVersionKey.encode(
+        message.versionKey,
+        writer.uint32(10).fork(),
+      ).ldelim();
     }
     if (message.orgId !== undefined) {
       writer.uint32(18).string(message.orgId);
     }
-    if (message.regionId !== "") {
+    if (message.regionId !== '') {
       writer.uint32(26).string(message.regionId);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ProtocolServiceGetPricingRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): ProtocolServiceGetPricingRequest {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseProtocolServiceGetPricingRequest();
     while (reader.pos < end) {
@@ -1000,7 +1114,10 @@ export const ProtocolServiceGetPricingRequest = {
             break;
           }
 
-          message.versionKey = ProtocolVersionKey.decode(reader, reader.uint32());
+          message.versionKey = ProtocolVersionKey.decode(
+            reader,
+            reader.uint32(),
+          );
           continue;
         case 2:
           if (tag !== 18) {
@@ -1025,17 +1142,22 @@ export const ProtocolServiceGetPricingRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<ProtocolServiceGetPricingRequest>): ProtocolServiceGetPricingRequest {
+  create(
+    base?: DeepPartial<ProtocolServiceGetPricingRequest>,
+  ): ProtocolServiceGetPricingRequest {
     return ProtocolServiceGetPricingRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<ProtocolServiceGetPricingRequest>): ProtocolServiceGetPricingRequest {
+  fromPartial(
+    object: DeepPartial<ProtocolServiceGetPricingRequest>,
+  ): ProtocolServiceGetPricingRequest {
     const message = createBaseProtocolServiceGetPricingRequest();
-    message.versionKey = (object.versionKey !== undefined && object.versionKey !== null)
-      ? ProtocolVersionKey.fromPartial(object.versionKey)
-      : undefined;
+    message.versionKey =
+      object.versionKey !== undefined && object.versionKey !== null
+        ? ProtocolVersionKey.fromPartial(object.versionKey)
+        : undefined;
     message.orgId = object.orgId ?? undefined;
-    message.regionId = object.regionId ?? "";
+    message.regionId = object.regionId ?? '';
     return message;
   },
 };
@@ -1045,15 +1167,25 @@ function createBaseProtocolServiceGetPricingResponse(): ProtocolServiceGetPricin
 }
 
 export const ProtocolServiceGetPricingResponse = {
-  encode(message: ProtocolServiceGetPricingResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: ProtocolServiceGetPricingResponse,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     if (message.billingAmount !== undefined) {
-      BillingAmount.encode(message.billingAmount, writer.uint32(10).fork()).ldelim();
+      BillingAmount.encode(
+        message.billingAmount,
+        writer.uint32(10).fork(),
+      ).ldelim();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ProtocolServiceGetPricingResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): ProtocolServiceGetPricingResponse {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseProtocolServiceGetPricingResponse();
     while (reader.pos < end) {
@@ -1075,15 +1207,20 @@ export const ProtocolServiceGetPricingResponse = {
     return message;
   },
 
-  create(base?: DeepPartial<ProtocolServiceGetPricingResponse>): ProtocolServiceGetPricingResponse {
+  create(
+    base?: DeepPartial<ProtocolServiceGetPricingResponse>,
+  ): ProtocolServiceGetPricingResponse {
     return ProtocolServiceGetPricingResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<ProtocolServiceGetPricingResponse>): ProtocolServiceGetPricingResponse {
+  fromPartial(
+    object: DeepPartial<ProtocolServiceGetPricingResponse>,
+  ): ProtocolServiceGetPricingResponse {
     const message = createBaseProtocolServiceGetPricingResponse();
-    message.billingAmount = (object.billingAmount !== undefined && object.billingAmount !== null)
-      ? BillingAmount.fromPartial(object.billingAmount)
-      : undefined;
+    message.billingAmount =
+      object.billingAmount !== undefined && object.billingAmount !== null
+        ? BillingAmount.fromPartial(object.billingAmount)
+        : undefined;
     return message;
   },
 };
@@ -1093,7 +1230,10 @@ function createBaseProtocolServiceGetProtocolRequest(): ProtocolServiceGetProtoc
 }
 
 export const ProtocolServiceGetProtocolRequest = {
-  encode(message: ProtocolServiceGetProtocolRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: ProtocolServiceGetProtocolRequest,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     if (message.protocolId !== undefined) {
       writer.uint32(10).string(message.protocolId);
     }
@@ -1106,8 +1246,12 @@ export const ProtocolServiceGetProtocolRequest = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ProtocolServiceGetProtocolRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): ProtocolServiceGetProtocolRequest {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseProtocolServiceGetProtocolRequest();
     while (reader.pos < end) {
@@ -1143,11 +1287,15 @@ export const ProtocolServiceGetProtocolRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<ProtocolServiceGetProtocolRequest>): ProtocolServiceGetProtocolRequest {
+  create(
+    base?: DeepPartial<ProtocolServiceGetProtocolRequest>,
+  ): ProtocolServiceGetProtocolRequest {
     return ProtocolServiceGetProtocolRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<ProtocolServiceGetProtocolRequest>): ProtocolServiceGetProtocolRequest {
+  fromPartial(
+    object: DeepPartial<ProtocolServiceGetProtocolRequest>,
+  ): ProtocolServiceGetProtocolRequest {
     const message = createBaseProtocolServiceGetProtocolRequest();
     message.protocolId = object.protocolId ?? undefined;
     message.protocolKey = object.protocolKey ?? undefined;
@@ -1161,15 +1309,22 @@ function createBaseProtocolServiceGetProtocolResponse(): ProtocolServiceGetProto
 }
 
 export const ProtocolServiceGetProtocolResponse = {
-  encode(message: ProtocolServiceGetProtocolResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: ProtocolServiceGetProtocolResponse,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     if (message.protocol !== undefined) {
       Protocol.encode(message.protocol, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ProtocolServiceGetProtocolResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): ProtocolServiceGetProtocolResponse {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseProtocolServiceGetProtocolResponse();
     while (reader.pos < end) {
@@ -1191,15 +1346,20 @@ export const ProtocolServiceGetProtocolResponse = {
     return message;
   },
 
-  create(base?: DeepPartial<ProtocolServiceGetProtocolResponse>): ProtocolServiceGetProtocolResponse {
+  create(
+    base?: DeepPartial<ProtocolServiceGetProtocolResponse>,
+  ): ProtocolServiceGetProtocolResponse {
     return ProtocolServiceGetProtocolResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<ProtocolServiceGetProtocolResponse>): ProtocolServiceGetProtocolResponse {
+  fromPartial(
+    object: DeepPartial<ProtocolServiceGetProtocolResponse>,
+  ): ProtocolServiceGetProtocolResponse {
     const message = createBaseProtocolServiceGetProtocolResponse();
-    message.protocol = (object.protocol !== undefined && object.protocol !== null)
-      ? Protocol.fromPartial(object.protocol)
-      : undefined;
+    message.protocol =
+      object.protocol !== undefined && object.protocol !== null
+        ? Protocol.fromPartial(object.protocol)
+        : undefined;
     return message;
   },
 };
@@ -1215,7 +1375,10 @@ function createBaseProtocolServiceGetStatsRequest(): ProtocolServiceGetStatsRequ
 }
 
 export const ProtocolServiceGetStatsRequest = {
-  encode(message: ProtocolServiceGetStatsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: ProtocolServiceGetStatsRequest,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     if (message.orgId !== undefined) {
       writer.uint32(10).string(message.orgId);
     }
@@ -1234,8 +1397,12 @@ export const ProtocolServiceGetStatsRequest = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ProtocolServiceGetStatsRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): ProtocolServiceGetStatsRequest {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseProtocolServiceGetStatsRequest();
     while (reader.pos < end) {
@@ -1285,21 +1452,27 @@ export const ProtocolServiceGetStatsRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<ProtocolServiceGetStatsRequest>): ProtocolServiceGetStatsRequest {
+  create(
+    base?: DeepPartial<ProtocolServiceGetStatsRequest>,
+  ): ProtocolServiceGetStatsRequest {
     return ProtocolServiceGetStatsRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<ProtocolServiceGetStatsRequest>): ProtocolServiceGetStatsRequest {
+  fromPartial(
+    object: DeepPartial<ProtocolServiceGetStatsRequest>,
+  ): ProtocolServiceGetStatsRequest {
     const message = createBaseProtocolServiceGetStatsRequest();
     message.orgId = object.orgId ?? undefined;
     message.protocolId = object.protocolId ?? undefined;
     message.protocolVersionId = object.protocolVersionId ?? undefined;
-    message.allProtocols = (object.allProtocols !== undefined && object.allProtocols !== null)
-      ? Empty.fromPartial(object.allProtocols)
-      : undefined;
-    message.allVersions = (object.allVersions !== undefined && object.allVersions !== null)
-      ? Empty.fromPartial(object.allVersions)
-      : undefined;
+    message.allProtocols =
+      object.allProtocols !== undefined && object.allProtocols !== null
+        ? Empty.fromPartial(object.allProtocols)
+        : undefined;
+    message.allVersions =
+      object.allVersions !== undefined && object.allVersions !== null
+        ? Empty.fromPartial(object.allVersions)
+        : undefined;
     return message;
   },
 };
@@ -1309,20 +1482,31 @@ function createBaseProtocolServiceGetStatsResponse(): ProtocolServiceGetStatsRes
 }
 
 export const ProtocolServiceGetStatsResponse = {
-  encode(message: ProtocolServiceGetStatsResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: ProtocolServiceGetStatsResponse,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     Object.entries(message.protocolStats).forEach(([key, value]) => {
-      ProtocolServiceGetStatsResponse_ProtocolStatsEntry.encode({ key: key as any, value }, writer.uint32(10).fork())
-        .ldelim();
+      ProtocolServiceGetStatsResponse_ProtocolStatsEntry.encode(
+        { key: key as any, value },
+        writer.uint32(10).fork(),
+      ).ldelim();
     });
     Object.entries(message.versionStats).forEach(([key, value]) => {
-      ProtocolServiceGetStatsResponse_VersionStatsEntry.encode({ key: key as any, value }, writer.uint32(18).fork())
-        .ldelim();
+      ProtocolServiceGetStatsResponse_VersionStatsEntry.encode(
+        { key: key as any, value },
+        writer.uint32(18).fork(),
+      ).ldelim();
     });
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ProtocolServiceGetStatsResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): ProtocolServiceGetStatsResponse {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseProtocolServiceGetStatsResponse();
     while (reader.pos < end) {
@@ -1333,7 +1517,11 @@ export const ProtocolServiceGetStatsResponse = {
             break;
           }
 
-          const entry1 = ProtocolServiceGetStatsResponse_ProtocolStatsEntry.decode(reader, reader.uint32());
+          const entry1 =
+            ProtocolServiceGetStatsResponse_ProtocolStatsEntry.decode(
+              reader,
+              reader.uint32(),
+            );
           if (entry1.value !== undefined) {
             message.protocolStats[entry1.key] = entry1.value;
           }
@@ -1343,7 +1531,11 @@ export const ProtocolServiceGetStatsResponse = {
             break;
           }
 
-          const entry2 = ProtocolServiceGetStatsResponse_VersionStatsEntry.decode(reader, reader.uint32());
+          const entry2 =
+            ProtocolServiceGetStatsResponse_VersionStatsEntry.decode(
+              reader,
+              reader.uint32(),
+            );
           if (entry2.value !== undefined) {
             message.versionStats[entry2.key] = entry2.value;
           }
@@ -1357,36 +1549,38 @@ export const ProtocolServiceGetStatsResponse = {
     return message;
   },
 
-  create(base?: DeepPartial<ProtocolServiceGetStatsResponse>): ProtocolServiceGetStatsResponse {
+  create(
+    base?: DeepPartial<ProtocolServiceGetStatsResponse>,
+  ): ProtocolServiceGetStatsResponse {
     return ProtocolServiceGetStatsResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<ProtocolServiceGetStatsResponse>): ProtocolServiceGetStatsResponse {
+  fromPartial(
+    object: DeepPartial<ProtocolServiceGetStatsResponse>,
+  ): ProtocolServiceGetStatsResponse {
     const message = createBaseProtocolServiceGetStatsResponse();
-    message.protocolStats = Object.entries(object.protocolStats ?? {}).reduce<{ [key: string]: NodeStats }>(
-      (acc, [key, value]) => {
-        if (value !== undefined) {
-          acc[key] = NodeStats.fromPartial(value);
-        }
-        return acc;
-      },
-      {},
-    );
-    message.versionStats = Object.entries(object.versionStats ?? {}).reduce<{ [key: string]: NodeStats }>(
-      (acc, [key, value]) => {
-        if (value !== undefined) {
-          acc[key] = NodeStats.fromPartial(value);
-        }
-        return acc;
-      },
-      {},
-    );
+    message.protocolStats = Object.entries(object.protocolStats ?? {}).reduce<{
+      [key: string]: NodeStats;
+    }>((acc, [key, value]) => {
+      if (value !== undefined) {
+        acc[key] = NodeStats.fromPartial(value);
+      }
+      return acc;
+    }, {});
+    message.versionStats = Object.entries(object.versionStats ?? {}).reduce<{
+      [key: string]: NodeStats;
+    }>((acc, [key, value]) => {
+      if (value !== undefined) {
+        acc[key] = NodeStats.fromPartial(value);
+      }
+      return acc;
+    }, {});
     return message;
   },
 };
 
 function createBaseProtocolServiceGetStatsResponse_ProtocolStatsEntry(): ProtocolServiceGetStatsResponse_ProtocolStatsEntry {
-  return { key: "", value: undefined };
+  return { key: '', value: undefined };
 }
 
 export const ProtocolServiceGetStatsResponse_ProtocolStatsEntry = {
@@ -1394,7 +1588,7 @@ export const ProtocolServiceGetStatsResponse_ProtocolStatsEntry = {
     message: ProtocolServiceGetStatsResponse_ProtocolStatsEntry,
     writer: _m0.Writer = _m0.Writer.create(),
   ): _m0.Writer {
-    if (message.key !== "") {
+    if (message.key !== '') {
       writer.uint32(10).string(message.key);
     }
     if (message.value !== undefined) {
@@ -1403,10 +1597,15 @@ export const ProtocolServiceGetStatsResponse_ProtocolStatsEntry = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ProtocolServiceGetStatsResponse_ProtocolStatsEntry {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): ProtocolServiceGetStatsResponse_ProtocolStatsEntry {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseProtocolServiceGetStatsResponse_ProtocolStatsEntry();
+    const message =
+      createBaseProtocolServiceGetStatsResponse_ProtocolStatsEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -1436,23 +1635,27 @@ export const ProtocolServiceGetStatsResponse_ProtocolStatsEntry = {
   create(
     base?: DeepPartial<ProtocolServiceGetStatsResponse_ProtocolStatsEntry>,
   ): ProtocolServiceGetStatsResponse_ProtocolStatsEntry {
-    return ProtocolServiceGetStatsResponse_ProtocolStatsEntry.fromPartial(base ?? {});
+    return ProtocolServiceGetStatsResponse_ProtocolStatsEntry.fromPartial(
+      base ?? {},
+    );
   },
 
   fromPartial(
     object: DeepPartial<ProtocolServiceGetStatsResponse_ProtocolStatsEntry>,
   ): ProtocolServiceGetStatsResponse_ProtocolStatsEntry {
-    const message = createBaseProtocolServiceGetStatsResponse_ProtocolStatsEntry();
-    message.key = object.key ?? "";
-    message.value = (object.value !== undefined && object.value !== null)
-      ? NodeStats.fromPartial(object.value)
-      : undefined;
+    const message =
+      createBaseProtocolServiceGetStatsResponse_ProtocolStatsEntry();
+    message.key = object.key ?? '';
+    message.value =
+      object.value !== undefined && object.value !== null
+        ? NodeStats.fromPartial(object.value)
+        : undefined;
     return message;
   },
 };
 
 function createBaseProtocolServiceGetStatsResponse_VersionStatsEntry(): ProtocolServiceGetStatsResponse_VersionStatsEntry {
-  return { key: "", value: undefined };
+  return { key: '', value: undefined };
 }
 
 export const ProtocolServiceGetStatsResponse_VersionStatsEntry = {
@@ -1460,7 +1663,7 @@ export const ProtocolServiceGetStatsResponse_VersionStatsEntry = {
     message: ProtocolServiceGetStatsResponse_VersionStatsEntry,
     writer: _m0.Writer = _m0.Writer.create(),
   ): _m0.Writer {
-    if (message.key !== "") {
+    if (message.key !== '') {
       writer.uint32(10).string(message.key);
     }
     if (message.value !== undefined) {
@@ -1469,10 +1672,15 @@ export const ProtocolServiceGetStatsResponse_VersionStatsEntry = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ProtocolServiceGetStatsResponse_VersionStatsEntry {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): ProtocolServiceGetStatsResponse_VersionStatsEntry {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseProtocolServiceGetStatsResponse_VersionStatsEntry();
+    const message =
+      createBaseProtocolServiceGetStatsResponse_VersionStatsEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -1502,17 +1710,21 @@ export const ProtocolServiceGetStatsResponse_VersionStatsEntry = {
   create(
     base?: DeepPartial<ProtocolServiceGetStatsResponse_VersionStatsEntry>,
   ): ProtocolServiceGetStatsResponse_VersionStatsEntry {
-    return ProtocolServiceGetStatsResponse_VersionStatsEntry.fromPartial(base ?? {});
+    return ProtocolServiceGetStatsResponse_VersionStatsEntry.fromPartial(
+      base ?? {},
+    );
   },
 
   fromPartial(
     object: DeepPartial<ProtocolServiceGetStatsResponse_VersionStatsEntry>,
   ): ProtocolServiceGetStatsResponse_VersionStatsEntry {
-    const message = createBaseProtocolServiceGetStatsResponse_VersionStatsEntry();
-    message.key = object.key ?? "";
-    message.value = (object.value !== undefined && object.value !== null)
-      ? NodeStats.fromPartial(object.value)
-      : undefined;
+    const message =
+      createBaseProtocolServiceGetStatsResponse_VersionStatsEntry();
+    message.key = object.key ?? '';
+    message.value =
+      object.value !== undefined && object.value !== null
+        ? NodeStats.fromPartial(object.value)
+        : undefined;
     return message;
   },
 };
@@ -1522,7 +1734,10 @@ function createBaseNodeStats(): NodeStats {
 }
 
 export const NodeStats = {
-  encode(message: NodeStats, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: NodeStats,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     if (message.total !== 0) {
       writer.uint32(8).uint64(message.total);
     }
@@ -1542,7 +1757,8 @@ export const NodeStats = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): NodeStats {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNodeStats();
     while (reader.pos < end) {
@@ -1612,7 +1828,10 @@ function createBaseProtocolServiceListProtocolsRequest(): ProtocolServiceListPro
 }
 
 export const ProtocolServiceListProtocolsRequest = {
-  encode(message: ProtocolServiceListProtocolsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: ProtocolServiceListProtocolsRequest,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     for (const v of message.orgIds) {
       writer.uint32(10).string(v!);
     }
@@ -1631,8 +1850,12 @@ export const ProtocolServiceListProtocolsRequest = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ProtocolServiceListProtocolsRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): ProtocolServiceListProtocolsRequest {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseProtocolServiceListProtocolsRequest();
     while (reader.pos < end) {
@@ -1682,18 +1905,23 @@ export const ProtocolServiceListProtocolsRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<ProtocolServiceListProtocolsRequest>): ProtocolServiceListProtocolsRequest {
+  create(
+    base?: DeepPartial<ProtocolServiceListProtocolsRequest>,
+  ): ProtocolServiceListProtocolsRequest {
     return ProtocolServiceListProtocolsRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<ProtocolServiceListProtocolsRequest>): ProtocolServiceListProtocolsRequest {
+  fromPartial(
+    object: DeepPartial<ProtocolServiceListProtocolsRequest>,
+  ): ProtocolServiceListProtocolsRequest {
     const message = createBaseProtocolServiceListProtocolsRequest();
     message.orgIds = object.orgIds?.map((e) => e) || [];
     message.offset = object.offset ?? 0;
     message.limit = object.limit ?? 0;
-    message.search = (object.search !== undefined && object.search !== null)
-      ? ProtocolSearch.fromPartial(object.search)
-      : undefined;
+    message.search =
+      object.search !== undefined && object.search !== null
+        ? ProtocolSearch.fromPartial(object.search)
+        : undefined;
     message.sort = object.sort?.map((e) => ProtocolSort.fromPartial(e)) || [];
     return message;
   },
@@ -1704,7 +1932,10 @@ function createBaseProtocolSearch(): ProtocolSearch {
 }
 
 export const ProtocolSearch = {
-  encode(message: ProtocolSearch, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: ProtocolSearch,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     if (message.operator !== 0) {
       writer.uint32(8).int32(message.operator);
     }
@@ -1718,7 +1949,8 @@ export const ProtocolSearch = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ProtocolSearch {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseProtocolSearch();
     while (reader.pos < end) {
@@ -1772,7 +2004,10 @@ function createBaseProtocolSort(): ProtocolSort {
 }
 
 export const ProtocolSort = {
-  encode(message: ProtocolSort, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: ProtocolSort,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     if (message.field !== 0) {
       writer.uint32(8).int32(message.field);
     }
@@ -1783,7 +2018,8 @@ export const ProtocolSort = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ProtocolSort {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseProtocolSort();
     while (reader.pos < end) {
@@ -1829,7 +2065,10 @@ function createBaseProtocolServiceListProtocolsResponse(): ProtocolServiceListPr
 }
 
 export const ProtocolServiceListProtocolsResponse = {
-  encode(message: ProtocolServiceListProtocolsResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: ProtocolServiceListProtocolsResponse,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     for (const v of message.protocols) {
       Protocol.encode(v!, writer.uint32(10).fork()).ldelim();
     }
@@ -1839,8 +2078,12 @@ export const ProtocolServiceListProtocolsResponse = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ProtocolServiceListProtocolsResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): ProtocolServiceListProtocolsResponse {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseProtocolServiceListProtocolsResponse();
     while (reader.pos < end) {
@@ -1869,25 +2112,33 @@ export const ProtocolServiceListProtocolsResponse = {
     return message;
   },
 
-  create(base?: DeepPartial<ProtocolServiceListProtocolsResponse>): ProtocolServiceListProtocolsResponse {
+  create(
+    base?: DeepPartial<ProtocolServiceListProtocolsResponse>,
+  ): ProtocolServiceListProtocolsResponse {
     return ProtocolServiceListProtocolsResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<ProtocolServiceListProtocolsResponse>): ProtocolServiceListProtocolsResponse {
+  fromPartial(
+    object: DeepPartial<ProtocolServiceListProtocolsResponse>,
+  ): ProtocolServiceListProtocolsResponse {
     const message = createBaseProtocolServiceListProtocolsResponse();
-    message.protocols = object.protocols?.map((e) => Protocol.fromPartial(e)) || [];
+    message.protocols =
+      object.protocols?.map((e) => Protocol.fromPartial(e)) || [];
     message.total = object.total ?? 0;
     return message;
   },
 };
 
 function createBaseProtocolServiceListVariantsRequest(): ProtocolServiceListVariantsRequest {
-  return { protocolId: "", orgId: undefined };
+  return { protocolId: '', orgId: undefined };
 }
 
 export const ProtocolServiceListVariantsRequest = {
-  encode(message: ProtocolServiceListVariantsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.protocolId !== "") {
+  encode(
+    message: ProtocolServiceListVariantsRequest,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    if (message.protocolId !== '') {
       writer.uint32(10).string(message.protocolId);
     }
     if (message.orgId !== undefined) {
@@ -1896,8 +2147,12 @@ export const ProtocolServiceListVariantsRequest = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ProtocolServiceListVariantsRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): ProtocolServiceListVariantsRequest {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseProtocolServiceListVariantsRequest();
     while (reader.pos < end) {
@@ -1926,13 +2181,17 @@ export const ProtocolServiceListVariantsRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<ProtocolServiceListVariantsRequest>): ProtocolServiceListVariantsRequest {
+  create(
+    base?: DeepPartial<ProtocolServiceListVariantsRequest>,
+  ): ProtocolServiceListVariantsRequest {
     return ProtocolServiceListVariantsRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<ProtocolServiceListVariantsRequest>): ProtocolServiceListVariantsRequest {
+  fromPartial(
+    object: DeepPartial<ProtocolServiceListVariantsRequest>,
+  ): ProtocolServiceListVariantsRequest {
     const message = createBaseProtocolServiceListVariantsRequest();
-    message.protocolId = object.protocolId ?? "";
+    message.protocolId = object.protocolId ?? '';
     message.orgId = object.orgId ?? undefined;
     return message;
   },
@@ -1943,15 +2202,22 @@ function createBaseProtocolServiceListVariantsResponse(): ProtocolServiceListVar
 }
 
 export const ProtocolServiceListVariantsResponse = {
-  encode(message: ProtocolServiceListVariantsResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: ProtocolServiceListVariantsResponse,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     for (const v of message.variantKeys) {
       writer.uint32(10).string(v!);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ProtocolServiceListVariantsResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): ProtocolServiceListVariantsResponse {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseProtocolServiceListVariantsResponse();
     while (reader.pos < end) {
@@ -1973,11 +2239,15 @@ export const ProtocolServiceListVariantsResponse = {
     return message;
   },
 
-  create(base?: DeepPartial<ProtocolServiceListVariantsResponse>): ProtocolServiceListVariantsResponse {
+  create(
+    base?: DeepPartial<ProtocolServiceListVariantsResponse>,
+  ): ProtocolServiceListVariantsResponse {
     return ProtocolServiceListVariantsResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<ProtocolServiceListVariantsResponse>): ProtocolServiceListVariantsResponse {
+  fromPartial(
+    object: DeepPartial<ProtocolServiceListVariantsResponse>,
+  ): ProtocolServiceListVariantsResponse {
     const message = createBaseProtocolServiceListVariantsResponse();
     message.variantKeys = object.variantKeys?.map((e) => e) || [];
     return message;
@@ -1989,9 +2259,15 @@ function createBaseProtocolServiceListVersionsRequest(): ProtocolServiceListVers
 }
 
 export const ProtocolServiceListVersionsRequest = {
-  encode(message: ProtocolServiceListVersionsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: ProtocolServiceListVersionsRequest,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     if (message.versionKey !== undefined) {
-      ProtocolVersionKey.encode(message.versionKey, writer.uint32(10).fork()).ldelim();
+      ProtocolVersionKey.encode(
+        message.versionKey,
+        writer.uint32(10).fork(),
+      ).ldelim();
     }
     if (message.orgId !== undefined) {
       writer.uint32(18).string(message.orgId);
@@ -1999,8 +2275,12 @@ export const ProtocolServiceListVersionsRequest = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ProtocolServiceListVersionsRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): ProtocolServiceListVersionsRequest {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseProtocolServiceListVersionsRequest();
     while (reader.pos < end) {
@@ -2011,7 +2291,10 @@ export const ProtocolServiceListVersionsRequest = {
             break;
           }
 
-          message.versionKey = ProtocolVersionKey.decode(reader, reader.uint32());
+          message.versionKey = ProtocolVersionKey.decode(
+            reader,
+            reader.uint32(),
+          );
           continue;
         case 2:
           if (tag !== 18) {
@@ -2029,15 +2312,20 @@ export const ProtocolServiceListVersionsRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<ProtocolServiceListVersionsRequest>): ProtocolServiceListVersionsRequest {
+  create(
+    base?: DeepPartial<ProtocolServiceListVersionsRequest>,
+  ): ProtocolServiceListVersionsRequest {
     return ProtocolServiceListVersionsRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<ProtocolServiceListVersionsRequest>): ProtocolServiceListVersionsRequest {
+  fromPartial(
+    object: DeepPartial<ProtocolServiceListVersionsRequest>,
+  ): ProtocolServiceListVersionsRequest {
     const message = createBaseProtocolServiceListVersionsRequest();
-    message.versionKey = (object.versionKey !== undefined && object.versionKey !== null)
-      ? ProtocolVersionKey.fromPartial(object.versionKey)
-      : undefined;
+    message.versionKey =
+      object.versionKey !== undefined && object.versionKey !== null
+        ? ProtocolVersionKey.fromPartial(object.versionKey)
+        : undefined;
     message.orgId = object.orgId ?? undefined;
     return message;
   },
@@ -2048,15 +2336,22 @@ function createBaseProtocolServiceListVersionsResponse(): ProtocolServiceListVer
 }
 
 export const ProtocolServiceListVersionsResponse = {
-  encode(message: ProtocolServiceListVersionsResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: ProtocolServiceListVersionsResponse,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     for (const v of message.protocolVersions) {
       ProtocolVersion.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ProtocolServiceListVersionsResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): ProtocolServiceListVersionsResponse {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseProtocolServiceListVersionsResponse();
     while (reader.pos < end) {
@@ -2067,7 +2362,9 @@ export const ProtocolServiceListVersionsResponse = {
             break;
           }
 
-          message.protocolVersions.push(ProtocolVersion.decode(reader, reader.uint32()));
+          message.protocolVersions.push(
+            ProtocolVersion.decode(reader, reader.uint32()),
+          );
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -2078,24 +2375,37 @@ export const ProtocolServiceListVersionsResponse = {
     return message;
   },
 
-  create(base?: DeepPartial<ProtocolServiceListVersionsResponse>): ProtocolServiceListVersionsResponse {
+  create(
+    base?: DeepPartial<ProtocolServiceListVersionsResponse>,
+  ): ProtocolServiceListVersionsResponse {
     return ProtocolServiceListVersionsResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<ProtocolServiceListVersionsResponse>): ProtocolServiceListVersionsResponse {
+  fromPartial(
+    object: DeepPartial<ProtocolServiceListVersionsResponse>,
+  ): ProtocolServiceListVersionsResponse {
     const message = createBaseProtocolServiceListVersionsResponse();
-    message.protocolVersions = object.protocolVersions?.map((e) => ProtocolVersion.fromPartial(e)) || [];
+    message.protocolVersions =
+      object.protocolVersions?.map((e) => ProtocolVersion.fromPartial(e)) || [];
     return message;
   },
 };
 
 function createBaseProtocolServiceUpdateProtocolRequest(): ProtocolServiceUpdateProtocolRequest {
-  return { protocolId: "", name: undefined, description: undefined, visibility: undefined };
+  return {
+    protocolId: '',
+    name: undefined,
+    description: undefined,
+    visibility: undefined,
+  };
 }
 
 export const ProtocolServiceUpdateProtocolRequest = {
-  encode(message: ProtocolServiceUpdateProtocolRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.protocolId !== "") {
+  encode(
+    message: ProtocolServiceUpdateProtocolRequest,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    if (message.protocolId !== '') {
       writer.uint32(10).string(message.protocolId);
     }
     if (message.name !== undefined) {
@@ -2110,8 +2420,12 @@ export const ProtocolServiceUpdateProtocolRequest = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ProtocolServiceUpdateProtocolRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): ProtocolServiceUpdateProtocolRequest {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseProtocolServiceUpdateProtocolRequest();
     while (reader.pos < end) {
@@ -2154,13 +2468,17 @@ export const ProtocolServiceUpdateProtocolRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<ProtocolServiceUpdateProtocolRequest>): ProtocolServiceUpdateProtocolRequest {
+  create(
+    base?: DeepPartial<ProtocolServiceUpdateProtocolRequest>,
+  ): ProtocolServiceUpdateProtocolRequest {
     return ProtocolServiceUpdateProtocolRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<ProtocolServiceUpdateProtocolRequest>): ProtocolServiceUpdateProtocolRequest {
+  fromPartial(
+    object: DeepPartial<ProtocolServiceUpdateProtocolRequest>,
+  ): ProtocolServiceUpdateProtocolRequest {
     const message = createBaseProtocolServiceUpdateProtocolRequest();
-    message.protocolId = object.protocolId ?? "";
+    message.protocolId = object.protocolId ?? '';
     message.name = object.name ?? undefined;
     message.description = object.description ?? undefined;
     message.visibility = object.visibility ?? undefined;
@@ -2173,15 +2491,22 @@ function createBaseProtocolServiceUpdateProtocolResponse(): ProtocolServiceUpdat
 }
 
 export const ProtocolServiceUpdateProtocolResponse = {
-  encode(message: ProtocolServiceUpdateProtocolResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: ProtocolServiceUpdateProtocolResponse,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     if (message.protocol !== undefined) {
       Protocol.encode(message.protocol, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ProtocolServiceUpdateProtocolResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): ProtocolServiceUpdateProtocolResponse {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseProtocolServiceUpdateProtocolResponse();
     while (reader.pos < end) {
@@ -2203,26 +2528,39 @@ export const ProtocolServiceUpdateProtocolResponse = {
     return message;
   },
 
-  create(base?: DeepPartial<ProtocolServiceUpdateProtocolResponse>): ProtocolServiceUpdateProtocolResponse {
+  create(
+    base?: DeepPartial<ProtocolServiceUpdateProtocolResponse>,
+  ): ProtocolServiceUpdateProtocolResponse {
     return ProtocolServiceUpdateProtocolResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<ProtocolServiceUpdateProtocolResponse>): ProtocolServiceUpdateProtocolResponse {
+  fromPartial(
+    object: DeepPartial<ProtocolServiceUpdateProtocolResponse>,
+  ): ProtocolServiceUpdateProtocolResponse {
     const message = createBaseProtocolServiceUpdateProtocolResponse();
-    message.protocol = (object.protocol !== undefined && object.protocol !== null)
-      ? Protocol.fromPartial(object.protocol)
-      : undefined;
+    message.protocol =
+      object.protocol !== undefined && object.protocol !== null
+        ? Protocol.fromPartial(object.protocol)
+        : undefined;
     return message;
   },
 };
 
 function createBaseProtocolServiceUpdateVersionRequest(): ProtocolServiceUpdateVersionRequest {
-  return { protocolVersionId: "", skuCode: undefined, description: undefined, visibility: undefined };
+  return {
+    protocolVersionId: '',
+    skuCode: undefined,
+    description: undefined,
+    visibility: undefined,
+  };
 }
 
 export const ProtocolServiceUpdateVersionRequest = {
-  encode(message: ProtocolServiceUpdateVersionRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.protocolVersionId !== "") {
+  encode(
+    message: ProtocolServiceUpdateVersionRequest,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    if (message.protocolVersionId !== '') {
       writer.uint32(10).string(message.protocolVersionId);
     }
     if (message.skuCode !== undefined) {
@@ -2237,8 +2575,12 @@ export const ProtocolServiceUpdateVersionRequest = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ProtocolServiceUpdateVersionRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): ProtocolServiceUpdateVersionRequest {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseProtocolServiceUpdateVersionRequest();
     while (reader.pos < end) {
@@ -2281,13 +2623,17 @@ export const ProtocolServiceUpdateVersionRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<ProtocolServiceUpdateVersionRequest>): ProtocolServiceUpdateVersionRequest {
+  create(
+    base?: DeepPartial<ProtocolServiceUpdateVersionRequest>,
+  ): ProtocolServiceUpdateVersionRequest {
     return ProtocolServiceUpdateVersionRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<ProtocolServiceUpdateVersionRequest>): ProtocolServiceUpdateVersionRequest {
+  fromPartial(
+    object: DeepPartial<ProtocolServiceUpdateVersionRequest>,
+  ): ProtocolServiceUpdateVersionRequest {
     const message = createBaseProtocolServiceUpdateVersionRequest();
-    message.protocolVersionId = object.protocolVersionId ?? "";
+    message.protocolVersionId = object.protocolVersionId ?? '';
     message.skuCode = object.skuCode ?? undefined;
     message.description = object.description ?? undefined;
     message.visibility = object.visibility ?? undefined;
@@ -2300,15 +2646,25 @@ function createBaseProtocolServiceUpdateVersionResponse(): ProtocolServiceUpdate
 }
 
 export const ProtocolServiceUpdateVersionResponse = {
-  encode(message: ProtocolServiceUpdateVersionResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: ProtocolServiceUpdateVersionResponse,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     if (message.protocolVersion !== undefined) {
-      ProtocolVersion.encode(message.protocolVersion, writer.uint32(10).fork()).ldelim();
+      ProtocolVersion.encode(
+        message.protocolVersion,
+        writer.uint32(10).fork(),
+      ).ldelim();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ProtocolServiceUpdateVersionResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): ProtocolServiceUpdateVersionResponse {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseProtocolServiceUpdateVersionResponse();
     while (reader.pos < end) {
@@ -2319,7 +2675,10 @@ export const ProtocolServiceUpdateVersionResponse = {
             break;
           }
 
-          message.protocolVersion = ProtocolVersion.decode(reader, reader.uint32());
+          message.protocolVersion = ProtocolVersion.decode(
+            reader,
+            reader.uint32(),
+          );
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -2330,15 +2689,20 @@ export const ProtocolServiceUpdateVersionResponse = {
     return message;
   },
 
-  create(base?: DeepPartial<ProtocolServiceUpdateVersionResponse>): ProtocolServiceUpdateVersionResponse {
+  create(
+    base?: DeepPartial<ProtocolServiceUpdateVersionResponse>,
+  ): ProtocolServiceUpdateVersionResponse {
     return ProtocolServiceUpdateVersionResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<ProtocolServiceUpdateVersionResponse>): ProtocolServiceUpdateVersionResponse {
+  fromPartial(
+    object: DeepPartial<ProtocolServiceUpdateVersionResponse>,
+  ): ProtocolServiceUpdateVersionResponse {
     const message = createBaseProtocolServiceUpdateVersionResponse();
-    message.protocolVersion = (object.protocolVersion !== undefined && object.protocolVersion !== null)
-      ? ProtocolVersion.fromPartial(object.protocolVersion)
-      : undefined;
+    message.protocolVersion =
+      object.protocolVersion !== undefined && object.protocolVersion !== null
+        ? ProtocolVersion.fromPartial(object.protocolVersion)
+        : undefined;
     return message;
   },
 };
@@ -2346,12 +2710,12 @@ export const ProtocolServiceUpdateVersionResponse = {
 /** Service for managing deployable protocols. */
 export type ProtocolServiceDefinition = typeof ProtocolServiceDefinition;
 export const ProtocolServiceDefinition = {
-  name: "ProtocolService",
-  fullName: "blockjoy.v1.ProtocolService",
+  name: 'ProtocolService',
+  fullName: 'blockjoy.v1.ProtocolService',
   methods: {
     /** Add new deployable protocol. */
     addProtocol: {
-      name: "AddProtocol",
+      name: 'AddProtocol',
       requestType: ProtocolServiceAddProtocolRequest,
       requestStream: false,
       responseType: ProtocolServiceAddProtocolResponse,
@@ -2360,7 +2724,7 @@ export const ProtocolServiceDefinition = {
     },
     /** Add a new version to existing protocol. */
     addVersion: {
-      name: "AddVersion",
+      name: 'AddVersion',
       requestType: ProtocolServiceAddVersionRequest,
       requestStream: false,
       responseType: ProtocolServiceAddVersionResponse,
@@ -2369,7 +2733,7 @@ export const ProtocolServiceDefinition = {
     },
     /** Get the latest protocol version. */
     getLatest: {
-      name: "GetLatest",
+      name: 'GetLatest',
       requestType: ProtocolServiceGetLatestRequest,
       requestStream: false,
       responseType: ProtocolServiceGetLatestResponse,
@@ -2378,7 +2742,7 @@ export const ProtocolServiceDefinition = {
     },
     /** Get the instance pricing for some protocol. */
     getPricing: {
-      name: "GetPricing",
+      name: 'GetPricing',
       requestType: ProtocolServiceGetPricingRequest,
       requestStream: false,
       responseType: ProtocolServiceGetPricingResponse,
@@ -2387,7 +2751,7 @@ export const ProtocolServiceDefinition = {
     },
     /** Get info about some protocol. */
     getProtocol: {
-      name: "GetProtocol",
+      name: 'GetProtocol',
       requestType: ProtocolServiceGetProtocolRequest,
       requestStream: false,
       responseType: ProtocolServiceGetProtocolResponse,
@@ -2396,7 +2760,7 @@ export const ProtocolServiceDefinition = {
     },
     /** Get stats for some protocol. */
     getStats: {
-      name: "GetStats",
+      name: 'GetStats',
       requestType: ProtocolServiceGetStatsRequest,
       requestStream: false,
       responseType: ProtocolServiceGetStatsResponse,
@@ -2405,7 +2769,7 @@ export const ProtocolServiceDefinition = {
     },
     /** List all deployable protocols. */
     listProtocols: {
-      name: "ListProtocols",
+      name: 'ListProtocols',
       requestType: ProtocolServiceListProtocolsRequest,
       requestStream: false,
       responseType: ProtocolServiceListProtocolsResponse,
@@ -2414,7 +2778,7 @@ export const ProtocolServiceDefinition = {
     },
     /** List the different variants for some protocol. */
     listVariants: {
-      name: "ListVariants",
+      name: 'ListVariants',
       requestType: ProtocolServiceListVariantsRequest,
       requestStream: false,
       responseType: ProtocolServiceListVariantsResponse,
@@ -2423,7 +2787,7 @@ export const ProtocolServiceDefinition = {
     },
     /** List all versions for some version key. */
     listVersions: {
-      name: "ListVersions",
+      name: 'ListVersions',
       requestType: ProtocolServiceListVersionsRequest,
       requestStream: false,
       responseType: ProtocolServiceListVersionsResponse,
@@ -2432,7 +2796,7 @@ export const ProtocolServiceDefinition = {
     },
     /** Update existing protocol metadata. */
     updateProtocol: {
-      name: "UpdateProtocol",
+      name: 'UpdateProtocol',
       requestType: ProtocolServiceUpdateProtocolRequest,
       requestStream: false,
       responseType: ProtocolServiceUpdateProtocolResponse,
@@ -2441,7 +2805,7 @@ export const ProtocolServiceDefinition = {
     },
     /** Update existing protocol version metadata. */
     updateVersion: {
-      name: "UpdateVersion",
+      name: 'UpdateVersion',
       requestType: ProtocolServiceUpdateVersionRequest,
       requestStream: false,
       responseType: ProtocolServiceUpdateVersionResponse,
@@ -2571,26 +2935,38 @@ declare const self: any | undefined;
 declare const window: any | undefined;
 declare const global: any | undefined;
 const tsProtoGlobalThis: any = (() => {
-  if (typeof globalThis !== "undefined") {
+  if (typeof globalThis !== 'undefined') {
     return globalThis;
   }
-  if (typeof self !== "undefined") {
+  if (typeof self !== 'undefined') {
     return self;
   }
-  if (typeof window !== "undefined") {
+  if (typeof window !== 'undefined') {
     return window;
   }
-  if (typeof global !== "undefined") {
+  if (typeof global !== 'undefined') {
     return global;
   }
-  throw "Unable to locate global object";
+  throw 'Unable to locate global object';
 })();
 
-type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
+type Builtin =
+  | Date
+  | Function
+  | Uint8Array
+  | string
+  | number
+  | boolean
+  | undefined;
 
-export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
-  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin
+  ? T
+  : T extends Array<infer U>
+  ? Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U>
+  ? ReadonlyArray<DeepPartial<U>>
+  : T extends {}
+  ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 function toTimestamp(date: Date): Timestamp {
@@ -2607,7 +2983,9 @@ function fromTimestamp(t: Timestamp): Date {
 
 function longToNumber(long: Long): number {
   if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+    throw new tsProtoGlobalThis.Error(
+      'Value is larger than Number.MAX_SAFE_INTEGER',
+    );
   }
   return long.toNumber();
 }
