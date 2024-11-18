@@ -48,7 +48,7 @@ export const Pricing = () => {
               </span>
             )} */}
             <span css={styles.priceTotal}>
-              {formatters.formatCurrency(price?.value!)}
+              {formatters.formatCurrency(price?.amountMinorUnits!)}
             </span>
             <span css={styles.priceLabel}>
               {/* {`/ ${

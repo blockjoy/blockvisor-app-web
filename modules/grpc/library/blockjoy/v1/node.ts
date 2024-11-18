@@ -3,6 +3,7 @@ import Long from "long";
 import type { CallContext, CallOptions } from "nice-grpc-common";
 import _m0 from "protobufjs/minimal";
 import { Timestamp } from "../../google/protobuf/timestamp";
+import { BillingAmount } from "../common/v1/currency";
 import { ContainerStatus, NodeStatus, NodeType, StakingStatus, SyncStatus, UiType } from "../common/v1/node";
 import { EntityUpdate } from "../common/v1/resource";
 import { SearchOperator, SortOrder } from "../common/v1/search";
@@ -117,7 +118,11 @@ export interface Node {
     | string
     | undefined;
   /** A list of tags that are attached to this node. */
-  tags: Tags | undefined;
+  tags:
+    | Tags
+    | undefined;
+  /** Monthly cost of this node. */
+  cost?: BillingAmount | undefined;
 }
 
 /** This message is used to create a new node. */
@@ -306,7 +311,11 @@ export interface NodeServiceUpdateConfigRequest {
    * If this is provided, the tags contained in this will update the existing
    * tags.
    */
-  updateTags?: UpdateTags | undefined;
+  updateTags?:
+    | UpdateTags
+    | undefined;
+  /** The cost of this host. */
+  cost?: BillingAmount | undefined;
 }
 
 export interface NodeServiceUpdateConfigResponse {
@@ -584,6 +593,7 @@ function createBaseNode(): Node {
     url: "",
     oldNodeId: undefined,
     tags: undefined,
+    cost: undefined,
   };
 }
 
@@ -699,6 +709,9 @@ export const Node = {
     }
     if (message.tags !== undefined) {
       Tags.encode(message.tags, writer.uint32(306).fork()).ldelim();
+    }
+    if (message.cost !== undefined) {
+      BillingAmount.encode(message.cost, writer.uint32(314).fork()).ldelim();
     }
     return writer;
   },
@@ -969,6 +982,13 @@ export const Node = {
 
           message.tags = Tags.decode(reader, reader.uint32());
           continue;
+        case 39:
+          if (tag !== 314) {
+            break;
+          }
+
+          message.cost = BillingAmount.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1025,6 +1045,9 @@ export const Node = {
     message.url = object.url ?? "";
     message.oldNodeId = object.oldNodeId ?? undefined;
     message.tags = (object.tags !== undefined && object.tags !== null) ? Tags.fromPartial(object.tags) : undefined;
+    message.cost = (object.cost !== undefined && object.cost !== null)
+      ? BillingAmount.fromPartial(object.cost)
+      : undefined;
     return message;
   },
 };
@@ -1930,6 +1953,7 @@ function createBaseNodeServiceUpdateConfigRequest(): NodeServiceUpdateConfigRequ
     note: undefined,
     displayName: undefined,
     updateTags: undefined,
+    cost: undefined,
   };
 }
 
@@ -1952,6 +1976,9 @@ export const NodeServiceUpdateConfigRequest = {
     }
     if (message.updateTags !== undefined) {
       UpdateTags.encode(message.updateTags, writer.uint32(82).fork()).ldelim();
+    }
+    if (message.cost !== undefined) {
+      BillingAmount.encode(message.cost, writer.uint32(90).fork()).ldelim();
     }
     return writer;
   },
@@ -2005,6 +2032,13 @@ export const NodeServiceUpdateConfigRequest = {
 
           message.updateTags = UpdateTags.decode(reader, reader.uint32());
           continue;
+        case 11:
+          if (tag !== 90) {
+            break;
+          }
+
+          message.cost = BillingAmount.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2027,6 +2061,9 @@ export const NodeServiceUpdateConfigRequest = {
     message.displayName = object.displayName ?? undefined;
     message.updateTags = (object.updateTags !== undefined && object.updateTags !== null)
       ? UpdateTags.fromPartial(object.updateTags)
+      : undefined;
+    message.cost = (object.cost !== undefined && object.cost !== null)
+      ? BillingAmount.fromPartial(object.cost)
       : undefined;
     return message;
   },
@@ -3507,10 +3544,10 @@ export interface NodeServiceClient<CallOptionsExt = {}> {
   ): Promise<NodeServiceReportResponse>;
 }
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }

@@ -9,6 +9,7 @@ import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
 
 type Props = {
   index: number;
+  isLastColumn: boolean;
   column: AdminListColumn;
   activeSortField: number;
   activeSortOrder: SortOrder;
@@ -25,6 +26,7 @@ type Props = {
 
 export const AdminListTableHeader = ({
   index,
+  isLastColumn,
   column,
   activeSortField,
   activeSortOrder,
@@ -47,7 +49,7 @@ export const AdminListTableHeader = ({
   return (
     <span ref={headerRef} css={styles.tableHeader}>
       <>
-        {column.isResizable !== false && (
+        {column.isResizable !== false && !isLastColumn && (
           <span
             ref={resizerRef}
             css={styles.resizer}

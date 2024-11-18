@@ -107,7 +107,11 @@ export interface Host {
   /** The entity that can make decisions on whether to run nodes on this host. */
   managedBy: ManagedBy;
   /** A list of tags that are attached to this host. */
-  tags: Tags | undefined;
+  tags:
+    | Tags
+    | undefined;
+  /** Monthly cost of this host. */
+  cost?: BillingAmount | undefined;
 }
 
 export interface HostServiceCreateRequest {
@@ -269,7 +273,11 @@ export interface HostServiceUpdateRequest {
    * If this is provided, the tags contained in this will update the existing
    * tags.
    */
-  updateTags?: UpdateTags | undefined;
+  updateTags?:
+    | UpdateTags
+    | undefined;
+  /** The cost of this host. */
+  cost?: BillingAmount | undefined;
 }
 
 export interface HostServiceUpdateResponse {
@@ -376,6 +384,7 @@ function createBaseHost(): Host {
     ipAddresses: [],
     managedBy: 0,
     tags: undefined,
+    cost: undefined,
   };
 }
 
@@ -440,6 +449,9 @@ export const Host = {
     }
     if (message.tags !== undefined) {
       Tags.encode(message.tags, writer.uint32(194).fork()).ldelim();
+    }
+    if (message.cost !== undefined) {
+      BillingAmount.encode(message.cost, writer.uint32(202).fork()).ldelim();
     }
     return writer;
   },
@@ -591,6 +603,13 @@ export const Host = {
 
           message.tags = Tags.decode(reader, reader.uint32());
           continue;
+        case 25:
+          if (tag !== 202) {
+            break;
+          }
+
+          message.cost = BillingAmount.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -628,6 +647,9 @@ export const Host = {
     message.ipAddresses = object.ipAddresses?.map((e) => HostIpAddress.fromPartial(e)) || [];
     message.managedBy = object.managedBy ?? 0;
     message.tags = (object.tags !== undefined && object.tags !== null) ? Tags.fromPartial(object.tags) : undefined;
+    message.cost = (object.cost !== undefined && object.cost !== null)
+      ? BillingAmount.fromPartial(object.cost)
+      : undefined;
     return message;
   },
 };
@@ -1364,6 +1386,7 @@ function createBaseHostServiceUpdateRequest(): HostServiceUpdateRequest {
     totalDiskSpace: undefined,
     managedBy: undefined,
     updateTags: undefined,
+    cost: undefined,
   };
 }
 
@@ -1398,6 +1421,9 @@ export const HostServiceUpdateRequest = {
     }
     if (message.updateTags !== undefined) {
       UpdateTags.encode(message.updateTags, writer.uint32(82).fork()).ldelim();
+    }
+    if (message.cost !== undefined) {
+      BillingAmount.encode(message.cost, writer.uint32(90).fork()).ldelim();
     }
     return writer;
   },
@@ -1479,6 +1505,13 @@ export const HostServiceUpdateRequest = {
 
           message.updateTags = UpdateTags.decode(reader, reader.uint32());
           continue;
+        case 11:
+          if (tag !== 90) {
+            break;
+          }
+
+          message.cost = BillingAmount.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1507,6 +1540,9 @@ export const HostServiceUpdateRequest = {
     message.managedBy = object.managedBy ?? undefined;
     message.updateTags = (object.updateTags !== undefined && object.updateTags !== null)
       ? UpdateTags.fromPartial(object.updateTags)
+      : undefined;
+    message.cost = (object.cost !== undefined && object.cost !== null)
+      ? BillingAmount.fromPartial(object.cost)
       : undefined;
     return message;
   },
@@ -2364,10 +2400,10 @@ export interface HostServiceClient<CallOptionsExt = {}> {
   ): Promise<HostServiceRegionsResponse>;
 }
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }

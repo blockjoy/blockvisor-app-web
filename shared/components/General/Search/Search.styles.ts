@@ -76,7 +76,7 @@ export const styles = {
       opacity: 1;
     }
   `,
-  clearButton: css`
+  clearButton: (theme: ITheme) => css`
     position: absolute;
     top: 0;
     right: 4px;
@@ -89,6 +89,10 @@ export const styles = {
 
     :hover {
       opacity: 1;
+    }
+
+    svg path {
+      fill: ${theme.colorText};
     }
   `,
 };
