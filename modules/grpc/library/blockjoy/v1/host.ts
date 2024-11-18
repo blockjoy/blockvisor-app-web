@@ -72,6 +72,22 @@ export interface Host {
   updatedAt: Date | undefined;
   /** The cost of this host. */
   cost?: BillingAmount | undefined;
+  /** The number of logical cores this host has. */
+  cpuCores: number;
+  /** The amount of memory this host has (in bytes). */
+  memoryBytes: number;
+  /** The amount of disk space this host has (in bytes). */
+  diskBytes: number;
+  /** The number of nodes on this host. */
+  nodeCount: number;
+  /** A list of tags attached to this host. */
+  tags: Tags | undefined;
+  /** Who created this host. */
+  createdBy: Resource | undefined;
+  /** When this host was created. */
+  createdAt: Date | undefined;
+  /** When this host was last updated. */
+  updatedAt: Date | undefined;
 }
 
 export interface Region {
@@ -242,6 +258,12 @@ export interface HostServiceUpdateHostRequest {
   updateTags?: UpdateTags | undefined;
   /** The cost of this host. */
   cost?: BillingAmount | undefined;
+  /** Update the amount of disk space on the host. */
+  diskBytes?: number | undefined;
+  /** When to schedule nodes to this host. */
+  scheduleType?: ScheduleType | undefined;
+  /** Update the existing host tags. */
+  updateTags?: UpdateTags | undefined;
 }
 
 export interface HostServiceUpdateHostResponse {
@@ -309,6 +331,9 @@ function createBaseHost(): Host {
     createdAt: undefined,
     updatedAt: undefined,
     cost: undefined,
+    createdBy: undefined,
+    createdAt: undefined,
+    updatedAt: undefined,
   };
 }
 
@@ -2490,6 +2515,13 @@ export const HostServiceDeleteHostResponse = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.host = Host.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;

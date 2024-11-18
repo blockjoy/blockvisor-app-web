@@ -305,6 +305,9 @@ function createBaseNode(): Node {
     createdAt: undefined,
     updatedAt: undefined,
     cost: undefined,
+    createdBy: undefined,
+    createdAt: undefined,
+    updatedAt: undefined,
   };
 }
 
@@ -577,7 +580,7 @@ export const Node = {
           message.protocolName = reader.string();
           continue;
         case 19:
-          if (tag !== 154) {
+          if (tag !== 152) {
             break;
           }
 
@@ -601,7 +604,7 @@ export const Node = {
           message.semanticVersion = reader.string();
           continue;
         case 22:
-          if (tag !== 176) {
+          if (tag !== 178) {
             break;
           }
 
@@ -619,7 +622,7 @@ export const Node = {
             break;
           }
 
-          message.ipGateway = reader.string();
+          message.dnsUrl = reader.string();
           continue;
         case 25:
           if (tag !== 202) {
@@ -629,7 +632,7 @@ export const Node = {
           message.dnsName = reader.string();
           continue;
         case 26:
-          if (tag !== 210) {
+          if (tag !== 208) {
             break;
           }
 
@@ -1234,10 +1237,10 @@ export const NodeServiceListRequest = {
       writer.uint32(74).string(v!);
     }
     for (const v of message.userIds) {
-      writer.uint32(82).string(v!);
+      writer.uint32(66).string(v!);
     }
     for (const v of message.ipAddresses) {
-      writer.uint32(90).string(v!);
+      writer.uint32(74).string(v!);
     }
     writer.uint32(98).fork();
     for (const v of message.nodeStates) {
@@ -1891,7 +1894,7 @@ export const NodeServiceReportErrorRequest = {
             break;
           }
 
-          message.message = reader.string();
+          message.orgId = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
