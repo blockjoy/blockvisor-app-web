@@ -80,7 +80,7 @@ export default () => {
           name: 'Organizations',
           path: isMobile
             ? ROUTES.ORGANIZATIONS
-            : `${ROUTES.ORGANIZATIONS}/${defaultOrganization?.id}`,
+            : `${ROUTES.ORGANIZATIONS}/${defaultOrganization?.orgId}`,
           icon: <IconOrganizations />,
           isOrganizations: true,
         },

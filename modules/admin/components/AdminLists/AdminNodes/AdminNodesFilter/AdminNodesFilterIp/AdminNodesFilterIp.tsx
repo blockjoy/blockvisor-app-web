@@ -15,7 +15,9 @@ export const AdminNodesFilterIp = ({
 
   useEffect(() => {
     const networks = Array.from(
-      new Set(sortIpStringArray((listAll as Node[])?.map((node) => node.ip)!)),
+      new Set(
+        sortIpStringArray((listAll as Node[])?.map((node) => node.ipAddress)!),
+      ),
     );
     setList(networks.map((network) => ({ id: network, name: network })));
   }, [listAll]);

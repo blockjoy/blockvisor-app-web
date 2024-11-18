@@ -40,7 +40,7 @@ export const useSettings = (): UseSettingsHook => {
 
         try {
           const response = await userClient.updateSettings(
-            userId || user?.id!,
+            userId || user?.userId!,
             name,
             updatedSettingsString,
           );
@@ -64,7 +64,7 @@ export const useSettings = (): UseSettingsHook => {
         console.log('%cDELETE_SETTINGS', 'color: #f00', name);
 
         try {
-          await userClient.deleteSettings(user?.id!, name);
+          await userClient.deleteSettings(user?.userId!, name);
           set(authAtoms.userSettings, (prevSettings) => {
             const updatedSettings = { ...prevSettings };
             delete updatedSettings[name];

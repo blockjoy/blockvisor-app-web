@@ -24,29 +24,31 @@ export const NodeTags = ({
   const { updateNode } = useNodeUpdate();
 
   const handleNewTag = async (tag: string) => {
-    if (!node?.id) return;
+    if (!node?.nodeId) return;
 
     await updateNode({
-      ids: [node?.id!],
+      nodeId: node?.nodeId!,
       updateTags: { addTag: { name: tag } },
+      newValues: [],
     });
   };
 
   const handleRemoveTag = async (tag: Tag) => {
-    if (!node?.id) return;
+    if (!node?.nodeId) return;
 
     const newTags: Tag[] =
       node.tags?.tags.filter((nodeTag) => nodeTag.name !== tag.name) ?? [];
 
     await updateNode({
-      ids: [node?.id!],
+      nodeId: node?.nodeId!,
       updateTags: { overwriteTags: { tags: newTags } },
+      newValues: [],
     });
   };
 
   return (
     <Tags
-      name={node.id}
+      name={node.nodeId}
       tags={nodeTags}
       inactiveTags={inactiveTags}
       autoHide={autoHide}

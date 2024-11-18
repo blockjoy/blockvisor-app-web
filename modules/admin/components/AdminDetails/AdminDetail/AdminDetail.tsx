@@ -98,7 +98,7 @@ export const AdminDetail = ({
             itemsPerPage: 1,
           },
         );
-        const item = await nodeClient.getNode(nodeResults.nodes[0].id);
+        const item = await nodeClient.getNode(nodeResults.nodes[0].nodeId);
         setItem(item);
       } else {
         const item = await getItem();

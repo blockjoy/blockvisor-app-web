@@ -45,7 +45,7 @@ export function useGetOrganizations() {
 
   const removeFromOrganizations = (orgId: string) => {
     const newOrganizations = organizations.filter(
-      (organization) => organization.id !== orgId,
+      (organization) => organization.orgId !== orgId,
     );
 
     setOrganizations(newOrganizations);
@@ -54,7 +54,7 @@ export function useGetOrganizations() {
   };
 
   const addToOrganizations = (org: Org) => {
-    const foundOrg = organizations.findIndex((o) => o.id === org.id) > -1;
+    const foundOrg = organizations.findIndex((o) => o.orgId === org.orgId) > -1;
     if (foundOrg) return;
 
     const organizationsCopy = [...organizations];

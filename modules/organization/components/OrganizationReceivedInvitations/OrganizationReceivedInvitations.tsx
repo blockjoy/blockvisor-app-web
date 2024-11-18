@@ -40,7 +40,7 @@ export const OrganizationReceivedInvitations = () => {
 
   const handleAcceptInvitation = (invitation: Invitation) => {
     setIsAccepting(true);
-    acceptInvitation(invitation.id, async () => {
+    acceptInvitation(invitation.invitationId, async () => {
       await getOrganizations(true, false);
       switchOrganization(invitation.orgId, invitation.orgName);
       getOrganization(invitation.orgId);
@@ -67,11 +67,11 @@ export const OrganizationReceivedInvitations = () => {
       </header>
       <ul>
         {invitations?.map((invite) => (
-          <li key={invite.id} css={styles.item}>
+          <li key={invite.invitationId} css={styles.item}>
             <div css={[spacing.bottom.medium]}>
-              <b>{escapeHtml(invite.invitedBy?.name!) || 'Unknown'}</b> invited
-              you to join <b>{escapeHtml(invite.orgName!) || 'Unknown'}</b>{' '}
-              organization
+              <b>{escapeHtml(invite.invitedBy?.resourceId!) || 'Unknown'}</b>{' '}
+              invited you to join{' '}
+              <b>{escapeHtml(invite.orgName!) || 'Unknown'}</b> organization
             </div>
             <div css={styles.buttons}>
               <Button
@@ -84,7 +84,7 @@ export const OrganizationReceivedInvitations = () => {
               </Button>
               <Button
                 size="small"
-                onClick={() => handleDeclineInvitation(invite.id!)}
+                onClick={() => handleDeclineInvitation(invite.invitationId!)}
                 style="outline"
                 loading={isDeclining}
               >

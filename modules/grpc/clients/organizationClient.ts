@@ -10,6 +10,7 @@ import {
   OrgServiceGetInvoicesRequest,
   OrgServiceGetInvoicesResponse,
   OrgServiceGetProvisionTokenResponse,
+  OrgServiceGetRequest,
   OrgServiceListRequest,
   OrgServiceListResponse,
   OrgServiceResetProvisionTokenResponse,
@@ -46,8 +47,8 @@ class OrganizationClient {
     this.client = createClient(OrgServiceDefinition, channel);
   }
 
-  async getOrganization(id: string): Promise<Org> {
-    const request = { id };
+  async getOrganization(orgId: string): Promise<Org> {
+    const request: OrgServiceGetRequest = { orgId };
     console.log('getOrganizationRequest', request);
     try {
       await authClient.refreshToken();
@@ -67,7 +68,7 @@ class OrganizationClient {
     includePersonal?: boolean,
   ): Promise<OrgServiceListResponse> {
     const request: OrgServiceListRequest = {
-      memberId: !isAdmin ? getIdentity().id : undefined,
+      memberId: !isAdmin ? getIdentity().userId : undefined,
       offset: getPaginationOffset(
         pagination || { currentPage: 0, itemsPerPage: 1000 },
       ),
@@ -83,7 +84,7 @@ class OrganizationClient {
 
     if (keyword) {
       const search: OrgSearch = {
-        id: createSearch(keyword),
+        orgId: createSearch(keyword),
         name: createSearch(keyword),
         operator: SearchOperator.SEARCH_OPERATOR_OR,
       };
@@ -125,10 +126,10 @@ class OrganizationClient {
     }
   }
 
-  async deleteOrganization(id: string): Promise<void> {
+  async deleteOrganization(orgId: string): Promise<void> {
     try {
       await authClient.refreshToken();
-      await this.client.delete({ id }, getOptions());
+      await this.client.delete({ orgId }, getOptions());
     } catch (err: any) {
       handleError(err);
     }

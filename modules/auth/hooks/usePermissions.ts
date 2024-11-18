@@ -21,13 +21,15 @@ export function usePermissions() {
     setPermissionsLoadingState('loading');
 
     return await authClient.listPermissions(
-      user?.id!,
-      defaultOrganization?.id!,
+      user?.userId!,
+      defaultOrganization?.orgId!,
     );
   };
 
   useSWR(
-    defaultOrganization?.id ? `permissions_${defaultOrganization.id}` : null,
+    defaultOrganization?.orgId
+      ? `permissions_${defaultOrganization.orgId}`
+      : null,
     fetcher,
     {
       revalidateOnMount: true,

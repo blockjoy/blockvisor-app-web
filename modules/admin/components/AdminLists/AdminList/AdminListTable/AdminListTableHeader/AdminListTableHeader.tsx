@@ -5,7 +5,7 @@ import { useRef } from 'react';
 import { styles } from './AdminListTableHeader.styles';
 import { AdminListTableSortButton } from './AdminListTableSortButton/AdminListTableSortButton';
 import { AdminListFilter } from './AdminListFilter/AdminListFilter';
-import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
+import { Protocol } from '@modules/grpc/library/blockjoy/v1/protocol';
 
 type Props = {
   index: number;
@@ -14,7 +14,8 @@ type Props = {
   activeSortOrder: SortOrder;
   scrollX: number;
   listAll: any[];
-  blockchains?: Blockchain[];
+  protocols?: Protocol[];
+  canResize?: boolean;
   initResize: any;
   onSortChanged: (sortField: number, sortOrder: SortOrder) => void;
   onFilterChange: (item: AdminFilterDropdownItem, columnName: string) => void;
@@ -30,7 +31,8 @@ export const AdminListTableHeader = ({
   activeSortOrder,
   scrollX,
   listAll,
-  blockchains,
+  protocols,
+  canResize,
   initResize,
   onSortChanged,
   onFilterChange,
@@ -47,7 +49,7 @@ export const AdminListTableHeader = ({
   return (
     <span ref={headerRef} css={styles.tableHeader}>
       <>
-        {column.isResizable !== false && (
+        {column.isResizable !== false && canResize && (
           <span
             ref={resizerRef}
             css={styles.resizer}
@@ -82,7 +84,7 @@ export const AdminListTableHeader = ({
             listAll={listAll}
             column={column}
             headerRef={headerRef}
-            blockchains={blockchains}
+            protocols={protocols}
             onFilterChange={handleFilterChange}
             onReset={onReset}
             scrollX={scrollX}

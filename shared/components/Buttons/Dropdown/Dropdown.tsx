@@ -20,7 +20,7 @@ export type DropdownProps<T = any> = {
   items: T[];
   itemKey?: string;
   selectedItem: T | null;
-  handleSelected: (item: T | null) => void;
+  handleSelected: (item: T) => void;
   defaultText?: string | ReactNode;
   searchQuery?: string;
   isTouchedQuery?: boolean;

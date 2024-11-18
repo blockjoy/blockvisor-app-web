@@ -30,10 +30,9 @@ export enum InvoiceStatus {
   UNRECOGNIZED = -1,
 }
 
-/** Organization representation */
 export interface Org {
   /** The UUID of a the organization. */
-  id: string;
+  orgId: string;
   /** The name of this organization. */
   name: string;
   /** A personal organization is the default for a single user. */
@@ -57,7 +56,7 @@ export interface Org {
 }
 
 export interface OrgServiceGetRequest {
-  id: string;
+  orgId: string;
 }
 
 export interface OrgServiceGetResponse {
@@ -65,47 +64,35 @@ export interface OrgServiceGetResponse {
 }
 
 export interface OrgServiceListRequest {
-  /**
-   * If this is set to a user id, only orgs that that user is a member of will
-   * be returned
-   */
+  /** If set to a user id, only return orgs that user is a member of. */
   memberId?:
     | string
     | undefined;
-  /**
-   * If this is true, only personal orgs are returned. If this is false, no
-   * personal orgs are returned.
-   */
+  /** If true only personal orgs are returned, otherwise none are. */
   personal?:
     | boolean
     | undefined;
-  /** The number of items to be skipped over. */
+  /** The number of results to skip. */
   offset: number;
-  /**
-   * The number of items that will be returned. Together with offset, you can
-   * use this to get pagination.
-   */
+  /** Limit the number of results. */
   limit: number;
-  /** Search params. */
+  /** Search these parameters. */
   search?:
     | OrgSearch
     | undefined;
-  /** The field sorting order of results. */
+  /** Sort the results in this order. */
   sort: OrgSort[];
 }
 
-/**
- * This message contains fields used to search organizations as opposed to just
- * filtering them.
- */
+/** Fields used when searching orgs. */
 export interface OrgSearch {
-  /** The way the search parameters should be combined. */
+  /** How to combine the parameters. */
   operator: SearchOperator;
-  /** Search only the id. */
-  id?:
+  /** Search for this org id. */
+  orgId?:
     | string
     | undefined;
-  /** Search only the name. */
+  /** Search for this name. */
   name?: string | undefined;
 }
 
@@ -116,8 +103,7 @@ export interface OrgSort {
 
 export interface OrgServiceListResponse {
   orgs: Org[];
-  /** The total number of orgs matching your query. */
-  orgCount: number;
+  total: number;
 }
 
 export interface OrgServiceCreateRequest {
@@ -130,11 +116,8 @@ export interface OrgServiceCreateResponse {
 
 export interface OrgServiceUpdateRequest {
   /** The id of the organization to be updated. */
-  id: string;
-  /**
-   * If this value is provided, the name of the organization will be set to the
-   * provided value.
-   */
+  orgId: string;
+  /** Set the name of the organization. */
   name?: string | undefined;
 }
 
@@ -142,7 +125,7 @@ export interface OrgServiceUpdateResponse {
 }
 
 export interface OrgServiceDeleteRequest {
-  id: string;
+  orgId: string;
 }
 
 export interface OrgServiceDeleteResponse {
@@ -317,7 +300,7 @@ export interface LineItem {
 
 function createBaseOrg(): Org {
   return {
-    id: "",
+    orgId: "",
     name: "",
     personal: false,
     createdAt: undefined,
@@ -331,8 +314,8 @@ function createBaseOrg(): Org {
 
 export const Org = {
   encode(message: Org, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.orgId !== "") {
+      writer.uint32(10).string(message.orgId);
     }
     if (message.name !== "") {
       writer.uint32(18).string(message.name);
@@ -373,7 +356,7 @@ export const Org = {
             break;
           }
 
-          message.id = reader.string();
+          message.orgId = reader.string();
           continue;
         case 2:
           if (tag !== 18) {
@@ -446,7 +429,7 @@ export const Org = {
 
   fromPartial(object: DeepPartial<Org>): Org {
     const message = createBaseOrg();
-    message.id = object.id ?? "";
+    message.orgId = object.orgId ?? "";
     message.name = object.name ?? "";
     message.personal = object.personal ?? false;
     message.createdAt = object.createdAt ?? undefined;
@@ -460,13 +443,13 @@ export const Org = {
 };
 
 function createBaseOrgServiceGetRequest(): OrgServiceGetRequest {
-  return { id: "" };
+  return { orgId: "" };
 }
 
 export const OrgServiceGetRequest = {
   encode(message: OrgServiceGetRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.orgId !== "") {
+      writer.uint32(10).string(message.orgId);
     }
     return writer;
   },
@@ -483,7 +466,7 @@ export const OrgServiceGetRequest = {
             break;
           }
 
-          message.id = reader.string();
+          message.orgId = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -500,7 +483,7 @@ export const OrgServiceGetRequest = {
 
   fromPartial(object: DeepPartial<OrgServiceGetRequest>): OrgServiceGetRequest {
     const message = createBaseOrgServiceGetRequest();
-    message.id = object.id ?? "";
+    message.orgId = object.orgId ?? "";
     return message;
   },
 };
@@ -655,7 +638,7 @@ export const OrgServiceListRequest = {
 };
 
 function createBaseOrgSearch(): OrgSearch {
-  return { operator: 0, id: undefined, name: undefined };
+  return { operator: 0, orgId: undefined, name: undefined };
 }
 
 export const OrgSearch = {
@@ -663,8 +646,8 @@ export const OrgSearch = {
     if (message.operator !== 0) {
       writer.uint32(8).int32(message.operator);
     }
-    if (message.id !== undefined) {
-      writer.uint32(18).string(message.id);
+    if (message.orgId !== undefined) {
+      writer.uint32(18).string(message.orgId);
     }
     if (message.name !== undefined) {
       writer.uint32(26).string(message.name);
@@ -691,7 +674,7 @@ export const OrgSearch = {
             break;
           }
 
-          message.id = reader.string();
+          message.orgId = reader.string();
           continue;
         case 3:
           if (tag !== 26) {
@@ -716,7 +699,7 @@ export const OrgSearch = {
   fromPartial(object: DeepPartial<OrgSearch>): OrgSearch {
     const message = createBaseOrgSearch();
     message.operator = object.operator ?? 0;
-    message.id = object.id ?? undefined;
+    message.orgId = object.orgId ?? undefined;
     message.name = object.name ?? undefined;
     return message;
   },
@@ -780,7 +763,7 @@ export const OrgSort = {
 };
 
 function createBaseOrgServiceListResponse(): OrgServiceListResponse {
-  return { orgs: [], orgCount: 0 };
+  return { orgs: [], total: 0 };
 }
 
 export const OrgServiceListResponse = {
@@ -788,8 +771,8 @@ export const OrgServiceListResponse = {
     for (const v of message.orgs) {
       Org.encode(v!, writer.uint32(10).fork()).ldelim();
     }
-    if (message.orgCount !== 0) {
-      writer.uint32(16).uint64(message.orgCount);
+    if (message.total !== 0) {
+      writer.uint32(16).uint64(message.total);
     }
     return writer;
   },
@@ -813,7 +796,7 @@ export const OrgServiceListResponse = {
             break;
           }
 
-          message.orgCount = longToNumber(reader.uint64() as Long);
+          message.total = longToNumber(reader.uint64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -831,7 +814,7 @@ export const OrgServiceListResponse = {
   fromPartial(object: DeepPartial<OrgServiceListResponse>): OrgServiceListResponse {
     const message = createBaseOrgServiceListResponse();
     message.orgs = object.orgs?.map((e) => Org.fromPartial(e)) || [];
-    message.orgCount = object.orgCount ?? 0;
+    message.total = object.total ?? 0;
     return message;
   },
 };
@@ -929,13 +912,13 @@ export const OrgServiceCreateResponse = {
 };
 
 function createBaseOrgServiceUpdateRequest(): OrgServiceUpdateRequest {
-  return { id: "", name: undefined };
+  return { orgId: "", name: undefined };
 }
 
 export const OrgServiceUpdateRequest = {
   encode(message: OrgServiceUpdateRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.orgId !== "") {
+      writer.uint32(10).string(message.orgId);
     }
     if (message.name !== undefined) {
       writer.uint32(18).string(message.name);
@@ -955,7 +938,7 @@ export const OrgServiceUpdateRequest = {
             break;
           }
 
-          message.id = reader.string();
+          message.orgId = reader.string();
           continue;
         case 2:
           if (tag !== 18) {
@@ -979,7 +962,7 @@ export const OrgServiceUpdateRequest = {
 
   fromPartial(object: DeepPartial<OrgServiceUpdateRequest>): OrgServiceUpdateRequest {
     const message = createBaseOrgServiceUpdateRequest();
-    message.id = object.id ?? "";
+    message.orgId = object.orgId ?? "";
     message.name = object.name ?? undefined;
     return message;
   },
@@ -1021,13 +1004,13 @@ export const OrgServiceUpdateResponse = {
 };
 
 function createBaseOrgServiceDeleteRequest(): OrgServiceDeleteRequest {
-  return { id: "" };
+  return { orgId: "" };
 }
 
 export const OrgServiceDeleteRequest = {
   encode(message: OrgServiceDeleteRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.orgId !== "") {
+      writer.uint32(10).string(message.orgId);
     }
     return writer;
   },
@@ -1044,7 +1027,7 @@ export const OrgServiceDeleteRequest = {
             break;
           }
 
-          message.id = reader.string();
+          message.orgId = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -1061,7 +1044,7 @@ export const OrgServiceDeleteRequest = {
 
   fromPartial(object: DeepPartial<OrgServiceDeleteRequest>): OrgServiceDeleteRequest {
     const message = createBaseOrgServiceDeleteRequest();
-    message.id = object.id ?? "";
+    message.orgId = object.orgId ?? "";
     return message;
   },
 };
@@ -3152,10 +3135,10 @@ export interface OrgServiceClient<CallOptionsExt = {}> {
   ): Promise<OrgServiceGetInvoicesResponse>;
 }
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }

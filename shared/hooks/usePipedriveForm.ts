@@ -39,7 +39,7 @@ export const usePipedriveForm = (): UsePipedriveFormHook => {
     try {
       // Search for an existing external organization by OrgID
       const searchOrganizationResponse = await Pipedrive.searchOrganization(
-        defaultOrganization?.id,
+        defaultOrganization?.orgId,
       );
 
       if (!searchOrganizationResponse.success)
@@ -55,7 +55,7 @@ export const usePipedriveForm = (): UsePipedriveFormHook => {
         // If the organization does not exist, create a new one
         const addOrganizationResponse = await Pipedrive.addOrganization(
           defaultOrganization?.name,
-          defaultOrganization?.id,
+          defaultOrganization?.orgId,
         );
 
         if (!addOrganizationResponse.success)

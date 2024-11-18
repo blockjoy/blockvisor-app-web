@@ -6,10 +6,10 @@ import { Resource } from "../common/v1/resource";
 export const protobufPackage = "blockjoy.v1";
 
 export interface CryptServiceGetSecretRequest {
-  /** The resource type requesting this secret. */
-  resource: Resource;
-  /** The resource id requesting this secret. */
-  resourceId: string;
+  /** The resource requesting this secret. */
+  resource:
+    | Resource
+    | undefined;
   /** The secret name to read. */
   name: string;
 }
@@ -20,10 +20,10 @@ export interface CryptServiceGetSecretResponse {
 }
 
 export interface CryptServicePutSecretRequest {
-  /** The resource type writing this secret. */
-  resource: Resource;
-  /** The resource id writing this secret. */
-  resourceId: string;
+  /** The resource writing this secret. */
+  resource:
+    | Resource
+    | undefined;
   /** The secret name to write. */
   name: string;
   /** The secret bytes to encrypt. */
@@ -34,19 +34,16 @@ export interface CryptServicePutSecretResponse {
 }
 
 function createBaseCryptServiceGetSecretRequest(): CryptServiceGetSecretRequest {
-  return { resource: 0, resourceId: "", name: "" };
+  return { resource: undefined, name: "" };
 }
 
 export const CryptServiceGetSecretRequest = {
   encode(message: CryptServiceGetSecretRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.resource !== 0) {
-      writer.uint32(8).int32(message.resource);
-    }
-    if (message.resourceId !== "") {
-      writer.uint32(18).string(message.resourceId);
+    if (message.resource !== undefined) {
+      Resource.encode(message.resource, writer.uint32(10).fork()).ldelim();
     }
     if (message.name !== "") {
-      writer.uint32(26).string(message.name);
+      writer.uint32(18).string(message.name);
     }
     return writer;
   },
@@ -59,21 +56,14 @@ export const CryptServiceGetSecretRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 8) {
+          if (tag !== 10) {
             break;
           }
 
-          message.resource = reader.int32() as any;
+          message.resource = Resource.decode(reader, reader.uint32());
           continue;
         case 2:
           if (tag !== 18) {
-            break;
-          }
-
-          message.resourceId = reader.string();
-          continue;
-        case 3:
-          if (tag !== 26) {
             break;
           }
 
@@ -94,15 +84,16 @@ export const CryptServiceGetSecretRequest = {
 
   fromPartial(object: DeepPartial<CryptServiceGetSecretRequest>): CryptServiceGetSecretRequest {
     const message = createBaseCryptServiceGetSecretRequest();
-    message.resource = object.resource ?? 0;
-    message.resourceId = object.resourceId ?? "";
+    message.resource = (object.resource !== undefined && object.resource !== null)
+      ? Resource.fromPartial(object.resource)
+      : undefined;
     message.name = object.name ?? "";
     return message;
   },
 };
 
 function createBaseCryptServiceGetSecretResponse(): CryptServiceGetSecretResponse {
-  return { value: new Uint8Array() };
+  return { value: new Uint8Array(0) };
 }
 
 export const CryptServiceGetSecretResponse = {
@@ -142,28 +133,25 @@ export const CryptServiceGetSecretResponse = {
 
   fromPartial(object: DeepPartial<CryptServiceGetSecretResponse>): CryptServiceGetSecretResponse {
     const message = createBaseCryptServiceGetSecretResponse();
-    message.value = object.value ?? new Uint8Array();
+    message.value = object.value ?? new Uint8Array(0);
     return message;
   },
 };
 
 function createBaseCryptServicePutSecretRequest(): CryptServicePutSecretRequest {
-  return { resource: 0, resourceId: "", name: "", value: new Uint8Array() };
+  return { resource: undefined, name: "", value: new Uint8Array(0) };
 }
 
 export const CryptServicePutSecretRequest = {
   encode(message: CryptServicePutSecretRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.resource !== 0) {
-      writer.uint32(8).int32(message.resource);
-    }
-    if (message.resourceId !== "") {
-      writer.uint32(18).string(message.resourceId);
+    if (message.resource !== undefined) {
+      Resource.encode(message.resource, writer.uint32(10).fork()).ldelim();
     }
     if (message.name !== "") {
-      writer.uint32(26).string(message.name);
+      writer.uint32(18).string(message.name);
     }
     if (message.value.length !== 0) {
-      writer.uint32(34).bytes(message.value);
+      writer.uint32(26).bytes(message.value);
     }
     return writer;
   },
@@ -176,28 +164,21 @@ export const CryptServicePutSecretRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 8) {
+          if (tag !== 10) {
             break;
           }
 
-          message.resource = reader.int32() as any;
+          message.resource = Resource.decode(reader, reader.uint32());
           continue;
         case 2:
           if (tag !== 18) {
             break;
           }
 
-          message.resourceId = reader.string();
+          message.name = reader.string();
           continue;
         case 3:
           if (tag !== 26) {
-            break;
-          }
-
-          message.name = reader.string();
-          continue;
-        case 4:
-          if (tag !== 34) {
             break;
           }
 
@@ -218,10 +199,11 @@ export const CryptServicePutSecretRequest = {
 
   fromPartial(object: DeepPartial<CryptServicePutSecretRequest>): CryptServicePutSecretRequest {
     const message = createBaseCryptServicePutSecretRequest();
-    message.resource = object.resource ?? 0;
-    message.resourceId = object.resourceId ?? "";
+    message.resource = (object.resource !== undefined && object.resource !== null)
+      ? Resource.fromPartial(object.resource)
+      : undefined;
     message.name = object.name ?? "";
-    message.value = object.value ?? new Uint8Array();
+    message.value = object.value ?? new Uint8Array(0);
     return message;
   },
 };

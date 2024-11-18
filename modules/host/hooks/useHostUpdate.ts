@@ -7,7 +7,7 @@ export const useHostUpdate = () => {
   const { host, setHost } = useHostView();
 
   const modifyHost = (modifiedHost: Host) => {
-    if (host?.id === modifiedHost.id) {
+    if (host?.hostId === modifiedHost.hostId) {
       const newHost: Host = {
         ...host,
         ...modifiedHost,
@@ -17,7 +17,7 @@ export const useHostUpdate = () => {
 
     if (hostList?.length) {
       const newHostList = hostList.map((host: Host) => {
-        if (host.id === modifiedHost.id) {
+        if (host.hostId === modifiedHost.hostId) {
           const newHostInList = {
             ...host,
             ...modifiedHost,

@@ -21,9 +21,9 @@ const links = [
   { name: 'nodes', icon: <IconNode />, href: '/admin?name=nodes' },
   { name: 'hosts', icon: <IconHost />, href: '/admin?name=hosts' },
   {
-    name: 'blockchains',
+    name: 'protocols',
     icon: <IconBlockchain />,
-    href: '/admin?name=blockchains',
+    href: '/admin?name=protocols',
   },
   { name: 'orgs', icon: <IconOrganization />, href: '/admin?name=orgs' },
   { name: 'users', icon: <IconPerson />, href: '/admin?name=users' },

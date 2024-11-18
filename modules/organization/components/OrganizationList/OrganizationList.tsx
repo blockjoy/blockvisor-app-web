@@ -51,13 +51,13 @@ export const OrganizationsList = () => {
       ) : (
         <Scrollbar additionalStyles={[styles.scrollbar]}>
           {allOrganizationsSorted?.map((org) => {
-            const isActive = defaultOrganization?.id === org.id;
+            const isActive = defaultOrganization?.orgId === org.orgId;
             return (
               <button
                 className={isActive ? 'active' : ''}
-                onClick={() => handleRowClicked(org.id)}
+                onClick={() => handleRowClicked(org.orgId)}
                 css={styles.row}
-                key={org.id}
+                key={org.orgId}
               >
                 <p>{escapeHtml(org.name)}</p>
                 {isActive && (

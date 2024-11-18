@@ -17,12 +17,12 @@ export const AdminNodesFilterVersion = ({
   const settings = useRecoilValue(adminSelectors.settings);
   const settingsColumns = settings['nodes']?.columns ?? [];
 
-  const blockchainFilters = settingsColumns.find(
-    (column) => column.name === 'blockchainName',
+  const protocolFilters = settingsColumns.find(
+    (column) => column.name === 'protocolName',
   )?.filterSettings?.values;
 
   const selectedBlockchains = blockchains?.filter((b) =>
-    blockchainFilters?.some((bf) => bf === b.id),
+    protocolFilters?.some((bf) => bf === b.id),
   );
 
   const filteredVersions: AdminFilterDropdownItem[] = Array.from(
@@ -38,9 +38,9 @@ export const AdminNodesFilterVersion = ({
     .filter((version) =>
       (listAll as Node[])?.some(
         (item) =>
-          item.version === version &&
+          item.semanticVersion === version &&
           selectedBlockchains?.some(
-            (blockain) => blockain.id === item.blockchainId,
+            (blockain) => blockain.id === item.protocolId,
           ),
       ),
     )

@@ -26,11 +26,11 @@ const defaultOrganization = selector<DefaultOrganization | null>({
     const defOrg = orgSettings?.default ?? null;
 
     if (organizations?.length && defOrg && !isSuperUser) {
-      const org = organizations.find((org) => org?.id === defOrg?.id);
+      const org = organizations.find((org) => org?.orgId === defOrg?.orgId);
 
       if (!org)
         return {
-          id: organizations[0].id,
+          orgId: organizations[0].orgId,
           name: organizations[0].name,
         };
     }
@@ -83,9 +83,9 @@ const organizationRoles = selector<OrgRole[]>({
     const defOrg = get(defaultOrganization);
     const allOrgs = get(organizationAtoms.allOrganizations);
 
-    const currentOrg = allOrgs.find((org) => org.id === defOrg?.id);
+    const currentOrg = allOrgs.find((org) => org.orgId === defOrg?.orgId);
     const currentMember = currentOrg?.members?.find(
-      (member) => member.userId === user?.id,
+      (member) => member.userId === user?.userId,
     );
 
     return currentMember?.roles ?? [];

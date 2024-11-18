@@ -1,27 +1,28 @@
 import { selector, selectorFamily } from 'recoil';
 import isEqual from 'lodash/isEqual';
 import { Region } from '@modules/grpc/library/blockjoy/v1/host';
-import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
+import { Protocol } from '@modules/grpc/library/blockjoy/v1/protocol';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { NodeSort } from '@modules/grpc/library/blockjoy/v1/node';
 import { Tag } from '@modules/grpc/library/blockjoy/common/v1/tag';
 import { UINodeFilterCriteria } from '@modules/grpc';
 import { nodeStatusList } from '@shared/constants/nodeStatusList';
 import {
-  nodeTypeList,
   NODE_FILTERS_DEFAULT,
   NODE_SORT_DEFAULT,
 } from '@shared/constants/lookups';
 import { NodeStatusListItem, sort } from '@shared/components';
 import {
   nodeAtoms,
-  blockchainAtoms,
-  blockchainSelectors,
+  protocolAtoms,
+  protocolSelectors,
   NetworkConfigSimple,
   InitialNodeQueryParams,
   nodeLauncherAtoms,
 } from '@modules/node';
 import { authAtoms } from '@modules/auth';
+import { createDropdownValuesFromEnum } from '@modules/admin';
+import { NodeState } from '@modules/grpc/library/blockjoy/common/v1/node';
 
 const settings = selector<NodeSettings>({
   key: 'node.settings',
@@ -83,26 +84,28 @@ const queryParams = selector<InitialNodeQueryParams>({
   },
 });
 
-const filtersBlockchainSelectedIds = selector<string[]>({
-  key: 'node.filters.blockchain',
-  get: ({ get }) => get(filters)?.blockchain ?? [],
+const filtersProtocolSelectedIds = selector<string[]>({
+  key: 'node.filters.protocol',
+  get: ({ get }) => get(filters)?.protocol ?? [],
 });
 
-const filtersBlockchainAll = selectorFamily<
-  (Blockchain & FilterListItem)[],
+const filtersProtocolAll = selectorFamily<
+  (Protocol & FilterListItem)[],
   string[]
 >({
-  key: 'node.filters.blockchain.all',
+  key: 'node.filters.protocol.all',
   get:
     (tempFilters: string[]) =>
     ({ get }) => {
-      const allBlockchains = get(blockchainAtoms.blockchains);
-      if (!allBlockchains.length) return [];
+      const allProtocols = get(protocolAtoms.protocols);
+      if (!allProtocols.length) return [];
 
-      const allFilters = allBlockchains.map((blockchain) => ({
-        ...blockchain,
-        name: blockchain.displayName,
-        isChecked: tempFilters?.some((filter) => blockchain.id === filter),
+      const allFilters = allProtocols.map((protocol) => ({
+        ...protocol,
+        name: protocol.name,
+        isChecked: tempFilters?.some(
+          (filter) => protocol.protocolId === filter,
+        ),
       }));
 
       return allFilters;
@@ -113,13 +116,11 @@ const filtersStatusAll = selectorFamily<FilterListItem[], string[]>({
   key: 'node.filters.nodeStatus.all',
   get: (tempFilters) => () => {
     const allStatuses: (NodeStatusListItem & FilterListItem)[] = sort(
-      nodeStatusList
-        .filter((item) => item.id !== 0 && !item.type)
-        .map((item) => ({
-          ...item,
-          name: item.name?.toLowerCase(),
-          id: item.id?.toString(),
-        })),
+      createDropdownValuesFromEnum(NodeState, 'NODE_STATE_').map((item) => ({
+        ...item,
+        name: item.name?.toLowerCase(),
+        id: item.id?.toString(),
+      })),
       {
         field: 'name',
         order: SortOrder.SORT_ORDER_ASCENDING,
@@ -137,47 +138,49 @@ const filtersStatusAll = selectorFamily<FilterListItem[], string[]>({
   },
 });
 
-const filtersTypeAll = selectorFamily<FilterListItem[], string[]>({
-  key: 'node.filters.nodeType.all',
-  get: (tempFilters: string[]) => () => {
-    const allTypes = nodeTypeList.map((item) => ({
-      name: item.name,
-      id: item.id.toString()!,
-    }));
+// TODO: add node type filters
+// const filtersTypeAll = selectorFamily<FilterListItem[], string[]>({
+//   key: 'node.filters.nodeType.all',
+//   get: (tempFilters: string[]) => () => {
+//     // const allTypes = nodeTypeList.map((item) => ({
+//     //   name: item.name,
+//     //   id: item.id.toString()!,
+//     // }));
 
-    if (!allTypes.length) return [];
+//     // if (!allTypes.length) return [];
 
-    const allFilters = allTypes.map((type) => ({
-      ...type,
-      isChecked: tempFilters?.some((filter) => type.id === filter),
-    }));
+//     // const allFilters = allTypes.map((type) => ({
+//     //   ...type,
+//     //   isChecked: tempFilters?.some((filter) => type.id === filter),
+//     // }));
 
-    return allFilters;
-  },
-});
+//     return [];
+//   },
+// });
 
-const filtersNetworksAll = selectorFamily<
-  (NetworkConfigSimple & FilterListItem)[],
-  string[]
->({
-  key: 'node.filters.networks.all',
-  get:
-    (tempFilters: string[]) =>
-    ({ get }) => {
-      const filterBlockchainsIDs = get(filtersBlockchainSelectedIds);
+// TODO: add node network filters
+// const filtersNetworksAll = selectorFamily<
+//   (NetworkConfigSimple & FilterListItem)[],
+//   string[]
+// >({
+//   key: 'node.filters.networks.all',
+//   get:
+//     (tempFilters: string[]) =>
+//     ({ get }) => {
+//       const filterProtocolsIDs = get(filtersProtocolSelectedIds);
 
-      const allNetworks = get(
-        blockchainSelectors.blockchainNetworks(filterBlockchainsIDs),
-      );
+//       const allNetworks = get(
+//         protocolSelectors.protocolNetworks(filterProtocolsIDs),
+//       );
 
-      const allFilters = allNetworks.map((network) => ({
-        ...network,
-        isChecked: tempFilters?.some((filter) => network.id === filter),
-      }));
+//       const allFilters = allNetworks.map((network) => ({
+//         ...network,
+//         isChecked: tempFilters?.some((filter) => network.id === filter),
+//       }));
 
-      return allFilters;
-    },
-});
+//       return allFilters;
+//     },
+// });
 
 const inactiveTags = selectorFamily<Tag[], any[]>({
   key: 'node.tags.inactive',
@@ -218,12 +221,12 @@ export const nodeSelectors = {
   nodeSort,
   queryParams,
 
-  filtersBlockchainSelectedIds,
+  filtersProtocolSelectedIds,
 
-  filtersBlockchainAll,
+  filtersProtocolAll,
   filtersStatusAll,
-  filtersTypeAll,
-  filtersNetworksAll,
+  // filtersTypeAll,
+  // filtersNetworksAll,
 
   inactiveTags,
 

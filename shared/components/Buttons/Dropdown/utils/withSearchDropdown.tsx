@@ -35,7 +35,7 @@ export const withSearchDropdown = <T extends { id?: string; name?: string }>(
     };
 
     const handleSelect = (item: T | null) => {
-      handleSelected(item);
+      handleSelected(item!);
       setSearchQuery('');
       // Added Timeout due to animation in the DropdownMenu
       setTimeout(() => {

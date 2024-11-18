@@ -28,7 +28,7 @@ export const HostSelect = ({
   };
 
   const HostSelectDropdown = useMemo(
-    () => withSearchDropdown<Host>(Dropdown),
+    () => withSearchDropdown<Host & { id?: string; name?: string }>(Dropdown),
     [hosts],
   );
 

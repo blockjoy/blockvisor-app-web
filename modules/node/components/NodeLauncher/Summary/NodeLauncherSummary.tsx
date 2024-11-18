@@ -9,7 +9,6 @@ import {
   HostSelectMultiple,
   OrganizationSelect,
   Pricing,
-  Tooltip,
 } from '@shared/components';
 import { usePipedriveForm } from '@shared/index';
 import { hostAtoms } from '@modules/host';
@@ -170,7 +169,7 @@ export const NodeLauncherSummary = ({
               disabled={
                 isLaunching ||
                 (isSuperUser && nodeLauncherStatus.isDisabled) ||
-                isPropertiesValid
+                !isPropertiesValid
               }
               css={[
                 styles.createButton,

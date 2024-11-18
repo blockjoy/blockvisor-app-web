@@ -15,9 +15,14 @@ export const AdminDashboardNodeReports = () => {
 
   useEffect(() => {
     (async () => {
-      const reportsResponse = await nodeClient.listNodeProblems();
-      setReports(reportsResponse);
-      setIsLoading(false);
+      try {
+        const reportsResponse = await nodeClient.listNodeProblems();
+        setReports(reportsResponse);
+        setIsLoading(false);
+      } catch (err) {
+        setReports([]);
+        setIsLoading(false);
+      }
     })();
   }, []);
 
@@ -41,11 +46,11 @@ export const AdminDashboardNodeReports = () => {
             </thead>
             <tbody>
               {reports?.map((report) => (
-                <tr key={report.id}>
+                <tr key={report.reportId}>
                   <td>
                     <div css={styles.message}>{escapeHtml(report.message)}</div>
                   </td>
-                  <td>
+                  {/* <td>
                     <TableBlock
                       topRow={
                         <NextLink
@@ -56,17 +61,17 @@ export const AdminDashboardNodeReports = () => {
                       }
                       middleRow={report.createdBy?.email}
                     ></TableBlock>
-                  </td>
+                  </td> */}
                   <td>
                     <TableBlock
                       topRow={
                         <NextLink
-                          href={`/admin?name=nodes&id=${report.node?.id}`}
+                          href={`/admin?name=nodes&id=${report.node?.nodeId}`}
                         >
                           {report.node?.displayName}
                         </NextLink>
                       }
-                      middleRow={report.node?.id}
+                      middleRow={report.node?.nodeId}
                     ></TableBlock>
                   </td>
                   <td>

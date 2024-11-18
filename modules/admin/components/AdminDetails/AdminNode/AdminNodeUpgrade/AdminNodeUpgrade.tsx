@@ -1,5 +1,5 @@
 import { AdminHeaderButton } from '@modules/admin/components';
-import { blockchainClient, nodeClient } from '@modules/grpc';
+import { protocolClient, nodeClient } from '@modules/grpc';
 import {
   DropdownItem,
   DropdownMenu,
@@ -36,19 +36,15 @@ export const AdminNodeUpgrade = () => {
     try {
       const node = await nodeClient.getNode(id as string);
 
-      const blockchains = await blockchainClient.listBlockchains();
+      const protocolsResponse = await protocolClient.listProtocols();
 
-      const blockchain = blockchains.blockchains.find(
-        (b) => b.id === node.blockchainId,
-      );
-
-      const nodeType = blockchain?.nodeTypes.find(
-        (t) => t.nodeType === node.nodeType,
+      const protocol = protocolsResponse.protocols.find(
+        (b) => b.protocolId === node.protocolId,
       );
 
       setVersions(
         sortVersionStringArray(
-          nodeType?.versions.map(({ version }) => version),
+          protocol?.versions.map(({ semanticVersion }) => semanticVersion),
         ),
       );
     } catch (err) {

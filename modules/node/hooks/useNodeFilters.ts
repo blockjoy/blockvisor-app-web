@@ -28,14 +28,11 @@ export const useNodeFilters = (): UseNodeFiltersHook => {
   const [tempFiltersTotal, setTempFiltersTotal] = useRecoilState(
     nodeAtoms.filtersTempTotal,
   );
-  const filtersBlockchainAll = useRecoilValue(
-    nodeSelectors.filtersBlockchainAll(tempFilters.blockchain!),
+  const filtersProtocolAll = useRecoilValue(
+    nodeSelectors.filtersProtocolAll(tempFilters.protocol!),
   );
   const filtersStatusAll = useRecoilValue(
     nodeSelectors.filtersStatusAll(tempFilters.nodeStatus!),
-  );
-  const filtersNetworksAll = useRecoilValue(
-    nodeSelectors.filtersNetworksAll(tempFilters.networks!),
   );
   const setSearchQuery = useSetRecoilState(nodeAtoms.filtersSearchQuery);
   const resetPagination = useResetRecoilState(nodeAtoms.nodeListPagination);
@@ -88,26 +85,20 @@ export const useNodeFilters = (): UseNodeFiltersHook => {
   const isDirty = !isEqual(filters, tempFilters);
 
   const filtersAll: FilterItem[] = [
-    {
-      id: 'blockchain',
-      name: 'Blockchain',
-      disabled: false,
-      count: tempFilters.blockchain?.length,
-      list: filtersBlockchainAll,
-    },
+    // TODO: implement node protocol filtering
+    // {
+    //   id: 'protocol',
+    //   name: 'Protocol',
+    //   disabled: false,
+    //   count: tempFilters.protocol?.length,
+    //   list: filtersProtocolAll,
+    // },
     {
       id: 'nodeStatus',
       name: 'Node Status',
       disabled: false,
       count: tempFilters.nodeStatus?.length,
       list: filtersStatusAll,
-    },
-    {
-      id: 'networks',
-      name: 'Network',
-      disabled: false,
-      count: tempFilters.networks?.length,
-      list: filtersNetworksAll,
     },
   ];
 

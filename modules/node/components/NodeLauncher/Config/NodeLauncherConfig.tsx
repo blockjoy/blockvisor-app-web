@@ -1,65 +1,45 @@
 import { Fragment } from 'react';
 import { useRecoilValue } from 'recoil';
-import { NodeProperty } from '@modules/grpc/library/blockjoy/v1/node';
 import { renderControls } from '@modules/node/utils/renderNodeLauncherConfigControls';
-import { BlockchainVersion } from '@modules/grpc/library/blockjoy/v1/blockchain';
-import { NetworkConfig } from '@modules/grpc/library/blockjoy/common/v1/blockchain';
+import { ProtocolVersion } from '@modules/grpc/library/blockjoy/v1/protocol';
 import { FormLabel, FormHeader } from '@shared/components';
 import {
   NodeLauncherPanel,
   NodeVersionSelect,
   nodeLauncherAtoms,
-  nodeLauncherSelectors,
-  NodeTypeSelect,
-  NodeNetworkSelect,
   FirewallDropdown,
   NodeLauncherState,
 } from '@modules/node';
 import { authSelectors } from '@modules/auth';
 import { styles } from './NodeLauncherConfig.styles';
+import { ImageProperty } from '@modules/grpc/library/blockjoy/v1/image';
 
 type NodeLauncherConfigProps = {
-  onFileUploaded: (e: any) => void;
   onNodeConfigPropertyChanged: (name: string, value: string | boolean) => void;
   onNodePropertyChanged: <K extends keyof NodeLauncherState>(
     name: K,
     value: NodeLauncherState[K],
   ) => void;
-  onVersionChanged: (version: BlockchainVersion | null) => void;
-  onNetworkChanged: (network: NetworkConfig) => void;
+  onVersionChanged: (version: ProtocolVersion | null) => void;
 };
 
 export const NodeLauncherConfig = ({
-  onFileUploaded,
   onNodeConfigPropertyChanged,
   onNodePropertyChanged,
   onVersionChanged,
-  onNetworkChanged,
 }: NodeLauncherConfigProps) => {
   const nodeLauncher = useRecoilValue(nodeLauncherAtoms.nodeLauncher);
-  const networks = useRecoilValue(nodeLauncherSelectors.networks);
-  const selectedVersion = useRecoilValue(nodeLauncherAtoms.selectedVersion);
   const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
 
-  const { properties, keyFiles } = nodeLauncher;
+  const { properties } = nodeLauncher;
 
   return (
     <NodeLauncherPanel>
       <div css={styles.wrapper}>
         <FormHeader>Configure</FormHeader>
 
-        <FormLabel>Node Type</FormLabel>
-        <NodeTypeSelect />
-
         <FormLabel>Version</FormLabel>
         <NodeVersionSelect onVersionChanged={onVersionChanged} />
-
-        {(networks.length || isSuperUser) && selectedVersion && (
-          <>
-            <FormLabel>Network</FormLabel>
-            <NodeNetworkSelect onNetworkChanged={onNetworkChanged} />
-          </>
-        )}
 
         <FormLabel hint="Add IP addresses that are allowed/denied">
           Firewall Rules
@@ -71,22 +51,16 @@ export const NodeLauncherConfig = ({
           deniedIps={nodeLauncher?.denyIps}
         />
 
-        {Boolean(networks?.length) &&
-          properties?.map((property: NodeProperty) => {
-            return (
-              <Fragment key={property.name}>
-                <FormLabel isRequired={property.required}>
-                  {property.displayName}
-                </FormLabel>
-                {renderControls(
-                  property,
-                  keyFiles!,
-                  onFileUploaded,
-                  onNodeConfigPropertyChanged,
-                )}
-              </Fragment>
-            );
-          })}
+        {/* TODO: implement image properties
+        
+        {properties?.map((property: ImageProperty) => {
+          return (
+            <Fragment key={property.imagePropertyId}>
+              <FormLabel>{property.key}</FormLabel>
+              {renderControls(property, onNodeConfigPropertyChanged)}
+            </Fragment>
+          );
+        })} */}
       </div>
     </NodeLauncherPanel>
   );

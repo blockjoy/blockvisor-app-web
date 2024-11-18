@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { FilteredIpAddr } from '@modules/grpc/library/blockjoy/v1/node';
+// import { FilteredIpAddr } from '@modules/grpc/library/blockjoy/v1/node';
 import IconFirewall from '@public/assets/icons/app/Firewall.svg';
 import {
   DropdownMenu,

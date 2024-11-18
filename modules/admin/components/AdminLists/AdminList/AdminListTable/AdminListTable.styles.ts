@@ -53,7 +53,6 @@ export const styles = {
       min-width: 500px;
       font-size: 13px;
       border-collapse: collapse;
-      table-layout: fixed;
 
       @media ${breakpoints.toSml} {
         font-size: 16px;
@@ -164,10 +163,15 @@ export const styles = {
           visibility: visible;
         }
       `,
-  tableCell: (width: string) => css`
+  tableCell: (width?: string, isLastColumn?: boolean) => css`
     min-width: ${width};
-    max-width: ${width};
-    width: ${width};
+
+    ${!isLastColumn &&
+    css`
+      max-width: ${width};
+      width: ${width};
+    `}
+
     box-sizing: border-box;
   `,
   copyButton: css`

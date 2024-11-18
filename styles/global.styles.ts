@@ -74,7 +74,6 @@ export const globalStyles = (theme: ITheme) => css`
 
   /* --- LIGHT THEME --- */
   :root.theme--light {
-    /* TODO: Add light theme colors, these are just for testing */
     --color-overlay-background-1: hsl(240, 20%, 85%);
 
     --color-text-3: hsl(160, 4%, 14%);
