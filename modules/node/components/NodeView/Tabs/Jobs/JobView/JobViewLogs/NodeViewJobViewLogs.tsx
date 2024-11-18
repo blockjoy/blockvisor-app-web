@@ -1,4 +1,4 @@
-import { NodeJob } from '@modules/grpc/library/blockjoy/v1/node';
+import { NodeJob } from '@modules/grpc/library/blockjoy/common/v1/node';
 import { Alert, Log, LogsWrapper } from '@shared/components';
 
 export const NodeViewJobViewLogs = ({ job }: { job: NodeJob }) => {

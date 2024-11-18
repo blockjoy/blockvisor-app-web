@@ -1,10 +1,10 @@
 import { css } from '@emotion/react';
 import { TableGridCell, NodeStatus } from '@shared/components';
-import { BlockchainIcon } from '@shared/components';
+import { ProtocolIcon } from '@shared/components';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { getNodeJobProgress } from './getNodeJobProgress';
 import { escapeHtml } from '@shared/utils/escapeHtml';
-import { convertNodeTypeToName, NodeTags } from '@modules/node';
+import { NodeTags } from '@modules/node';
 
 const styles = {
   blockchainNetwork: css`
@@ -37,21 +37,21 @@ export const mapNodeListToGrid = (
     const progress = getNodeJobProgress(node);
 
     return {
-      key: node.id,
+      key: node.nodeId,
       component: (
         <TableGridCell
-          key={node.id}
-          onCellClick={() => onCellClick(node.id)}
-          titleText={escapeHtml(node.displayName)}
+          key={node.nodeId}
+          onCellClick={() => onCellClick(node.nodeId)}
+          titleText={escapeHtml(node.displayName!)}
           {...(hasTags && { titleStyle: styles.header })}
           titleStyle={styles.header}
           titleIcon={
-            <BlockchainIcon size="28px" blockchainName={node.blockchainName} />
+            <ProtocolIcon size="28px" protocolName={node.protocolName} />
           }
           footer={
             <NodeStatus
               hasBorder
-              status={node.status}
+              status={node.nodeStatus?.state!}
               downloadingCurrent={progress?.current}
               downloadingTotal={progress?.total}
             />
@@ -60,8 +60,7 @@ export const mapNodeListToGrid = (
             <>
               <NodeTags autoHide={false} node={node} itemsPerView={3} />
               <p css={styles.blockchainNetwork}>
-                {node.blockchainName} | {convertNodeTypeToName(node.nodeType)} |{' '}
-                {node.network}
+                {node.protocolName} | {node.versionKey?.variantKey}
               </p>
             </>
           }

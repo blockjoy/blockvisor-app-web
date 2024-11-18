@@ -26,7 +26,7 @@ const Deactivated: NextPage = () => {
   useEffect(() => {
     (async () => {
       try {
-        await userClient.deleteUser(repository?.getIdentity()?.id!);
+        await userClient.deleteUser(repository?.getIdentity()?.userId!);
         repository?.deleteIdentity();
       } catch (err) {
         console.log('error deleting account', err);

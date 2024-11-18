@@ -30,7 +30,7 @@ export const CommandsView = ({ commands }: CommandsViewProps) => {
       {canViewCommands || (isSuperUser && canViewCommandsAsSuperUser) ? (
         <LogsWrapper>
           {commands?.map((command: Command) => (
-            <CommandView key={command.id} command={command} />
+            <CommandView key={command.commandId} command={command} />
           ))}
         </LogsWrapper>
       ) : (

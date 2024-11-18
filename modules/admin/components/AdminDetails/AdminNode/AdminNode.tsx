@@ -2,19 +2,18 @@ import { nodeClient } from '@modules/grpc';
 import { useRouter } from 'next/router';
 import { AdminDetail } from '../AdminDetail/AdminDetail';
 import { NextLink, NodeFirewall, NodeStatus } from '@shared/components';
-import { convertNodeTypeToName } from '@modules/node/utils/convertNodeTypeToName';
 import { capitalized } from '@modules/admin/utils/capitalized';
 import {
   Node,
   NodeServiceUpdateConfigRequest,
 } from '@modules/grpc/library/blockjoy/v1/node';
 import { createAdminUpdateRequest } from '@modules/admin/utils';
-import { AdminNodeUpgrade } from './AdminNodeUpgrade/AdminNodeUpgrade';
+// import { AdminNodeUpgrade } from './AdminNodeUpgrade/AdminNodeUpgrade';
 import { escapeHtml } from '@shared/utils/escapeHtml';
 import { Currency } from '../../AdminFinancesByHost/Currency/Currency';
 
 const ignoreItems = [
-  'id',
+  'nodeId',
   'nodeName',
   'displayName',
   'dnsName',
@@ -26,10 +25,10 @@ const ignoreItems = [
   'ip',
   'ipGateway',
   'placement',
-  'blockchainId',
-  'blockchainName',
+  'protocolId',
+  'protocolName',
   'blockHeight',
-  'selfUpdate',
+  'autoUpgrade',
   'status',
   'containerStatus',
   'syncStatus',
@@ -54,7 +53,8 @@ export const AdminNode = () => {
     node: Node,
   ) => {
     const defaultRequest: NodeServiceUpdateConfigRequest = {
-      ids: [id as string],
+      nodeId: id as string,
+      newValues: [],
     };
     const request = createAdminUpdateRequest(defaultRequest, properties);
     await nodeClient.updateNode(request);
@@ -73,9 +73,9 @@ export const AdminNode = () => {
         { keyword: ip as string },
         { currentPage: 0, itemsPerPage: 1 },
       );
-      const { id } = nodeResults.nodes[0];
+      const { nodeId } = nodeResults.nodes[0];
       router.replace(`/admin?name=nodes&id=${id}`);
-      return await nodeClient.getNode(id);
+      return await nodeClient.getNode(nodeId);
     } else {
       return await nodeClient.getNode(id as string);
     }
@@ -91,7 +91,7 @@ export const AdminNode = () => {
     {
       id: 'displayName',
       label: 'Display Name',
-      data: escapeHtml(node.displayName),
+      data: escapeHtml(node.displayName!),
       copyValue: node.displayName,
       editSettings: {
         field: 'displayName',
@@ -109,8 +109,8 @@ export const AdminNode = () => {
     {
       id: 'id',
       label: 'Id',
-      data: node.id,
-      copyValue: node.id,
+      data: node.nodeId,
+      copyValue: node.nodeId,
     },
     {
       id: 'cost',
@@ -120,8 +120,8 @@ export const AdminNode = () => {
     {
       id: 'ip',
       label: 'Ip',
-      data: <p>{node.ip}</p>,
-      copyValue: node.ip,
+      data: <p>{node.ipAddress}</p>,
+      copyValue: node.ipAddress,
     },
     {
       id: 'ipGateway',
@@ -132,27 +132,10 @@ export const AdminNode = () => {
     {
       id: 'status',
       label: 'Node Status',
-      data: <NodeStatus hasBorder={false} status={node.status}></NodeStatus>,
-    },
-    {
-      id: 'containerStatus',
-      label: 'Container Status',
       data: (
         <NodeStatus
           hasBorder={false}
-          status={node.containerStatus}
-          type="container"
-        ></NodeStatus>
-      ),
-    },
-    {
-      id: 'syncStatus',
-      label: 'Sync Status',
-      data: (
-        <NodeStatus
-          hasBorder={false}
-          status={node.syncStatus}
-          type="sync"
+          status={node.nodeStatus?.state!}
         ></NodeStatus>
       ),
     },
@@ -162,21 +145,16 @@ export const AdminNode = () => {
       data: node.blockHeight?.toLocaleString('en-US'),
     },
     {
-      id: 'blockchainName',
-      label: 'Blockchain Name',
-      data: node.blockchainName,
-      copyValue: node.blockchainName,
+      id: 'protocolName',
+      label: 'Protocol Name',
+      data: node.protocolName,
+      copyValue: node.protocolName,
     },
     {
-      id: 'blockchainId',
-      label: 'Blockchain Id',
-      data: node.blockchainId,
-      copyValue: node.blockchainId,
-    },
-    {
-      id: 'nodeType',
-      label: 'Node Type',
-      data: capitalized(convertNodeTypeToName(node.nodeType)),
+      id: 'protocolId',
+      label: 'Protocol Id',
+      data: node.protocolId,
+      copyValue: node.protocolId,
     },
     {
       id: 'orgName',
@@ -214,11 +192,11 @@ export const AdminNode = () => {
       data: (
         <p>
           <NextLink href={`/admin?name=hosts&id=${node.hostId}`}>
-            {node.hostName}
+            {node.hostDisplayName}
           </NextLink>
         </p>
       ),
-      copyValue: node.hostName,
+      copyValue: node.hostDisplayName,
     },
     {
       id: 'hostId',
@@ -233,27 +211,27 @@ export const AdminNode = () => {
       copyValue: node.hostId,
     },
     {
-      id: 'selfUpdate',
+      id: 'autoUpgrade',
       label: 'Auto Update',
-      data: node.selfUpdate?.toString(),
+      data: node.autoUpgrade?.toString(),
       editSettings: {
-        field: 'selfUpdate',
+        field: 'autoUpgrade',
         displayName: 'Auto Update',
         isBoolean: true,
         controlType: 'switch',
-        defaultValue: node.selfUpdate?.toString(),
+        defaultValue: node.autoUpgrade?.toString(),
       },
     },
-    {
-      id: 'firewallRules',
-      label: 'Firewall Rules',
-      data:
-        node.allowIps.length || node.denyIps.length ? (
-          <NodeFirewall allowIps={node.allowIps} denyIps={node.denyIps} />
-        ) : (
-          '-'
-        ),
-    },
+    // {
+    //   id: 'firewallRules',
+    //   label: 'Firewall Rules',
+    //   data:
+    //     node.allowIps.length || node.denyIps.length ? (
+    //       <NodeFirewall allowIps={node.allowIps} denyIps={node.denyIps} />
+    //     ) : (
+    //       '-'
+    //     ),
+    // },
     // {
     //   id: 'allowIps',
     //   label: 'Allow Ips',
@@ -284,32 +262,32 @@ export const AdminNode = () => {
       label: 'Region',
       data: <p>{node.placement?.scheduler?.region || '-'}</p>,
     },
-    {
-      id: 'createdByName',
-      label: 'Launched By Name',
-      data: (
-        <p>
-          <NextLink
-            href={`/admin?name=users&id=${node?.createdBy?.resourceId}`}
-          >
-            {node?.createdBy?.name || 'No name'}
-          </NextLink>
-        </p>
-      ),
-    },
-    {
-      id: 'createdByEmail',
-      label: 'Launched By Email',
-      data: (
-        <p>
-          <NextLink
-            href={`/admin?name=users&id=${node?.createdBy?.resourceId}`}
-          >
-            {node?.createdBy?.email || 'No email'}
-          </NextLink>
-        </p>
-      ),
-    },
+    // {
+    //   id: 'createdByName',
+    //   label: 'Created By Name',
+    //   data: (
+    //     <p>
+    //       <NextLink
+    //         href={`/admin?name=users&id=${node?.createdBy?.resourceId}`}
+    //       >
+    //         {node?.createdBy?.name || 'No name'}
+    //       </NextLink>
+    //     </p>
+    //   ),
+    // },
+    // {
+    //   id: 'createdByEmail',
+    //   label: 'Created By Email',
+    //   data: (
+    //     <p>
+    //       <NextLink
+    //         href={`/admin?name=users&id=${node?.createdBy?.resourceId}`}
+    //       >
+    //         {node?.createdBy?.email || 'No email'}
+    //       </NextLink>
+    //     </p>
+    //   ),
+    // },
     {
       id: 'createdById',
       label: 'Launched By Id',
@@ -334,8 +312,8 @@ export const AdminNode = () => {
       onDelete={handleDelete}
       ignoreItems={ignoreItems}
       customItems={customItems}
-      additionalHeaderButtons={<AdminNodeUpgrade />}
-      detailsName="id"
+      // additionalHeaderButtons={<AdminNodeUpgrade />}
+      detailsName="nodeId"
       metricsKey="ip"
       hasMetrics
     />

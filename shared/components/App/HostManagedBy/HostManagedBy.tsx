@@ -1,4 +1,4 @@
-import { ManagedBy } from '@modules/grpc/library/blockjoy/v1/host';
+// import { ManagedBy } from '@modules/grpc/library/blockjoy/v1/host';
 import { css } from '@emotion/react';
 
 const styles = {
@@ -8,11 +8,12 @@ const styles = {
 };
 
 type Props = {
-  managedBy: ManagedBy;
+  managedBy?: string;
 };
 
 export const HostManagedBy = ({ managedBy }: Props) => (
   <p css={styles.base}>
-    {ManagedBy[managedBy].replace('MANAGED_BY_', '').toLocaleLowerCase()}
+    {/* TODO: host managedBy is missing */}
+    {/* {ManagedBy[managedBy].replace('MANAGED_BY_', '').toLocaleLowerCase()} */}
   </p>
 );

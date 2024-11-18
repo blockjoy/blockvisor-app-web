@@ -64,19 +64,19 @@ export const useNodeView = (): Hook => {
   };
 
   const loadNode = async (id: Args) => {
-    const foundNode = nodeList?.find((n) => n.id === id);
+    const foundNode = nodeList?.find((n) => n.nodeId === id);
 
     if (foundNode) {
       setIsLoading('finished');
       if (!isSuperUser) {
         setNode(foundNode);
-        if (foundNode.orgId !== defaultOrganization?.id)
+        if (foundNode.orgId !== defaultOrganization?.orgId)
           switchOrganization(foundNode.orgId, foundNode.orgName);
       } else {
         setNode(foundNode);
         const node = await nodeClient.getNode(id as string);
         setNode(node);
-        if (node.orgId !== defaultOrganization?.id)
+        if (node.orgId !== defaultOrganization?.orgId)
           switchOrganization(node.orgId, node.orgName);
       }
 
@@ -88,7 +88,7 @@ export const useNodeView = (): Hook => {
       const node = await nodeClient.getNode(nodeId);
       setNode(node);
       setIsLoading('finished');
-      if (node.orgId !== defaultOrganization?.id)
+      if (node.orgId !== defaultOrganization?.orgId)
         switchOrganization(node.orgId, node.orgName);
     } catch (err) {
       setNode(null);

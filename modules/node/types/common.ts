@@ -1,18 +1,11 @@
 import { UINodeFilterCriteria } from '@modules/grpc';
-import { NetType } from '@modules/grpc/library/blockjoy/common/v1/blockchain';
-import { NodeType } from '@modules/grpc/library/blockjoy/common/v1/node';
 import { Host, Region } from '@modules/grpc/library/blockjoy/v1/host';
-import {
-  NodePlacement,
-  NodeProperty,
-  NodeSort,
-} from '@modules/grpc/library/blockjoy/v1/node';
+import { NodeSort } from '@modules/grpc/library/blockjoy/v1/node';
+import { NodePlacement } from '@modules/grpc/library/blockjoy/common/v1/node';
+import { ImageProperty } from '@modules/grpc/library/blockjoy/v1/image';
 
 export type NodeLauncherState = {
-  blockchainId: string;
-  nodeTypeVersion: string;
-  nodeType: NodeType;
-  properties?: NodeProperty[];
+  properties?: ImageProperty[];
   keyFiles?: NodeFiles[];
   allowIps: FilteredIpAddr[];
   denyIps: FilteredIpAddr[];
@@ -29,7 +22,7 @@ export type CreateNodeParams = {
   version: string;
   nodeType: number;
   blockchain: string;
-  nodeTypeProperties: NodeProperty[];
+  // nodeTypeProperties: NodeProperty[];
   key_files?: File[];
   network: string;
   allowedIps: FilteredIpAddr[];
@@ -37,8 +30,8 @@ export type CreateNodeParams = {
 };
 
 export type BlockchainSimple = {
-  blockchainId?: string;
-  nodeType?: NodeType;
+  protocolId?: string;
+  // nodeType?: NodeType;
   version?: string;
 };
 
@@ -48,9 +41,9 @@ export type BlockchainSimpleWRegion = BlockchainSimple & {
 
 export type NetworkConfigSimple = {
   id: string;
-  blockchainId?: string;
+  protocolId?: string;
   name?: string;
-  netType?: NetType;
+  // netType?: NetType;
 };
 
 export type InitialNodeQueryParams = {

@@ -20,14 +20,14 @@ export const useNodeAdd = () => {
     onSuccess: (nodeId: string) => void,
     onError: (errorMessage: string) => void,
   ) => {
-    const properties = node?.properties?.map((property) => ({
-      ...property,
-      value: property?.value?.toString() || 'null',
-    }));
+    // const properties = node?.properties?.map((property) => ({
+    //   ...property,
+    //   value: property?.value?.toString() || 'null',
+    // }));
 
     const nodeRequest = {
       ...node,
-      properties,
+      // properties,
     };
 
     try {
@@ -40,7 +40,7 @@ export const useNodeAdd = () => {
       if (!subscription) getSubscription();
       getInvoices();
 
-      onSuccess(response.id);
+      onSuccess(response.nodeId);
     } catch (err: any) {
       console.log('Error Launching Node', err);
       onError('Error launching node, an unknown error occurred.');

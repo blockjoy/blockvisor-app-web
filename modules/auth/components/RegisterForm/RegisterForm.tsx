@@ -25,7 +25,6 @@ type RegisterForm = {
 };
 
 const getError = (message: string) => {
-  // TODO: Have better error messages / codes
   if (message?.toLowerCase()?.includes('exists')) {
     return 'Email address already registered';
   } else {

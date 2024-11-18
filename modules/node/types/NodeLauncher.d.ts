@@ -1,6 +1,5 @@
 type NodeLauncherBasicInfo = {
-  blockchainName?: string;
-  nodeTypeName?: string;
+  protocolName?: string;
   networkName?: string;
   versionName?: string;
 };

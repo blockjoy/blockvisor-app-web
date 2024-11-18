@@ -54,7 +54,7 @@ export const withLauncherGuard = (Component: any) => {
 
     useEffect(() => {
       setFulfilRequirements(false);
-    }, [defaultOrganization?.id]);
+    }, [defaultOrganization?.orgId]);
 
     const handleDefaultView = () => {
       setActiveView('launcher');

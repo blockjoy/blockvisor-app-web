@@ -26,7 +26,7 @@ export const OrganizationViewHeader = () => {
   const handleSaveClicked = async (newOrganizationName: string) => {
     setIsSavingOrganization(true);
     try {
-      await updateOrganization(organization!.id, newOrganizationName);
+      await updateOrganization(organization!.orgId, newOrganizationName);
       setIsSavingOrganization(false);
       toast.success('Organization Updated');
     } catch (err: any) {
@@ -47,12 +47,12 @@ export const OrganizationViewHeader = () => {
   return (
     <>
       <header css={styles.header}>
-        {isLoadingOrg && !organization?.id ? (
+        {isLoadingOrg && !organization?.orgId ? (
           <SkeletonGrid>
             <Skeleton width="280px" />
           </SkeletonGrid>
         ) : (
-          organization?.id && (
+          organization?.orgId && (
             <>
               <EditableTitle
                 initialValue={organization?.name!}

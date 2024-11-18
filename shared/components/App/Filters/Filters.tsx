@@ -9,7 +9,7 @@ import {
   SkeletonGrid,
   SvgIcon,
 } from '@shared/components';
-import { blockchainSelectors } from '@modules/node';
+import { protocolSelectors } from '@modules/node';
 import { styles } from './Filters.styles';
 import IconClose from '@public/assets/icons/common/Close.svg';
 import IconRefresh from '@public/assets/icons/common/Refresh.svg';
@@ -38,7 +38,7 @@ export const Filters = ({
   searchValue,
 }: FiltersProps) => {
   const hasBlockchainError = useRecoilValue(
-    blockchainSelectors.blockchainsHasError,
+    protocolSelectors.protocolsHasError,
   );
 
   const [openFilterId, setOpenFilterId] = useState('');

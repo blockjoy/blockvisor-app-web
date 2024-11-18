@@ -3,16 +3,18 @@ import { ROUTES } from '@shared/constants/routes';
 import { NextLink, DateTime } from '@shared/components';
 
 export const mapNodeToLaunchDetails = (node: Node) => {
-  if (!node?.nodeType) return [];
+  // if (!node?.nodeType) return [];
 
   const details: { label: string; data: any | undefined }[] = [
     {
       label: 'Host',
       data:
         node.orgId === node.hostOrgId ? (
-          <NextLink href={ROUTES.HOST(node.hostId)}>{node.hostName}</NextLink>
+          <NextLink href={ROUTES.HOST(node.hostId)}>
+            {node.hostDisplayName}
+          </NextLink>
         ) : (
-          node.hostName
+          node.hostDisplayName
         ),
     },
     {
@@ -23,8 +25,8 @@ export const mapNodeToLaunchDetails = (node: Node) => {
         </NextLink>
       ),
     },
-
-    { label: 'Launched By', data: node.createdBy?.name || '-' },
+    // TODO: createdBy name is missing
+    { label: 'Launched By', data: node.createdBy?.resourceId || '-' },
     {
       label: 'Launched On',
       data: !node.createdAt ? '-' : <DateTime date={node.createdAt} />,

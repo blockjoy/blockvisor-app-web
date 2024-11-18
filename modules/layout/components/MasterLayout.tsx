@@ -47,7 +47,7 @@ export const MasterLayout = ({ children }: MasterLayoutProps) => {
 
   return (
     <Suspense fallback={<LoadingSpinner size="page" />}>
-      {defaultOrganization?.id && children}
+      {defaultOrganization?.orgId && children}
     </Suspense>
   );
 };

@@ -17,7 +17,7 @@ export const AdminOrg = () => {
     properties: AdminDetailProperty[],
     onSuccess: VoidFunction,
   ) => {
-    const defaultRequest: OrgServiceUpdateRequest = { id: id as string };
+    const defaultRequest: OrgServiceUpdateRequest = { orgId: id as string };
     const request = createAdminUpdateRequest(defaultRequest, properties);
     await organizationClient.updateOrganization(request);
     onSuccess();
@@ -39,21 +39,21 @@ export const AdminOrg = () => {
       },
     },
     {
-      id: 'id',
-      label: 'Id',
-      data: item.id,
-      copyValue: item.id,
+      id: 'orgId',
+      label: 'Org Id',
+      data: item.orgId,
+      copyValue: item.orgId,
     },
   ];
 
   return (
     <AdminDetail
-      ignoreItems={['id', 'name', 'members']}
+      ignoreItems={['orgId', 'name', 'members']}
       customItems={customItems}
       getItem={getItem}
       onOpenInApp={handleOpenInApp}
       onSaveChanges={handleSaveChanges}
-      detailsName="id"
+      detailsName="orgId"
     />
   );
 };

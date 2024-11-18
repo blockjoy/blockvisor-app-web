@@ -4,8 +4,9 @@ import { NodeStatusIcon } from './NodeStatusIcon';
 import { NodeStatusLoader } from './NodeStatusLoader';
 import { NodeStatusName } from './NodeStatusName';
 import { useLayoutEffect, useRef, useState } from 'react';
+import { NodeState } from '@modules/grpc/library/blockjoy/common/v1/node';
 
-export type NodeStatusType = 'container' | 'sync' | 'staking';
+export type NodeStatusType = 'protocol';
 
 export type NodeStatusListItem = {
   id: string | number;
@@ -14,27 +15,27 @@ export type NodeStatusListItem = {
 };
 
 type Props = {
-  status: number;
+  status: NodeState;
   type?: NodeStatusType;
   hasBorder?: boolean;
   downloadingCurrent?: number;
   downloadingTotal?: number;
 };
 
-export const getNodeStatusInfo = (status: number, type?: NodeStatusType) => {
-  const statusInfo = nodeStatusList.find(
-    (l) => l.id === status && l.type === type,
-  );
+export const getNodeStatusInfo = (status: NodeState) => {
+  const statusInfo = nodeStatusList.find((l) => l.id === status);
 
   return {
-    id: statusInfo?.id,
+    id: status,
     name: statusInfo?.name,
-    type: statusInfo?.type,
   };
 };
 
-export const getNodeStatusColor = (status: number, type?: NodeStatusType) => {
-  const statusName = getNodeStatusInfo(status, type)?.name!;
+export const getNodeStatusColor = (
+  nodeState: NodeState,
+  type?: NodeStatusType,
+) => {
+  const statusName = getNodeStatusInfo(nodeState)?.name!;
 
   if (
     statusName?.match(
@@ -86,7 +87,7 @@ export const NodeStatus = ({
           total={downloadingTotal!}
         />
       )}
-      <NodeStatusIcon size="12px" status={status} type={type} />
+      <NodeStatusIcon size="12px" status={status!} type={type} />
       <p ref={nameRef} css={[styles.statusText(!hasBorder), statusColor]}>
         <NodeStatusName status={status} type={type} />
       </p>

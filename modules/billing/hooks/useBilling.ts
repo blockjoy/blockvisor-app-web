@@ -28,7 +28,7 @@ export const useBilling = () => {
 
   useEffect(() => {
     if (
-      currentOrgId.current !== defaultOrganization?.id &&
+      currentOrgId.current !== defaultOrganization?.orgId &&
       permissionsLoadingState === 'finished'
     ) {
       getPaymentMethods();
@@ -37,7 +37,7 @@ export const useBilling = () => {
       getSubscription();
       // getEstimates();
 
-      currentOrgId.current = defaultOrganization?.id;
+      currentOrgId.current = defaultOrganization?.orgId;
     }
-  }, [defaultOrganization?.id, permissionsLoadingState]);
+  }, [defaultOrganization?.orgId, permissionsLoadingState]);
 };

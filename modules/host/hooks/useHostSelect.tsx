@@ -15,7 +15,7 @@ export const useHostSelect = () => {
     try {
       setIsLoading('loading');
       const response: HostServiceListResponse = await hostClient.listHosts(
-        defaultOrganization?.id!,
+        defaultOrganization?.orgId!,
         undefined,
         {
           currentPage: 0,

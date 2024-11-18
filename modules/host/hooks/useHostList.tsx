@@ -25,17 +25,18 @@ export const useHostList = () => {
 
     try {
       const response: HostServiceListResponse = await hostClient.listHosts(
-        defaultOrganization?.id!,
+        defaultOrganization?.orgId!,
         queryParams.filter,
         queryParams.pagination,
         queryParams.sort,
       );
 
-      const { hostCount } = response;
+      // const { hostCount } = response;
+      const { total } = response;
 
       let hosts = response.hosts;
 
-      setHostCount(hostCount);
+      setHostCount(total);
 
       if (queryParams.pagination.currentPage !== 0) {
         hosts = [...hostList!, ...hosts];
@@ -60,7 +61,7 @@ export const useHostList = () => {
   };
 
   const removeFromHostList = (id: string) => {
-    const newList = hostList.filter((h) => h.id !== id);
+    const newList = hostList.filter((h) => h.hostId !== id);
 
     if (newList.length !== hostList.length) {
       setHostList(newList);

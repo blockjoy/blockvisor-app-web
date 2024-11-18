@@ -25,7 +25,7 @@ export function useDefaultOrganization() {
     userId?: string,
   ) => {
     const doesLocalStorageDefaultOrgExistInList = organizations.find(
-      (org) => org.id === defaultOrganization?.id,
+      (org) => org.orgId === defaultOrganization?.orgId,
     );
 
     if (
@@ -39,7 +39,7 @@ export function useDefaultOrganization() {
 
       const newDefaultOrg = {
         name: firstOrgInList.name,
-        id: firstOrgInList.id,
+        orgId: firstOrgInList.orgId,
       };
 
       setDefaultOrganization(newDefaultOrg, userId);

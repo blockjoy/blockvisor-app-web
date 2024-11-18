@@ -10,7 +10,7 @@ export function useLeaveOrganization() {
   );
 
   const repository = useIdentityRepository();
-  const userId = repository?.getIdentity()?.id;
+  const userId = repository?.getIdentity()?.userId;
 
   const leaveOrganization = async (
     orgId: string,

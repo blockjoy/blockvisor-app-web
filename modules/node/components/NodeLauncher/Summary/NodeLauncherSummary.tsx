@@ -176,8 +176,8 @@ export const NodeLauncherSummary = ({
               onClick={handleNodeClicked}
               disabled={
                 isLaunching ||
-                nodeLauncherStatus.isDisabled ||
-                isPropertiesValid
+                (isSuperUser && nodeLauncherStatus.isDisabled) ||
+                !isPropertiesValid
               }
               css={[
                 styles.createButton,

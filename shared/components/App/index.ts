@@ -20,7 +20,7 @@ export * from './NodeFirewall/NodeFirewall';
 export * from './NodeStatus/NodeStatus';
 export * from './NodeStatus/NodeStatusName';
 export * from './NodeStatus/NodeStatusIcon';
-export * from './BlockchainIcon/BlockchainIcon';
+export * from './ProtocolIcon/ProtocolIcon';
 export * from './OrganizationPicker/OrganizationPicker';
 export * from './OrganizationSelect/OrganizationSelect';
 export * from './Filters/Filters';

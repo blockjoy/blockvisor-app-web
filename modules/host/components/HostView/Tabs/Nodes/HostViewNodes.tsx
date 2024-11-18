@@ -58,7 +58,7 @@ export const HostViewNodes = () => {
       {!isSuperUser && (
         <Alert isSuccess>
           Showing nodes for{' '}
-          <NextLink href={ROUTES.ORGANIZATION(defaultOrganization?.id!)}>
+          <NextLink href={ROUTES.ORGANIZATION(defaultOrganization?.orgId!)}>
             {defaultOrganization?.name}
           </NextLink>{' '}
           organization.

@@ -31,13 +31,14 @@ export const useNodeList = () => {
 
     try {
       const response = await nodeClient.listNodes(
-        defaultOrganization?.id!,
+        defaultOrganization?.orgId!,
         queryParams.filter,
         queryParams.pagination,
         queryParams.sort,
       );
 
-      const { nodeCount } = response;
+      // const { nodeCount } = response;
+      const nodeCount = response.nodes.length;
 
       let nodes = response.nodes;
 
@@ -70,10 +71,11 @@ export const useNodeList = () => {
     const response = await nodeClient.listNodesByHost(
       hostId,
       pagination,
-      isSuperUser ? undefined : defaultOrganization?.id!,
+      isSuperUser ? undefined : defaultOrganization?.orgId!,
     );
 
-    const { nodeCount } = response;
+    // const { nodeCount } = response;
+    const nodeCount = response.nodes.length;
 
     setNodeListByHostCount(nodeCount);
 
@@ -91,7 +93,9 @@ export const useNodeList = () => {
   const modifyNodeInNodeList = (node: Node) => {
     const nodeListCopy = [...nodeList];
 
-    const foundNodeIndex = nodeListCopy?.findIndex((n) => n.id === node.id);
+    const foundNodeIndex = nodeListCopy?.findIndex(
+      (n) => n.nodeId === node.nodeId,
+    );
 
     if (foundNodeIndex < 0) return;
 
@@ -101,7 +105,8 @@ export const useNodeList = () => {
   };
 
   const addToNodeList = (node: Node) => {
-    const foundNode = nodeList?.findIndex((n) => n.id === node.id)! > -1;
+    const foundNode =
+      nodeList?.findIndex((n) => n.nodeId === node.nodeId)! > -1;
     if (foundNode) return;
 
     const newNodeList = [node, ...nodeList!];
@@ -111,7 +116,7 @@ export const useNodeList = () => {
   };
 
   const removeFromNodeList = (nodeId: string) => {
-    const newNodeList = nodeList?.filter((nl) => nl.id !== nodeId);
+    const newNodeList = nodeList?.filter((nl) => nl.nodeId !== nodeId);
 
     if (newNodeList?.length !== nodeList?.length) {
       setNodeList(newNodeList);

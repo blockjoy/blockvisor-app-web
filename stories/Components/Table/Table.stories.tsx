@@ -9,7 +9,7 @@ export default {
 
 const mockdata = [
   {
-    id: '9e127189-edad-44b2-9d0d-0a5e4be81b48',
+    orgId: '9e127189-edad-44b2-9d0d-0a5e4be81b48',
     name: 'Organization 1',
     personal: true,
     memberCount: 1,
@@ -20,7 +20,7 @@ const mockdata = [
     hostCount: 0,
   },
   {
-    id: '28ce6cf1-3caf-49a2-8928-bcd3777a2b3b',
+    orgId: '28ce6cf1-3caf-49a2-8928-bcd3777a2b3b',
     name: 'Organization 2',
     personal: false,
     memberCount: 1,
@@ -31,7 +31,7 @@ const mockdata = [
     hostCount: 0,
   },
   {
-    id: '793be634-bf9e-495d-891f-b3185696030e',
+    orgId: '793be634-bf9e-495d-891f-b3185696030e',
     name: 'Organization 3',
     personal: false,
     memberCount: 1,

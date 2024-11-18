@@ -9,13 +9,13 @@ const items: SortingItem<HostSortField>[] = [
   {
     id: 'name-asc',
     name: 'Name: A-Z',
-    field: HostSortField.HOST_SORT_FIELD_HOST_NAME,
+    field: HostSortField.HOST_SORT_FIELD_DISPLAY_NAME,
     order: SortOrder.SORT_ORDER_ASCENDING,
   },
   {
     id: 'name-desc',
     name: 'Name: Z-A',
-    field: HostSortField.HOST_SORT_FIELD_HOST_NAME,
+    field: HostSortField.HOST_SORT_FIELD_DISPLAY_NAME,
     order: SortOrder.SORT_ORDER_DESCENDING,
   },
   {

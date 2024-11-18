@@ -24,9 +24,9 @@ export function useUpdateOrganization(): IUpdateOrganizationHook {
     organizationSelectors.defaultOrganization,
   );
 
-  const updateOrganization = async (id: string, name: string) => {
+  const updateOrganization = async (orgId: string, name: string) => {
     const response: any = await organizationClient.updateOrganization({
-      id,
+      orgId,
       name,
     });
 
@@ -54,7 +54,7 @@ export function useUpdateOrganization(): IUpdateOrganizationHook {
       setSelectedOrganization(newOrg);
     }
     const updatedAllOrgs: Org[] = allOrganizations.map((organization: Org) => {
-      if (organization.id === updatedOrganization.id) {
+      if (organization.orgId === updatedOrganization.orgId) {
         const updatedNewOrganization: Org = {
           ...organization,
           ...updatedOrganization,
@@ -65,11 +65,11 @@ export function useUpdateOrganization(): IUpdateOrganizationHook {
     });
     setAllOrganizations(updatedAllOrgs);
     if (
-      defaultOrganization?.id === updatedOrganization?.id &&
+      defaultOrganization?.orgId === updatedOrganization?.orgId &&
       updatedOrganization?.name
     ) {
       setDefaultOrganization({
-        id: defaultOrganization?.id ?? '',
+        orgId: defaultOrganization?.orgId ?? '',
         name: updatedOrganization.name,
       });
     }

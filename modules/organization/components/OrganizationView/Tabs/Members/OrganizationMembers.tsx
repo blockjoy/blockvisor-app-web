@@ -67,7 +67,7 @@ export const OrganizationMembers = () => {
         currentPage: 1,
       },
     });
-  }, [selectedOrganization?.id]);
+  }, [selectedOrganization?.orgId]);
 
   const MembersTable = withQuery({
     pagination: true,

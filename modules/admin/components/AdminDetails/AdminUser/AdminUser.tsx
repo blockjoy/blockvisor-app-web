@@ -24,7 +24,7 @@ export const AdminUser = () => {
     properties: AdminDetailProperty[],
     onSuccess: VoidFunction,
   ) => {
-    const defaultRequest: UserServiceUpdateRequest = { id: id as string };
+    const defaultRequest: UserServiceUpdateRequest = { userId: id as string };
     const request = createAdminUpdateRequest(defaultRequest, properties);
     await userClient.updateUser(request);
     onSuccess();
@@ -38,7 +38,6 @@ export const AdminUser = () => {
   useEffect(() => {
     (async () => {
       const settings = await userClient.getSettings(id as string);
-      console.log('settings', settings);
       if (settings.admin) {
         setUserSettings(JSON.parse(settings.admin));
       }
@@ -47,10 +46,10 @@ export const AdminUser = () => {
 
   const customItems = (item: User): AdminDetailProperty[] => [
     {
-      id: 'id',
-      label: 'Id',
-      data: item.id,
-      copyValue: item.id,
+      id: 'userId',
+      label: 'User Id',
+      data: item.userId,
+      copyValue: item.userId,
     },
     {
       id: 'firstName',
@@ -96,7 +95,7 @@ export const AdminUser = () => {
 
   return (
     <AdminDetail
-      ignoreItems={['id', 'firstName', 'lastName']}
+      ignoreItems={['userId', 'firstName', 'lastName']}
       customItems={customItems}
       getItem={getItem}
       additionalHeaderButtons={
@@ -106,7 +105,7 @@ export const AdminUser = () => {
           tooltip="Delete Settings"
         />
       }
-      detailsName="id"
+      detailsName="userId"
       onSaveChanges={handleSaveChanges}
     />
   );

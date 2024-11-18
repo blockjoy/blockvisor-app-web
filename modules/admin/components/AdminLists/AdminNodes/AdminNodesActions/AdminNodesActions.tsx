@@ -57,7 +57,7 @@ export const AdminNodesActions = ({ selectedIds, list, setList }: Props) => {
 
       await Promise.all(calls);
 
-      setList(list.filter((node) => !selectedIds.includes(node.id)));
+      setList(list.filter((node) => !selectedIds.includes(node.nodeId)));
 
       toast.success(`Nodes Deleted`);
     } catch (err) {

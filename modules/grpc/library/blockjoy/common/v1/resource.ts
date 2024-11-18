@@ -4,56 +4,42 @@ import _m0 from "protobufjs/minimal";
 export const protobufPackage = "blockjoy.common.v1";
 
 /** All supported resource types. */
-export enum Resource {
-  RESOURCE_UNSPECIFIED = 0,
-  RESOURCE_USER = 1,
-  RESOURCE_ORG = 2,
-  RESOURCE_HOST = 3,
-  RESOURCE_NODE = 4,
+export enum ResourceType {
+  RESOURCE_TYPE_UNSPECIFIED = 0,
+  RESOURCE_TYPE_USER = 1,
+  RESOURCE_TYPE_ORG = 2,
+  RESOURCE_TYPE_HOST = 3,
+  RESOURCE_TYPE_NODE = 4,
   UNRECOGNIZED = -1,
 }
 
-/** Details around the resource that updated some entity. */
-export interface EntityUpdate {
-  /** The resource type that updated an entity. */
-  resource: Resource;
-  /** The uuid of the resource that updated an entity. */
-  resourceId?:
-    | string
-    | undefined;
-  /** The name of the updator (if updated by a user resource). */
-  name?:
-    | string
-    | undefined;
-  /** The email of the updator (if updated by a user resource). */
-  email?: string | undefined;
+/** A resource type and id. */
+export interface Resource {
+  /** The resource type. */
+  resourceType: ResourceType;
+  /** The uuid of the resource. */
+  resourceId: string;
 }
 
-function createBaseEntityUpdate(): EntityUpdate {
-  return { resource: 0, resourceId: undefined, name: undefined, email: undefined };
+function createBaseResource(): Resource {
+  return { resourceType: 0, resourceId: "" };
 }
 
-export const EntityUpdate = {
-  encode(message: EntityUpdate, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.resource !== 0) {
-      writer.uint32(8).int32(message.resource);
+export const Resource = {
+  encode(message: Resource, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.resourceType !== 0) {
+      writer.uint32(8).int32(message.resourceType);
     }
-    if (message.resourceId !== undefined) {
+    if (message.resourceId !== "") {
       writer.uint32(18).string(message.resourceId);
-    }
-    if (message.name !== undefined) {
-      writer.uint32(26).string(message.name);
-    }
-    if (message.email !== undefined) {
-      writer.uint32(34).string(message.email);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): EntityUpdate {
+  decode(input: _m0.Reader | Uint8Array, length?: number): Resource {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseEntityUpdate();
+    const message = createBaseResource();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -62,7 +48,7 @@ export const EntityUpdate = {
             break;
           }
 
-          message.resource = reader.int32() as any;
+          message.resourceType = reader.int32() as any;
           continue;
         case 2:
           if (tag !== 18) {
@@ -70,20 +56,6 @@ export const EntityUpdate = {
           }
 
           message.resourceId = reader.string();
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.name = reader.string();
-          continue;
-        case 4:
-          if (tag !== 34) {
-            break;
-          }
-
-          message.email = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -94,16 +66,14 @@ export const EntityUpdate = {
     return message;
   },
 
-  create(base?: DeepPartial<EntityUpdate>): EntityUpdate {
-    return EntityUpdate.fromPartial(base ?? {});
+  create(base?: DeepPartial<Resource>): Resource {
+    return Resource.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<EntityUpdate>): EntityUpdate {
-    const message = createBaseEntityUpdate();
-    message.resource = object.resource ?? 0;
-    message.resourceId = object.resourceId ?? undefined;
-    message.name = object.name ?? undefined;
-    message.email = object.email ?? undefined;
+  fromPartial(object: DeepPartial<Resource>): Resource {
+    const message = createBaseResource();
+    message.resourceType = object.resourceType ?? 0;
+    message.resourceId = object.resourceId ?? "";
     return message;
   },
 };

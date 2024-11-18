@@ -5,7 +5,7 @@ import { RefObject, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useClickOutside } from '@shared/hooks/useClickOutside';
 import { styles } from './AdminListFilter.styles';
 import { AdminListColumn } from '@modules/admin/types/AdminListColumn';
-import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
+import { Protocol } from '@modules/grpc/library/blockjoy/v1/protocol';
 import IconFilter from '@public/assets/icons/common/Filter.svg';
 
 type Props = {
@@ -13,7 +13,7 @@ type Props = {
   scrollX: number;
   headerRef: RefObject<HTMLSpanElement>;
   listAll: any[];
-  blockchains?: Blockchain[];
+  protocols?: Protocol[];
   onFilterChange: (item: AdminFilterDropdownItem) => void;
   onReset: (columnName: string) => void;
 };
@@ -22,7 +22,7 @@ export const AdminListFilter = ({
   column,
   headerRef,
   listAll,
-  blockchains,
+  protocols,
   scrollX,
   onFilterChange,
   onReset,
@@ -92,7 +92,7 @@ export const AdminListFilter = ({
     >
       <FilterControls
         listAll={listAll}
-        blockchains={blockchains}
+        protocols={protocols}
         isOpen={isOpen}
         columnName={column.name}
         onFilterChange={onFilterChange}

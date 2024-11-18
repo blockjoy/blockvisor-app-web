@@ -41,16 +41,28 @@ export const AdminNodesOrgAssign = ({ selectedIds, list, setList }: Props) => {
     const listCopy = [...list];
 
     try {
-      await nodeClient.updateNode({
-        ids: selectedIds,
-        newOrgId: selectedOrg?.id,
-      });
+      const calls = [];
 
       for (let id of selectedIds) {
-        const foundNode = listCopy.find((n) => n.id === id);
+        calls.push(async () =>
+          nodeClient.updateNode({
+            nodeId: id,
+            newOrgId: selectedOrg?.orgId,
+            newValues: [],
+          }),
+        );
+      }
+
+      // await nodeClient.updateNode({
+      //   ids: selectedIds,
+      //   newOrgId: selectedOrg?.orgId,
+      // });
+
+      for (let id of selectedIds) {
+        const foundNode = listCopy.find((n) => n.nodeId === id);
         if (!foundNode) return;
         foundNode.orgName = selectedOrg?.name!;
-        foundNode.orgId = selectedOrg?.id!;
+        foundNode.orgId = selectedOrg?.orgId!;
       }
 
       setList(listCopy);
@@ -100,14 +112,14 @@ export const AdminNodesOrgAssign = ({ selectedIds, list, setList }: Props) => {
         <Scrollbar additionalStyles={[styles.dropdownInner]}>
           {orgs?.map((org) => (
             <DropdownItem
-              key={org.id}
+              key={org.orgId}
               onButtonClick={() => setSelectedOrg(org)}
               type="button"
               size="medium"
             >
               <div>
                 {org.name}
-                {selectedOrg?.id === org.id && (
+                {selectedOrg?.orgId === org.orgId && (
                   <Badge style="outline">Selected</Badge>
                 )}
               </div>

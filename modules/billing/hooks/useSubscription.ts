@@ -45,7 +45,7 @@ export const useSubscription = (): ISubscriptionHook => {
 
     try {
       const data = await organizationClient.getSubscription(
-        defaultOrganization?.id!,
+        defaultOrganization?.orgId!,
       );
 
       console.log('%cGetSubscription', 'color: #bff589', data);

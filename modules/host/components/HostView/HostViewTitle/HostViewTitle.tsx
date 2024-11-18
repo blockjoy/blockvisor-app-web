@@ -15,7 +15,7 @@ export const HostViewTitle = () => {
     <PageTitle
       title="Hosts"
       onTitleClick={handleHostsClicked}
-      childTitle={host?.id}
+      childTitle={host?.hostId}
       icon={<IconHost />}
       isLoading={isLoading === 'loading'}
       canCopyChild

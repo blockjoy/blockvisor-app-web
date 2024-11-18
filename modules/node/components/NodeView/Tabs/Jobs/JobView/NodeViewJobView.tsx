@@ -14,7 +14,8 @@ export const NodeViewJobView = () => {
 
   const job = node?.jobs.find((job) => job.name === (name as string));
 
-  const handleBackClicked = () => router.push(`${ROUTES.NODE(node?.id!)}/jobs`);
+  const handleBackClicked = () =>
+    router.push(`${ROUTES.NODE(node?.nodeId!)}/jobs`);
 
   return (
     <section css={styles.wrapper}>

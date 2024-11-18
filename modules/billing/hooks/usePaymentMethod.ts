@@ -42,8 +42,8 @@ export const usePaymentMethod = () => {
       if (!stripe || !elements) return;
 
       const clientSecret = await organizationClient.initCard(
-        defaultOrganization?.id!,
-        user?.id!,
+        defaultOrganization?.orgId!,
+        user?.userId!,
       );
 
       if (!clientSecret) return;

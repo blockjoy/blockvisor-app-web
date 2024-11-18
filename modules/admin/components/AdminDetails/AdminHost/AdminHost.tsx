@@ -7,7 +7,6 @@ import { AdminDetail } from '../AdminDetail/AdminDetail';
 import {
   Host,
   HostServiceUpdateRequest,
-  ManagedBy,
 } from '@modules/grpc/library/blockjoy/v1/host';
 import { formatters } from '@shared/utils/formatters';
 import {
@@ -36,7 +35,7 @@ export const AdminHost = () => {
     onSuccess: VoidFunction,
     onError: VoidFunction,
   ) => {
-    const defaultRequest: HostServiceUpdateRequest = { id: id as string };
+    const defaultRequest: HostServiceUpdateRequest = { hostId: id as string };
     const request = createAdminUpdateRequest(defaultRequest, properties);
     try {
       await hostClient.updateHost(request);
@@ -51,7 +50,7 @@ export const AdminHost = () => {
   const handleAddTag = async (nextTag: string, id?: string) => {
     try {
       await hostClient.updateHost({
-        id: id!,
+        hostId: id!,
         updateTags: {
           addTag: { name: nextTag },
         },
@@ -66,7 +65,7 @@ export const AdminHost = () => {
   const handleRemoveTag = async (nextTags: string[], id?: string) => {
     try {
       await hostClient.updateHost({
-        id: id!,
+        hostId: id!,
         updateTags: {
           overwriteTags: { tags: nextTags.map((tag) => ({ name: tag })) },
         },
@@ -80,62 +79,62 @@ export const AdminHost = () => {
 
   const customItems = (host: Host): AdminDetailProperty[] => [
     {
-      id: 'name',
-      label: 'Name',
-      data: host.name,
-      copyValue: host.name,
+      id: 'displayName',
+      label: 'Display Name',
+      data: host.displayName,
+      copyValue: host.displayName,
       editSettings: {
         field: 'name',
         isNumber: false,
         controlType: 'text',
-        defaultValue: host.name,
+        defaultValue: host.displayName,
       },
     },
     {
       id: 'id',
       label: 'Id',
-      data: host.id,
-      copyValue: host.id,
+      data: host.hostId,
+      copyValue: host.hostId,
     },
     {
       id: 'cost',
       label: 'Cost',
       data: <Currency cents={host.cost?.amount?.amountMinorUnits!} />,
     },
-    {
-      id: 'managedBy',
-      label: 'Managed By',
-      data: <HostManagedBy managedBy={host.managedBy} />,
-      editSettings: {
-        field: 'managedBy',
-        isNumber: true,
-        controlType: 'dropdown',
-        defaultValue: host.managedBy?.toString(),
-        dropdownValues: createDropdownValuesFromEnum(ManagedBy, 'MANAGED_BY_'),
-      },
-    },
+    // {
+    //   id: 'managedBy',
+    //   label: 'Managed By',
+    //   data: <HostManagedBy managedBy={host.managedBy} />,
+    //   editSettings: {
+    //     field: 'managedBy',
+    //     isNumber: true,
+    //     controlType: 'dropdown',
+    //     defaultValue: host.managedBy?.toString(),
+    //     dropdownValues: createDropdownValuesFromEnum(ManagedBy, 'MANAGED_BY_'),
+    //   },
+    // },
     {
       id: 'memSize',
       label: 'Memory Size',
-      data: formatters.formatSize(host.memSizeBytes, 'bytes'),
+      data: formatters.formatSize(host.memoryBytes, 'bytes'),
     },
     {
       id: 'diskSize',
       label: 'Disk Size',
-      data: formatters.formatSize(host.diskSizeBytes, 'bytes'),
+      data: formatters.formatSize(host.diskBytes, 'bytes'),
     },
-    {
-      id: 'billingAmount',
-      label: 'Billing Amount',
-      data: host.billingAmount ? `$${host.billingAmount?.amount}` : '-',
-    },
+    // {
+    //   id: 'billingAmount',
+    //   label: 'Billing Amount',
+    //   data: host. ? `$${host.billingAmount?.amount}` : '-',
+    // },
     {
       id: 'tags',
       label: 'Tags',
       data: (
         <TagList
           key={uuidv4()}
-          id={host.id}
+          id={host.hostId}
           tags={host.tags?.tags.map((tag) => tag.name)!}
           noPadding
           onAdd={handleAddTag}
@@ -183,7 +182,7 @@ export const AdminHost = () => {
       getItem={getItem}
       onOpenInApp={handleOpenInApp}
       onSaveChanges={handleSaveChanges}
-      detailsName="id"
+      detailsName="hostId"
       metricsKey="name"
       hasMetrics
       hasLogs
@@ -191,7 +190,7 @@ export const AdminHost = () => {
       onRefreshed={() => setShouldRefresh(false)}
       customItems={customItems}
       ignoreItems={[
-        'id',
+        'hostId',
         'name',
         'ipAddresses',
         'memSizeBytes',

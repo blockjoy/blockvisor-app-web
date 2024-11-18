@@ -13,7 +13,7 @@ export const useProvisionToken = () => {
     useRecoilState(organizationAtoms.provisionTokenLoadingState);
 
   const getProvisionToken = async (orgId: string) => {
-    const userId = repository?.getIdentity()?.id;
+    const userId = repository?.getIdentity()?.userId;
 
     try {
       const response: any = await organizationClient.getProvisionToken(
@@ -29,7 +29,7 @@ export const useProvisionToken = () => {
   };
 
   const resetProvisionToken = async (orgId: string) => {
-    const userId = repository?.getIdentity()?.id;
+    const userId = repository?.getIdentity()?.userId;
 
     setProvisionTokenLoadingState('loading');
 
