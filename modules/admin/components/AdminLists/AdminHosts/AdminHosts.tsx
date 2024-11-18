@@ -22,6 +22,11 @@ const columns: AdminListColumn[] = [
     isVisible: true,
   },
   {
+    name: 'cost',
+    width: '100px',
+    isVisible: true,
+  },
+  {
     name: 'tags',
     isVisible: true,
     isRowClickDisabled: true,
@@ -197,6 +202,7 @@ export const AdminHosts = () => {
         availableIps: <HostIpStatus ipAddresses={host.ipAddresses} />,
         managedBy: <HostManagedBy managedBy={host.managedBy} />,
         createdAt: <DateTime date={host.createdAt!} />,
+        cost: `$${(host.cost?.amount?.amountMinorUnits! / 100).toFixed(2)}`,
         tags: (
           <TagList
             isInTable

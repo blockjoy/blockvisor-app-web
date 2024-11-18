@@ -53,7 +53,6 @@ export const styles = {
       min-width: 500px;
       font-size: 13px;
       border-collapse: collapse;
-      table-layout: fixed;
 
       @media ${breakpoints.toSml} {
         font-size: 16px;
@@ -164,10 +163,15 @@ export const styles = {
           visibility: visible;
         }
       `,
-  tableCell: (width: string) => css`
+  tableCell: (width: string, isLastColumn: boolean) => css`
+    ${!isLastColumn &&
+    css`
+      max-width: ${width};
+      width: ${width};
+    `};
+
     min-width: ${width};
-    max-width: ${width};
-    width: ${width};
+
     box-sizing: border-box;
   `,
   copyButton: css`
@@ -186,7 +190,7 @@ export const styles = {
     right: 0;
     display: flex;
     align-items: center;
-    padding: 24px 16px;
+    padding: 24px 16px 24px 0;
     font-size: 14px;
     margin: 0;
     border-bottom: 1px solid ${theme.colorBorder};

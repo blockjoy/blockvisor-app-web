@@ -76,7 +76,10 @@ export const NodeViewHeaderActions = ({
     });
   }
 
-  if (canStop || canStopAdmin) {
+  if (
+    (canStop || canStopAdmin) &&
+    node?.containerStatus !== ContainerStatus.CONTAINER_STATUS_STOPPED
+  ) {
     items.push({ name: 'Stop', icon: <IconStop />, onClick: handleStop });
   }
 

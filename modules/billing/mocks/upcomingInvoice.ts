@@ -11,7 +11,7 @@ export const _UPCOMING_INVOICE: Invoice = {
         name: '30% off',
         amount: {
           currency: Currency.CURRENCY_USD,
-          value: 318960,
+          amountMinorUnits: 318960,
         },
       },
     ],
@@ -30,7 +30,7 @@ export const _UPCOMING_INVOICE: Invoice = {
           name: '30% off',
           amount: {
             currency: Currency.CURRENCY_USD,
-            value: 112800,
+            amountMinorUnits: 112800,
           },
         },
       ],

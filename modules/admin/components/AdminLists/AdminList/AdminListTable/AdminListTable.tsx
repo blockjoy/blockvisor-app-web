@@ -296,10 +296,14 @@ export const AdminListTable = ({
                 <th
                   ref={columnRefs[index]}
                   key={column.name}
-                  css={styles.tableCell(column.width!)}
+                  css={styles.tableCell(
+                    column.width!,
+                    index === columnsVisible.length - 1,
+                  )}
                 >
                   <AdminListTableHeader
                     index={index}
+                    isLastColumn={index === columnsVisible.length - 1}
                     initResize={initResize}
                     listAll={listAll}
                     blockchains={blockchains}
@@ -349,10 +353,13 @@ export const AdminListTable = ({
                     </button>
                   </td>
                 )}
-                {columnsVisible.map((column) => (
+                {columnsVisible.map((column, index) => (
                   <td
                     key={column.name}
-                    css={styles.tableCell(column.width!)}
+                    css={styles.tableCell(
+                      column.width!,
+                      index === columnsVisible.length - 1,
+                    )}
                     onClick={() =>
                       column.isRowClickDisabled ? null : gotoDetails(item.id)
                     }

@@ -1,6 +1,6 @@
 import { AdminList } from '../AdminList/AdminList';
 import { blockchainClient, nodeClient } from '@modules/grpc';
-import { DateTime, NodeStatus } from '@shared/components';
+import { Currency, DateTime, NodeStatus } from '@shared/components';
 import {
   AdminNodesFilterBlockchain,
   AdminNodesFilterOrg,
@@ -70,6 +70,10 @@ const columns: AdminListColumn[] = [
     isVisible: false,
     filterComponent: AdminNodesSyncStatus,
     filterDropdownMinWidth: 120,
+  },
+  {
+    name: 'cost',
+    width: '100px',
   },
   {
     name: 'host',
@@ -219,6 +223,7 @@ export const AdminNodes = () => {
         createdAt: <DateTime date={node.createdAt!} />,
         createdBy: node.createdBy?.name,
         host: node.hostName,
+        cost: <Currency cents={node.cost?.amount?.amountMinorUnits!} />,
       };
     });
 

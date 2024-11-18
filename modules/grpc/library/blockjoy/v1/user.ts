@@ -1345,7 +1345,7 @@ export const UserServiceGetSettingsResponse = {
 };
 
 function createBaseUserServiceGetSettingsResponse_SettingsEntry(): UserServiceGetSettingsResponse_SettingsEntry {
-  return { key: "", value: new Uint8Array() };
+  return { key: "", value: new Uint8Array(0) };
 }
 
 export const UserServiceGetSettingsResponse_SettingsEntry = {
@@ -1400,13 +1400,13 @@ export const UserServiceGetSettingsResponse_SettingsEntry = {
   ): UserServiceGetSettingsResponse_SettingsEntry {
     const message = createBaseUserServiceGetSettingsResponse_SettingsEntry();
     message.key = object.key ?? "";
-    message.value = object.value ?? new Uint8Array();
+    message.value = object.value ?? new Uint8Array(0);
     return message;
   },
 };
 
 function createBaseUserServiceUpdateSettingsRequest(): UserServiceUpdateSettingsRequest {
-  return { userId: "", name: "", value: new Uint8Array() };
+  return { userId: "", name: "", value: new Uint8Array(0) };
 }
 
 export const UserServiceUpdateSettingsRequest = {
@@ -1468,13 +1468,13 @@ export const UserServiceUpdateSettingsRequest = {
     const message = createBaseUserServiceUpdateSettingsRequest();
     message.userId = object.userId ?? "";
     message.name = object.name ?? "";
-    message.value = object.value ?? new Uint8Array();
+    message.value = object.value ?? new Uint8Array(0);
     return message;
   },
 };
 
 function createBaseUserServiceUpdateSettingsResponse(): UserServiceUpdateSettingsResponse {
-  return { name: "", value: new Uint8Array() };
+  return { name: "", value: new Uint8Array(0) };
 }
 
 export const UserServiceUpdateSettingsResponse = {
@@ -1525,7 +1525,7 @@ export const UserServiceUpdateSettingsResponse = {
   fromPartial(object: DeepPartial<UserServiceUpdateSettingsResponse>): UserServiceUpdateSettingsResponse {
     const message = createBaseUserServiceUpdateSettingsResponse();
     message.name = object.name ?? "";
-    message.value = object.value ?? new Uint8Array();
+    message.value = object.value ?? new Uint8Array(0);
     return message;
   },
 };
@@ -1861,10 +1861,10 @@ export interface UserServiceClient<CallOptionsExt = {}> {
   ): Promise<UserServiceDeleteSettingsResponse>;
 }
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }
