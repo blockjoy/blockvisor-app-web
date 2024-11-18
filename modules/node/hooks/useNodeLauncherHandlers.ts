@@ -65,8 +65,6 @@ export const useNodeLauncherHandlers = ({
   const { getRegions } = useGetRegions();
   const { getPrice } = usePricing();
 
-  const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
-
   const defaultOrganization = useRecoilValue(
     organizationSelectors.defaultOrganization,
   );

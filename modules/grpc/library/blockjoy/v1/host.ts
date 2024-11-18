@@ -69,7 +69,7 @@ export interface Host {
   ipGateway: string;
   /** IP addresses available to nodes running on this host. */
   ipAddresses: HostIpAddress[];
-  /** The cost of this host. */
+  /** Monthly cost of this host. */
   cost?: BillingAmount | undefined;
   /** The number of logical cores this host has. */
   cpuCores: number;
@@ -87,8 +87,6 @@ export interface Host {
   createdAt: Date | undefined;
   /** When this host was last updated. */
   updatedAt: Date | undefined;
-  /** The cost of this host. */
-  cost?: BillingAmount | undefined;
 }
 
 export interface HostServiceCreateRequest {
@@ -202,14 +200,13 @@ export interface HostServiceUpdateRequest {
   cpuCores?: number | undefined;
   /** Update the amount of memory on the host. */
   memoryBytes?: number | undefined;
+  cost?: BillingAmount | undefined;
   /** Update the amount of disk space on the host. */
   diskBytes?: number | undefined;
   /** When to schedule nodes to this host. */
   scheduleType?: ScheduleType | undefined;
   /** Update the existing host tags. */
   updateTags?: UpdateTags | undefined;
-  /** The cost of this host. */
-  cost?: BillingAmount | undefined;
 }
 
 export interface HostServiceUpdateResponse {
@@ -293,6 +290,9 @@ function createBaseHost(): Host {
     createdAt: undefined,
     updatedAt: undefined,
     cost: undefined,
+    createdBy: undefined,
+    createdAt: undefined,
+    updatedAt: undefined,
   };
 }
 
@@ -366,9 +366,6 @@ export const Host = {
         toTimestamp(message.updatedAt),
         writer.uint32(170).fork(),
       ).ldelim();
-    }
-    if (message.cost !== undefined) {
-      BillingAmount.encode(message.cost, writer.uint32(178).fork()).ldelim();
     }
     if (message.cost !== undefined) {
       BillingAmount.encode(message.cost, writer.uint32(202).fork()).ldelim();
@@ -540,13 +537,6 @@ export const Host = {
             Timestamp.decode(reader, reader.uint32()),
           );
           continue;
-        case 22:
-          if (tag !== 178) {
-            break;
-          }
-
-          message.cost = BillingAmount.decode(reader, reader.uint32());
-          continue;
         case 25:
           if (tag !== 202) {
             break;
@@ -598,16 +588,16 @@ export const Host = {
       object.tags !== undefined && object.tags !== null
         ? Tags.fromPartial(object.tags)
         : undefined;
+    message.cost =
+      object.cost !== undefined && object.cost !== null
+        ? BillingAmount.fromPartial(object.cost)
+        : undefined;
     message.createdBy =
       object.createdBy !== undefined && object.createdBy !== null
         ? Resource.fromPartial(object.createdBy)
         : undefined;
     message.createdAt = object.createdAt ?? undefined;
     message.updatedAt = object.updatedAt ?? undefined;
-    message.cost =
-      object.cost !== undefined && object.cost !== null
-        ? BillingAmount.fromPartial(object.cost)
-        : undefined;
     return message;
   },
 };
@@ -1489,9 +1479,6 @@ export const HostServiceUpdateRequest = {
     }
     if (message.updateTags !== undefined) {
       UpdateTags.encode(message.updateTags, writer.uint32(98).fork()).ldelim();
-    }
-    if (message.cost !== undefined) {
-      BillingAmount.encode(message.cost, writer.uint32(106).fork()).ldelim();
     }
     if (message.cost !== undefined) {
       BillingAmount.encode(message.cost, writer.uint32(90).fork()).ldelim();

@@ -21,10 +21,9 @@ import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { capitalized, createAdminNodeFilters } from '@modules/admin';
 import { AdminListColumn } from '@modules/admin/types/AdminListColumn';
 import { useEffect, useState } from 'react';
-import { Protocol } from '@modules/grpc/library/blockjoy/v1/protocol';
-import { Currency } from '../../AdminFinancesByHost/Currency/Currency';
 import { AdminListEditCost } from '../AdminListEditCost/AdminListEditCost';
 import { BillingAmount } from '@modules/grpc/library/blockjoy/common/v1/currency';
+import { Protocol } from '@modules/grpc/library/blockjoy/v1/protocol';
 
 const columns: AdminListColumn[] = [
   {
@@ -82,6 +81,16 @@ const columns: AdminListColumn[] = [
     // filterComponent: AdminNodesFilterProtocol,
     // filterDropdownMinWidth: 200,
   },
+  // {
+  //   name: 'nodeType',
+  //   displayName: 'Node Type',
+  //   width: '140px',
+  //   sortField: NodeSortField.NODE_SORT_FIELD_NODE_TYPE,
+  //   isVisible: true,
+  //   filterComponent: AdminNodesFilterNodeType,
+  //   filterDropdownMinWidth: 100,
+  //   filterDropdownMaxWidth: 120,
+  // },
   {
     name: 'variant',
     width: '140px',
@@ -205,10 +214,19 @@ export const AdminNodes = () => {
         nodeState: (
           <NodeStatus status={node.nodeStatus?.state!} hasBorder={false} />
         ),
+        // containerStatus: (
+        //   <NodeStatus
+        //     status={node.containerStatus}
+        //     type="container"
+        //     hasBorder={false}
+        //   />
+        // ),
+        // syncStatus: (
+        //   <NodeStatus status={node.syncStatus} type="sync" hasBorder={false} />
+        // ),
+        // nodeType: capitalized(convertNodeTypeToName(node.nodeType)),
         region: node.placement?.scheduler?.region,
         createdAt: <DateTime date={node.createdAt!} />,
-        // createdBy: node.createdBy?.resourceId,
-        host: node.hostDisplayName || node.hostNetworkName,
         cost: (
           <AdminListEditCost
             id={node.nodeId}
@@ -216,6 +234,7 @@ export const AdminNodes = () => {
             onUpdate={handleUpdate}
           />
         ),
+        // createdBy: node.createdBy?.resourceId,
         host: node.hostDisplayName || node.hostNetworkName,
       };
     });

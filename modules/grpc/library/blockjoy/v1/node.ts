@@ -3,13 +3,13 @@ import Long from 'long';
 import type { CallContext, CallOptions } from 'nice-grpc-common';
 import _m0 from 'protobufjs/minimal';
 import { Timestamp } from '../../google/protobuf/timestamp';
+import { BillingAmount } from '../common/v1/currency';
 import {
   FirewallConfig,
   FirewallRule,
   ImagePropertyValue,
   NodeConfig,
 } from '../common/v1/config';
-import { BillingAmount } from '../common/v1/currency';
 import {
   NextState,
   NodeJob,
@@ -43,7 +43,7 @@ export enum NodeSortField {
 export interface Node {
   nodeId: string;
   nodeName: string;
-  displayName: string;
+  displayName?: string | undefined;
   oldNodeId?: string | undefined;
   imageId: string;
   configId: string;
@@ -76,7 +76,8 @@ export interface Node {
   createdBy: Resource | undefined;
   createdAt: Date | undefined;
   updatedAt: Date | undefined;
-  /** The cost of this node. */
+  dataDirectoryMountpoint?: string | undefined;
+  /** Monthly cost of this node. */
   cost?: BillingAmount | undefined;
 }
 
@@ -212,14 +213,14 @@ export interface NodeServiceUpdateConfigRequest {
   newDisplayName?: string | undefined;
   /** Update the note that explains what this node is for. */
   newNote?: string | undefined;
+  /** The cost of this host. */
+  cost?: BillingAmount | undefined;
   /** Update these property keys to these values. */
   newValues: ImagePropertyValue[];
   /** Replace the firewall config with a new one. */
   newFirewall?: FirewallConfig | undefined;
   /** Update the node tags. */
   updateTags?: UpdateTags | undefined;
-  /** The cost of this node. */
-  cost?: BillingAmount | undefined;
 }
 
 export interface NodeServiceUpdateConfigResponse {}
@@ -263,7 +264,7 @@ function createBaseNode(): Node {
   return {
     nodeId: '',
     nodeName: '',
-    displayName: '',
+    displayName: undefined,
     oldNodeId: undefined,
     imageId: '',
     configId: '',
@@ -297,6 +298,9 @@ function createBaseNode(): Node {
     createdAt: undefined,
     updatedAt: undefined,
     cost: undefined,
+    createdBy: undefined,
+    createdAt: undefined,
+    updatedAt: undefined,
   };
 }
 
@@ -308,7 +312,7 @@ export const Node = {
     if (message.nodeName !== '') {
       writer.uint32(18).string(message.nodeName);
     }
-    if (message.displayName !== '') {
+    if (message.displayName !== undefined) {
       writer.uint32(26).string(message.displayName);
     }
     if (message.oldNodeId !== undefined) {
@@ -418,9 +422,6 @@ export const Node = {
         toTimestamp(message.updatedAt),
         writer.uint32(282).fork(),
       ).ldelim();
-    }
-    if (message.cost !== undefined) {
-      BillingAmount.encode(message.cost, writer.uint32(290).fork()).ldelim();
     }
     if (message.cost !== undefined) {
       BillingAmount.encode(message.cost, writer.uint32(314).fork()).ldelim();
@@ -691,13 +692,6 @@ export const Node = {
             Timestamp.decode(reader, reader.uint32()),
           );
           continue;
-        case 36:
-          if (tag !== 290) {
-            break;
-          }
-
-          message.cost = BillingAmount.decode(reader, reader.uint32());
-          continue;
         case 39:
           if (tag !== 314) {
             break;
@@ -729,7 +723,7 @@ export const Node = {
     const message = createBaseNode();
     message.nodeId = object.nodeId ?? '';
     message.nodeName = object.nodeName ?? '';
-    message.displayName = object.displayName ?? '';
+    message.displayName = object.displayName ?? undefined;
     message.oldNodeId = object.oldNodeId ?? undefined;
     message.imageId = object.imageId ?? '';
     message.configId = object.configId ?? '';
@@ -775,16 +769,16 @@ export const Node = {
       object.tags !== undefined && object.tags !== null
         ? Tags.fromPartial(object.tags)
         : undefined;
+    message.cost =
+      object.cost !== undefined && object.cost !== null
+        ? BillingAmount.fromPartial(object.cost)
+        : undefined;
     message.createdBy =
       object.createdBy !== undefined && object.createdBy !== null
         ? Resource.fromPartial(object.createdBy)
         : undefined;
     message.createdAt = object.createdAt ?? undefined;
     message.updatedAt = object.updatedAt ?? undefined;
-    message.cost =
-      object.cost !== undefined && object.cost !== null
-        ? BillingAmount.fromPartial(object.cost)
-        : undefined;
     return message;
   },
 };
@@ -1791,6 +1785,13 @@ export const NodeServiceReportErrorRequest = {
 
           message.createdBy = Resource.decode(reader, reader.uint32());
           continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.message = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1922,9 +1923,6 @@ export const NodeServiceUpdateConfigRequest = {
     }
     if (message.updateTags !== undefined) {
       UpdateTags.encode(message.updateTags, writer.uint32(66).fork()).ldelim();
-    }
-    if (message.cost !== undefined) {
-      BillingAmount.encode(message.cost, writer.uint32(74).fork()).ldelim();
     }
     if (message.cost !== undefined) {
       BillingAmount.encode(message.cost, writer.uint32(90).fork()).ldelim();

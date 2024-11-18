@@ -32,9 +32,9 @@ export enum Visibility {
  * The string representation is: "{protocol_key}/{variant_key}"
  */
 export interface ProtocolVersionKey {
-  /** The key identifier to the protocol (in lower-kebab-case). */
+  /** The key identifier to the protocol. */
   protocolKey: string;
-  /** The key identifier to the protocol variant (in lower-kebab-case). */
+  /** The key identifier to the protocol variant. */
   variantKey: string;
 }
 
