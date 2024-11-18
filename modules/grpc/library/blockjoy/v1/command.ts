@@ -111,13 +111,12 @@ export interface NodeCreate {
 
 export interface NodeStart {}
 
-export interface NodeStop {}
+export interface NodeStart {}
 
-export interface NodeRestart {}
+export interface NodeStop {}
 
 export interface NodeUpdate {
   nodeId: string;
-  configId: string;
   autoUpgrade?: boolean | undefined;
   newOrgId?: string | undefined;
   newOrgName?: string | undefined;
@@ -388,6 +387,109 @@ export const CommandServiceAckResponse = {
   },
 };
 
+function createBaseCommandServiceAckRequest(): CommandServiceAckRequest {
+  return { commandId: '' };
+}
+
+export const CommandServiceAckRequest = {
+  encode(
+    message: CommandServiceAckRequest,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    if (message.commandId !== '') {
+      writer.uint32(10).string(message.commandId);
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): CommandServiceAckRequest {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCommandServiceAckRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.commandId = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<CommandServiceAckRequest>,
+  ): CommandServiceAckRequest {
+    return CommandServiceAckRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(
+    object: DeepPartial<CommandServiceAckRequest>,
+  ): CommandServiceAckRequest {
+    const message = createBaseCommandServiceAckRequest();
+    message.commandId = object.commandId ?? '';
+    return message;
+  },
+};
+
+function createBaseCommandServiceAckResponse(): CommandServiceAckResponse {
+  return {};
+}
+
+export const CommandServiceAckResponse = {
+  encode(
+    _: CommandServiceAckResponse,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): CommandServiceAckResponse {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCommandServiceAckResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<CommandServiceAckResponse>,
+  ): CommandServiceAckResponse {
+    return CommandServiceAckResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(
+    _: DeepPartial<CommandServiceAckResponse>,
+  ): CommandServiceAckResponse {
+    const message = createBaseCommandServiceAckResponse();
+    return message;
+  },
+};
+
 function createBaseCommandServiceListRequest(): CommandServiceListRequest {
   return { nodeId: undefined, hostId: undefined, exitCode: undefined };
 }
@@ -551,6 +653,138 @@ export const CommandServicePendingRequest = {
       input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCommandServicePendingRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.hostId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.filterType = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<CommandServicePendingRequest>,
+  ): CommandServicePendingRequest {
+    return CommandServicePendingRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(
+    object: DeepPartial<CommandServicePendingRequest>,
+  ): CommandServicePendingRequest {
+    const message = createBaseCommandServicePendingRequest();
+    message.hostId = object.hostId ?? '';
+    message.filterType = object.filterType ?? undefined;
+    return message;
+  },
+};
+
+function createBaseCommandServicePendingResponse(): CommandServicePendingResponse {
+  return { commands: [] };
+}
+
+export const CommandServicePendingResponse = {
+  encode(
+    message: CommandServicePendingResponse,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    for (const v of message.commands) {
+      Command.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): CommandServicePendingResponse {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCommandServicePendingResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.commands.push(Command.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<CommandServicePendingResponse>,
+  ): CommandServicePendingResponse {
+    return CommandServicePendingResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(
+    object: DeepPartial<CommandServicePendingResponse>,
+  ): CommandServicePendingResponse {
+    const message = createBaseCommandServicePendingResponse();
+    message.commands =
+      object.commands?.map((e) => Command.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseCommandServicePendingRequest(): CommandServicePendingRequest {
+  return { hostId: '', filterType: undefined };
+}
+
+export const CommandServicePendingRequest = {
+  encode(
+    message: CommandServicePendingRequest,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    if (message.hostId !== '') {
+      writer.uint32(10).string(message.hostId);
+    }
+    if (message.start !== undefined) {
+      HostStart.encode(message.start, writer.uint32(18).fork()).ldelim();
+    }
+    if (message.stop !== undefined) {
+      HostStop.encode(message.stop, writer.uint32(26).fork()).ldelim();
+    }
+    if (message.restart !== undefined) {
+      HostRestart.encode(message.restart, writer.uint32(34).fork()).ldelim();
+    }
+    if (message.pending !== undefined) {
+      HostPending.encode(message.pending, writer.uint32(42).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): HostCommand {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseHostCommand();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -1407,7 +1641,6 @@ export const NodeRestart = {
 function createBaseNodeUpdate(): NodeUpdate {
   return {
     nodeId: '',
-    configId: '',
     autoUpgrade: undefined,
     newOrgId: undefined,
     newOrgName: undefined,
@@ -1426,23 +1659,20 @@ export const NodeUpdate = {
     if (message.nodeId !== '') {
       writer.uint32(10).string(message.nodeId);
     }
-    if (message.configId !== '') {
-      writer.uint32(18).string(message.configId);
-    }
     if (message.autoUpgrade !== undefined) {
-      writer.uint32(24).bool(message.autoUpgrade);
+      writer.uint32(16).bool(message.autoUpgrade);
     }
     if (message.newOrgId !== undefined) {
-      writer.uint32(34).string(message.newOrgId);
+      writer.uint32(26).string(message.newOrgId);
     }
     if (message.newOrgName !== undefined) {
-      writer.uint32(42).string(message.newOrgName);
+      writer.uint32(34).string(message.newOrgName);
     }
     if (message.newDisplayName !== undefined) {
-      writer.uint32(50).string(message.newDisplayName);
+      writer.uint32(42).string(message.newDisplayName);
     }
     if (message.newNote !== undefined) {
-      writer.uint32(58).string(message.newNote);
+      writer.uint32(50).string(message.newNote);
     }
     for (const v of message.newValues) {
       PropertyValueConfig.encode(v!, writer.uint32(66).fork()).ldelim();
@@ -1450,7 +1680,7 @@ export const NodeUpdate = {
     if (message.newFirewall !== undefined) {
       FirewallConfig.encode(
         message.newFirewall,
-        writer.uint32(74).fork(),
+        writer.uint32(66).fork(),
       ).ldelim();
     }
     return writer;
@@ -1476,45 +1706,38 @@ export const NodeUpdate = {
             break;
           }
 
-          message.configId = reader.string();
+          message.autoUpgrade = reader.bool();
           continue;
         case 3:
-          if (tag !== 24) {
+          if (tag !== 26) {
             break;
           }
 
-          message.autoUpgrade = reader.bool();
+          message.newOrgId = reader.string();
           continue;
         case 4:
           if (tag !== 34) {
             break;
           }
 
-          message.newOrgId = reader.string();
+          message.newOrgName = reader.string();
           continue;
         case 5:
           if (tag !== 42) {
             break;
           }
 
-          message.newOrgName = reader.string();
+          message.newDisplayName = reader.string();
           continue;
         case 6:
           if (tag !== 50) {
             break;
           }
 
-          message.newDisplayName = reader.string();
+          message.newNote = reader.string();
           continue;
         case 7:
           if (tag !== 58) {
-            break;
-          }
-
-          message.newNote = reader.string();
-          continue;
-        case 8:
-          if (tag !== 66) {
             break;
           }
 
@@ -1522,8 +1745,8 @@ export const NodeUpdate = {
             PropertyValueConfig.decode(reader, reader.uint32()),
           );
           continue;
-        case 9:
-          if (tag !== 74) {
+        case 8:
+          if (tag !== 66) {
             break;
           }
 
@@ -1545,7 +1768,6 @@ export const NodeUpdate = {
   fromPartial(object: DeepPartial<NodeUpdate>): NodeUpdate {
     const message = createBaseNodeUpdate();
     message.nodeId = object.nodeId ?? '';
-    message.configId = object.configId ?? '';
     message.autoUpgrade = object.autoUpgrade ?? undefined;
     message.newOrgId = object.newOrgId ?? undefined;
     message.newOrgName = object.newOrgName ?? undefined;

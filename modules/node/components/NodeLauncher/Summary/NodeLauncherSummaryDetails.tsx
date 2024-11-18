@@ -88,7 +88,8 @@ export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
             The following needs to be added:
           </h2>
           <div css={styles.missingFields}>
-            {!isConfigValid
+            {/* TODO: image properties missing required and disabled fields */}
+            {/* {!isConfigValid
               ? properties
                   ?.filter((property) => !property.value)
                   .map((property) => (
@@ -96,8 +97,8 @@ export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
                       {kebabToCapitalized(property.key)}
                     </div>
                   ))
-              : null}
-            {!isNodeValid || !isNodeAllocationValid ? (
+              : null} */}
+            {!isNodeValid ? (
               <>
                 {!selectedHosts && !selectedRegions && allHosts?.length ? (
                   <div>Host or Region</div>

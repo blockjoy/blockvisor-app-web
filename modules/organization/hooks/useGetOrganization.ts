@@ -33,8 +33,16 @@ export function useGetOrganization() {
 
     const shouldUpdateDefault =
       shouldSetDefault &&
-      organization?.orgId &&
-      organization?.orgId !== defaultOrganization?.orgId;
+      (!organization ||
+        (organization?.orgId &&
+          organization?.orgId !== defaultOrganization?.orgId));
+
+    console.log('shouldUpdateDefault', {
+      shouldUpdateDefault,
+      organization,
+      defaultOrganization,
+      id,
+    });
 
     if (organization) {
       setOrganization(organization);
