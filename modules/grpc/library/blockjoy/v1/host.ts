@@ -69,6 +69,8 @@ export interface Host {
   ipGateway: string;
   /** IP addresses available to nodes running on this host. */
   ipAddresses: HostIpAddress[];
+  /** The cost of this host. */
+  cost?: BillingAmount | undefined;
   /** The number of logical cores this host has. */
   cpuCores: number;
   /** The amount of memory this host has (in bytes). */
@@ -85,8 +87,6 @@ export interface Host {
   createdAt: Date | undefined;
   /** When this host was last updated. */
   updatedAt: Date | undefined;
-  /** The cost of this host. */
-  cost?: BillingAmount | undefined;
 }
 
 export interface HostServiceCreateRequest {
@@ -200,14 +200,14 @@ export interface HostServiceUpdateRequest {
   cpuCores?: number | undefined;
   /** Update the amount of memory on the host. */
   memoryBytes?: number | undefined;
+  /** The cost of this host. */
+  cost?: BillingAmount | undefined;
   /** Update the amount of disk space on the host. */
   diskBytes?: number | undefined;
   /** When to schedule nodes to this host. */
   scheduleType?: ScheduleType | undefined;
   /** Update the existing host tags. */
   updateTags?: UpdateTags | undefined;
-  /** The cost of this host. */
-  cost?: BillingAmount | undefined;
 }
 
 export interface HostServiceUpdateResponse {

@@ -1,7 +1,7 @@
 /* eslint-disable */
-import _m0 from "protobufjs/minimal";
+import _m0 from 'protobufjs/minimal';
 
-export const protobufPackage = "blockjoy.common.v1";
+export const protobufPackage = 'blockjoy.common.v1';
 
 /** The type of field to display in the UI. */
 export enum UiType {
@@ -39,22 +39,26 @@ export interface ProtocolVersionKey {
 }
 
 function createBaseProtocolVersionKey(): ProtocolVersionKey {
-  return { protocolKey: "", variantKey: "" };
+  return { protocolKey: '', variantKey: '' };
 }
 
 export const ProtocolVersionKey = {
-  encode(message: ProtocolVersionKey, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.protocolKey !== "") {
+  encode(
+    message: ProtocolVersionKey,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    if (message.protocolKey !== '') {
       writer.uint32(10).string(message.protocolKey);
     }
-    if (message.variantKey !== "") {
+    if (message.variantKey !== '') {
       writer.uint32(18).string(message.variantKey);
     }
     return writer;
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ProtocolVersionKey {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseProtocolVersionKey();
     while (reader.pos < end) {
@@ -89,15 +93,27 @@ export const ProtocolVersionKey = {
 
   fromPartial(object: DeepPartial<ProtocolVersionKey>): ProtocolVersionKey {
     const message = createBaseProtocolVersionKey();
-    message.protocolKey = object.protocolKey ?? "";
-    message.variantKey = object.variantKey ?? "";
+    message.protocolKey = object.protocolKey ?? '';
+    message.variantKey = object.variantKey ?? '';
     return message;
   },
 };
 
-type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
+type Builtin =
+  | Date
+  | Function
+  | Uint8Array
+  | string
+  | number
+  | boolean
+  | undefined;
 
-export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
-  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin
+  ? T
+  : T extends Array<infer U>
+  ? Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U>
+  ? ReadonlyArray<DeepPartial<U>>
+  : T extends {}
+  ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
