@@ -309,6 +309,7 @@ export const AdminListTable = ({
                     index={index}
                     canResize={index !== columnsVisible.length - 1}
                     isLastColumn={index === columnsVisible.length - 1}
+                    canResize={index !== columnsVisible.length - 1}
                     initResize={initResize}
                     listAll={listAll}
                     protocols={protocols}

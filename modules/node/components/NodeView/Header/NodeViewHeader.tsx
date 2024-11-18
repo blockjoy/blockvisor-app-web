@@ -162,7 +162,7 @@ export const NodeViewHeader = () => {
                 <div css={styles.name}>
                   <div css={styles.title}>
                     <EditableTitle
-                      initialValue={node.displayName}
+                      initialValue={node.displayName!}
                       isLoading={isLoading}
                       isSaving={isSaving!}
                       additionalContentRight={

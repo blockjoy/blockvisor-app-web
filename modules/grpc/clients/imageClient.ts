@@ -30,7 +30,6 @@ class ImageClient {
         this.client.getImage.bind(this.client),
         request,
       );
-
       console.log('getImageResponse', response);
       return response;
     } catch (err) {

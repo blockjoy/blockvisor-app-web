@@ -58,7 +58,7 @@ export const AdminHost = () => {
   const handleAddTag = async (nextTag: string, id?: string) => {
     try {
       await hostClient.updateHost({
-        id: id!,
+        hostId: id!,
         updateTags: {
           addTag: { name: nextTag },
         },
@@ -73,7 +73,7 @@ export const AdminHost = () => {
   const handleRemoveTag = async (nextTags: string[], id?: string) => {
     try {
       await hostClient.updateHost({
-        id: id!,
+        hostId: id!,
         updateTags: {
           overwriteTags: { tags: nextTags.map((tag) => ({ name: tag })) },
         },
@@ -142,7 +142,7 @@ export const AdminHost = () => {
       data: (
         <TagList
           key={uuidv4()}
-          id={host.id}
+          id={host.hostId}
           tags={host.tags?.tags.map((tag) => tag.name)!}
           noPadding
           onAdd={handleAddTag}

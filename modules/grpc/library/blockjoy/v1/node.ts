@@ -297,6 +297,9 @@ function createBaseNode(): Node {
     createdAt: undefined,
     updatedAt: undefined,
     cost: undefined,
+    createdBy: undefined,
+    createdAt: undefined,
+    updatedAt: undefined,
   };
 }
 
@@ -1780,13 +1783,6 @@ export const NodeServiceReportErrorRequest = {
           }
 
           message.createdBy = Resource.decode(reader, reader.uint32());
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.message = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {

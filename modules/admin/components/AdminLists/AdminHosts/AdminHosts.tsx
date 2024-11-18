@@ -204,9 +204,9 @@ export const AdminHosts = () => {
     setTagsAdded(tagsAddedCopy);
   };
 
-  const handleUpdate = async (id: string, cost: BillingAmount) => {
+  const handleUpdate = async (hostId: string, cost: BillingAmount) => {
     hostClient.updateHost({
-      id,
+      hostId,
       cost,
     });
   };
@@ -221,7 +221,7 @@ export const AdminHosts = () => {
         createdAt: <DateTime date={host.createdAt!} />,
         cost: (
           <AdminListEditCost
-            id={host.id}
+            id={host.hostId}
             defaultValue={host.cost?.amount?.amountMinorUnits}
             onUpdate={handleUpdate}
           />

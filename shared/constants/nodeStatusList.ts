@@ -1,7 +1,6 @@
 import {
   NodeHealth,
   NodeState,
-  ProtocolStatus,
 } from '@modules/grpc/library/blockjoy/common/v1/node';
 import { NodeStatusListItem } from '@shared/components';
 
