@@ -6,6 +6,7 @@ export const styles = {
     border: 1px solid ${theme.colorBorderGrey};
     border-radius: 6px;
     padding: 20px;
+    margin-top: 20px;
     display: grid;
   `,
   h2: (theme: ITheme) => css`

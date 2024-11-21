@@ -1,12 +1,7 @@
 import { nodeClient } from '@modules/grpc';
 import { useRouter } from 'next/router';
 import { AdminDetail } from '../AdminDetail/AdminDetail';
-import {
-  Currency,
-  NextLink,
-  NodeFirewall,
-  NodeStatus,
-} from '@shared/components';
+import { NextLink, NodeFirewall, NodeStatus } from '@shared/components';
 import { convertNodeTypeToName } from '@modules/node/utils/convertNodeTypeToName';
 import { capitalized } from '@modules/admin/utils/capitalized';
 import {
@@ -16,6 +11,7 @@ import {
 import { createAdminUpdateRequest } from '@modules/admin/utils';
 import { AdminNodeUpgrade } from './AdminNodeUpgrade/AdminNodeUpgrade';
 import { escapeHtml } from '@shared/utils/escapeHtml';
+import { Currency } from '../../AdminFinances/Currency/Currency';
 
 const ignoreItems = [
   'id',

@@ -1,6 +1,6 @@
 import { AdminList } from '../AdminList/AdminList';
 import { blockchainClient, nodeClient } from '@modules/grpc';
-import { Currency, DateTime, NodeStatus } from '@shared/components';
+import { DateTime, NodeStatus } from '@shared/components';
 import {
   AdminNodesFilterBlockchain,
   AdminNodesFilterOrg,
@@ -26,6 +26,7 @@ import { capitalized, createAdminNodeFilters } from '@modules/admin';
 import { AdminListColumn } from '@modules/admin/types/AdminListColumn';
 import { useEffect, useState } from 'react';
 import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
+import { Currency } from '../../AdminFinances/Currency/Currency';
 
 const columns: AdminListColumn[] = [
   {
