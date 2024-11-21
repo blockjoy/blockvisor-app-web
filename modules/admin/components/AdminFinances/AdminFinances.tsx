@@ -45,28 +45,30 @@ const sort = (
   sortField: SortField,
   sortOrder: SortOrder,
 ) => {
-  return items.sort((a: any, b: any) => {
-    const aField: any = a[sortField];
-    const bField: any = b[sortField];
+  return [
+    ...items.sort((a: any, b: any) => {
+      const aField: any = a[sortField];
+      const bField: any = b[sortField];
 
-    if (typeof aField === 'number' && typeof bField === 'number') {
-      return sortOrder === SortOrder.SORT_ORDER_ASCENDING
-        ? aField - bField
-        : bField - aField;
-    }
+      if (typeof aField === 'number' && typeof bField === 'number') {
+        return sortOrder === SortOrder.SORT_ORDER_ASCENDING
+          ? aField - bField
+          : bField - aField;
+      }
 
-    if (typeof aField === 'string' && typeof bField === 'string') {
-      const comparison = aField
-        ?.toString()
-        .toLowerCase()
-        .localeCompare(bField.toLowerCase());
-      return sortOrder === SortOrder.SORT_ORDER_ASCENDING
-        ? comparison
-        : -comparison;
-    }
+      if (typeof aField === 'string' && typeof bField === 'string') {
+        const comparison = aField
+          ?.toString()
+          .toLowerCase()
+          .localeCompare(bField.toLowerCase());
+        return sortOrder === SortOrder.SORT_ORDER_ASCENDING
+          ? comparison
+          : -comparison;
+      }
 
-    return 0;
-  });
+      return 0;
+    }),
+  ];
 };
 
 const EditControl = ({

@@ -71,8 +71,12 @@ export const AdminDashboardFinances = () => {
     })();
   }, []);
 
-  const CustomSkeleton = () => (
-    <Skeleton height="24px" width="130px" margin="8px 0 8px" />
+  const CustomSkeletonLarge = () => (
+    <Skeleton height="24px" width="110px" margin="8px 0 6px" />
+  );
+
+  const CustomSkeletonSmall = () => (
+    <Skeleton height="16px" width="80px" margin="0px 0 4px" />
   );
 
   return (
@@ -80,31 +84,43 @@ export const AdminDashboardFinances = () => {
       <div css={styles.card}>
         <h2 css={styles.label}>Revenue</h2>
         {totals?.totalRevenue === undefined ? (
-          <CustomSkeleton />
+          <CustomSkeletonLarge />
         ) : (
           <Currency cents={totals?.totalRevenue} isShort />
         )}
-        <h3 css={styles.subtitle}>On {totals?.totalNodesWithRevenue} nodes</h3>
+        <h3 css={styles.subtitle}>
+          {!totals ? (
+            <CustomSkeletonSmall />
+          ) : (
+            `On ${totals?.totalNodesWithRevenue} nodes`
+          )}
+        </h3>
       </div>
       <div css={styles.card}>
         <h2 css={styles.label}>Cost</h2>
 
         {totals?.totalCost === undefined ? (
-          <CustomSkeleton />
+          <CustomSkeletonLarge />
         ) : (
           <Currency cents={-totals?.totalCost!} isShort />
         )}
-        <h3 css={styles.subtitle}>On {totals?.totalHosts} hosts</h3>
+        <h3 css={styles.subtitle}>
+          {!totals ? <CustomSkeletonSmall /> : `On ${totals?.totalHosts} hosts`}
+        </h3>
       </div>
       <div css={styles.card}>
         <h2 css={styles.label}>Profit</h2>
         {totals?.totalProfit === undefined ? (
-          <CustomSkeleton />
+          <CustomSkeletonLarge />
         ) : (
           <Currency cents={totals?.totalProfit} hasColor hasIcon isShort />
         )}
         <h3 css={styles.subtitle}>
-          {Math.abs(totals?.totalProfitPercent!).toFixed(1)}% of cost
+          {!totals ? (
+            <CustomSkeletonSmall />
+          ) : (
+            `${Math.abs(totals?.totalProfitPercent!).toFixed(1)}% of cost`
+          )}
         </h3>
       </div>
     </>
