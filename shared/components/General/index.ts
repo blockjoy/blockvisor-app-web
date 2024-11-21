@@ -11,7 +11,6 @@ export * from './Copy/Copy';
 export * from './CopyToClipboard/CopyToClipboard';
 export * from './CountrySelector/CountrySelector';
 export * from './CountrySelector/StateSelector';
-export * from './Currency/Currency';
 export * from './DangerZone/DangerZone';
 export * from './DateTime/DateTime';
 export * from './DetailsView/DetailsView';

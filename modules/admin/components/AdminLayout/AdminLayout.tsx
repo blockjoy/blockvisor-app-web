@@ -8,13 +8,18 @@ import { AdminLists } from '../AdminLists/AdminLists';
 import { AdminDetails } from '../AdminDetails/AdminDetails';
 import { AdminDashboard } from '../AdminDashboard/AdminDashboard';
 import { AdminSettings } from '../AdminSettings/AdminSettings';
-import { AdminCosts } from '../AdminCosts/AdminCosts';
+import { AdminFinances } from '../AdminFinances/AdminFinances';
 import { PageTitle } from '@shared/components';
 import { layoutSelectors } from '@modules/layout';
 import { capitalized } from '@modules/admin/utils/capitalized';
 import IconAdmin from '@public/assets/icons/app/Sliders.svg';
 
-type AdminLayoutType = 'dashboard' | 'details' | 'list' | 'settings' | 'costs';
+type AdminLayoutType =
+  | 'dashboard'
+  | 'details'
+  | 'list'
+  | 'settings'
+  | 'finances';
 
 const getType = (
   name?: string | null,
@@ -25,7 +30,7 @@ const getType = (
   return ({
     dashboard: 'dashboard',
     settings: 'settings',
-    costs: 'costs',
+    finances: 'finances',
   }[name] || (id || ip ? 'details' : 'list')) as AdminLayoutType;
 };
 
@@ -66,8 +71,8 @@ export const AdminLayout = () => {
           <AdminDashboard />
         ) : type === 'settings' ? (
           <AdminSettings />
-        ) : type === 'costs' ? (
-          <AdminCosts />
+        ) : type === 'finances' ? (
+          <AdminFinances />
         ) : type === 'details' ? (
           <AdminDetails />
         ) : (

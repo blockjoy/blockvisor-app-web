@@ -3,12 +3,14 @@ import { useRouter } from 'next/router';
 import { styles } from './AdminDashboard.styles';
 import { AdminDashboardCard } from './AdminDashboardCard/AdminDashboardCard';
 import { AdminDashboardNodeReports } from './AdminDashboardNodeReports/AdminDashboardNodeReports';
+import { AdminDashboardFinances } from './AdminDashboardFinances/AdminDashboardFinances';
 
 import IconHost from '@public/assets/icons/app/Host.svg';
 import IconNode from '@public/assets/icons/app/Node.svg';
 import IconOrg from '@public/assets/icons/app/Organization.svg';
 import IconUser from '@public/assets/icons/common/Person.svg';
 import IconBlockchain from '@public/assets/icons/app/Blockchain.svg';
+import { NextLink } from '@shared/components';
 
 type Card = {
   name: 'Nodes' | 'Hosts' | 'Users' | 'Orgs' | 'Blockchains';
@@ -57,6 +59,14 @@ export const AdminDashboard = () => {
 
   return (
     <section css={styles.wrapper}>
+      <h2 css={styles.sectionHeader}>
+        Finances
+        <NextLink href="/admin?name=finances">View All</NextLink>
+      </h2>
+      <div css={styles.grid}>
+        <AdminDashboardFinances />
+      </div>
+      <h2>Totals</h2>
       <div css={styles.grid}>
         {cards.map((card) => (
           <AdminDashboardCard
@@ -67,6 +77,7 @@ export const AdminDashboard = () => {
           />
         ))}
       </div>
+      <h2>Issues</h2>
       <AdminDashboardNodeReports />
     </section>
   );
