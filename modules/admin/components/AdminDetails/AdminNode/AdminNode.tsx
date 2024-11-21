@@ -1,7 +1,7 @@
 import { nodeClient } from '@modules/grpc';
 import { useRouter } from 'next/router';
 import { AdminDetail } from '../AdminDetail/AdminDetail';
-import { NextLink, Currency, NodeStatus } from '@shared/components';
+import { NextLink, NodeStatus } from '@shared/components';
 import {
   Node,
   NodeServiceUpdateConfigRequest,
@@ -221,41 +221,6 @@ export const AdminNode = () => {
         defaultValue: node.autoUpgrade?.toString(),
       },
     },
-    // {
-    //   id: 'firewallRules',
-    //   label: 'Firewall Rules',
-    //   data:
-    //     node.allowIps.length || node.denyIps.length ? (
-    //       <NodeFirewall allowIps={node.allowIps} denyIps={node.denyIps} />
-    //     ) : (
-    //       '-'
-    //     ),
-    // },
-    // {
-    //   id: 'allowIps',
-    //   label: 'Allow Ips',
-    //   data: node.allowIps,
-    //   isHidden: true,
-    //   editSettings: {
-    //     field: 'allowIps',
-    //     displayName: 'Allow Ips',
-    //     isArray: true,
-    //     controlType: 'firewall',
-    //     defaultValue: JSON.stringify(node.allowIps),
-    //   },
-    // },
-    // {
-    //   id: 'denyIps',
-    //   label: 'Deny Ips',
-    //   data: node.denyIps,
-    //   isHidden: false,
-    //   editSettings: {
-    //     field: 'denyIps',
-    //     displayName: 'Deny Ips',
-    //     isArray: true,
-    //     controlType: 'firewall',
-    //     defaultValue: JSON.stringify(node.denyIps),
-    //   },
     {
       id: 'region',
       label: 'Region',

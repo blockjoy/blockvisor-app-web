@@ -40,7 +40,6 @@ const links = [
   },
   { name: 'orgs', icon: <IconOrganization />, href: '/admin?name=orgs' },
   { name: 'users', icon: <IconPerson />, href: '/admin?name=users' },
-  { name: 'costs', icon: <IconBilling />, href: '/admin?name=costs' },
   { name: 'settings', icon: <IconCog />, href: '/admin?name=settings' },
 ];
 

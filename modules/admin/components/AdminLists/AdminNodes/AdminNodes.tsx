@@ -1,6 +1,6 @@
 import { AdminList } from '../AdminList/AdminList';
 import { protocolClient, nodeClient } from '@modules/grpc';
-import { DateTime, NodeStatus, Currency } from '@shared/components';
+import { DateTime, NodeStatus } from '@shared/components';
 import {
   AdminNodesFilterProtocol,
   AdminNodesFilterOrg,
@@ -22,6 +22,7 @@ import { capitalized, createAdminNodeFilters } from '@modules/admin';
 import { AdminListColumn } from '@modules/admin/types/AdminListColumn';
 import { useEffect, useState } from 'react';
 import { Protocol } from '@modules/grpc/library/blockjoy/v1/protocol';
+import { Currency } from '../../AdminFinances/Currency/Currency';
 
 const columns: AdminListColumn[] = [
   {
