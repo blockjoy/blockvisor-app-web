@@ -45,7 +45,7 @@ export const AdminDashboardCard = ({ name, icon, getTotal }: Props) => {
     <article css={styles.card}>
       <div css={styles.cardTitle}>
         <span css={styles.cardIcon}>
-          <SvgIcon size="20px"> {icon}</SvgIcon>
+          <SvgIcon size="22px"> {icon}</SvgIcon>
         </span>
         {total! >= 0 ? (
           <a onClick={handleTotalClick} css={styles.cardTotal}>
@@ -59,6 +59,7 @@ export const AdminDashboardCard = ({ name, icon, getTotal }: Props) => {
           </div>
         )}
       </div>
+
       <Search version="submit" onSearch={handleSearch} placeholder="Keyword" />
     </article>
   );

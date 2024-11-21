@@ -15,8 +15,8 @@ import {
   HostIpStatus,
   HostManagedBy,
   NextLink,
-  Currency,
 } from '@shared/components';
+import { Currency } from '../../AdminFinances/Currency/Currency';
 
 export const AdminHost = () => {
   const router = useRouter();

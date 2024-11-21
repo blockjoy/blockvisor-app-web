@@ -22,12 +22,12 @@ export const PageTitleAdminNav = () => {
   const links: LinkItem[] = useMemo(
     () => [
       { id: 'dashboard', name: 'Dashboard', icon: <IconDashboard /> },
+      { id: 'finances', name: 'Finances', icon: <IconBilling /> },
       { id: 'nodes', name: 'Nodes', icon: <IconNode /> },
       { id: 'hosts', name: 'Hosts', icon: <IconHost /> },
       { id: 'protocols', name: 'Protocols', icon: <IconBlockchain /> },
       { id: 'orgs', name: 'Orgs', icon: <IconOrganization /> },
       { id: 'users', name: 'Users', icon: <IconUser /> },
-      { id: 'costs', name: 'Costs', icon: <IconBilling /> },
       { id: 'settings', name: 'Settings', icon: <IconCog /> },
     ],
     [],
