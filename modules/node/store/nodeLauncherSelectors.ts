@@ -119,7 +119,7 @@ const nodeLauncherStatus = selectorFamily<
         NoRegion: !(selectedHosts?.length || selectedRegion),
         InvalidConfig: !isConfigValidVal,
         ErrorExists: Boolean(error),
-        NoPrice: !price && !billingExempt && !isManagedHost,
+        NoPrice: !price && !billingExempt,
         InvalidNodeAllocation: !isNodeAllocationValidVal,
       };
 
