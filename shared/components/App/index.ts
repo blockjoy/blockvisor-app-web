@@ -17,6 +17,7 @@ export * from './Page/PageTitle';
 export * from './Page/PageTitleLabel';
 export * from './NetdataDashboard/NetdataDashboard';
 export * from './NodeFirewall/NodeFirewall';
+export * from './NodeItems/NodeItems';
 export * from './NodeStatus/NodeStatus';
 export * from './NodeStatus/NodeStatusName';
 export * from './NodeStatus/NodeStatusIcon';

@@ -2,7 +2,6 @@ import { css } from '@emotion/react';
 import { TableGridCell, NodeStatus } from '@shared/components';
 import { ProtocolIcon } from '@shared/components';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
-import { getNodeJobProgress } from './getNodeJobProgress';
 import { escapeHtml } from '@shared/utils/escapeHtml';
 import { NodeTags } from '@modules/node';
 
@@ -34,7 +33,6 @@ export const mapNodeListToGrid = (
 ) => {
   return nodeList?.map((node: Node) => {
     const hasTags = Boolean(node.tags?.tags.length);
-    const progress = getNodeJobProgress(node);
 
     return {
       key: node.nodeId,

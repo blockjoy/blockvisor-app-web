@@ -17,6 +17,7 @@ type SortingProps<T> = {
   selectedItem: SortingItem<T>;
   handleSelect: (item: SortingItem<T> | null) => void;
   disabled?: boolean;
+  size?: SortingSize;
 };
 
 export const Sorting = <T extends {}>({
@@ -24,6 +25,7 @@ export const Sorting = <T extends {}>({
   selectedItem,
   handleSelect,
   disabled = false,
+  size = 'large',
 }: SortingProps<T>) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -47,7 +49,7 @@ export const Sorting = <T extends {}>({
             <p css={styles.buttonText}>{selectedItem.name}</p>
           </>
         }
-        dropdownButtonStyles={[styles.dropdownButton]}
+        dropdownButtonStyles={[styles.dropdownButton(size)]}
         hideDropdownIcon={isMobile || isTablet}
         dropdownMenuStyles={[styles.dropdownMenu]}
       />

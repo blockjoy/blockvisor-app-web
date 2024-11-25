@@ -42,8 +42,6 @@ export const NodeViewHeader = () => {
   const handleActionView = (action: NodeAction | null) => setActionView(action);
   const handleClose = () => setActionView(null);
 
-  const progress = getNodeJobProgress(node!);
-
   useEffect(() => {
     if (!actionView && error) setError('');
   }, [actionView]);
