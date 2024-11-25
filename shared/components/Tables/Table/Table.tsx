@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { isSafari } from 'react-device-detect';
-import { css } from '@emotion/react';
 import { styles } from './table.styles';
-import { TableRowLoader } from './TableRowLoader';
-import { TableSortButton } from './TableSortButton';
 import { BaseQueryParams } from '@shared/common/common';
+import { TableRowLoader } from './TableRowLoader';
+import { TableHeader } from './TableHeader/TableHeader';
+import { TableCell } from './TableCell/TableCell';
 
 export const Table = <T extends BaseQueryParams>({
   hideHeader,
@@ -19,8 +19,17 @@ export const Table = <T extends BaseQueryParams>({
   handleSort,
   additionalStyles,
   isHover = true,
+  isDraggable,
+  isResizable,
+  drag,
+  resize,
+  context,
+  columns,
+  tableRef,
+  wrapperRef,
+  handleHeaderRef,
 }: TableProps<T>) => {
-  const [activeRowKey, setActiveRowKey] = useState<string>(
+  const [activeRowKey, setActiveRowKey] = useState(
     rows?.[0]?.isClickable ? rows?.[0]?.key : '',
   );
 
@@ -31,11 +40,18 @@ export const Table = <T extends BaseQueryParams>({
     setActiveRowKey(id);
   };
 
+  const tableColumns = columns ?? headers;
+
   return (
-    <div css={styles.wrapper} className="table-wrapper">
+    <div
+      css={styles.wrapper(isResizable)}
+      className="table-wrapper"
+      {...(wrapperRef && { ref: wrapperRef })}
+    >
       <table
+        {...(tableRef && { ref: tableRef })}
         css={[
-          styles.table,
+          styles.table(isResizable),
           fixedRowHeight && styles.fixedRowHeight(fixedRowHeight),
           additionalStyles && additionalStyles,
           isHover && styles.tableHoverIcon,
@@ -44,42 +60,31 @@ export const Table = <T extends BaseQueryParams>({
         {!hideHeader && headers && rows?.length > 0 && (
           <thead>
             <tr>
-              {headers.map(
-                ({
-                  isHiddenOnMobile,
-                  key,
-                  width,
-                  minWidth,
-                  maxWidth,
-                  textAlign,
-                  name,
-                  component,
-                  dataField,
-                }) => (
-                  <th
-                    className={isHiddenOnMobile ? 'hidden-on-mobile' : ''}
+              {tableColumns.map((col, colIndex) => {
+                const { key, name, label, hideLabel } = col;
+
+                return (
+                  <TableHeader
                     key={key}
-                    css={css`
-                      width: ${width};
-                      min-width: ${minWidth};
-                      max-width: ${maxWidth};
-                      text-align: ${textAlign || 'left'};
-                    `}
+                    {...(handleHeaderRef && {
+                      ref: (el) => handleHeaderRef(el, colIndex),
+                    })}
+                    header={col}
+                    index={colIndex}
+                    context={context}
+                    sort={queryParams?.sort?.[0]}
+                    handleSort={handleSort}
+                    {...(isResizable && {
+                      resize,
+                    })}
+                    {...(isDraggable && {
+                      drag,
+                    })}
                   >
-                    {handleSort && dataField ? (
-                      <TableSortButton
-                        onClick={() => handleSort(dataField)}
-                        dataField={dataField}
-                        sort={queryParams?.sort?.[0]}
-                      >
-                        {component || name}
-                      </TableSortButton>
-                    ) : (
-                      component || name
-                    )}
-                  </th>
-                ),
-              )}
+                    {(!hideLabel && label) || name}
+                  </TableHeader>
+                );
+              })}
             </tr>
           </thead>
         )}
@@ -107,28 +112,29 @@ export const Table = <T extends BaseQueryParams>({
                       : undefined
                   }
                 >
-                  {tr.cells?.map((td, index) => (
-                    <td
-                      key={td.key}
-                      css={[
-                        headers &&
-                          headers[index]?.isHiddenOnMobile &&
-                          styles.hiddenOnMobile,
-                        verticalAlign ? styles[verticalAlign] : styles.middle,
-                        styles.textAlign(headers[index]?.textAlign || 'left'),
-                        css`
-                          width: ${headers[index]?.width};
-                          min-width: ${headers[index]?.minWidth};
-                          max-width: ${headers[index]?.maxWidth};
-                        `,
-                      ]}
-                    >
-                      {td.component}
-                      {index === 0 && !isSafari && (
-                        <span className="underline" css={styles.underline} />
-                      )}
-                    </td>
-                  ))}
+                  {tableColumns?.map((col, colIndex) => {
+                    const cell = tr.cells?.find(
+                      (singleRow) => singleRow.key === col.key,
+                    );
+
+                    return (
+                      <TableCell
+                        key={col.key}
+                        cell={col}
+                        index={colIndex}
+                        verticalAlign={verticalAlign}
+                        {...(isResizable && {
+                          resize,
+                        })}
+                        {...(rows.length <= 10 &&
+                          isDraggable && {
+                            drag,
+                          })}
+                      >
+                        {cell?.component}
+                      </TableCell>
+                    );
+                  })}
                 </tr>
               );
             })

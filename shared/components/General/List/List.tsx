@@ -10,11 +10,15 @@ export type ListProps<T = any> = {
   renderItem: (item: T, isActiveItem?: boolean) => React.ReactNode;
   renderEmpty?: () => React.ReactNode;
   handleSelect?: (item: T) => void;
+  handleClick?: (item: T) => void;
   searchQuery?: string;
   isFocused?: boolean;
   handleFocus?: (isFocus: boolean) => void;
   isLoading?: boolean;
-  additionalyStyles: SerializedStyles[] | ((theme: ITheme) => SerializedStyles);
+  additionalyStyles?:
+    | SerializedStyles[]
+    | ((theme: ITheme) => SerializedStyles);
+  listItemStyles?: (item: T) => SerializedStyles[];
 };
 
 export const List = <T extends { id?: string; name?: string }>({
@@ -23,10 +27,12 @@ export const List = <T extends { id?: string; name?: string }>({
   renderItem,
   renderEmpty,
   handleSelect,
+  handleClick,
   searchQuery,
   isFocused,
   handleFocus,
   additionalyStyles,
+  listItemStyles,
 }: ListProps<T>) => {
   const listRef = useRef<HTMLUListElement>(null);
   const { activeIndex, handleItemRef } = useAccessibleList({
@@ -53,6 +59,8 @@ export const List = <T extends { id?: string; name?: string }>({
           <li
             key={item?.id}
             ref={(el: HTMLLIElement) => handleItemRef(el, index)}
+            {...(handleClick && { onClick: () => handleClick(item) })}
+            {...(listItemStyles && { css: listItemStyles(item) })}
           >
             {renderItem(item, isActive)}
           </li>

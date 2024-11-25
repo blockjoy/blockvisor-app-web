@@ -5,7 +5,7 @@ import {
   Alert,
   ViewPicker,
 } from '@shared/components';
-import { nodeAtoms, NodeSorting } from '@modules/node';
+import { nodeAtoms, NodeSorting, NodeCustomize } from '@modules/node';
 import { layoutSelectors } from '@modules/layout';
 import { useSettings } from '@modules/settings';
 import { styles } from './NodeListHeader.styles';
@@ -32,13 +32,13 @@ export const NodeListHeader = () => {
   return (
     <div css={styles.wrapper}>
       {!isFiltersOpen && (
-        <div css={styles.wrapperInner}>
+        <div>
           {isLoading ? (
             <Skeleton width="80px" />
           ) : (
             <button
               onClick={handleFilterCollapseToggled}
-              css={[styles.filterToggle, styles.endBlock]}
+              css={[styles.filterToggle]}
             >
               <FiltersHeaderIconText
                 filtersTotal={filtersTotal}
@@ -48,7 +48,6 @@ export const NodeListHeader = () => {
           )}
         </div>
       )}
-
       {isLoading ? (
         <Skeleton width="115px" />
       ) : (
@@ -60,14 +59,10 @@ export const NodeListHeader = () => {
           {nodeCount} {nodeCount === 1 ? 'Node' : 'Nodes'}
         </Alert>
       )}
-
-      <NodeSorting />
-
-      <div css={[styles.endBlock, styles.listTypePicker]}>
-        <ViewPicker
-          activeView={activeView}
-          handleActiveView={handleActiveView}
-        />
+      <ViewPicker activeView={activeView} handleActiveView={handleActiveView} />
+      <div css={[styles.listTypePicker]}>
+        <NodeSorting />
+        <NodeCustomize />
       </div>
     </div>
   );

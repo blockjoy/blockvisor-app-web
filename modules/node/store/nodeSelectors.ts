@@ -9,11 +9,13 @@ import {
   NODE_FILTERS_DEFAULT,
   NODE_SORT_DEFAULT,
 } from '@shared/constants/lookups';
-import { NodeStatusListItem, sort } from '@shared/components';
+import { NodeStatusListItem, sort, transformHeaders } from '@shared/components';
 import {
   nodeAtoms,
   protocolAtoms,
   InitialNodeQueryParams,
+  NODE_LIST_LAYOUT_GROUPED_FIELDS,
+  NODE_LIST_ITEMS,
 } from '@modules/node';
 import { authAtoms } from '@modules/auth';
 import { createDropdownValuesFromEnum } from '@modules/admin';
@@ -47,6 +49,48 @@ const isFiltersEmpty = selector({
     const filtersVal = get(filters);
 
     return isEqual(filtersVal, NODE_FILTERS_DEFAULT);
+  },
+});
+
+const tableColumns = selector<TableColumn[]>({
+  key: 'node.table.columns',
+  get: ({ get }) => {
+    const nodeSettings = get(settings);
+
+    return nodeSettings?.columns ?? [];
+  },
+});
+
+const tableLayout = selector({
+  key: 'node.table.layout.nodeInfo.isGrouped',
+  get: ({ get }) => {
+    const tableColumnsVal = get(tableColumns);
+
+    const tableColumnsVisible = new Map();
+    tableColumnsVal.forEach((col) =>
+      tableColumnsVisible.set(col.key, col.isVisible),
+    );
+
+    const groupedFields = NODE_LIST_LAYOUT_GROUPED_FIELDS.reduce<
+      Record<string, boolean>
+    >((group, groupedField) => {
+      const isVisible = tableColumnsVisible.get(groupedField.key);
+      group[groupedField.key!] = isVisible ?? groupedField.isGrouped;
+      return group;
+    }, {});
+
+    return groupedFields;
+  },
+});
+
+const nodeListHeaders = selector<TableHeader[]>({
+  key: 'node.table.headers',
+  get: ({ get }) => {
+    const tableColumnsVal = get(tableColumns);
+
+    const headers = transformHeaders(NODE_LIST_ITEMS, tableColumnsVal);
+
+    return headers;
   },
 });
 
@@ -167,8 +211,15 @@ const nodesTagsAll = selector<Tag[]>({
 
 export const nodeSelectors = {
   settings,
+
   filters,
   isFiltersEmpty,
+
+  tableColumns,
+  tableLayout,
+
+  nodeListHeaders,
+
   nodeSort,
   queryParams,
 

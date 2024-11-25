@@ -23,9 +23,8 @@ export type NodeStatusListItem = {
 type Props = {
   status: NodeState;
   type?: NodeStatusType;
+  jobs?: NodeJob[];
   hasBorder?: boolean;
-  downloadingCurrent?: number;
-  downloadingTotal?: number;
 };
 
 export const getNodeStatusInfo = (status: NodeState) => {
@@ -67,19 +66,18 @@ export const getNodeStatusColor = (status: number, type?: NodeStatusType) => {
   }
 };
 
-export const NodeStatus = ({
-  status,
-  type,
-  hasBorder = true,
-  downloadingCurrent,
-  downloadingTotal,
-}: Props) => {
+export const NodeStatus = ({ status, type, jobs, hasBorder = true }: Props) => {
   const nameRef = useRef<HTMLParagraphElement>(null);
+
+  const progress = getNodeJobProgress(jobs!);
+
+  const downloadingCurrent = progress?.current;
+  const downloadingTotal = progress?.total;
 
   const isDownloading =
     downloadingCurrent! >= 0 && downloadingCurrent !== downloadingTotal;
 
-  const statusColor = getNodeStatusColor(status, type);
+  const statusColor = getNodeStatusColor(status!, type);
 
   const [statusNameWidth, setStatusNameWidth] = useState(
     nameRef.current?.clientWidth!,
@@ -106,7 +104,7 @@ export const NodeStatus = ({
       )}
       <NodeStatusIcon size="12px" status={status!} type={type} />
       <p ref={nameRef} css={[styles.statusText(!hasBorder), statusColor]}>
-        <NodeStatusName status={status} type={type} />
+        <NodeStatusName status={status!} type={type} />
       </p>
     </span>
   );

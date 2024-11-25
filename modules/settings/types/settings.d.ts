@@ -2,6 +2,7 @@ declare namespace globalThis {
   type NodeSettings = {
     filters: import('@modules/grpc').UINodeFilterCriteria;
     sort: import('@modules/grpc/library/blockjoy/v1/node').NodeSort[];
+    columns?: TableColumn[];
   };
 
   type HostSettings = {
