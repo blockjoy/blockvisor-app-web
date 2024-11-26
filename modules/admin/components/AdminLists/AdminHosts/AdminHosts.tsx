@@ -13,6 +13,8 @@ import {
 import { AdminListColumn } from '@modules/admin/types/AdminListColumn';
 import { AdminHostsTag } from './AdminHostsTag/AdminHostsTag';
 import { useState } from 'react';
+import { BillingAmount } from '@modules/grpc/library/blockjoy/common/v1/currency';
+import { AdminListEditCost } from '../AdminListEditCost/AdminListEditCost';
 
 const columns: AdminListColumn[] = [
   {
@@ -28,15 +30,16 @@ const columns: AdminListColumn[] = [
     isVisible: true,
   },
   {
-    name: 'cost',
-    width: '100px',
-    isVisible: true,
-  },
-  {
     name: 'tags',
     isVisible: true,
     isRowClickDisabled: true,
     width: '250px',
+  },
+  {
+    name: 'cost',
+    width: '100px',
+    isVisible: true,
+    isRowClickDisabled: true,
   },
   {
     name: 'ipAddress',
@@ -200,6 +203,13 @@ export const AdminHosts = () => {
     setTagsAdded(tagsAddedCopy);
   };
 
+  const handleUpdate = async (id: string, cost: BillingAmount) => {
+    hostClient.updateHost({
+      id,
+      cost,
+    });
+  };
+
   const listMap = (list: Host[]) =>
     list.map((host) => {
       return {
@@ -208,7 +218,13 @@ export const AdminHosts = () => {
         availableIps: <HostIpStatus ipAddresses={host.ipAddresses} />,
         // managedBy: <HostManagedBy managedBy={host.managedBy} />,
         createdAt: <DateTime date={host.createdAt!} />,
-        cost: `$${(host.cost?.amount?.amountMinorUnits! / 100).toFixed(2)}`,
+        cost: (
+          <AdminListEditCost
+            id={host.id}
+            defaultValue={host.cost?.amount?.amountMinorUnits}
+            onUpdate={handleUpdate}
+          />
+        ),
         tags: (
           <TagList
             isInTable

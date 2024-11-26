@@ -10,10 +10,12 @@ import { useEffect, useState } from 'react';
 import { AdminHeaderButton } from '../../AdminHeader/AdminHeaderButton/AdminHeaderButton';
 import IconDelete from '@public/assets/icons/common/Trash.svg';
 import { toast } from 'react-toastify';
+import { AdminUserNodes } from './AdminUserNodes/AdminUserNodes';
 
 export const AdminUser = () => {
   const router = useRouter();
   const { id } = router.query;
+
   const getItem = async () => await userClient.getUser(id as string);
 
   const [userSettings, setUserSettings] = useState<Record<string, string>>();
@@ -71,6 +73,11 @@ export const AdminUser = () => {
         controlType: 'text',
         defaultValue: item.lastName,
       },
+    },
+    {
+      id: 'nodes',
+      label: 'Nodes',
+      data: <AdminUserNodes userId={item.id} />,
     },
     {
       id: 'userSettings',

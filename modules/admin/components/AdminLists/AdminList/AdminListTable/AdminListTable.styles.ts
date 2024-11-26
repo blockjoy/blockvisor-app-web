@@ -120,10 +120,6 @@ export const styles = {
         opacity: 1;
       }
 
-      tbody tr {
-        cursor: pointer;
-      }
-
       tbody tr:hover td {
         opacity: 1;
         border-bottom-color: rgb(255 255 255 / 24%);
@@ -163,13 +159,20 @@ export const styles = {
           visibility: visible;
         }
       `,
-  tableCell: (width?: string, isLastColumn?: boolean) => css`
-    min-width: ${width};
-
+  tableCell: (
+    width: string,
+    isLastColumn: boolean,
+    isRowClickDisabled: boolean,
+  ) => css`
     ${!isLastColumn &&
     css`
       max-width: ${width};
       width: ${width};
+    `}
+
+    ${!isRowClickDisabled &&
+    css`
+      cursor: pointer;
     `}
 
     box-sizing: border-box;
