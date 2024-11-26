@@ -17,6 +17,7 @@ export const styles = {
   `,
   table: (theme: ITheme) => css`
     text-align: left;
+    font-size: 14px;
     width: 100%;
 
     thead {
@@ -37,7 +38,7 @@ export const styles = {
     }
 
     tbody td {
-      padding: 16px 32px 16px 0;
+      padding: 12px 32px 12px 0;
       vertical-align: middle;
     }
   `,

@@ -182,6 +182,11 @@ export const styles = {
       cursor: pointer;
     `}
 
+    ${!isRowClickDisabled &&
+    css`
+      cursor: pointer;
+    `}
+
     box-sizing: border-box;
   `,
   copyButton: css`

@@ -76,6 +76,7 @@ const columns: AdminListColumn[] = [
   {
     name: 'cost',
     width: '100px',
+    isRowClickDisabled: true,
   },
   {
     name: 'host',
