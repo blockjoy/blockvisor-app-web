@@ -286,7 +286,7 @@ export const AdminNode = () => {
     },
     {
       id: 'createdByName',
-      label: 'Created By Name',
+      label: 'Launched By Name',
       data: (
         <p>
           <NextLink
@@ -299,7 +299,7 @@ export const AdminNode = () => {
     },
     {
       id: 'createdByEmail',
-      label: 'Created By Email',
+      label: 'Launched By Email',
       data: (
         <p>
           <NextLink
@@ -312,7 +312,7 @@ export const AdminNode = () => {
     },
     {
       id: 'createdById',
-      label: 'Created By Id',
+      label: 'Launched By Id',
       data: (
         <p>
           <NextLink

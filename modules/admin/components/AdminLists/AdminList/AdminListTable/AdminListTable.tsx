@@ -299,6 +299,7 @@ export const AdminListTable = ({
                   css={styles.tableCell(
                     column.width!,
                     index === columnsVisible.length - 1,
+                    true,
                   )}
                 >
                   <AdminListTableHeader
@@ -359,6 +360,7 @@ export const AdminListTable = ({
                     css={styles.tableCell(
                       column.width!,
                       index === columnsVisible.length - 1,
+                      column.isRowClickDisabled!,
                     )}
                     onClick={() =>
                       column.isRowClickDisabled ? null : gotoDetails(item.id)

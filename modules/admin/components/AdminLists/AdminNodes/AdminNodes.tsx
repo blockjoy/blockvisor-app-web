@@ -27,6 +27,8 @@ import { AdminListColumn } from '@modules/admin/types/AdminListColumn';
 import { useEffect, useState } from 'react';
 import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
 import { Currency } from '../../AdminFinances/Currency/Currency';
+import { AdminListEditCost } from '../AdminListEditCost/AdminListEditCost';
+import { BillingAmount } from '@modules/grpc/library/blockjoy/common/v1/currency';
 
 const columns: AdminListColumn[] = [
   {
@@ -75,6 +77,7 @@ const columns: AdminListColumn[] = [
   {
     name: 'cost',
     width: '100px',
+    isRowClickDisabled: true,
   },
   {
     name: 'host',
@@ -204,6 +207,13 @@ export const AdminNodes = () => {
     return { list: response.nodes, total: response.nodeCount };
   };
 
+  const handleUpdate = async (id: string, cost: BillingAmount) => {
+    nodeClient.updateNode({
+      ids: [id],
+      cost,
+    });
+  };
+
   const listMap = (list: Node[]) =>
     list.map((node) => {
       return {
@@ -224,7 +234,13 @@ export const AdminNodes = () => {
         createdAt: <DateTime date={node.createdAt!} />,
         createdBy: node.createdBy?.name,
         host: node.hostName,
-        cost: <Currency cents={node.cost?.amount?.amountMinorUnits!} />,
+        cost: (
+          <AdminListEditCost
+            id={node.id}
+            defaultValue={node.cost?.amount?.amountMinorUnits}
+            onUpdate={handleUpdate}
+          />
+        ),
       };
     });
 
