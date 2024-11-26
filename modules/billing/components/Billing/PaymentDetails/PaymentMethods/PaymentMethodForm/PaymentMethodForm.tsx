@@ -37,9 +37,7 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
   const { paymentMethodLoadingState, initPaymentMethod } = usePaymentMethod();
   const { billingAddress, createBillingAddress } = useBillingAddress();
 
-  const [saveAsDefaultAddress, setSaveAsDefaultAddress] = useState(
-    !billingAddress,
-  );
+  const [saveAsDefaultAddress, setSaveAsDefaultAddress] = useState(false);
   const [billingAddressView, setBillingAddressView] =
     useState<BillingAddressView>(billingAddress ? 'preview' : 'form');
   const [error, setError] = useState<string | null>(null);
@@ -146,7 +144,7 @@ export const PaymentMethodForm = ({ handleCancel }: PaymentMethodFormProps) => {
                 <Checkbox
                   id="default-address"
                   name="default-address"
-                  checked={saveAsDefaultAddress}
+                  checked={saveAsDefaultAddress || !billingAddress}
                   disabled={!billingAddress}
                   onChange={handleSaveAsDefaultToggle}
                 >
