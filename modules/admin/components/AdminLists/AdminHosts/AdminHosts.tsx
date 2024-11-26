@@ -30,11 +30,6 @@ const columns: AdminListColumn[] = [
     isVisible: true,
   },
   {
-    name: 'cost',
-    width: '100px',
-    isVisible: true,
-  },
-  {
     name: 'tags',
     isVisible: true,
     isRowClickDisabled: true,
@@ -48,7 +43,7 @@ const columns: AdminListColumn[] = [
     isRowClickDisabled: true,
   },
   {
-    name: 'ip',
+    name: 'ipAddress',
     width: '100px',
     isVisible: true,
   },
