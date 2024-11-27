@@ -15,6 +15,13 @@ type Totals = {
   totalNegativeHosts: number;
 };
 
+const blockjoyOrgs = [
+  'f0210007-f981-4f53-8826-efa2509991d2',
+  '2a98604b-8d01-4dda-8516-a3e99f564170',
+  'c71f6380-0c26-479c-a220-463d1637844b',
+  '15d793dd-84da-4eb5-b617-64c714ff056b',
+];
+
 export const AdminDashboardFinances = () => {
   const [totals, setTotals] = useState<Totals>();
 
@@ -26,7 +33,7 @@ export const AdminDashboardFinances = () => {
       });
 
       const customerNodes = nodes.filter(
-        (node) => node.orgId !== 'f0210007-f981-4f53-8826-efa2509991d2',
+        (node) => !blockjoyOrgs.includes(node.orgId),
       );
 
       const { hosts } = await hostClient.listHosts(undefined, undefined, {
@@ -86,7 +93,10 @@ export const AdminDashboardFinances = () => {
         {totals?.totalRevenue === undefined ? (
           <CustomSkeletonLarge />
         ) : (
-          <Currency cents={totals?.totalRevenue} isShort />
+          <div css={styles.value}>
+            <Currency cents={totals?.totalRevenue} isShort />
+            <abbr>/ Month</abbr>
+          </div>
         )}
         <h3 css={styles.subtitle}>
           {!totals ? (
@@ -98,11 +108,13 @@ export const AdminDashboardFinances = () => {
       </div>
       <div css={styles.card}>
         <h2 css={styles.label}>Cost</h2>
-
         {totals?.totalCost === undefined ? (
           <CustomSkeletonLarge />
         ) : (
-          <Currency cents={-totals?.totalCost!} isShort />
+          <div css={styles.value}>
+            <Currency cents={-totals?.totalCost!} isShort />
+            <abbr>/ Month</abbr>
+          </div>
         )}
         <h3 css={styles.subtitle}>
           {!totals ? <CustomSkeletonSmall /> : `On ${totals?.totalHosts} hosts`}
@@ -113,7 +125,10 @@ export const AdminDashboardFinances = () => {
         {totals?.totalProfit === undefined ? (
           <CustomSkeletonLarge />
         ) : (
-          <Currency cents={totals?.totalProfit} hasColor hasIcon isShort />
+          <div css={styles.value}>
+            <Currency cents={totals?.totalProfit} hasColor isShort />
+            <abbr>/ Month</abbr>
+          </div>
         )}
         <h3 css={styles.subtitle}>
           {!totals ? (

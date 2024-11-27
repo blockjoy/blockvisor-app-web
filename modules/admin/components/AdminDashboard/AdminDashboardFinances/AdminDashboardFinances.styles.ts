@@ -30,8 +30,16 @@ export const styles = {
   negative: (theme: ITheme) => css`
     color: ${theme.colorDanger};
   `,
-  value: css`
+  value: (theme: ITheme) => css`
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
     font-size: 34px;
+
+    abbr {
+      font-size: 12px;
+      color: ${theme.colorDefault}
+    }
   `,
   subtitle: (theme: ITheme) => css`
     color: ${theme.colorLabel};
