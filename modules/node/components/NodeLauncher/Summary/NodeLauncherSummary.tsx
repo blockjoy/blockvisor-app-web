@@ -9,7 +9,6 @@ import {
   HostSelectMultiple,
   OrganizationSelect,
   Pricing,
-  Tooltip,
 } from '@shared/components';
 import { usePipedriveForm } from '@shared/index';
 import { hostAtoms } from '@modules/host';
@@ -76,27 +75,32 @@ export const NodeLauncherSummary = ({
     setIsLaunching(false);
   }, []);
 
-  const handleIssueReport = async () => {
-    setIsLaunching(true);
+  const handleIssueReport = async (isValid?: boolean) => {
+    if (!isValid) setIsLaunching(true);
+
+    const leadData: PipedriveAddLeadParams = {
+      nodeInfo: Object.values(nodeLauncherInfo)
+        .filter((value) => value)
+        .join(' | '),
+    };
+
+    if (!isValid) leadData.nodeIssues = nodeLauncherStatus.reasons.join(' | ');
 
     await nodeLauncherForm({
-      leadData: {
-        nodeInfo: Object.values(nodeLauncherInfo)
-          .filter((value) => value)
-          .join(' | '),
-        nodeIssues: nodeLauncherStatus.reasons.join(' | '),
-      },
+      leadData,
       callback: () => {
-        setIsLaunched(true);
+        if (!isValid) setIsLaunched(true);
       },
     });
 
-    setIsLaunching(false);
+    if (!isValid) setIsLaunching(false);
   };
 
   const handleNodeClicked = () => {
-    if (nodeLauncherStatus.isDisabled) handleIssueReport();
-    else onCreateNodeClicked();
+    const isValid = !nodeLauncherStatus.isDisabled;
+
+    handleIssueReport(isValid);
+    if (isValid) onCreateNodeClicked();
   };
 
   const handleHostChanged = (host: Host | null) => {
