@@ -49,6 +49,9 @@ export const NodeLauncherSummary = ({
     nodeLauncherAtoms.isLaunching,
   );
   const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
+  const billingExempt = useRecoilValue(
+    authSelectors.hasPermission('billing-exempt'),
+  );
   const error = useRecoilValue(nodeLauncherAtoms.error);
   const selectedHosts = useRecoilValue(nodeLauncherAtoms.selectedHosts);
   const totalNodesToLaunch = useRecoilValue(
@@ -99,7 +102,7 @@ export const NodeLauncherSummary = ({
   const handleNodeClicked = () => {
     const isValid = !nodeLauncherStatus.isDisabled;
 
-    handleIssueReport(isValid);
+    if (!billingExempt) handleIssueReport(isValid);
     if (isValid) onCreateNodeClicked();
   };
 
