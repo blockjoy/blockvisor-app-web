@@ -1,3 +1,6 @@
+import { useState } from 'react';
+import { toast } from 'react-toastify';
+import { v4 as uuidv4 } from 'uuid';
 import { hostClient } from '@modules/grpc/clients/hostClient';
 import { useRouter } from 'next/router';
 import { AdminDetail } from '../AdminDetail/AdminDetail';
@@ -16,12 +19,15 @@ import {
   HostIpStatus,
   HostManagedBy,
   NextLink,
+  TagList,
 } from '@shared/components';
 import { Currency } from '../../AdminFinances/Currency/Currency';
 
 export const AdminHost = () => {
   const router = useRouter();
   const { id } = router.query;
+
+  const [shouldRefresh, setShouldRefresh] = useState(false);
 
   const handleOpenInApp = () => router.push(`/hosts/${id as string}`);
 
@@ -41,6 +47,36 @@ export const AdminHost = () => {
   };
 
   const getItem = async () => await hostClient.getHost(id as string);
+
+  const handleAddTag = async (nextTag: string, id?: string) => {
+    try {
+      await hostClient.updateHost({
+        id: id!,
+        updateTags: {
+          addTag: { name: nextTag },
+        },
+      });
+      toast.success('Host Tags Updated');
+      setShouldRefresh(true);
+    } catch (err) {
+      toast.error('Error Updating Host');
+    }
+  };
+
+  const handleRemoveTag = async (nextTags: string[], id?: string) => {
+    try {
+      await hostClient.updateHost({
+        id: id!,
+        updateTags: {
+          overwriteTags: { tags: nextTags.map((tag) => ({ name: tag })) },
+        },
+      });
+      toast.success('Host Tags Updated');
+      setShouldRefresh(true);
+    } catch (err) {
+      toast.error('Error Updating Host');
+    }
+  };
 
   const customItems = (host: Host): AdminDetailProperty[] => [
     {
@@ -94,6 +130,20 @@ export const AdminHost = () => {
       data: host.billingAmount ? `$${host.billingAmount?.amount}` : '-',
     },
     {
+      id: 'tags',
+      label: 'Tags',
+      data: (
+        <TagList
+          key={uuidv4()}
+          id={host.id}
+          tags={host.tags?.tags.map((tag) => tag.name)!}
+          noPadding
+          onAdd={handleAddTag}
+          onRemove={handleRemoveTag}
+        />
+      ),
+    },
+    {
       id: 'availableIps',
       label: `Available Ip's`,
       data: <HostIpStatus ipAddresses={host.ipAddresses} />,
@@ -137,6 +187,8 @@ export const AdminHost = () => {
       metricsKey="name"
       hasMetrics
       hasLogs
+      shouldRefresh={shouldRefresh}
+      onRefreshed={() => setShouldRefresh(false)}
       customItems={customItems}
       ignoreItems={[
         'id',
@@ -148,6 +200,7 @@ export const AdminHost = () => {
         'orgName',
         'managedBy',
         'billingAmount',
+        'tags',
       ]}
     />
   );

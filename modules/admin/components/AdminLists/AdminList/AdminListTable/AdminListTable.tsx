@@ -300,6 +300,7 @@ export const AdminListTable = ({
                     column.width!,
                     index === columnsVisible.length - 1,
                     true,
+                    true,
                   )}
                 >
                   <AdminListTableHeader
@@ -361,6 +362,7 @@ export const AdminListTable = ({
                       column.width!,
                       index === columnsVisible.length - 1,
                       column.isRowClickDisabled!,
+                      column.isOverflowHidden !== false,
                     )}
                     onClick={() =>
                       column.isRowClickDisabled ? null : gotoDetails(item.id)

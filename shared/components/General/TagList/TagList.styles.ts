@@ -3,12 +3,12 @@ import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
-  tagList: css`
+  tagList: (noPadding?: boolean) => css`
     display: flex;
     align-items: center;
     flex-wrap: wrap;
     gap: 8px;
-    padding: 16px 0;
+    ${!noPadding && `padding: 16px 0`};
     width: 100%;
 
     :hover .add-tag-button {
@@ -19,9 +19,20 @@ export const styles = {
   tagListWrap: css`
     flex-wrap: wrap;
   `,
+  extraTags: (theme: ITheme) => css`
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    height: 28px;
+    min-width: 28px;
+    padding: 0 8px;
+    border-radius: 14px;
+    background: ${theme.colorBorderGrey};
+  `,
   tagAddButton: (isTagsEmpty?: boolean) => (theme: ITheme) =>
     css`
-      background: ${theme.colorInput};
+      background: ${theme.colorBorderGrey};
       border: 0;
       border-bottom: 1px solid transparent;
       padding: 0 14px 0 10px;
