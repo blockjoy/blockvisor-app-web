@@ -16,7 +16,7 @@ import {
 import { spacing } from 'styles/utils.spacing.styles';
 import { form as formStyles } from 'styles/form.styles';
 
-export const CreditCardForm = () => {
+export const CreditCardFormFields = () => {
   const [cardHolder, setCardHolder] = useRecoilState(billingAtoms.cardHolder);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {

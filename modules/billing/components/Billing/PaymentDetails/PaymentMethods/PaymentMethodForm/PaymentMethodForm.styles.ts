@@ -6,9 +6,9 @@ export const styles = {
     display: flex;
     flex-flow: row wrap;
     gap: 20px;
+    margin-bottom: 20px;
   `,
   headline: css`
-    margin-bottom: 20px;
     text-transform: uppercase;
   `,
   backToDefault: (theme: ITheme) => css`

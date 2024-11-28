@@ -1,10 +1,11 @@
 export * from './components/BillingWrapper';
 export * from './components/Billing/PaymentDetails/BillingAddress/BillingAddress';
 export * from './components/Billing/PaymentDetails/BillingAddress/BillingAddressForm/BillingAddressForm';
+export * from './components/Billing/PaymentDetails/BillingAddress/BillingAddressForm/BillingAddressFormFields';
 export * from './components/Billing/PaymentDetails/PaymentDetails';
 export * from './components/Billing/PaymentDetails/PaymentMethods/PaymentMethodForm/AvailablePayments/AvailablePayments';
 export * from './components/Billing/PaymentDetails/PaymentMethods/PaymentMethodForm/CreditCardForm/CardComponent/CardComponent';
-export * from './components/Billing/PaymentDetails/PaymentMethods/PaymentMethodForm/CreditCardForm/CreditCardForm';
+export * from './components/Billing/PaymentDetails/PaymentMethods/PaymentMethodForm/CreditCardForm/CreditCardFormFields';
 export * from './components/Billing/PaymentDetails/PaymentMethods/PaymentMethodForm/PaymentMethodForm';
 export * from './components/Billing/PaymentDetails/PaymentMethods/PaymentMethods';
 export * from './components/Billing/PaymentDetails/PaymentMethods/PaymentMethodsList/PaymentMethodsList';
@@ -64,6 +65,7 @@ export * from './types/common';
 
 export * from './utils/calcNextRenewDate';
 export * from './utils/checkIfBillingContactExists';
+export * from './utils/formatAddress';
 export * from './utils/getPaymentMethodIcon';
 export * from './utils/getStatuses';
 export * from './utils/mapBillingContactsToRows';
