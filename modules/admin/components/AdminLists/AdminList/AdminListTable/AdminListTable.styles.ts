@@ -182,6 +182,8 @@ export const styles = {
       cursor: pointer;
     `}
 
+    min-width: ${width};
+
     ${!isRowClickDisabled &&
     css`
       cursor: pointer;

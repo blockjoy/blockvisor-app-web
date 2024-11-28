@@ -127,6 +127,20 @@ export const AdminHost = () => {
       ),
     },
     {
+      id: 'tags',
+      label: 'Tags',
+      data: (
+        <TagList
+          key={uuidv4()}
+          id={host.hostId}
+          tags={host.tags?.tags.map((tag) => tag.name)!}
+          noPadding
+          onAdd={handleAddTag}
+          onRemove={handleRemoveTag}
+        />
+      ),
+    },
+    {
       id: 'availableIps',
       label: `Available Ip's`,
       data: <HostIpStatus ipAddresses={host.ipAddresses} />,
