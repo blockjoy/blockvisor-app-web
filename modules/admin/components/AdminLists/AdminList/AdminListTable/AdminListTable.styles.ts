@@ -106,7 +106,6 @@ export const styles = {
         opacity: 0.7;
         padding: 0 12px 0 0;
         white-space: nowrap;
-        overflow: hidden;
         text-overflow: ellipsis;
         transition-property: opacity, border-color;
         transition-duration: 0.3s;
@@ -163,12 +162,20 @@ export const styles = {
     width: string,
     isLastColumn: boolean,
     isRowClickDisabled: boolean,
+    isOverflowHidden: boolean,
   ) => css`
     ${!isLastColumn &&
     css`
       max-width: ${width};
       width: ${width};
+    `};
+
+    ${isOverflowHidden &&
+    css`
+      overflow: hidden;
     `}
+
+    min-width: ${width};
 
     ${!isRowClickDisabled &&
     css`

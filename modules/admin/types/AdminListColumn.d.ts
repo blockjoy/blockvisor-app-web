@@ -10,6 +10,7 @@ type AdminListColumn = {
   isVisible?: boolean;
   isResizable?: boolean;
   isRowClickDisabled?: boolean;
+  isOverflowHidden?: boolean;
   filterComponent?: React.FunctionComponent<AdminFilterControlProps>;
   filterSettings?: AdminListColumnFilterSettings;
   filterDropdownMinWidth?: number;
