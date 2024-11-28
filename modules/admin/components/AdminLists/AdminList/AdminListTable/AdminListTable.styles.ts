@@ -162,12 +162,20 @@ export const styles = {
     width: string,
     isLastColumn: boolean,
     isRowClickDisabled: boolean,
+    isOverflowHidden: boolean,
   ) => css`
     ${!isLastColumn &&
     css`
       max-width: ${width};
       width: ${width};
+    `};
+
+    ${isOverflowHidden &&
+    css`
+      overflow: hidden;
     `}
+
+    min-width: ${width};
 
     ${!isRowClickDisabled &&
     css`
