@@ -35,7 +35,7 @@ export const TagList = ({
 
   const [newTag, setNewTag] = useState('');
 
-  const [visibleTags, setVisibleTags] = useState<string[]>([]);
+  const [visibleTags, setVisibleTags] = useState<string[]>(tags.slice(0, 2));
 
   const inputRef = useRef<HTMLInputElement>(null);
 
