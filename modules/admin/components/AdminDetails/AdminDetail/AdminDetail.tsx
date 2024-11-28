@@ -52,33 +52,51 @@ export const AdminDetail = ({
   const [item, setItem] = useState<any>();
   const [isEditMode, setIsEditMode] = useState(false);
 
-  const properties: AdminDetailProperty[] =
-    item &&
-    Object.entries(item)
-      .filter((property) => !ignoreItems?.some((item) => property[0] === item))
-      .map((property) => {
-        const label = capitalized(property[0]);
-        const value: any = property[1];
-        return {
-          id: label,
-          label,
-          data:
-            typeof value === 'object' && Boolean(Date.parse(value)) ? (
-              <DateTime date={new Date(item.createdAt)} />
-            ) : typeof value === 'object' ||
-              typeof value === 'undefined' ? undefined : (
-              value?.toString()
-            ),
-        };
-      });
+  const [propertiesState, setPropertiesState] = useState<AdminDetailProperty[]>(
+    [],
+  );
 
-  if (properties && customItems) {
-    if (customItemsAtEnd) {
-      properties.push(...customItems(item));
-    } else {
-      properties.unshift(...customItems(item));
+  const buildProperties = () => {
+    const properties: AdminDetailProperty[] =
+      item &&
+      Object.entries(item)
+        .filter(
+          (property) => !ignoreItems?.some((item) => property[0] === item),
+        )
+        .map((property) => {
+          const label = capitalized(property[0]);
+          const value: any = property[1];
+          return {
+            id: label,
+            label,
+            data:
+              typeof value === 'object' && Boolean(Date.parse(value)) ? (
+                <DateTime date={new Date(item.createdAt)} />
+              ) : typeof value === 'object' ||
+                typeof value === 'undefined' ? undefined : (
+                value?.toString()
+              ),
+          };
+        });
+
+    if (properties && customItems) {
+      if (customItemsAtEnd) {
+        properties.push(...customItems(item));
+      } else {
+        properties.unshift(...customItems(item));
+      }
     }
-  }
+
+    return properties;
+  };
+
+  useEffect(() => {
+    if (shouldRefresh) {
+      setPropertiesState(buildProperties());
+    }
+  }, [shouldRefresh]);
+
+  useEffect(() => setPropertiesState(buildProperties()), [item]);
 
   const handleCopyObject = () =>
     copyToClipboard(JSON.stringify(item, undefined, 2));
@@ -100,6 +118,7 @@ export const AdminDetail = ({
         );
         const item = await nodeClient.getNode(nodeResults.nodes[0].id);
         setItem(item);
+        setPropertiesState(buildProperties());
       } else {
         const item = await getItem();
         setItem(item);
@@ -150,11 +169,13 @@ export const AdminDetail = ({
         <AdminDetailEdit
           onSaveChanges={handleSaveChanges}
           onToggleEditMode={handleToggleEditMode}
-          properties={properties.filter((property) => property.editSettings)}
+          properties={propertiesState.filter(
+            (property) => property.editSettings,
+          )}
         />
-      ) : (
-        <AdminDetailTable item={item!} properties={properties} />
-      )}
+      ) : propertiesState ? (
+        <AdminDetailTable item={item!} properties={propertiesState} />
+      ) : null}
     </>
   );
 };

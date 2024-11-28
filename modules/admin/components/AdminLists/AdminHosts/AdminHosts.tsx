@@ -27,6 +27,7 @@ const columns: AdminListColumn[] = [
     name: 'tags',
     isVisible: true,
     isRowClickDisabled: true,
+    isOverflowHidden: false,
     width: '250px',
   },
   {

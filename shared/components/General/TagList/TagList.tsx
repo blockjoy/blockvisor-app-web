@@ -17,6 +17,7 @@ type Props = {
   tags: string[];
   isInTable?: boolean;
   shouldWrap?: boolean;
+  noPadding?: boolean;
   onRemove?: (newTags: string[], id?: string) => void;
   onAdd?: (newTag: string, id?: string) => void;
 };
@@ -26,12 +27,15 @@ export const TagList = ({
   tags,
   isInTable = false,
   shouldWrap,
+  noPadding,
   onAdd,
   onRemove,
 }: Props) => {
   const [isAddMode, setIsAddMode] = useState(false);
 
   const [newTag, setNewTag] = useState('');
+
+  const [visibleTags, setVisibleTags] = useState<string[]>([]);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -87,14 +91,23 @@ export const TagList = ({
     }
   }, [isAddMode]);
 
+  useEffect(() => {
+    setVisibleTags(isInTable ? tags.slice(0, 2) : tags);
+  }, [tags]);
+
   return (
     <>
-      <ul css={[styles.tagList, shouldWrap && styles.tagListWrap]}>
-        {tags?.map((tag) => (
+      <ul css={[styles.tagList(noPadding), shouldWrap && styles.tagListWrap]}>
+        {visibleTags?.map((tag) => (
           <li key={tag}>
             <Tag name={tag} onRemove={handleRemove!} />
           </li>
         ))}
+        {tags?.length > 2 && isInTable && (
+          <li>
+            <div css={styles.extraTags}>+{tags?.length - 2}</div>
+          </li>
+        )}
         <li css={styles.listItem}>
           {!isAddMode && (
             <button
