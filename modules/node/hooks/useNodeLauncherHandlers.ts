@@ -65,6 +65,8 @@ export const useNodeLauncherHandlers = ({
   const { getRegions } = useGetRegions();
   const { getPrice } = usePricing();
 
+  const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
+
   const defaultOrganization = useRecoilValue(
     organizationSelectors.defaultOrganization,
   );
@@ -343,6 +345,8 @@ export const useNodeLauncherHandlers = ({
       ...nodeLauncherOldState,
       properties: propertiesCopy,
     }));
+
+    console.log('handleNodeConfigPropertyChanged', { name, value });
 
     Mixpanel.track('Launch Node - Node Config Property Changed', {
       propertyName: updatedProperty.keyGroup,

@@ -3,13 +3,13 @@ import Long from 'long';
 import type { CallContext, CallOptions } from 'nice-grpc-common';
 import _m0 from 'protobufjs/minimal';
 import { Timestamp } from '../../google/protobuf/timestamp';
-import { BillingAmount } from '../common/v1/currency';
 import {
   FirewallConfig,
   FirewallRule,
   ImagePropertyValue,
   NodeConfig,
 } from '../common/v1/config';
+import { BillingAmount } from '../common/v1/currency';
 import {
   NextState,
   NodeJob,
@@ -76,8 +76,7 @@ export interface Node {
   createdBy: Resource | undefined;
   createdAt: Date | undefined;
   updatedAt: Date | undefined;
-  dataDirectoryMountpoint?: string | undefined;
-  /** Monthly cost of this node. */
+  /** The cost of this node. */
   cost?: BillingAmount | undefined;
 }
 
@@ -213,14 +212,14 @@ export interface NodeServiceUpdateConfigRequest {
   newDisplayName?: string | undefined;
   /** Update the note that explains what this node is for. */
   newNote?: string | undefined;
-  /** The cost of this host. */
-  cost?: BillingAmount | undefined;
   /** Update these property keys to these values. */
   newValues: ImagePropertyValue[];
   /** Replace the firewall config with a new one. */
   newFirewall?: FirewallConfig | undefined;
   /** Update the node tags. */
   updateTags?: UpdateTags | undefined;
+  /** The cost of this node. */
+  cost?: BillingAmount | undefined;
 }
 
 export interface NodeServiceUpdateConfigResponse {}
@@ -779,6 +778,10 @@ export const Node = {
         : undefined;
     message.createdAt = object.createdAt ?? undefined;
     message.updatedAt = object.updatedAt ?? undefined;
+    message.cost =
+      object.cost !== undefined && object.cost !== null
+        ? BillingAmount.fromPartial(object.cost)
+        : undefined;
     return message;
   },
 };
@@ -1925,7 +1928,7 @@ export const NodeServiceUpdateConfigRequest = {
       UpdateTags.encode(message.updateTags, writer.uint32(66).fork()).ldelim();
     }
     if (message.cost !== undefined) {
-      BillingAmount.encode(message.cost, writer.uint32(90).fork()).ldelim();
+      BillingAmount.encode(message.cost, writer.uint32(74).fork()).ldelim();
     }
     return writer;
   },
