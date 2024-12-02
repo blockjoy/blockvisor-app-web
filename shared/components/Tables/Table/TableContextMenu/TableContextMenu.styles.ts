@@ -36,4 +36,11 @@ export const styles = {
       background-color: ${rgba(theme.colorText, 0.1)};
     }
   `,
+  spacer: (theme: ITheme) => css`
+    display: block;
+    width: 100%;
+    height: 1px;
+    margin: 5px auto;
+    background-color: ${rgba(theme.colorText, 0.1)};
+  `,
 };

@@ -5,7 +5,7 @@ import React, {
   useRef,
   RefObject,
 } from 'react';
-import { getSortedColumns } from '@shared/components';
+import { getOrderedColumns } from '@shared/components';
 
 export const useDraggableList = <T extends { key: string }, C>(
   items: T[],
@@ -183,7 +183,7 @@ export const useDraggableList = <T extends { key: string }, C>(
 
     setTimeout(() => {
       if (movedItem && draggingIndex.current !== targetIndex.current) {
-        const updatedColumns = getSortedColumns<T, C>(currentItems, newItems);
+        const updatedColumns = getOrderedColumns<T, C>(currentItems, newItems);
 
         onChange?.(updatedColumns);
       }

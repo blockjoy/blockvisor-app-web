@@ -13,6 +13,7 @@ export const styles = {
     cursor: default;
     white-space: nowrap;
     padding-right: 20px;
+    user-select: none;
 
     @media ${breakpoints.toXlrg} {
       padding: 0 16px 10px 0;

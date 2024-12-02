@@ -100,4 +100,9 @@ type TableContextItem = {
 
 type TableContextGroup = { title?: string; items: TableContextItem[] };
 
-type TableHeaderAction = 'sort_asc' | 'sort_desc' | 'hide';
+type TableHeaderAction =
+  | 'sort_asc'
+  | 'sort_desc'
+  | 'move_to_left'
+  | 'move_to_right'
+  | 'hide';

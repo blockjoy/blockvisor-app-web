@@ -6,9 +6,16 @@ import { styles } from './TableContextMenu.styles';
 type Props = {
   context?: TableContext;
   header?: TableHeader;
+  isFirst?: boolean;
+  isLast?: boolean;
 };
 
-export const TableContextMenu = ({ header, context }: Props) => {
+export const TableContextMenu = ({
+  context,
+  header,
+  isFirst,
+  isLast,
+}: Props) => {
   const { onClick, items } = context ?? {};
 
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -32,9 +39,14 @@ export const TableContextMenu = ({ header, context }: Props) => {
   return (
     <div ref={dropdownRef} css={styles.wrapper}>
       {items?.map((item) => {
-        const filteredItems = item.items?.filter((itemInner) =>
-          header?.actions?.includes(itemInner?.id!),
-        );
+        const filteredItems = item.items?.filter((itemInner) => {
+          if (
+            (itemInner.id === 'move_to_left' && isFirst) ||
+            (itemInner.id === 'move_to_right' && isLast)
+          )
+            return false;
+          return header?.actions?.includes(itemInner?.id!);
+        });
 
         return (
           <React.Fragment key={item.title}>
@@ -42,13 +54,16 @@ export const TableContextMenu = ({ header, context }: Props) => {
               <span css={styles.title}>{item.title}</span>
             )}
             {filteredItems.map((item) => (
-              <div
-                css={styles.item}
-                onClick={(e) => handleClick(e, item.onClick)}
-              >
-                <SvgIcon size="16px">{item.icon}</SvgIcon>
-                <span>{item.title}</span>
-              </div>
+              <>
+                {item.id === 'hide' && <div css={styles.spacer}></div>}
+                <div
+                  css={styles.item}
+                  onClick={(e) => handleClick(e, item.onClick)}
+                >
+                  <SvgIcon size="12px">{item.icon}</SvgIcon>
+                  <span>{item.title}</span>
+                </div>
+              </>
             ))}
           </React.Fragment>
         );

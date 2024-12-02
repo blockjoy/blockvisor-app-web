@@ -12,6 +12,7 @@ export const useTableResize = (
   const resizeIndex = useRef<number | null>(null);
   const initialWidth = useRef(0);
   const finalWidth = useRef(0);
+  const initialScrollOffset = useRef<number>(0);
 
   const handleMouseDown = (
     e: React.MouseEvent<HTMLDivElement>,
@@ -73,7 +74,7 @@ export const useTableResize = (
       ]);
     }
 
-    setIsResizing(false);
+    setTimeout(() => setIsResizing(false), 10);
 
     resizeIndex.current = null;
     initialWidth.current = 0;

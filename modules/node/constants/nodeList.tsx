@@ -36,7 +36,7 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
     component: (node: Node) => (
       <NodeItems.DisplayName displayName={node.displayName} />
     ),
-    actions: ['sort_asc', 'sort_desc', 'hide'],
+    actions: ['sort_asc', 'sort_desc', 'move_to_left', 'move_to_right', 'hide'],
   },
   {
     key: 'blockchainName',
@@ -50,7 +50,7 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
         showName={true}
       />
     ),
-    actions: ['hide'],
+    actions: ['move_to_left', 'move_to_right', 'hide'],
   },
   {
     key: 'createdAt',
@@ -62,7 +62,7 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
     component: (node: Node) => (
       <NodeItems.CreatedAt createdAt={node.createdAt} />
     ),
-    actions: ['sort_asc', 'sort_desc', 'hide'],
+    actions: ['sort_asc', 'sort_desc', 'move_to_left', 'move_to_right', 'hide'],
   },
   {
     key: 'nodeType',
@@ -72,7 +72,7 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
     dataField: NodeSortField.NODE_SORT_FIELD_NODE_TYPE,
     isVisible: true,
     component: (node: Node) => <NodeItems.NodeType nodeType={node.nodeType} />,
-    actions: ['sort_asc', 'sort_desc', 'hide'],
+    actions: ['sort_asc', 'sort_desc', 'move_to_left', 'move_to_right', 'hide'],
   },
   {
     key: 'status',
@@ -87,7 +87,7 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
         downloadingTotal={progress?.total}
       />
     ),
-    actions: ['sort_asc', 'sort_desc', 'hide'],
+    actions: ['sort_asc', 'sort_desc', 'move_to_left', 'move_to_right', 'hide'],
   },
   {
     key: 'network',
@@ -95,7 +95,7 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
     width: '160px',
     isVisible: true,
     component: (node: Node) => <NodeItems.Network network={node.network} />,
-    actions: ['hide'],
+    actions: ['move_to_left', 'move_to_right', 'hide'],
   },
   {
     key: 'version',
@@ -103,7 +103,7 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
     width: '160px',
     isVisible: false,
     component: (node: Node) => <NodeItems.Version version={node.version} />,
-    actions: ['hide'],
+    actions: ['move_to_left', 'move_to_right', 'hide'],
   },
   {
     key: 'ip',
@@ -111,7 +111,7 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
     width: '160px',
     isVisible: false,
     component: (node: Node) => <NodeItems.Ip ip={node.ip} />,
-    actions: ['hide'],
+    actions: ['move_to_left', 'move_to_right', 'hide'],
   },
   {
     key: 'ipGateway',
@@ -121,7 +121,7 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
     component: (node: Node) => (
       <NodeItems.IpGetaway ipGateway={node.ipGateway} />
     ),
-    actions: ['hide'],
+    actions: ['move_to_left', 'move_to_right', 'hide'],
   },
   {
     key: 'placement',
@@ -129,7 +129,7 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
     width: '160px',
     isVisible: false,
     component: (node: Node) => <NodeItems.Region placement={node.placement} />,
-    actions: ['hide'],
+    actions: ['move_to_left', 'move_to_right', 'hide'],
   },
   {
     key: 'createdBy',
@@ -140,7 +140,7 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
     component: (node: Node) => (
       <NodeItems.CreatedBy createdBy={node.createdBy} />
     ),
-    actions: ['hide'],
+    actions: ['move_to_left', 'move_to_right', 'hide'],
   },
 ];
 

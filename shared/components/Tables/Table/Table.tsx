@@ -74,6 +74,8 @@ export const Table = <T extends BaseQueryParams>({
                     context={context}
                     sort={queryParams?.sort?.[0]}
                     handleSort={handleSort}
+                    isFirst={colIndex === 0}
+                    isLast={colIndex === tableColumns.length - 1}
                     {...(isResizable && {
                       resize,
                     })}
