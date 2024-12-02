@@ -5,6 +5,7 @@ type Props = {
   middleRow?: string | React.ReactNode;
   bottomRow?: string | React.ReactNode;
   topRow?: string | React.ReactNode;
+  isOverflow?: boolean;
 };
 
 const styles = {
@@ -51,7 +52,7 @@ export const TableBlock = ({
 }: Props) => (
   <span css={styles.wrapper}>
     {topRow && (
-      <span css={styles.topRow} className="has-hover-color">
+      <span css={styles.topRow(isOverflow)} className="has-hover-color">
         {topRow}
       </span>
     )}
