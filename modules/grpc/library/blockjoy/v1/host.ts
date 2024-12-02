@@ -232,13 +232,14 @@ export interface HostServiceUpdateHostRequest {
   cpuCores?: number | undefined;
   /** Update the amount of memory on the host. */
   memoryBytes?: number | undefined;
-  cost?: BillingAmount | undefined;
   /** Update the amount of disk space on the host. */
   diskBytes?: number | undefined;
   /** When to schedule nodes to this host. */
   scheduleType?: ScheduleType | undefined;
   /** Update the existing host tags. */
   updateTags?: UpdateTags | undefined;
+  /** The cost of this host. */
+  cost?: BillingAmount | undefined;
 }
 
 export interface HostServiceUpdateHostResponse {
@@ -309,6 +310,7 @@ function createBaseHost(): Host {
     createdBy: undefined,
     createdAt: undefined,
     updatedAt: undefined,
+    cost: undefined,
   };
 }
 
@@ -610,6 +612,10 @@ export const Host = {
         : undefined;
     message.createdAt = object.createdAt ?? undefined;
     message.updatedAt = object.updatedAt ?? undefined;
+    message.cost =
+      object.cost !== undefined && object.cost !== null
+        ? BillingAmount.fromPartial(object.cost)
+        : undefined;
     return message;
   },
 };
@@ -2052,7 +2058,7 @@ export const HostServiceUpdateHostRequest = {
       UpdateTags.encode(message.updateTags, writer.uint32(98).fork()).ldelim();
     }
     if (message.cost !== undefined) {
-      BillingAmount.encode(message.cost, writer.uint32(90).fork()).ldelim();
+      BillingAmount.encode(message.cost, writer.uint32(106).fork()).ldelim();
     }
     return writer;
   },

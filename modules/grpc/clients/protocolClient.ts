@@ -60,6 +60,7 @@ class ProtocolClient {
     pagination?: ProtocolPagination,
     sort?: ProtocolSort[],
   ): Promise<ProtocolServiceListProtocolsResponse> {
+    this.client.listVersions;
     const request: ProtocolServiceListProtocolsRequest = {
       orgIds: orgId ? [orgId!] : [],
       offset: getPaginationOffset(pagination!),
@@ -77,7 +78,6 @@ class ProtocolClient {
       const search: ProtocolSearch = {
         protocolId: createSearch(keyword),
         name: createSearch(keyword),
-        // displayName: createSearch(keyword),
         operator: SearchOperator.SEARCH_OPERATOR_OR,
       };
       request.search = search;

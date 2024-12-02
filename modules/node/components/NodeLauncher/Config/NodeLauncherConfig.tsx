@@ -57,6 +57,9 @@ export const NodeLauncherConfig = ({
         <FormLabel>Version</FormLabel>
         <NodeVersionSelect onVersionChanged={onVersionChanged} />
 
+        <FormLabel>Variant</FormLabel>
+        <NodeVariantSelect onChange={onVariantChanged} />
+
         <FormLabel hint="Add IP addresses that are allowed/denied">
           Firewall Rules
         </FormLabel>

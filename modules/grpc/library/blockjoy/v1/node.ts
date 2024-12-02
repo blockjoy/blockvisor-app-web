@@ -218,8 +218,6 @@ export interface NodeServiceUpdateConfigRequest {
   newDisplayName?: string | undefined;
   /** Update the note that explains what this node is for. */
   newNote?: string | undefined;
-  /** The cost of this host. */
-  cost?: BillingAmount | undefined;
   /** Update these property keys to these values. */
   newValues: NewImagePropertyValue[];
   /** Replace the firewall config with a new one. */
@@ -260,6 +258,8 @@ export interface NodeServiceUpdateConfigRequest {
   newFirewall?: FirewallConfig | undefined;
   /** Update the node tags. */
   updateTags?: UpdateTags | undefined;
+  /** The cost of this node. */
+  cost?: BillingAmount | undefined;
 }
 
 export interface NodeServiceUpdateConfigResponse {}
@@ -836,6 +836,10 @@ export const Node = {
         : undefined;
     message.createdAt = object.createdAt ?? undefined;
     message.updatedAt = object.updatedAt ?? undefined;
+    message.cost =
+      object.cost !== undefined && object.cost !== null
+        ? BillingAmount.fromPartial(object.cost)
+        : undefined;
     return message;
   },
 };
@@ -2060,7 +2064,7 @@ export const NodeServiceUpdateConfigRequest = {
       UpdateTags.encode(message.updateTags, writer.uint32(66).fork()).ldelim();
     }
     if (message.cost !== undefined) {
-      BillingAmount.encode(message.cost, writer.uint32(90).fork()).ldelim();
+      BillingAmount.encode(message.cost, writer.uint32(74).fork()).ldelim();
     }
     return writer;
   },
