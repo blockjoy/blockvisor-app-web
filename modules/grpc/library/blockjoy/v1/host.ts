@@ -264,6 +264,8 @@ export interface HostServiceUpdateHostRequest {
   scheduleType?: ScheduleType | undefined;
   /** Update the existing host tags. */
   updateTags?: UpdateTags | undefined;
+  /** The cost of this host. */
+  cost?: BillingAmount | undefined;
 }
 
 export interface HostServiceUpdateHostResponse {
@@ -334,6 +336,7 @@ function createBaseHost(): Host {
     createdBy: undefined,
     createdAt: undefined,
     updatedAt: undefined,
+    cost: undefined,
   };
 }
 
@@ -413,6 +416,9 @@ export const Host = {
     }
     if (message.cost !== undefined) {
       BillingAmount.encode(message.cost, writer.uint32(202).fork()).ldelim();
+    }
+    if (message.cost !== undefined) {
+      BillingAmount.encode(message.cost, writer.uint32(178).fork()).ldelim();
     }
     return writer;
   },
@@ -587,6 +593,13 @@ export const Host = {
           continue;
         case 25:
           if (tag !== 202) {
+            break;
+          }
+
+          message.cost = BillingAmount.decode(reader, reader.uint32());
+          continue;
+        case 22:
+          if (tag !== 178) {
             break;
           }
 

@@ -88,7 +88,6 @@ export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
             The following needs to be added:
           </h2>
           <div css={styles.missingFields}>
-            {/* TODO: image properties missing required and disabled fields */}
             {!isConfigValid
               ? properties
                   ?.filter((property) => !property.value)
