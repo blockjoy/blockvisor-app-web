@@ -200,14 +200,14 @@ export interface HostServiceUpdateRequest {
   cpuCores?: number | undefined;
   /** Update the amount of memory on the host. */
   memoryBytes?: number | undefined;
-  /** The cost of this host. */
-  cost?: BillingAmount | undefined;
   /** Update the amount of disk space on the host. */
   diskBytes?: number | undefined;
   /** When to schedule nodes to this host. */
   scheduleType?: ScheduleType | undefined;
   /** Update the existing host tags. */
   updateTags?: UpdateTags | undefined;
+  /** The cost of this host. */
+  cost?: BillingAmount | undefined;
 }
 
 export interface HostServiceUpdateResponse {
@@ -370,6 +370,9 @@ export const Host = {
     }
     if (message.cost !== undefined) {
       BillingAmount.encode(message.cost, writer.uint32(202).fork()).ldelim();
+    }
+    if (message.cost !== undefined) {
+      BillingAmount.encode(message.cost, writer.uint32(178).fork()).ldelim();
     }
     return writer;
   },
@@ -544,6 +547,13 @@ export const Host = {
           continue;
         case 25:
           if (tag !== 202) {
+            break;
+          }
+
+          message.cost = BillingAmount.decode(reader, reader.uint32());
+          continue;
+        case 22:
+          if (tag !== 178) {
             break;
           }
 
