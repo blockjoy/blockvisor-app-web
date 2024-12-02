@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import throttle from 'lodash/throttle';
-import { getSortedColumns } from '@shared/components';
+import { getOrderedColumns } from '@shared/components';
 
 export const useTableDnD = (
   headersRef: React.MutableRefObject<(HTMLTableCellElement | null)[]>,
@@ -212,7 +212,7 @@ export const useTableDnD = (
       setColumns?.(updatedColumns);
 
       if (movedColumn) {
-        const sortedColumns = getSortedColumns(columns, updatedColumns);
+        const sortedColumns = getOrderedColumns(columns, updatedColumns);
 
         handleUpdateColumns?.(sortedColumns);
       }

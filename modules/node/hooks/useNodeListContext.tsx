@@ -5,9 +5,11 @@ import { useNodeListLayout } from './useNodeListLayout';
 import IconSortAsc from '@public/assets/icons/common/SortAsc.svg';
 import IconSortDesc from '@public/assets/icons/common/SortDesc.svg';
 import IconEyeClosed from '@public/assets/icons/common/EyeClosed.svg';
+import IconMoveLeft from '@public/assets/icons/common/MoveLeft.svg';
+import IconMoveRight from '@public/assets/icons/common/MoveRight.svg';
 
 export const useNodeListContext = () => {
-  const { updateColumnVisibility } = useNodeListLayout();
+  const { updateColumnVisibility, updatePosition } = useNodeListLayout();
   const { updateSorting } = useNodeSort();
 
   const handleSort = useCallback(
@@ -22,6 +24,13 @@ export const useNodeListContext = () => {
     (header?: TableHeader) => {
       if (!header?.key) return;
       updateColumnVisibility(header.key);
+    },
+    [updateColumnVisibility],
+  );
+
+  const handleMove = useCallback(
+    (key?: string, direction?: 'left' | 'right') => {
+      updatePosition(key, direction);
     },
     [updateColumnVisibility],
   );
@@ -44,6 +53,18 @@ export const useNodeListContext = () => {
   ];
 
   const layoutItems: TableContextItem[] = [
+    {
+      id: 'move_to_left',
+      icon: <IconMoveLeft />,
+      title: 'Move to left',
+      onClick: (header?: TableHeader) => handleMove(header?.key, 'left'),
+    },
+    {
+      id: 'move_to_right',
+      icon: <IconMoveRight />,
+      title: 'Move to right',
+      onClick: (header?: TableHeader) => handleMove(header?.key, 'right'),
+    },
     {
       id: 'hide',
       icon: <IconEyeClosed />,

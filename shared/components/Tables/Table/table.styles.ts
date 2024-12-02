@@ -150,6 +150,8 @@ export const styles = {
     }
   `,
   tableBackdrop: css`
+    position: relative;
+
     ::after {
       content: '';
       position: absolute;

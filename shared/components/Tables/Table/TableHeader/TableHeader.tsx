@@ -16,6 +16,8 @@ type Props = {
   resize?: TableResize;
   drag?: TableDrag;
   context?: TableContext;
+  isFirst?: boolean;
+  isLast?: boolean;
   additionalStyles?: ((theme: ITheme) => SerializedStyles)[];
   handleSort?: (key: any) => void;
 } & PropsWithChildren;
@@ -32,6 +34,8 @@ export const TableHeader = forwardRef(
       sort,
       handleSort,
       additionalStyles,
+      isFirst,
+      isLast,
     }: Props,
     ref: Ref<HTMLTableCellElement>,
   ) => {
@@ -79,6 +83,11 @@ export const TableHeader = forwardRef(
       onDrag?.(e, index!);
     };
 
+    const handleContext = () => {
+      if (isResizing) return;
+      context?.onClick?.(header.key === context.key ? null : header.key);
+    };
+
     const headerClasses = [];
     if (isHiddenOnMobile) headerClasses.push('hidden-on-mobile');
     if (header.key === context?.key) headerClasses.push('active');
@@ -104,10 +113,7 @@ export const TableHeader = forwardRef(
         <div
           css={styles.headerWrapper}
           {...(context?.onClick && {
-            onClick: () =>
-              context?.onClick?.(
-                header.key === context.key ? null : header.key,
-              ),
+            onClick: handleContext,
           })}
         >
           <span css={[styles.text(!!isSortable)]}>{children}</span>
@@ -141,7 +147,12 @@ export const TableHeader = forwardRef(
           )}
         </div>
         {header.key === context?.key && (
-          <TableContextMenu context={context} header={header} />
+          <TableContextMenu
+            context={context}
+            header={header}
+            isFirst={isFirst}
+            isLast={isLast}
+          />
         )}
       </th>
     );

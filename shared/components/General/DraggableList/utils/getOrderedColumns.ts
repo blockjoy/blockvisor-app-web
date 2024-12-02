@@ -1,4 +1,4 @@
-export const getSortedColumns = <
+export const getOrderedColumns = <
   T extends { key: string },
   C extends TableColumn,
 >(
