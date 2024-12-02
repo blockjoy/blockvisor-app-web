@@ -209,6 +209,17 @@ export interface ProtocolServiceListProtocolsResponse {
   total: number;
 }
 
+export interface ProtocolServiceListVariantsRequest {
+  /** The protocol id to list the variants of. */
+  protocolId: string;
+  /** The org id for private protocols or versions. */
+  orgId?: string | undefined;
+}
+
+export interface ProtocolServiceListVariantsResponse {
+  variantKeys: string[];
+}
+
 export interface ProtocolServiceListVersionsRequest {
   /** The version key to list the versions of. */
   versionKey:
@@ -1870,6 +1881,109 @@ export const ProtocolServiceListProtocolsResponse = {
   },
 };
 
+function createBaseProtocolServiceListVariantsRequest(): ProtocolServiceListVariantsRequest {
+  return { protocolId: "", orgId: undefined };
+}
+
+export const ProtocolServiceListVariantsRequest = {
+  encode(message: ProtocolServiceListVariantsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.protocolId !== "") {
+      writer.uint32(10).string(message.protocolId);
+    }
+    if (message.orgId !== undefined) {
+      writer.uint32(18).string(message.orgId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ProtocolServiceListVariantsRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseProtocolServiceListVariantsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.protocolId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.orgId = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ProtocolServiceListVariantsRequest>): ProtocolServiceListVariantsRequest {
+    return ProtocolServiceListVariantsRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<ProtocolServiceListVariantsRequest>): ProtocolServiceListVariantsRequest {
+    const message = createBaseProtocolServiceListVariantsRequest();
+    message.protocolId = object.protocolId ?? "";
+    message.orgId = object.orgId ?? undefined;
+    return message;
+  },
+};
+
+function createBaseProtocolServiceListVariantsResponse(): ProtocolServiceListVariantsResponse {
+  return { variantKeys: [] };
+}
+
+export const ProtocolServiceListVariantsResponse = {
+  encode(message: ProtocolServiceListVariantsResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.variantKeys) {
+      writer.uint32(10).string(v!);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ProtocolServiceListVariantsResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseProtocolServiceListVariantsResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.variantKeys.push(reader.string());
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ProtocolServiceListVariantsResponse>): ProtocolServiceListVariantsResponse {
+    return ProtocolServiceListVariantsResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<ProtocolServiceListVariantsResponse>): ProtocolServiceListVariantsResponse {
+    const message = createBaseProtocolServiceListVariantsResponse();
+    message.variantKeys = object.variantKeys?.map((e) => e) || [];
+    return message;
+  },
+};
+
 function createBaseProtocolServiceListVersionsRequest(): ProtocolServiceListVersionsRequest {
   return { versionKey: undefined, orgId: undefined };
 }
@@ -2298,6 +2412,15 @@ export const ProtocolServiceDefinition = {
       responseStream: false,
       options: {},
     },
+    /** List the different variants for some protocol. */
+    listVariants: {
+      name: "ListVariants",
+      requestType: ProtocolServiceListVariantsRequest,
+      requestStream: false,
+      responseType: ProtocolServiceListVariantsResponse,
+      responseStream: false,
+      options: {},
+    },
     /** List all versions for some version key. */
     listVersions: {
       name: "ListVersions",
@@ -2364,6 +2487,11 @@ export interface ProtocolServiceImplementation<CallContextExt = {}> {
     request: ProtocolServiceListProtocolsRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<ProtocolServiceListProtocolsResponse>>;
+  /** List the different variants for some protocol. */
+  listVariants(
+    request: ProtocolServiceListVariantsRequest,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<ProtocolServiceListVariantsResponse>>;
   /** List all versions for some version key. */
   listVersions(
     request: ProtocolServiceListVersionsRequest,
@@ -2417,6 +2545,11 @@ export interface ProtocolServiceClient<CallOptionsExt = {}> {
     request: DeepPartial<ProtocolServiceListProtocolsRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<ProtocolServiceListProtocolsResponse>;
+  /** List the different variants for some protocol. */
+  listVariants(
+    request: DeepPartial<ProtocolServiceListVariantsRequest>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<ProtocolServiceListVariantsResponse>;
   /** List all versions for some version key. */
   listVersions(
     request: DeepPartial<ProtocolServiceListVersionsRequest>,

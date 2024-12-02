@@ -27,6 +27,7 @@ export const NodeLauncher = ({
     handleNodePropertyChanged,
     handleNodeConfigPropertyChanged,
     handleVersionChanged,
+    handleVariantChanged,
   } = useNodeLauncherHandlers({ fulfilReqs });
 
   const hasProtocol = useRecoilValue(nodeLauncherSelectors.hasProtocol);
@@ -52,6 +53,7 @@ export const NodeLauncher = ({
                 onNodeConfigPropertyChanged={handleNodeConfigPropertyChanged}
                 onNodePropertyChanged={handleNodePropertyChanged}
                 onVersionChanged={handleVersionChanged}
+                onVariantChanged={handleVariantChanged}
               />
             )}
             {hasSummary && (

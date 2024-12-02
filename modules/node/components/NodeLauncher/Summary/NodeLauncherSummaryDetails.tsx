@@ -13,6 +13,7 @@ type Props = {
 export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
   const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
   const hasSummary = useRecoilValue(nodeLauncherSelectors.hasSummary);
+  const nodeLauncher = useRecoilValue(nodeLauncherAtoms.nodeLauncher);
   const isNodeValid = useRecoilValue(nodeLauncherSelectors.isNodeValid);
   const isConfigValid = useRecoilValue(nodeLauncherSelectors.isConfigValid);
   const error = useRecoilValue(nodeLauncherAtoms.error);
@@ -21,6 +22,8 @@ export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
   const selectedRegion = useRecoilValue(nodeLauncherAtoms.selectedRegion);
   const selectedVersion = useRecoilValue(nodeLauncherAtoms.selectedVersion);
   const selectedProtocol = useRecoilValue(nodeLauncherAtoms.selectedProtocol);
+
+  const { properties } = nodeLauncher;
 
   return (
     <div css={styles.summary}>
@@ -72,19 +75,13 @@ export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
             The following needs to be added:
           </h2>
           <div css={styles.missingFields}>
-            {/* TODO: image properties missing required and disabled fields */}
-            {/* {!isConfigValid
+            {!isConfigValid
               ? properties
-                  ?.filter(
-                    (property) =>
-                      property.required &&
-                      !property.disabled &&
-                      !property.value,
-                  )
+                  ?.filter((property) => !property.value)
                   .map((property) => (
-                    <div key={property.name}>{property.displayName}</div>
+                    <div key={property.name}>{property.name}</div>
                   ))
-              : null} */}
+              : null}
             {!isNodeValid ? (
               <>
                 {!selectedHosts && allHosts?.length ? (
