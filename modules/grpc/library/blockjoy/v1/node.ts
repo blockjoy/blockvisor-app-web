@@ -297,9 +297,6 @@ function createBaseNode(): Node {
     createdAt: undefined,
     updatedAt: undefined,
     cost: undefined,
-    createdBy: undefined,
-    createdAt: undefined,
-    updatedAt: undefined,
   };
 }
 
@@ -427,6 +424,9 @@ export const Node = {
     }
     if (message.cost !== undefined) {
       BillingAmount.encode(message.cost, writer.uint32(314).fork()).ldelim();
+    }
+    if (message.cost !== undefined) {
+      BillingAmount.encode(message.cost, writer.uint32(290).fork()).ldelim();
     }
     return writer;
   },
@@ -700,6 +700,13 @@ export const Node = {
           continue;
         case 39:
           if (tag !== 314) {
+            break;
+          }
+
+          message.cost = BillingAmount.decode(reader, reader.uint32());
+          continue;
+        case 36:
+          if (tag !== 290) {
             break;
           }
 
