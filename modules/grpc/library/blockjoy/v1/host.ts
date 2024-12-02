@@ -389,6 +389,9 @@ export const Host = {
     if (message.cost !== undefined) {
       BillingAmount.encode(message.cost, writer.uint32(178).fork()).ldelim();
     }
+    if (message.cost !== undefined) {
+      BillingAmount.encode(message.cost, writer.uint32(178).fork()).ldelim();
+    }
     return writer;
   },
 
@@ -552,6 +555,13 @@ export const Host = {
           message.updatedAt = fromTimestamp(
             Timestamp.decode(reader, reader.uint32()),
           );
+          continue;
+        case 22:
+          if (tag !== 178) {
+            break;
+          }
+
+          message.cost = BillingAmount.decode(reader, reader.uint32());
           continue;
         case 22:
           if (tag !== 178) {

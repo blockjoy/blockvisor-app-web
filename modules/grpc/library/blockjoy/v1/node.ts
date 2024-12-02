@@ -258,6 +258,8 @@ export interface NodeServiceUpdateConfigRequest {
   newFirewall?: FirewallConfig | undefined;
   /** Update the node tags. */
   updateTags?: UpdateTags | undefined;
+  /** The cost of this node. */
+  cost?: BillingAmount | undefined;
 }
 
 export interface NodeServiceUpdateConfigResponse {}
@@ -464,6 +466,9 @@ export const Node = {
     }
     if (message.cost !== undefined) {
       BillingAmount.encode(message.cost, writer.uint32(306).fork()).ldelim();
+    }
+    if (message.cost !== undefined) {
+      BillingAmount.encode(message.cost, writer.uint32(290).fork()).ldelim();
     }
     return writer;
   },
@@ -744,6 +749,13 @@ export const Node = {
           continue;
         case 38:
           if (tag !== 306) {
+            break;
+          }
+
+          message.cost = BillingAmount.decode(reader, reader.uint32());
+          continue;
+        case 36:
+          if (tag !== 290) {
             break;
           }
 
