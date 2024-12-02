@@ -41,6 +41,16 @@ const selectedImage = atom<Image | null>({
   default: null,
 });
 
+const variants = atom<string[]>({
+  key: 'nodeLauncher.variants',
+  default: [],
+});
+
+const selectedVariant = atom<string | null>({
+  key: 'nodeLauncher.variant',
+  default: null,
+});
+
 const error = atom<string | null>({
   key: 'nodeLauncher.error',
   default: null,
@@ -58,12 +68,14 @@ const isLaunching = atom<boolean>({
 
 export const nodeLauncherAtoms = {
   nodeLauncher,
+  variants,
 
   selectedProtocol,
   selectedRegion,
   selectedVersion,
   selectedHosts,
   selectedImage,
+  selectedVariant,
 
   error,
   isLaunchError,

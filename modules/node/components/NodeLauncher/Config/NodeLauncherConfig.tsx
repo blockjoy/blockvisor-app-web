@@ -9,10 +9,13 @@ import {
   nodeLauncherAtoms,
   FirewallDropdown,
   NodeLauncherState,
+  NodeVariantSelect,
+  NodeLauncherPropertyGroup,
 } from '@modules/node';
 import { authSelectors } from '@modules/auth';
 import { styles } from './NodeLauncherConfig.styles';
 import { ImageProperty } from '@modules/grpc/library/blockjoy/v1/image';
+import { UiType } from '@modules/grpc/library/blockjoy/common/v1/protocol';
 
 type NodeLauncherConfigProps = {
   onNodeConfigPropertyChanged: (name: string, value: string | boolean) => void;
@@ -21,12 +24,14 @@ type NodeLauncherConfigProps = {
     value: NodeLauncherState[K],
   ) => void;
   onVersionChanged: (version: ProtocolVersion | null) => void;
+  onVariantChanged: (variant: string) => void;
 };
 
 export const NodeLauncherConfig = ({
   onNodeConfigPropertyChanged,
   onNodePropertyChanged,
   onVersionChanged,
+  onVariantChanged,
 }: NodeLauncherConfigProps) => {
   const nodeLauncher = useRecoilValue(nodeLauncherAtoms.nodeLauncher);
   const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
@@ -41,6 +46,9 @@ export const NodeLauncherConfig = ({
         <FormLabel>Version</FormLabel>
         <NodeVersionSelect onVersionChanged={onVersionChanged} />
 
+        <FormLabel>Variant</FormLabel>
+        <NodeVariantSelect onChange={onVariantChanged} />
+
         <FormLabel hint="Add IP addresses that are allowed/denied">
           Firewall Rules
         </FormLabel>
@@ -51,16 +59,20 @@ export const NodeLauncherConfig = ({
           deniedIps={nodeLauncher?.denyIps}
         />
 
-        {/* TODO: implement image properties
-        
-        {properties?.map((property: ImageProperty) => {
+        {properties?.map((propertyGroup: NodeLauncherPropertyGroup) => {
+          const isRequired =
+            propertyGroup.uiType === UiType.UI_TYPE_TEXT ||
+            propertyGroup.uiType === UiType.UI_TYPE_PASSWORD;
+
           return (
-            <Fragment key={property.imagePropertyId}>
-              <FormLabel>{property.key}</FormLabel>
-              {renderControls(property, onNodeConfigPropertyChanged)}
+            <Fragment key={propertyGroup.name}>
+              <FormLabel isRequired={isRequired}>
+                {propertyGroup.name}
+              </FormLabel>
+              {renderControls(propertyGroup, onNodeConfigPropertyChanged)}
             </Fragment>
           );
-        })} */}
+        })}
       </div>
     </NodeLauncherPanel>
   );

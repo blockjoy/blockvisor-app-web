@@ -14,6 +14,8 @@ import {
   ProtocolSort,
   ProtocolSortField,
   ProtocolVersion,
+  ProtocolServiceListVariantsRequest,
+  ProtocolServiceListVariantsResponse,
 } from '../library/blockjoy/v1/protocol';
 import {
   callWithTokenRefresh,
@@ -52,6 +54,7 @@ class ProtocolClient {
     pagination?: ProtocolPagination,
     sort?: ProtocolSort[],
   ): Promise<ProtocolServiceListProtocolsResponse> {
+    this.client.listVersions;
     const request: ProtocolServiceListProtocolsRequest = {
       orgIds: orgId ? [orgId!] : [],
       offset: getPaginationOffset(pagination!),
@@ -69,7 +72,6 @@ class ProtocolClient {
       const search: ProtocolSearch = {
         protocolId: createSearch(keyword),
         name: createSearch(keyword),
-        // displayName: createSearch(keyword),
         operator: SearchOperator.SEARCH_OPERATOR_OR,
       };
       request.search = search;
@@ -120,6 +122,23 @@ class ProtocolClient {
         );
       console.log('addVersionResponse', response);
       return response.version!;
+    } catch (err: any) {
+      return handleError(err);
+    }
+  }
+
+  async listVariants(
+    request: ProtocolServiceListVariantsRequest,
+  ): Promise<string[]> {
+    console.log('listVariantsRequest', request);
+    try {
+      const response: ProtocolServiceListVariantsResponse =
+        await callWithTokenRefresh(
+          this.client.listVariants.bind(this.client),
+          request,
+        );
+      console.log('listVariantsResponse', response);
+      return response.variantKeys;
     } catch (err: any) {
       return handleError(err);
     }

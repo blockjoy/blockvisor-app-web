@@ -7,42 +7,28 @@ import {
   useSetRecoilState,
 } from 'recoil';
 import { toast } from 'react-toastify';
-import isEqual from 'lodash/isEqual';
 import {
   Protocol,
   ProtocolVersion,
 } from '@modules/grpc/library/blockjoy/v1/protocol';
 import { Host, Region } from '@modules/grpc/library/blockjoy/v1/host';
-// import {
-//   NodeType,
-//   UiType,
-// } from '@modules/grpc/library/blockjoy/common/v1/node';
-import {
-  // NodeProperty,
-  // NodeScheduler_ResourceAffinity,
-  NodeServiceCreateRequest,
-} from '@modules/grpc/library/blockjoy/v1/node';
-// import { NetworkConfig } from '@modules/grpc/library/blockjoy/common/v1/protocol';
+import { NodeServiceCreateRequest } from '@modules/grpc/library/blockjoy/v1/node';
 import { hostAtoms, useHostSelect } from '@modules/host';
 import {
   useNodeAdd,
   nodeLauncherAtoms,
-  protocolAtoms,
   useGetRegions,
-  sortNetworks,
-  sortVersions,
   NodeLauncherHost,
   NodeLauncherState,
+  NodeLauncherPropertyGroup,
 } from '@modules/node';
 import { organizationSelectors } from '@modules/organization';
 import { ROUTES, useNavigate } from '@shared/index';
 import { Mixpanel } from '@shared/services/mixpanel';
-import { authSelectors } from '@modules/auth';
 import { usePricing } from '@modules/billing';
 import { ResourceAffinity } from '@modules/grpc/library/blockjoy/common/v1/node';
-import { imageClient } from '@modules/grpc';
-import { ImageProperty } from '@modules/grpc/library/blockjoy/v1/image';
-import { UiType } from '@modules/grpc/library/blockjoy/common/v1/protocol';
+import { imageClient, protocolClient } from '@modules/grpc';
+import { authSelectors } from '@modules/auth';
 
 type IUseNodeLauncherHandlersParams = {
   fulfilReqs: boolean;
@@ -62,6 +48,7 @@ interface IUseNodeLauncherHandlersHook {
     value: string | boolean,
   ) => void;
   handleVersionChanged: (version: ProtocolVersion | null) => void;
+  handleVariantChanged: (variant: string) => void;
   handleCreateNodeClicked: () => void;
 }
 
@@ -75,6 +62,8 @@ export const useNodeLauncherHandlers = ({
   const { createNode } = useNodeAdd();
   const { getRegions } = useGetRegions();
   const { getPrice } = usePricing();
+
+  const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
 
   const defaultOrganization = useRecoilValue(
     organizationSelectors.defaultOrganization,
@@ -109,6 +98,12 @@ export const useNodeLauncherHandlers = ({
 
   const [selectedImage, setSelectedImage] = useRecoilState(
     nodeLauncherAtoms.selectedImage,
+  );
+
+  const setVariants = useSetRecoilState(nodeLauncherAtoms.variants);
+
+  const setSelectedVariant = useSetRecoilState(
+    nodeLauncherAtoms.selectedVariant,
   );
 
   const resetSelectedImage = useResetRecoilState(
@@ -147,38 +142,52 @@ export const useNodeLauncherHandlers = ({
   }, [selectedProtocol]);
 
   useEffect(() => {
-    let properties: ImageProperty[] | undefined;
+    const properties: NodeLauncherPropertyGroup[] = [];
 
-    const propertyMap = (property: ImageProperty) => ({
-      name: property.key,
-      default: property.defaultValue,
-    });
+    const keyGroups = Array.from(
+      new Set(
+        selectedImage?.properties
+          ?.filter((property) => property.keyGroup)
+          ?.map((property) => property.keyGroup),
+      ),
+    );
 
-    const nodeLauncherProperties =
-      nodeLauncherState.properties?.map(propertyMap);
+    const propertiesWithoutKeyGroup: NodeLauncherPropertyGroup[] =
+      selectedImage?.properties
+        .filter((property) => !property.keyGroup)
+        .map((property) => ({
+          name: property.key,
+          uiType: property.uiType,
+          value: property.defaultValue || '',
+          properties: [property],
+        })) ?? [];
 
-    const selectedProperties = selectedImage?.properties.map(propertyMap);
+    properties.push(...propertiesWithoutKeyGroup!);
 
-    if (
-      selectedProperties &&
-      !isEqual(nodeLauncherProperties, selectedProperties)
-    ) {
-      const nodeTypePropertiesCopy = [...selectedImage?.properties!];
+    for (let keyGroup of keyGroups) {
+      const keyGroupProperties = selectedImage?.properties.filter(
+        (property) => property.keyGroup === keyGroup,
+      );
 
-      properties = nodeTypePropertiesCopy.map((property) => ({
-        ...property,
-        value: property.defaultValue ?? '',
-        disabled: false,
-      }));
-    } else {
-      properties = nodeLauncherState.properties;
+      const firstProperty = keyGroupProperties?.[0];
+
+      if (!firstProperty) return;
+
+      properties.push({
+        name: keyGroup!,
+        uiType: firstProperty.uiType,
+        value: firstProperty.key,
+        properties: keyGroupProperties!,
+      });
     }
+
+    console.log('properties', properties);
 
     setNodeLauncherState((nodeLauncherOldState) => ({
       ...nodeLauncherOldState,
       properties,
     }));
-  }, [selectedVersion]);
+  }, [selectedImage]);
 
   useEffect(() => {
     (async () => {
@@ -193,10 +202,24 @@ export const useNodeLauncherHandlers = ({
   }, [selectedVersion]);
 
   useEffect(() => {
-    if (true)
+    (async () => {
+      if (!defaultOrganization || !selectedProtocol) return;
+
+      const variantsResponse = await protocolClient.listVariants({
+        protocolId: selectedProtocol?.protocolId!,
+        orgId: defaultOrganization?.orgId,
+      });
+
+      setVariants(variantsResponse);
+      setSelectedVariant(variantsResponse[0]);
+    })();
+  }, [selectedProtocol, defaultOrganization]);
+
+  useEffect(() => {
+    if (selectedVersion && selectedRegion && defaultOrganization)
       getPrice({
         region: selectedRegion?.name!,
-        versionKey: { variantKey: '???', protocolKey: '???' },
+        versionKey: selectedVersion.versionKey,
         orgId: defaultOrganization?.orgId,
       });
   }, [selectedProtocol, selectedVersion, selectedRegion]);
@@ -210,11 +233,15 @@ export const useNodeLauncherHandlers = ({
   }, []);
 
   useEffect(() => {
-    getHosts();
-  }, [defaultOrganization?.orgId]);
+    if (!isSuperUser && !defaultOrganization?.orgId) {
+      return;
+    }
+
+    getHosts(isSuperUser ? undefined : defaultOrganization?.orgId);
+  }, [defaultOrganization?.orgId, isSuperUser]);
 
   useEffect(() => {
-    getRegions();
+    if (defaultOrganization?.orgId && selectedImage) getRegions();
   }, [defaultOrganization?.orgId, selectedImage]);
 
   const handleHostsChanged = (hosts: NodeLauncherHost[] | null) => {
@@ -269,7 +296,7 @@ export const useNodeLauncherHandlers = ({
     const propertiesCopy = [...nodeLauncherState.properties!];
 
     const propertyIndex = propertiesCopy.findIndex(
-      (property) => property.key === name,
+      (property) => property.name === name,
     );
 
     if (propertyIndex === -1) return;
@@ -286,8 +313,10 @@ export const useNodeLauncherHandlers = ({
       properties: propertiesCopy,
     }));
 
+    console.log('handleNodeConfigPropertyChanged', { name, value });
+
     Mixpanel.track('Launch Node - Node Config Property Changed', {
-      propertyName: updatedProperty.key,
+      propertyName: updatedProperty.name,
       propertyValue: value?.toString(),
     });
   };
@@ -296,6 +325,8 @@ export const useNodeLauncherHandlers = ({
     Mixpanel.track('Launch Node - Version Changed');
     setSelectedVersion(version);
   };
+
+  const handleVariantChanged = (variant: string) => setSelectedVariant(variant);
 
   const handleCreateNodeClicked = async () => {
     setIsLaunching(true);
@@ -307,10 +338,15 @@ export const useNodeLauncherHandlers = ({
     const params: NodeServiceCreateRequest = {
       orgId: defaultOrganization!.orgId,
       addRules: [],
-      imageId: '',
-      newValues: [],
+      imageId: selectedImage?.imageId!,
+      newValues: nodeLauncherState.properties?.map((property) => ({
+        key: property.name,
+        value: property.value,
+      }))!,
       placement: {},
     };
+
+    console.log('createNodeParams', params);
 
     if (selectedHosts?.length!) {
       params.placement = {
@@ -357,6 +393,7 @@ export const useNodeLauncherHandlers = ({
     handleNodePropertyChanged,
     handleNodeConfigPropertyChanged,
     handleVersionChanged,
+    handleVariantChanged,
     handleCreateNodeClicked,
   };
 };

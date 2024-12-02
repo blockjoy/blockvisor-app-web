@@ -3,9 +3,17 @@ import { Host, Region } from '@modules/grpc/library/blockjoy/v1/host';
 import { NodeSort } from '@modules/grpc/library/blockjoy/v1/node';
 import { NodePlacement } from '@modules/grpc/library/blockjoy/common/v1/node';
 import { ImageProperty } from '@modules/grpc/library/blockjoy/v1/image';
+import { UiType } from '@modules/grpc/library/blockjoy/common/v1/protocol';
+
+export type NodeLauncherPropertyGroup = {
+  name: string;
+  value: string;
+  uiType: UiType;
+  properties: ImageProperty[];
+};
 
 export type NodeLauncherState = {
-  properties?: ImageProperty[];
+  properties?: NodeLauncherPropertyGroup[];
   keyFiles?: NodeFiles[];
   allowIps: FilteredIpAddr[];
   denyIps: FilteredIpAddr[];

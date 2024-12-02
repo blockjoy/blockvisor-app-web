@@ -3,6 +3,7 @@ import Long from 'long';
 import type { CallContext, CallOptions } from 'nice-grpc-common';
 import _m0 from 'protobufjs/minimal';
 import { Timestamp } from '../../google/protobuf/timestamp';
+import { BillingAmount } from '../common/v1/currency';
 import { Resource } from '../common/v1/resource';
 import { SearchOperator, SortOrder } from '../common/v1/search';
 import { Tags, UpdateTags } from '../common/v1/tag';
@@ -84,6 +85,8 @@ export interface Host {
   createdAt: Date | undefined;
   /** When this host was last updated. */
   updatedAt: Date | undefined;
+  /** The cost of this host. */
+  cost?: BillingAmount | undefined;
 }
 
 export interface HostServiceCreateRequest {
@@ -203,6 +206,8 @@ export interface HostServiceUpdateRequest {
   scheduleType?: ScheduleType | undefined;
   /** Update the existing host tags. */
   updateTags?: UpdateTags | undefined;
+  /** The cost of this host. */
+  cost?: BillingAmount | undefined;
 }
 
 export interface HostServiceUpdateResponse {
@@ -285,6 +290,7 @@ function createBaseHost(): Host {
     createdBy: undefined,
     createdAt: undefined,
     updatedAt: undefined,
+    cost: undefined,
   };
 }
 
@@ -361,6 +367,9 @@ export const Host = {
     }
     if (message.cost !== undefined) {
       BillingAmount.encode(message.cost, writer.uint32(202).fork()).ldelim();
+    }
+    if (message.cost !== undefined) {
+      BillingAmount.encode(message.cost, writer.uint32(178).fork()).ldelim();
     }
     return writer;
   },
@@ -533,6 +542,13 @@ export const Host = {
 
           message.cost = BillingAmount.decode(reader, reader.uint32());
           continue;
+        case 22:
+          if (tag !== 178) {
+            break;
+          }
+
+          message.cost = BillingAmount.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -576,6 +592,10 @@ export const Host = {
         : undefined;
     message.createdAt = object.createdAt ?? undefined;
     message.updatedAt = object.updatedAt ?? undefined;
+    message.cost =
+      object.cost !== undefined && object.cost !== null
+        ? BillingAmount.fromPartial(object.cost)
+        : undefined;
     return message;
   },
 };
@@ -1459,7 +1479,7 @@ export const HostServiceUpdateRequest = {
       UpdateTags.encode(message.updateTags, writer.uint32(98).fork()).ldelim();
     }
     if (message.cost !== undefined) {
-      BillingAmount.encode(message.cost, writer.uint32(90).fork()).ldelim();
+      BillingAmount.encode(message.cost, writer.uint32(106).fork()).ldelim();
     }
     return writer;
   },
@@ -1559,8 +1579,8 @@ export const HostServiceUpdateRequest = {
 
           message.updateTags = UpdateTags.decode(reader, reader.uint32());
           continue;
-        case 11:
-          if (tag !== 90) {
+        case 13:
+          if (tag !== 106) {
             break;
           }
 

@@ -9,6 +9,7 @@ import {
   ImagePropertyValue,
   NodeConfig,
 } from '../common/v1/config';
+import { BillingAmount } from '../common/v1/currency';
 import {
   NextState,
   NodeJob,
@@ -75,6 +76,8 @@ export interface Node {
   createdBy: Resource | undefined;
   createdAt: Date | undefined;
   updatedAt: Date | undefined;
+  /** The cost of this node. */
+  cost?: BillingAmount | undefined;
 }
 
 /** Create a new node for some image. */
@@ -215,6 +218,8 @@ export interface NodeServiceUpdateConfigRequest {
   newFirewall?: FirewallConfig | undefined;
   /** Update the node tags. */
   updateTags?: UpdateTags | undefined;
+  /** The cost of this node. */
+  cost?: BillingAmount | undefined;
 }
 
 export interface NodeServiceUpdateConfigResponse {}
@@ -291,6 +296,7 @@ function createBaseNode(): Node {
     createdBy: undefined,
     createdAt: undefined,
     updatedAt: undefined,
+    cost: undefined,
   };
 }
 
@@ -415,6 +421,9 @@ export const Node = {
     }
     if (message.cost !== undefined) {
       BillingAmount.encode(message.cost, writer.uint32(314).fork()).ldelim();
+    }
+    if (message.cost !== undefined) {
+      BillingAmount.encode(message.cost, writer.uint32(290).fork()).ldelim();
     }
     return writer;
   },
@@ -686,6 +695,13 @@ export const Node = {
 
           message.cost = BillingAmount.decode(reader, reader.uint32());
           continue;
+        case 36:
+          if (tag !== 290) {
+            break;
+          }
+
+          message.cost = BillingAmount.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -755,6 +771,10 @@ export const Node = {
         : undefined;
     message.createdAt = object.createdAt ?? undefined;
     message.updatedAt = object.updatedAt ?? undefined;
+    message.cost =
+      object.cost !== undefined && object.cost !== null
+        ? BillingAmount.fromPartial(object.cost)
+        : undefined;
     return message;
   },
 };
@@ -1901,7 +1921,7 @@ export const NodeServiceUpdateConfigRequest = {
       UpdateTags.encode(message.updateTags, writer.uint32(66).fork()).ldelim();
     }
     if (message.cost !== undefined) {
-      BillingAmount.encode(message.cost, writer.uint32(90).fork()).ldelim();
+      BillingAmount.encode(message.cost, writer.uint32(74).fork()).ldelim();
     }
     return writer;
   },
@@ -1975,8 +1995,8 @@ export const NodeServiceUpdateConfigRequest = {
 
           message.updateTags = UpdateTags.decode(reader, reader.uint32());
           continue;
-        case 11:
-          if (tag !== 90) {
+        case 9:
+          if (tag !== 74) {
             break;
           }
 
