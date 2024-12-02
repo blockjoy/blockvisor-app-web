@@ -74,21 +74,7 @@ const isConfigValid = selector({
     const nodeLauncher = get(nodeLauncherAtoms.nodeLauncher);
     const { properties } = nodeLauncher;
 
-    return true;
-
-    // TODO: image property required missing
-    // return (
-    //   !nodeLauncher?.properties?.length ||
-    //   Boolean(
-    //     nodeLauncher.properties
-    //       ?.filter(
-    //         (property: ImageProperty) =>
-    //           // type.required &&
-    //           property.uiType !== UiType.UI_TYPE_SWITCH,
-    //       )
-    //       .every((type) => type.defaultValue),
-    //   )
-    // );
+    return properties?.every((propertyGroup) => propertyGroup.value);
   },
 });
 
@@ -97,9 +83,7 @@ const isPropertiesValid = selector({
   get: ({ get }) => {
     const nodeLauncher = get(nodeLauncherAtoms.nodeLauncher);
     const { properties } = nodeLauncher;
-    return true;
-    // TODO: image properties missing required field
-    // return properties?.some((p: ImageProperty) => p.required === true && !p.value) ?? false;
+    return properties?.every((propertyGroup) => propertyGroup.value);
   },
 });
 

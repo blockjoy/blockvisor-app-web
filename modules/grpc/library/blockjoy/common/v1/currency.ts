@@ -28,7 +28,7 @@ export interface Amount {
   /** The `Currency` type of this `Amount`. */
   currency: Currency;
   /** The minor units value for the `currency` (as defined by ISO 4217). */
-  value: number;
+  amountMinorUnits: number;
 }
 
 /** A `BillingAmount` combines an `Amount` with a recurring `Period`. */
@@ -38,7 +38,7 @@ export interface BillingAmount {
 }
 
 function createBaseAmount(): Amount {
-  return { currency: 0, value: 0 };
+  return { currency: 0, amountMinorUnits: 0 };
 }
 
 export const Amount = {
@@ -46,8 +46,8 @@ export const Amount = {
     if (message.currency !== 0) {
       writer.uint32(8).int32(message.currency);
     }
-    if (message.value !== 0) {
-      writer.uint32(16).int64(message.value);
+    if (message.amountMinorUnits !== 0) {
+      writer.uint32(16).int64(message.amountMinorUnits);
     }
     return writer;
   },
@@ -71,7 +71,7 @@ export const Amount = {
             break;
           }
 
-          message.value = longToNumber(reader.int64() as Long);
+          message.amountMinorUnits = longToNumber(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -89,7 +89,7 @@ export const Amount = {
   fromPartial(object: DeepPartial<Amount>): Amount {
     const message = createBaseAmount();
     message.currency = object.currency ?? 0;
-    message.value = object.value ?? 0;
+    message.amountMinorUnits = object.amountMinorUnits ?? 0;
     return message;
   },
 };

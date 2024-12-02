@@ -4,6 +4,7 @@ import type { CallContext, CallOptions } from "nice-grpc-common";
 import _m0 from "protobufjs/minimal";
 import { Timestamp } from "../../google/protobuf/timestamp";
 import { FirewallConfig, FirewallRule, ImagePropertyValue, NodeConfig } from "../common/v1/config";
+import { BillingAmount } from "../common/v1/currency";
 import { NextState, NodeJob, NodePlacement, NodeReport, NodeState, NodeStatus } from "../common/v1/node";
 import { ProtocolVersionKey } from "../common/v1/protocol";
 import { Resource } from "../common/v1/resource";
@@ -62,7 +63,11 @@ export interface Node {
   tags: Tags | undefined;
   createdBy: Resource | undefined;
   createdAt: Date | undefined;
-  updatedAt: Date | undefined;
+  updatedAt:
+    | Date
+    | undefined;
+  /** The cost of this node. */
+  cost?: BillingAmount | undefined;
 }
 
 /** Create a new node for some image. */
@@ -239,7 +244,11 @@ export interface NodeServiceUpdateConfigRequest {
     | FirewallConfig
     | undefined;
   /** Update the node tags. */
-  updateTags?: UpdateTags | undefined;
+  updateTags?:
+    | UpdateTags
+    | undefined;
+  /** The cost of this node. */
+  cost?: BillingAmount | undefined;
 }
 
 export interface NodeServiceUpdateConfigResponse {
@@ -322,6 +331,7 @@ function createBaseNode(): Node {
     createdBy: undefined,
     createdAt: undefined,
     updatedAt: undefined,
+    cost: undefined,
   };
 }
 
@@ -431,6 +441,9 @@ export const Node = {
     }
     if (message.updatedAt !== undefined) {
       Timestamp.encode(toTimestamp(message.updatedAt), writer.uint32(282).fork()).ldelim();
+    }
+    if (message.cost !== undefined) {
+      BillingAmount.encode(message.cost, writer.uint32(290).fork()).ldelim();
     }
     return writer;
   },
@@ -687,6 +700,13 @@ export const Node = {
 
           message.updatedAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
+        case 36:
+          if (tag !== 290) {
+            break;
+          }
+
+          message.cost = BillingAmount.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -747,6 +767,9 @@ export const Node = {
       : undefined;
     message.createdAt = object.createdAt ?? undefined;
     message.updatedAt = object.updatedAt ?? undefined;
+    message.cost = (object.cost !== undefined && object.cost !== null)
+      ? BillingAmount.fromPartial(object.cost)
+      : undefined;
     return message;
   },
 };
@@ -1729,6 +1752,7 @@ function createBaseNodeServiceUpdateConfigRequest(): NodeServiceUpdateConfigRequ
     newValues: [],
     newFirewall: undefined,
     updateTags: undefined,
+    cost: undefined,
   };
 }
 
@@ -1757,6 +1781,9 @@ export const NodeServiceUpdateConfigRequest = {
     }
     if (message.updateTags !== undefined) {
       UpdateTags.encode(message.updateTags, writer.uint32(66).fork()).ldelim();
+    }
+    if (message.cost !== undefined) {
+      BillingAmount.encode(message.cost, writer.uint32(74).fork()).ldelim();
     }
     return writer;
   },
@@ -1824,6 +1851,13 @@ export const NodeServiceUpdateConfigRequest = {
 
           message.updateTags = UpdateTags.decode(reader, reader.uint32());
           continue;
+        case 9:
+          if (tag !== 74) {
+            break;
+          }
+
+          message.cost = BillingAmount.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1850,6 +1884,9 @@ export const NodeServiceUpdateConfigRequest = {
       : undefined;
     message.updateTags = (object.updateTags !== undefined && object.updateTags !== null)
       ? UpdateTags.fromPartial(object.updateTags)
+      : undefined;
+    message.cost = (object.cost !== undefined && object.cost !== null)
+      ? BillingAmount.fromPartial(object.cost)
       : undefined;
     return message;
   },

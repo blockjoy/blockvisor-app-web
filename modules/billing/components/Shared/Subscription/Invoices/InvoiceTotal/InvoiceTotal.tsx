@@ -31,7 +31,9 @@ export const InvoiceTotal = ({
   discounts?.forEach((discount) =>
     items.splice(1, 0, {
       title: `Discount (${discount.name!})`,
-      data: `- ${formatters.formatCurrency(discount.amount?.value!)}`,
+      data: `- ${formatters.formatCurrency(
+        discount.amount?.amountMinorUnits!,
+      )}`,
     }),
   );
 

@@ -1,26 +1,32 @@
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { HostServiceListResponse } from '@modules/grpc/library/blockjoy/v1/host';
+import { useRecoilState } from 'recoil';
+import {
+  HostServiceListResponse,
+  HostSortField,
+} from '@modules/grpc/library/blockjoy/v1/host';
 import { hostClient } from '@modules/grpc';
-import { organizationSelectors } from '@modules/organization';
 import { hostAtoms } from '@modules/host';
+import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 
 export const useHostSelect = () => {
-  const defaultOrganization = useRecoilValue(
-    organizationSelectors.defaultOrganization,
-  );
   const [hosts, setHosts] = useRecoilState(hostAtoms.allHosts);
   const [isLoading, setIsLoading] = useRecoilState(hostAtoms.isLoadingAllHosts);
 
-  const getHosts = async () => {
+  const getHosts = async (orgId?: string) => {
     try {
       setIsLoading('loading');
       const response: HostServiceListResponse = await hostClient.listHosts(
-        defaultOrganization?.orgId!,
+        orgId,
         undefined,
         {
           currentPage: 0,
           itemsPerPage: 1000,
         },
+        [
+          {
+            field: HostSortField.HOST_SORT_FIELD_NETWORK_NAME,
+            order: SortOrder.SORT_ORDER_ASCENDING,
+          },
+        ],
       );
 
       setHosts(response?.hosts);
