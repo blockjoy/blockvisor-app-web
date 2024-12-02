@@ -1,19 +1,13 @@
 import { useRecoilState } from 'recoil';
-import { blockchainClient } from '@modules/grpc';
-import { BlockchainServicePricingRequest } from '@modules/grpc/library/blockjoy/v1/blockchain';
+import { protocolClient } from '@modules/grpc';
+import { ProtocolServiceGetPricingRequest } from '@modules/grpc/library/blockjoy/v1/protocol';
 import { Amount } from '@modules/grpc/library/blockjoy/common/v1/currency';
 import { billingAtoms } from '@modules/billing';
 
 type UsePricingHook = {
   price: Amount | null;
   priceLoadingState: LoadingState;
-  getPrice: ({
-    blockchainId,
-    network,
-    nodeType,
-    region,
-    version,
-  }: BlockchainServicePricingRequest) => void;
+  getPrice: ({ region }: ProtocolServiceGetPricingRequest) => void;
 };
 
 export const usePricing = (): UsePricingHook => {
@@ -22,7 +16,7 @@ export const usePricing = (): UsePricingHook => {
     billingAtoms.priceLoadingState,
   );
 
-  const getPrice = async (params: BlockchainServicePricingRequest) => {
+  const getPrice = async (params: ProtocolServiceGetPricingRequest) => {
     try {
       setPriceLoadingState('loading');
 
@@ -33,7 +27,7 @@ export const usePricing = (): UsePricingHook => {
         return;
       }
 
-      const response = await blockchainClient.getPricing(params);
+      const response = await protocolClient.getPricing(params);
 
       setPrice(response);
     } catch (error) {

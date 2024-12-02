@@ -20,6 +20,7 @@ export const styles = {
       border-bottom: 1px solid ${theme.colorBorder};
       background: ${rgba(theme.colorBackground || '#000', 0.8)};
       backdrop-filter: blur(10px);
+      line-height: 1.6;
     `,
   title: css`
     display: flex;

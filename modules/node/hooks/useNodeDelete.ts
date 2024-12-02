@@ -8,7 +8,7 @@ export function useNodeDelete() {
     onError?: (errorMessage: string) => void,
   ) => {
     try {
-      await nodeClient.deleteNode(node?.id);
+      await nodeClient.deleteNode(node?.nodeId);
 
       onSuccess();
     } catch (err: any) {

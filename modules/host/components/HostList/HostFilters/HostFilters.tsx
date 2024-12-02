@@ -5,7 +5,7 @@ import { Filters, FiltersHeader } from '@shared/components';
 import { useViewport } from '@shared/index';
 import { useSettings } from '@modules/settings';
 import { hostAtoms, useHostFilters, HostSorting } from '@modules/host';
-import { blockchainAtoms } from '@modules/node';
+import { protocolAtoms } from '@modules/node';
 import { layoutAtoms, layoutSelectors } from '@modules/layout';
 
 export const HostFilters = () => {
@@ -22,8 +22,8 @@ export const HostFilters = () => {
   const isCompleted = useRef(false);
 
   const hostListLoadingState = useRecoilValue(hostAtoms.hostListLoadingState);
-  const blockchainsLoadingState = useRecoilValue(
-    blockchainAtoms.blockchainsLoadingState,
+  const protocolsLoadingState = useRecoilValue(
+    protocolAtoms.protocolsLoadingState,
   );
   const isFiltersOpen = useRecoilValue(layoutSelectors.isHostFiltersOpen);
   const [isFiltersOpenMobile, setIsFiltersOpenMobile] = useRecoilState(
@@ -50,7 +50,7 @@ export const HostFilters = () => {
 
   if (
     hostListLoadingState === 'finished' &&
-    blockchainsLoadingState === 'finished'
+    protocolsLoadingState === 'finished'
   )
     isCompleted.current = true;
 

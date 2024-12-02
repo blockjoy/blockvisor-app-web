@@ -2,7 +2,7 @@ import { Host, HostSortField } from '@modules/grpc/library/blockjoy/v1/host';
 import {
   HostIcon,
   HostIpStatus,
-  HostManagedBy,
+  // HostManagedBy,
   TableBlock,
 } from '@shared/components';
 import { spacing } from 'styles/utils.spacing.styles';
@@ -20,22 +20,22 @@ export const mapHostListToRows = (hostList?: Host[]) => {
       name: 'Host',
       key: '2',
       width: '300px',
-      dataField: HostSortField.HOST_SORT_FIELD_HOST_NAME,
+      dataField: HostSortField.HOST_SORT_FIELD_DISPLAY_NAME,
     },
     {
       name: 'Version',
       key: '3',
       width: '200px',
     },
-    {
-      name: 'Managed By',
-      key: '4',
-      width: '200px',
-    },
+    // {
+    //   name: 'Managed By',
+    //   key: '4',
+    //   width: '200px',
+    // },
   ];
 
   const rows = hostList?.map((host: Host) => ({
-    key: host?.id,
+    key: host?.hostId,
     cells: [
       {
         key: '1',
@@ -45,7 +45,7 @@ export const mapHostListToRows = (hostList?: Host[]) => {
         key: '2',
         component: (
           <TableBlock
-            topRow={host.name}
+            topRow={host.displayName || host.networkName}
             middleRow={
               <div css={spacing.top.small}>
                 <HostIpStatus ipAddresses={host.ipAddresses} />
@@ -56,12 +56,12 @@ export const mapHostListToRows = (hostList?: Host[]) => {
       },
       {
         key: '3',
-        component: <>{host.version}</>,
+        component: <>{host.bvVersion}</>,
       },
-      {
-        key: '4',
-        component: <HostManagedBy managedBy={host.managedBy} />,
-      },
+      // {
+      //   key: '4',
+      //   component: <HostManagedBy managedBy={host.managedBy} />,
+      // },
     ],
   }));
 

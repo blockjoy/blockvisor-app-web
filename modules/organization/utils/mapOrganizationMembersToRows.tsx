@@ -99,7 +99,7 @@ export const mapOrganizationMembersToRows = (
           key: '2',
           component: (
             <>
-              {canRemoveMember && member.userId !== user?.id ? (
+              {canRemoveMember && member.userId !== user?.userId ? (
                 <Button
                   className="show-on-hover"
                   type="button"
@@ -109,7 +109,7 @@ export const mapOrganizationMembersToRows = (
                   onClick={() =>
                     handleRemoveMember(
                       member?.userId!,
-                      selectedOrganization?.id!,
+                      selectedOrganization?.orgId!,
                       member?.email!,
                     )
                   }

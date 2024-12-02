@@ -66,7 +66,7 @@ export const AdminOrgs = () => {
     );
     return {
       list: response.orgs,
-      total: response.orgCount,
+      total: response.total,
     };
   };
 
@@ -81,6 +81,7 @@ export const AdminOrgs = () => {
   return (
     <AdminList
       name="orgs"
+      idPropertyName="orgId"
       defaultSortField={OrgSortField.ORG_SORT_FIELD_NAME}
       defaultSortOrder={SortOrder.SORT_ORDER_ASCENDING}
       columns={columns}

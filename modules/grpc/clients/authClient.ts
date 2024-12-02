@@ -99,7 +99,7 @@ class AuthClient {
         {
           oldPassword: pwd.old_pwd,
           newPassword: pwd.new_pwd,
-          userId: getIdentity().id,
+          userId: getIdentity().userId,
         },
         getOptions(),
       );

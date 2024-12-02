@@ -16,7 +16,7 @@ export const useResendInvitation = () => {
       await invitationClient.revokeInvitation(invitationId);
       const newInvitation = await invitationClient.inviteOrgMember(
         email,
-        defaultOrganization?.id!,
+        defaultOrganization?.orgId!,
       );
       modifySentInvitations(newInvitation);
       toast.success('Invitation Resent');

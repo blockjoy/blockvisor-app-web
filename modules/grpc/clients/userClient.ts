@@ -38,10 +38,12 @@ class UserClient {
     this.client = createClient(UserServiceDefinition, channel);
   }
 
-  async getUser(id: string): Promise<User> {
+  async getUser(userId: string): Promise<User> {
     try {
+      console.log('getUserRequest', { userId });
       await authClient.refreshToken();
-      const response = await this.client.get({ id }, getOptions());
+      const response = await this.client.get({ userId }, getOptions());
+      console.log('getUserResponse', response);
       return response.user!;
     } catch (err) {
       return handleError(err);
@@ -68,7 +70,7 @@ class UserClient {
       request.search = {
         name: createSearch(keyword),
         email: createSearch(keyword),
-        id: createSearch(keyword),
+        userId: createSearch(keyword),
         operator: SearchOperator.SEARCH_OPERATOR_OR,
       };
     }
@@ -84,9 +86,9 @@ class UserClient {
     }
   }
 
-  async deleteUser(id: string): Promise<void> {
+  async deleteUser(userId: string): Promise<void> {
     try {
-      await this.client.delete({ id }, getOptions());
+      await this.client.delete({ userId }, getOptions());
     } catch (err) {
       return handleError(err);
     }
@@ -153,7 +155,7 @@ class UserClient {
 
   async updateSettings(
     userId: string,
-    name: string,
+    key: string,
     value: string,
   ): Promise<Record<string, string>> {
     try {
@@ -163,63 +165,63 @@ class UserClient {
       const encodedValue = encoder.encode(value);
 
       const response = await this.client.updateSettings(
-        { userId, name, value: encodedValue },
+        { userId, key, value: encodedValue },
         getOptions(),
       );
 
       const decoder = new TextDecoder();
       const decodedValue = decoder.decode(response.value);
 
-      return { [name]: decodedValue };
+      return { [key]: decodedValue };
     } catch (err) {
       return handleError(err);
     }
   }
 
-  async deleteSettings(userId: string, name: string): Promise<void> {
+  async deleteSettings(userId: string, key: string): Promise<void> {
     try {
       await authClient.refreshToken();
-      await this.client.deleteSettings({ userId, name }, getOptions());
+      await this.client.deleteSettings({ userId, key }, getOptions());
     } catch (err) {
       return handleError(err);
     }
   }
 
-  async getBilling(userId: string): Promise<string | StatusResponse> {
-    try {
-      await authClient.refreshToken();
-      const response = await this.client.getBilling({ userId }, getOptions());
+  // async getBilling(userId: string): Promise<string | StatusResponse> {
+  //   try {
+  //     await authClient.refreshToken();
+  //     const response = await this.client.getBilling({ userId }, getOptions());
 
-      return response.billingId!;
-    } catch (err) {
-      return handleError(err);
-    }
-  }
+  //     return response.billingId!;
+  //   } catch (err) {
+  //     return handleError(err);
+  //   }
+  // }
 
-  async updateBilling(
-    userId: string,
-    billingId: string,
-  ): Promise<string | StatusResponse> {
-    try {
-      await authClient.refreshToken();
-      const response = await this.client.updateBilling(
-        { userId, billingId },
-        getOptions(),
-      );
-      return response.billingId!;
-    } catch (err) {
-      return handleError(err);
-    }
-  }
+  // async updateBilling(
+  //   userId: string,
+  //   billingId: string,
+  // ): Promise<string | StatusResponse> {
+  //   try {
+  //     await authClient.refreshToken();
+  //     const response = await this.client.updateBilling(
+  //       { userId, billingId },
+  //       getOptions(),
+  //     );
+  //     return response.billingId!;
+  //   } catch (err) {
+  //     return handleError(err);
+  //   }
+  // }
 
-  async deleteBilling(userId: string): Promise<void> {
-    try {
-      await authClient.refreshToken();
-      await this.client.deleteBilling({ userId }, getOptions());
-    } catch (err) {
-      return handleError(err);
-    }
-  }
+  // async deleteBilling(userId: string): Promise<void> {
+  //   try {
+  //     await authClient.refreshToken();
+  //     await this.client.deleteBilling({ userId }, getOptions());
+  //   } catch (err) {
+  //     return handleError(err);
+  //   }
+  // }
 }
 
 export const userClient = new UserClient();

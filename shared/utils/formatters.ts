@@ -14,7 +14,7 @@ export const CURRENCIES = {
 };
 
 const formatAmount = (amount: Amount, type?: FormatAmountType): string => {
-  const formattedAmount = amount?.value?.toFixed(2);
+  const formattedAmount = amount?.amountMinorUnits?.toFixed(2);
 
   switch (type) {
     case 'amount':

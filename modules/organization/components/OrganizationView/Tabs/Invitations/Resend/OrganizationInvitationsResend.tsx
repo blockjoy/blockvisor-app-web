@@ -17,7 +17,10 @@ export const OrganizationInvitationsResend = ({ invitation }: Props) => {
   const handleClick = async () => {
     if (!isSending) {
       setIsSending(true);
-      await resendInvitation(invitation.inviteeEmail!, invitation.id!);
+      await resendInvitation(
+        invitation.inviteeEmail!,
+        invitation.invitationId!,
+      );
       setIsSent(true);
       setIsSending(false);
       timeoutRef.current = setTimeout(() => setIsSent(false), 5000);

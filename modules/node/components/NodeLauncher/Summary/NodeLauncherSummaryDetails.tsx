@@ -1,10 +1,5 @@
 import { useRecoilValue } from 'recoil';
-import {
-  blockchainAtoms,
-  nodeLauncherAtoms,
-  nodeLauncherSelectors,
-} from '@modules/node';
-import { nodeTypeList } from '@shared/constants/lookups';
+import { nodeLauncherAtoms, nodeLauncherSelectors } from '@modules/node';
 import { hostAtoms } from '@modules/host';
 import { authSelectors } from '@modules/auth';
 import { styles } from './NodeLauncherSummaryDetails.styles';
@@ -17,9 +12,8 @@ type Props = {
 
 export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
   const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
-  const blockchains = useRecoilValue(blockchainAtoms.blockchains);
-  const nodeLauncher = useRecoilValue(nodeLauncherAtoms.nodeLauncher);
   const hasSummary = useRecoilValue(nodeLauncherSelectors.hasSummary);
+  const nodeLauncher = useRecoilValue(nodeLauncherAtoms.nodeLauncher);
   const isNodeValid = useRecoilValue(nodeLauncherSelectors.isNodeValid);
   const isConfigValid = useRecoilValue(nodeLauncherSelectors.isConfigValid);
   const error = useRecoilValue(nodeLauncherAtoms.error);
@@ -27,10 +21,9 @@ export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
   const allHosts = useRecoilValue(hostAtoms.allHosts);
   const selectedRegion = useRecoilValue(nodeLauncherAtoms.selectedRegion);
   const selectedVersion = useRecoilValue(nodeLauncherAtoms.selectedVersion);
+  const selectedProtocol = useRecoilValue(nodeLauncherAtoms.selectedProtocol);
 
-  const { blockchainId, nodeType, properties } = nodeLauncher;
-
-  const blockchain = blockchains?.find((b) => b.id === blockchainId);
+  const { properties } = nodeLauncher;
 
   return (
     <div css={styles.summary}>
@@ -41,21 +34,7 @@ export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
           </span>
           <div>
             <label>Blockchain</label>
-            <span>
-              {blockchain?.displayName || blockchain?.name || 'Not Selected'}
-            </span>
-          </div>
-        </li>
-        <li>
-          <span css={styles.summaryIcon}>
-            <IconCheckCircle />
-          </span>
-          <div>
-            <label>Type</label>
-            <span>
-              {nodeTypeList?.find((n) => n.id === +nodeType)?.name ||
-                'Not Selected'}
-            </span>
+            <span>{selectedProtocol?.name || 'Not Selected'}</span>
           </div>
         </li>
         {isSuperUser && selectedHosts && (
@@ -98,14 +77,9 @@ export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
           <div css={styles.missingFields}>
             {!isConfigValid
               ? properties
-                  ?.filter(
-                    (property) =>
-                      property.required &&
-                      !property.disabled &&
-                      !property.value,
-                  )
+                  ?.filter((property) => !property.value)
                   .map((property) => (
-                    <div key={property.name}>{property.displayName}</div>
+                    <div key={property.name}>{property.name}</div>
                   ))
               : null}
             {!isNodeValid ? (
@@ -123,7 +97,6 @@ export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
           </div>
         </>
       )}
-
       {error && <div css={styles.serverError}>{error}</div>}
     </div>
   );

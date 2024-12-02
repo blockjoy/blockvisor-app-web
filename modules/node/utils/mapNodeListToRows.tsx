@@ -1,9 +1,9 @@
 import { css } from '@emotion/react';
 import { formatDistanceToNow } from 'date-fns';
 import { Node, NodeSortField } from '@modules/grpc/library/blockjoy/v1/node';
-import { TableBlock, BlockchainIcon, NodeStatus } from '@shared/components';
+import { TableBlock, ProtocolIcon, NodeStatus } from '@shared/components';
 import { getNodeJobProgress } from './getNodeJobProgress';
-import { NodeName, convertNodeTypeToName } from '@modules/node';
+import { NodeName } from '@modules/node';
 
 const middleRowStyles = css`
   text-transform: capitalize;
@@ -36,23 +36,20 @@ export const mapNodeListToRows = (nodeList?: Node[]) => {
       name: 'Status',
       key: '4',
       width: '400px',
-      dataField: NodeSortField.NODE_SORT_FIELD_NODE_STATUS,
+      dataField: NodeSortField.NODE_SORT_FIELD_NODE_STATE,
     },
   ];
 
   const rows = nodeList?.map((node: Node) => {
     const progress = getNodeJobProgress(node);
     return {
-      key: node.id,
+      key: node.nodeId,
       cells: [
         {
           key: '1',
           component: (
             <div style={{ marginTop: '4px', marginLeft: '8px' }}>
-              <BlockchainIcon
-                size="36px"
-                blockchainName={node.blockchainName}
-              />
+              <ProtocolIcon size="36px" protocolName={node.protocolName} />
             </div>
           ),
         },
@@ -61,13 +58,16 @@ export const mapNodeListToRows = (nodeList?: Node[]) => {
           component: (
             <TableBlock
               middleRow={
+                // <p css={middleRowStyles}>
+                //   {node.protocolName} | {convertNodeTypeToName(node.nodeType)} |{' '}
+                //   {node.network}
+                // </p>
                 <p css={middleRowStyles}>
-                  {node.blockchainName} | {convertNodeTypeToName(node.nodeType)}{' '}
-                  | {node.network}
+                  {node.protocolName} | {node.versionKey?.variantKey}
                 </p>
               }
               topRow={<NodeName node={node} />}
-              bottomRow={node?.ip!}
+              bottomRow={node?.ipAddress!}
               isOverflow={false}
             />
           ),
@@ -86,7 +86,7 @@ export const mapNodeListToRows = (nodeList?: Node[]) => {
           key: '4',
           component: (
             <NodeStatus
-              status={node.status}
+              status={node.nodeStatus?.state!}
               downloadingCurrent={progress?.current}
               downloadingTotal={progress?.total}
             />

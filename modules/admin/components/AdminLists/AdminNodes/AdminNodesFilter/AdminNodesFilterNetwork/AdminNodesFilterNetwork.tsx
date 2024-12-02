@@ -17,12 +17,12 @@ export const AdminNodesFilterNetwork = ({
   const settings = useRecoilValue(adminSelectors.settings);
   const settingsColumns = settings['nodes']?.columns ?? [];
 
-  const blockchainFilters = settingsColumns.find(
-    (column) => column.name === 'blockchainName',
+  const protocolFilters = settingsColumns.find(
+    (column) => column.name === 'protocolName',
   )?.filterSettings?.values;
 
   const selectedBlockchains = blockchains?.filter((b) =>
-    blockchainFilters?.some((blockchainFilter) => blockchainFilter === b.id),
+    protocolFilters?.some((blockchainFilter) => blockchainFilter === b.id),
   );
 
   const filteredNetworks: AdminFilterDropdownItem[] = Array.from(
@@ -39,9 +39,9 @@ export const AdminNodesFilterNetwork = ({
     .filter((network) =>
       (listAll as Node[])?.some(
         (item) =>
-          item.network === network &&
+          item.hostNetworkName === network &&
           selectedBlockchains?.some(
-            (blockain) => blockain.id === item.blockchainId,
+            (blockain) => blockain.id === item.protocolId,
           ),
       ),
     )

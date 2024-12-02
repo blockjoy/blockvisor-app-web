@@ -5,12 +5,12 @@ import IconDiscount from '@public/assets/icons/common/Discount.svg';
 import { formatters } from '@shared/utils/formatters';
 import { billingAtoms } from '@modules/billing';
 import { Skeleton } from '@shared/components';
-import { blockchainAtoms, nodeAtoms } from '@modules/node';
+import { protocolAtoms, nodeAtoms } from '@modules/node';
 import { PromoForm } from './PromoForm';
 
 export const Promo = () => {
-  const blockchainsLoadingState = useRecoilValue(
-    blockchainAtoms.blockchainsLoadingState,
+  const protocolsLoadingState = useRecoilValue(
+    protocolAtoms.protocolsLoadingState,
   );
   const regionsLoadingState = useRecoilValue(nodeAtoms.regionsLoadingState);
   const [promoCode, setPromoCode] = useRecoilState(billingAtoms.promoCode);
@@ -26,8 +26,7 @@ export const Promo = () => {
   const { discount, discountPercentage } = pricing;
 
   const isLoading =
-    blockchainsLoadingState !== 'finished' ||
-    regionsLoadingState !== 'finished';
+    protocolsLoadingState !== 'finished' || regionsLoadingState !== 'finished';
 
   return (
     <>

@@ -5,7 +5,10 @@ import {
   getNodeStatusInfo,
   NodeStatusType,
 } from './NodeStatus';
-import { NodeStatus as NodeStatusEnum } from '@modules/grpc/library/blockjoy/common/v1/node';
+import {
+  NodeState,
+  NodeStatus as NodeStatusEnum,
+} from '@modules/grpc/library/blockjoy/common/v1/node';
 
 import { SvgIcon } from '@shared/components';
 
@@ -140,7 +143,7 @@ const getIcon = (statusName: string) => {
 };
 
 type NodeStatusIconProps = {
-  status?: number;
+  status: NodeState;
   type?: NodeStatusType;
   size: string;
   isDefaultColor?: boolean;
@@ -152,15 +155,15 @@ export const NodeStatusIcon = ({
   size = '24px',
   isDefaultColor,
 }: NodeStatusIconProps) => {
-  const statusName = getNodeStatusInfo(status!, type)?.name;
+  const statusName = getNodeStatusInfo(status).name;
 
   return (
     <Suspense fallback={null}>
-      {statusName?.includes('PROVISIONING') ||
-      status === 0 ||
-      status === NodeStatusEnum.NODE_STATUS_UPLOADING ||
-      status === NodeStatusEnum.NODE_STATUS_DOWNLOADING ||
-      status === NodeStatusEnum.NODE_STATUS_UPDATING ? (
+      {status === NodeState.NODE_STATE_STARTING ||
+      status === NodeState.NODE_STATE_UPGRADING ? (
+        // status === NodeStatusEnum.NODE_STATUS_UPLOADING ||
+        // status === NodeStatusEnum.NODE_STATUS_DOWNLOADING ||
+        // status === NodeStatusEnum.NODE_STATUS_UPDATING
         <NodeStatusSpinner
           isDefaultColor={isDefaultColor}
           size={size}

@@ -17,7 +17,7 @@ export const mapOrganizationsToRows = (
   ];
 
   const rows = organizations?.map((org, idx) => ({
-    key: org.id ?? `${idx}`,
+    key: org.orgId ?? `${idx}`,
     cells: [
       {
         key: '1',

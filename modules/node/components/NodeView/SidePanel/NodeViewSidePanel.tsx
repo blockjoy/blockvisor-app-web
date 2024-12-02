@@ -23,7 +23,7 @@ export const NodeViewSidePanel = () => {
       </div>
       {node?.blockHeight! > -1 && (
         <NetdataDashboard
-          id={node?.id!}
+          id={node?.nodeId!}
           name={node?.nodeName!}
           is_node="true"
         />

@@ -32,8 +32,8 @@ export const HostSelectMultipleAllocation = ({
           <span css={styles.allocationHeader}>Nodes</span>
         </div>
         {selectedHosts?.map((h) => (
-          <div css={styles.allocationRow} key={h.host.id}>
-            <p css={styles.name}>{h.host.name}</p>
+          <div css={styles.allocationRow} key={h.host.hostId}>
+            <p css={styles.name}>{h.host.displayName || h.host.networkName}</p>
             <HostIpStatus ipAddresses={h.host.ipAddresses} />
             <button
               className="remove-button"

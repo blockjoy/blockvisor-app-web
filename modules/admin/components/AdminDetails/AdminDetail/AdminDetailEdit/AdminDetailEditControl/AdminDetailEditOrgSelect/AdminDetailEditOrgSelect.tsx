@@ -28,14 +28,14 @@ export const AdminDetailEditOrgSelect = ({
 
       setOrgs(sort(response.orgs, { field: 'name' }));
       setSelectedOrg(
-        response.orgs.find((org) => org.id === editSettings.defaultValue),
+        response.orgs.find((org) => org.orgId === editSettings.defaultValue),
       );
       setIsLoading(false);
     })();
   }, []);
 
   const handleChange = (org: Org | null) => {
-    onChange(editSettings.field, org?.id!);
+    onChange(editSettings.field, org?.orgId!);
     setSelectedOrg(org!);
   };
 
@@ -55,12 +55,12 @@ export const AdminDetailEditOrgSelect = ({
       renderItem={(item: Org) => (
         <>
           <span css={styles.name}>{item.name}</span>{' '}
-          <em css={styles.id}>{item.id}</em>
+          <em css={styles.id}>{item.orgId}</em>
         </>
       )}
       renderButtonText={
         <p css={styles.buttonText}>
-          {selectedOrg?.name} (<span>{selectedOrg?.id})</span>
+          {selectedOrg?.name} (<span>{selectedOrg?.orgId})</span>
         </p>
       }
       selectedItem={selectedOrg!}

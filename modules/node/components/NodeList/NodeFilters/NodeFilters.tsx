@@ -3,7 +3,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   nodeAtoms,
   useNodeFilters,
-  blockchainAtoms,
+  protocolAtoms,
   nodeSelectors,
   NodeSorting,
 } from '@modules/node';
@@ -27,15 +27,15 @@ export const NodeFilters = () => {
   const isCompleted = useRef(false);
 
   const nodeListLoadingState = useRecoilValue(nodeAtoms.nodeListLoadingState);
-  const blockchainsLoadingState = useRecoilValue(
-    blockchainAtoms.blockchainsLoadingState,
+  const protocolsLoadingState = useRecoilValue(
+    protocolAtoms.protocolsLoadingState,
   );
   const isFiltersOpen = useRecoilValue(layoutSelectors.isNodeFiltersOpen);
   const [isFiltersOpenMobile, setIsFiltersOpenMobile] = useRecoilState(
     layoutAtoms.isNodeFiltersOpenMobile,
   );
   const filtersBlockchainSelectedIds = useRecoilValue(
-    nodeSelectors.filtersBlockchainSelectedIds,
+    nodeSelectors.filtersProtocolSelectedIds,
   );
 
   const { updateSettings } = useSettings();
@@ -58,7 +58,7 @@ export const NodeFilters = () => {
 
   if (
     nodeListLoadingState === 'finished' &&
-    (blockchainsLoadingState === 'finished' ||
+    (protocolsLoadingState === 'finished' ||
       !filtersBlockchainSelectedIds.length)
   )
     isCompleted.current = true;

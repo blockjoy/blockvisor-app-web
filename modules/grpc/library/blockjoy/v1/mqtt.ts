@@ -1,6 +1,6 @@
 /* eslint-disable */
 import _m0 from "protobufjs/minimal";
-import { EntityUpdate } from "../common/v1/resource";
+import { Resource } from "../common/v1/resource";
 import { Host } from "./host";
 import { Invitation } from "./invitation";
 import { Node } from "./node";
@@ -18,19 +18,19 @@ export interface NodeMessage {
 
 export interface NodeCreated {
   node: Node | undefined;
-  createdBy: EntityUpdate | undefined;
+  createdBy: Resource | undefined;
 }
 
 export interface NodeUpdated {
   node: Node | undefined;
-  updatedBy: EntityUpdate | undefined;
+  updatedBy: Resource | undefined;
 }
 
 export interface NodeDeleted {
   nodeId: string;
   hostId: string;
   orgId: string;
-  deletedBy: EntityUpdate | undefined;
+  deletedBy: Resource | undefined;
 }
 
 export interface OrgMessage {
@@ -53,17 +53,17 @@ export interface OrgMessage {
 
 export interface OrgCreated {
   org: Org | undefined;
-  createdBy: EntityUpdate | undefined;
+  createdBy: Resource | undefined;
 }
 
 export interface OrgUpdated {
   org: Org | undefined;
-  updatedBy: EntityUpdate | undefined;
+  updatedBy: Resource | undefined;
 }
 
 export interface OrgDeleted {
   orgId: string;
-  deletedBy: EntityUpdate | undefined;
+  deletedBy: Resource | undefined;
 }
 
 /**
@@ -102,17 +102,17 @@ export interface HostMessage {
 
 export interface HostCreated {
   host: Host | undefined;
-  createdBy: EntityUpdate | undefined;
+  createdBy: Resource | undefined;
 }
 
 export interface HostUpdated {
   host: Host | undefined;
-  updatedBy: EntityUpdate | undefined;
+  updatedBy: Resource | undefined;
 }
 
 export interface HostDeleted {
   hostId: string;
-  deletedBy: EntityUpdate | undefined;
+  deletedBy: Resource | undefined;
 }
 
 function createBaseNodeMessage(): NodeMessage {
@@ -199,7 +199,7 @@ export const NodeCreated = {
       Node.encode(message.node, writer.uint32(10).fork()).ldelim();
     }
     if (message.createdBy !== undefined) {
-      EntityUpdate.encode(message.createdBy, writer.uint32(18).fork()).ldelim();
+      Resource.encode(message.createdBy, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -223,7 +223,7 @@ export const NodeCreated = {
             break;
           }
 
-          message.createdBy = EntityUpdate.decode(reader, reader.uint32());
+          message.createdBy = Resource.decode(reader, reader.uint32());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -242,7 +242,7 @@ export const NodeCreated = {
     const message = createBaseNodeCreated();
     message.node = (object.node !== undefined && object.node !== null) ? Node.fromPartial(object.node) : undefined;
     message.createdBy = (object.createdBy !== undefined && object.createdBy !== null)
-      ? EntityUpdate.fromPartial(object.createdBy)
+      ? Resource.fromPartial(object.createdBy)
       : undefined;
     return message;
   },
@@ -258,7 +258,7 @@ export const NodeUpdated = {
       Node.encode(message.node, writer.uint32(10).fork()).ldelim();
     }
     if (message.updatedBy !== undefined) {
-      EntityUpdate.encode(message.updatedBy, writer.uint32(18).fork()).ldelim();
+      Resource.encode(message.updatedBy, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -282,7 +282,7 @@ export const NodeUpdated = {
             break;
           }
 
-          message.updatedBy = EntityUpdate.decode(reader, reader.uint32());
+          message.updatedBy = Resource.decode(reader, reader.uint32());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -301,7 +301,7 @@ export const NodeUpdated = {
     const message = createBaseNodeUpdated();
     message.node = (object.node !== undefined && object.node !== null) ? Node.fromPartial(object.node) : undefined;
     message.updatedBy = (object.updatedBy !== undefined && object.updatedBy !== null)
-      ? EntityUpdate.fromPartial(object.updatedBy)
+      ? Resource.fromPartial(object.updatedBy)
       : undefined;
     return message;
   },
@@ -323,7 +323,7 @@ export const NodeDeleted = {
       writer.uint32(26).string(message.orgId);
     }
     if (message.deletedBy !== undefined) {
-      EntityUpdate.encode(message.deletedBy, writer.uint32(34).fork()).ldelim();
+      Resource.encode(message.deletedBy, writer.uint32(34).fork()).ldelim();
     }
     return writer;
   },
@@ -361,7 +361,7 @@ export const NodeDeleted = {
             break;
           }
 
-          message.deletedBy = EntityUpdate.decode(reader, reader.uint32());
+          message.deletedBy = Resource.decode(reader, reader.uint32());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -382,7 +382,7 @@ export const NodeDeleted = {
     message.hostId = object.hostId ?? "";
     message.orgId = object.orgId ?? "";
     message.deletedBy = (object.deletedBy !== undefined && object.deletedBy !== null)
-      ? EntityUpdate.fromPartial(object.deletedBy)
+      ? Resource.fromPartial(object.deletedBy)
       : undefined;
     return message;
   },
@@ -518,7 +518,7 @@ export const OrgCreated = {
       Org.encode(message.org, writer.uint32(10).fork()).ldelim();
     }
     if (message.createdBy !== undefined) {
-      EntityUpdate.encode(message.createdBy, writer.uint32(18).fork()).ldelim();
+      Resource.encode(message.createdBy, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -542,7 +542,7 @@ export const OrgCreated = {
             break;
           }
 
-          message.createdBy = EntityUpdate.decode(reader, reader.uint32());
+          message.createdBy = Resource.decode(reader, reader.uint32());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -561,7 +561,7 @@ export const OrgCreated = {
     const message = createBaseOrgCreated();
     message.org = (object.org !== undefined && object.org !== null) ? Org.fromPartial(object.org) : undefined;
     message.createdBy = (object.createdBy !== undefined && object.createdBy !== null)
-      ? EntityUpdate.fromPartial(object.createdBy)
+      ? Resource.fromPartial(object.createdBy)
       : undefined;
     return message;
   },
@@ -577,7 +577,7 @@ export const OrgUpdated = {
       Org.encode(message.org, writer.uint32(10).fork()).ldelim();
     }
     if (message.updatedBy !== undefined) {
-      EntityUpdate.encode(message.updatedBy, writer.uint32(18).fork()).ldelim();
+      Resource.encode(message.updatedBy, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -601,7 +601,7 @@ export const OrgUpdated = {
             break;
           }
 
-          message.updatedBy = EntityUpdate.decode(reader, reader.uint32());
+          message.updatedBy = Resource.decode(reader, reader.uint32());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -620,7 +620,7 @@ export const OrgUpdated = {
     const message = createBaseOrgUpdated();
     message.org = (object.org !== undefined && object.org !== null) ? Org.fromPartial(object.org) : undefined;
     message.updatedBy = (object.updatedBy !== undefined && object.updatedBy !== null)
-      ? EntityUpdate.fromPartial(object.updatedBy)
+      ? Resource.fromPartial(object.updatedBy)
       : undefined;
     return message;
   },
@@ -636,7 +636,7 @@ export const OrgDeleted = {
       writer.uint32(10).string(message.orgId);
     }
     if (message.deletedBy !== undefined) {
-      EntityUpdate.encode(message.deletedBy, writer.uint32(18).fork()).ldelim();
+      Resource.encode(message.deletedBy, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -660,7 +660,7 @@ export const OrgDeleted = {
             break;
           }
 
-          message.deletedBy = EntityUpdate.decode(reader, reader.uint32());
+          message.deletedBy = Resource.decode(reader, reader.uint32());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -679,7 +679,7 @@ export const OrgDeleted = {
     const message = createBaseOrgDeleted();
     message.orgId = object.orgId ?? "";
     message.deletedBy = (object.deletedBy !== undefined && object.deletedBy !== null)
-      ? EntityUpdate.fromPartial(object.deletedBy)
+      ? Resource.fromPartial(object.deletedBy)
       : undefined;
     return message;
   },
@@ -957,7 +957,7 @@ export const HostCreated = {
       Host.encode(message.host, writer.uint32(10).fork()).ldelim();
     }
     if (message.createdBy !== undefined) {
-      EntityUpdate.encode(message.createdBy, writer.uint32(18).fork()).ldelim();
+      Resource.encode(message.createdBy, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -981,7 +981,7 @@ export const HostCreated = {
             break;
           }
 
-          message.createdBy = EntityUpdate.decode(reader, reader.uint32());
+          message.createdBy = Resource.decode(reader, reader.uint32());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -1000,7 +1000,7 @@ export const HostCreated = {
     const message = createBaseHostCreated();
     message.host = (object.host !== undefined && object.host !== null) ? Host.fromPartial(object.host) : undefined;
     message.createdBy = (object.createdBy !== undefined && object.createdBy !== null)
-      ? EntityUpdate.fromPartial(object.createdBy)
+      ? Resource.fromPartial(object.createdBy)
       : undefined;
     return message;
   },
@@ -1016,7 +1016,7 @@ export const HostUpdated = {
       Host.encode(message.host, writer.uint32(10).fork()).ldelim();
     }
     if (message.updatedBy !== undefined) {
-      EntityUpdate.encode(message.updatedBy, writer.uint32(18).fork()).ldelim();
+      Resource.encode(message.updatedBy, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -1040,7 +1040,7 @@ export const HostUpdated = {
             break;
           }
 
-          message.updatedBy = EntityUpdate.decode(reader, reader.uint32());
+          message.updatedBy = Resource.decode(reader, reader.uint32());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -1059,7 +1059,7 @@ export const HostUpdated = {
     const message = createBaseHostUpdated();
     message.host = (object.host !== undefined && object.host !== null) ? Host.fromPartial(object.host) : undefined;
     message.updatedBy = (object.updatedBy !== undefined && object.updatedBy !== null)
-      ? EntityUpdate.fromPartial(object.updatedBy)
+      ? Resource.fromPartial(object.updatedBy)
       : undefined;
     return message;
   },
@@ -1075,7 +1075,7 @@ export const HostDeleted = {
       writer.uint32(10).string(message.hostId);
     }
     if (message.deletedBy !== undefined) {
-      EntityUpdate.encode(message.deletedBy, writer.uint32(18).fork()).ldelim();
+      Resource.encode(message.deletedBy, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -1099,7 +1099,7 @@ export const HostDeleted = {
             break;
           }
 
-          message.deletedBy = EntityUpdate.decode(reader, reader.uint32());
+          message.deletedBy = Resource.decode(reader, reader.uint32());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -1118,7 +1118,7 @@ export const HostDeleted = {
     const message = createBaseHostDeleted();
     message.hostId = object.hostId ?? "";
     message.deletedBy = (object.deletedBy !== undefined && object.deletedBy !== null)
-      ? EntityUpdate.fromPartial(object.deletedBy)
+      ? Resource.fromPartial(object.deletedBy)
       : undefined;
     return message;
   },

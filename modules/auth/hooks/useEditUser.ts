@@ -8,10 +8,14 @@ export function useEditUser() {
   const [, setUser] = useRecoilState(authAtoms.user);
   const repository = useIdentityRepository();
 
-  const editUser = async (firstName: string, lastName: string, id: string) => {
+  const editUser = async (
+    firstName: string,
+    lastName: string,
+    userId: string,
+  ) => {
     try {
       const response = await userClient.updateUser({
-        id,
+        userId,
         firstName,
         lastName,
       });

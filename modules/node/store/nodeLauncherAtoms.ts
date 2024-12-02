@@ -1,31 +1,27 @@
 import { atom } from 'recoil';
-import { NodeType } from '@modules/grpc/library/blockjoy/common/v1/node';
 import {
-  BlockchainNodeType,
-  BlockchainVersion,
-} from '@modules/grpc/library/blockjoy/v1/blockchain';
-import { NetworkConfig } from '@modules/grpc/library/blockjoy/common/v1/blockchain';
+  Protocol,
+  ProtocolVersion,
+} from '@modules/grpc/library/blockjoy/v1/protocol';
 import { Region } from '@modules/grpc/library/blockjoy/v1/host';
 import { NodeLauncherHost, NodeLauncherState } from '@modules/node';
+import { Image } from '@modules/grpc/library/blockjoy/v1/image';
 
 const nodeLauncher = atom<NodeLauncherState>({
   key: 'nodeLauncher',
   default: {
-    blockchainId: '',
-    nodeType: NodeType.NODE_TYPE_UNSPECIFIED,
-    nodeTypeVersion: '',
     allowIps: [],
     denyIps: [],
     placement: {},
   },
 });
 
-const selectedNodeType = atom<BlockchainNodeType | null>({
-  key: 'nodeLauncher.nodeType',
+const selectedProtocol = atom<Protocol | null>({
+  key: 'nodeLauncher.protocol',
   default: null,
 });
 
-const selectedVersion = atom<BlockchainVersion | null>({
+const selectedVersion = atom<ProtocolVersion | null>({
   key: 'nodeLauncher.version',
   default: null,
 });
@@ -40,8 +36,18 @@ const selectedHosts = atom<NodeLauncherHost[] | null>({
   default: null,
 });
 
-const selectedNetwork = atom<NetworkConfig | null>({
-  key: 'nodeLauncher.network',
+const selectedImage = atom<Image | null>({
+  key: 'nodeLauncher.image',
+  default: null,
+});
+
+const variants = atom<string[]>({
+  key: 'nodeLauncher.variants',
+  default: [],
+});
+
+const selectedVariant = atom<string | null>({
+  key: 'nodeLauncher.variant',
   default: null,
 });
 
@@ -62,12 +68,14 @@ const isLaunching = atom<boolean>({
 
 export const nodeLauncherAtoms = {
   nodeLauncher,
+  variants,
 
-  selectedNodeType,
+  selectedProtocol,
   selectedRegion,
   selectedVersion,
   selectedHosts,
-  selectedNetwork,
+  selectedImage,
+  selectedVariant,
 
   error,
   isLaunchError,

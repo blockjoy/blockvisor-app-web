@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { NodeJobStatus } from '@modules/grpc/library/blockjoy/v1/node';
+import { NodeJobStatus } from '@modules/grpc/library/blockjoy/common/v1/node';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { styles } from './NodeViewJobList.styles';
 import { useNodeView } from '@modules/node/hooks/useNodeView';
@@ -78,7 +78,7 @@ export const NodeViewJobList = () => {
 
   const handleRowClicked = (name: string) => {
     router.push({
-      pathname: ROUTES.NODE_JOB(node?.id!, name),
+      pathname: ROUTES.NODE_JOB(node?.nodeId!, name),
     });
   };
 

@@ -33,13 +33,13 @@ const items: SortingItem<NodeSortField>[] = [
   {
     id: 'status-asc',
     name: 'Status: A-Z',
-    field: NodeSortField.NODE_SORT_FIELD_NODE_STATUS,
+    field: NodeSortField.NODE_SORT_FIELD_NODE_STATE,
     order: SortOrder.SORT_ORDER_ASCENDING,
   },
   {
     id: 'status-desc',
     name: 'Status: Z-A',
-    field: NodeSortField.NODE_SORT_FIELD_NODE_STATUS,
+    field: NodeSortField.NODE_SORT_FIELD_NODE_STATE,
     order: SortOrder.SORT_ORDER_DESCENDING,
   },
 ];

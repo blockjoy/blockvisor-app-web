@@ -52,7 +52,7 @@ type LayoutMobileSettings = {
 type LayoutSettings = LayoutBasicSettings & LayoutMobileSettings;
 
 type DefaultOrganization = {
-  id: string;
+  orgId: string;
   name: string;
 };
 
@@ -73,7 +73,7 @@ type AdminSettingsItem = {
 type AdminSettings = {
   nodes?: AdminSettingsItem;
   hosts?: AdminSettingsItem;
-  blockchains?: AdminSettingsItem;
+  protocols?: AdminSettingsItem;
   orgs?: AdminSettingsItem;
   users?: AdminSettingsItem;
 };

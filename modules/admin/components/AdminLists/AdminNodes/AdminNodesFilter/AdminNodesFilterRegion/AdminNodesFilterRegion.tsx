@@ -15,8 +15,8 @@ export const AdminNodesFilterRegion = ({
   const settings = useRecoilValue(adminSelectors.settings);
   const settingsColumns = settings['nodes']?.columns ?? [];
 
-  const blockchainFilters = settingsColumns.find(
-    (column) => column.name === 'blockchainName',
+  const protocolFilters = settingsColumns.find(
+    (column) => column.name === 'protocolName',
   )?.filterSettings?.values;
 
   useEffect(() => {
@@ -27,8 +27,8 @@ export const AdminNodesFilterRegion = ({
             ?.filter(
               (node) =>
                 node.placement?.scheduler?.region &&
-                (!blockchainFilters?.length ||
-                  blockchainFilters?.includes(node.blockchainId)),
+                (!protocolFilters?.length ||
+                  protocolFilters?.includes(node.protocolId)),
             )
             .map((node) => node.placement?.scheduler?.region),
         ),

@@ -43,7 +43,7 @@ export const OrganizationViewHeaderActions = () => {
   );
 
   const orgHasOtherAdmins = organization?.members
-    .filter((member) => member.userId !== user?.id)
+    .filter((member) => member.userId !== user?.userId)
     .some(
       (member) =>
         getOrganizationRole(member.roles) === 'Admin' ||
@@ -69,12 +69,12 @@ export const OrganizationViewHeaderActions = () => {
   };
 
   const gotoAdminPanel = () =>
-    router.push(`/admin?name=orgs&id=${defaultOrganization?.id}`);
+    router.push(`/admin?name=orgs&id=${defaultOrganization?.orgId}`);
 
   const onSuccess = async () => {
-    const newOrgs = removeFromOrganizations(organization?.id!);
+    const newOrgs = removeFromOrganizations(organization?.orgId!);
     const newDefaultOrg = await getDefaultOrganization(newOrgs);
-    router.push(ROUTES.ORGANIZATION(newDefaultOrg?.id!));
+    router.push(ROUTES.ORGANIZATION(newDefaultOrg?.orgId!));
     setIsDeleteMode(false);
   };
 
@@ -84,8 +84,8 @@ export const OrganizationViewHeaderActions = () => {
 
   const handleAction = () =>
     deleteType === 'Delete'
-      ? deleteOrganization(organization!.id, onSuccess, onError)
-      : leaveOrganization(organization!.id, onSuccess, onError);
+      ? deleteOrganization(organization!.orgId, onSuccess, onError)
+      : leaveOrganization(organization!.orgId, onSuccess, onError);
 
   const items = [];
 
@@ -137,7 +137,7 @@ export const OrganizationViewHeaderActions = () => {
               <NextLink
                 href={
                   organization?.nodeCount === 1 && singleNode
-                    ? ROUTES.NODE(singleNode.id)
+                    ? ROUTES.NODE(singleNode.nodeId)
                     : ROUTES.NODES
                 }
               >

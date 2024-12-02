@@ -30,7 +30,7 @@ export function useRemoveMember() {
       // update all organizations list
       const organizationsCopy = [...organizations];
       const index = organizations.findIndex(
-        (org) => org.id === organizationCopy.id,
+        (org) => org.orgId === organizationCopy.orgId,
       );
       organizationsCopy[index] = organizationCopy;
 
