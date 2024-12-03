@@ -97,14 +97,11 @@ export const styles = {
         }
       }
     `,
-  icon: (isActive: boolean, isAscending: boolean) => (theme: ITheme) =>
+  icon: (isAscending: boolean) => (theme: ITheme) =>
     css`
-      ${isActive &&
-      `
-        svg :is(path, circle, rect) {
-          fill: ${theme.colorText};
-        }
-      `}
+      svg :is(path, circle, rect) {
+        fill: ${theme.colorText};
+      }
       ${isAscending &&
       `
         transform: rotate(180deg);

@@ -117,26 +117,19 @@ export const TableHeader = ({
         })}
       >
         <span css={[styles.text(!!isSortable)]}>{children}</span>
-        {(isSortable || isDraggable) && (
-          <>
-            {isSortable && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleSort(dataField || '');
-                }}
-                css={[styles.button, isActive && styles.buttonActive]}
-                className="table-sort"
-              >
-                <SvgIcon
-                  size="10px"
-                  additionalStyles={[styles.icon(isActive, isAscending)]}
-                >
-                  {isActive ? <IconArrowDown /> : <IconSort />}
-                </SvgIcon>
-              </button>
-            )}
-          </>
+        {isSortable && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleSort(dataField || '');
+            }}
+            css={[styles.button, isActive && styles.buttonActive]}
+            className="table-sort"
+          >
+            <SvgIcon size="10px" additionalStyles={[styles.icon(isAscending)]}>
+              {isActive ? <IconArrowDown /> : <IconSort />}
+            </SvgIcon>
+          </button>
         )}
         {isResizable && (
           <div
