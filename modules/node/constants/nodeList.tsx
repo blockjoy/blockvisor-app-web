@@ -90,6 +90,14 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
     actions: ALL_ACTIONS,
   },
   {
+    key: 'network',
+    label: 'Network',
+    width: '160px',
+    isVisible: true,
+    component: (node: Node) => <NodeItems.Network network={node.network} />,
+    actions: LAYOUT_ACTIONS,
+  },
+  {
     key: 'status',
     label: 'Status',
     width: '400px',
@@ -105,12 +113,30 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
     actions: ALL_ACTIONS,
   },
   {
-    key: 'network',
-    label: 'Network',
-    width: '160px',
-    isVisible: true,
-    component: (node: Node) => <NodeItems.Network network={node.network} />,
-    actions: LAYOUT_ACTIONS,
+    key: 'syncStatus',
+    label: 'Sync Status',
+    width: '200px',
+    dataField: NodeSortField.NODE_SORT_FIELD_SYNC_STATUS,
+    isVisible: false,
+    component: (node: Node) => (
+      <NodeStatus status={node.syncStatus} hasBorder={false} type="sync" />
+    ),
+    actions: ALL_ACTIONS,
+  },
+  {
+    key: 'containerStatus',
+    label: 'Container Status',
+    width: '200px',
+    dataField: NodeSortField.NODE_SORT_FIELD_CONTAINER_STATUS,
+    isVisible: false,
+    component: (node: Node) => (
+      <NodeStatus
+        status={node.containerStatus}
+        hasBorder={false}
+        type="container"
+      />
+    ),
+    actions: ALL_ACTIONS,
   },
   {
     key: 'version',
@@ -137,6 +163,17 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
       <NodeItems.IpGetaway ipGateway={node.ipGateway} />
     ),
     actions: LAYOUT_ACTIONS,
+  },
+  {
+    key: 'blockHeight',
+    label: 'Block Height',
+    width: '250px',
+    dataField: NodeSortField.NODE_SORT_FIELD_BLOCK_HEIGHT,
+    isVisible: false,
+    component: (node: Node) => (
+      <NodeItems.BlockHeight blockHeight={node.blockHeight} />
+    ),
+    actions: ALL_ACTIONS,
   },
   {
     key: 'placement',

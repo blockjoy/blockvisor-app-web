@@ -1,4 +1,5 @@
 import { BlockchainName } from './Items/BlockchainName';
+import { BlockHeight } from './Items/BlockHeight';
 import { CreatedAt } from './Items/CreatedAt';
 import { CreatedBy } from './Items/CreatedBy';
 import { DisplayName } from './Items/DisplayName';
@@ -13,6 +14,7 @@ import { Info } from './Groups/Info';
 
 export const NodeItems = {
   BlockchainName,
+  BlockHeight,
   CreatedAt,
   CreatedBy,
   DisplayName,

@@ -35,11 +35,26 @@ export const useDraggableList = <T extends { key: string }, C>(
     setCurrentItems(items);
   }, [items]);
 
+  const reset = function () {
+    setWillEndDragging(false);
+
+    itemShiftsY.current = [];
+    draggingIndex.current = null;
+    targetIndex.current = null;
+    draggingOffsetTop.current = null;
+    draggingItemSpacing.current = null;
+    draggingItemHeights.current = [];
+    shiftY.current = null;
+    dragStartY.current = 0;
+  };
+
   const handleMouseDown = useCallback(
     (
       e: React.MouseEvent<HTMLLIElement> | React.TouchEvent<HTMLLIElement>,
       index: number,
     ) => {
+      e.preventDefault();
+
       const item = itemRefs.current?.[index];
       const item0 = itemRefs.current?.[0];
       const item1 = itemRefs.current?.[1];
@@ -177,6 +192,11 @@ export const useDraggableList = <T extends { key: string }, C>(
     setIsDragging(false);
     setWillEndDragging(true);
 
+    if (draggingIndex.current === targetIndex.current) {
+      reset();
+      return;
+    }
+
     const newItems = [...currentItems];
     const [movedItem] = newItems.splice(draggingIndex.current!, 1);
     newItems.splice(targetIndex.current!, 0, movedItem);
@@ -188,17 +208,9 @@ export const useDraggableList = <T extends { key: string }, C>(
         onChange?.(updatedColumns);
       }
 
-      setWillEndDragging(false);
       setCurrentItems(newItems);
 
-      itemShiftsY.current = [];
-      draggingIndex.current = null;
-      targetIndex.current = null;
-      draggingOffsetTop.current = null;
-      draggingItemSpacing.current = null;
-      draggingItemHeights.current = [];
-      shiftY.current = null;
-      dragStartY.current = 0;
+      reset();
     }, 200);
   }, [onChange, currentItems]);
 

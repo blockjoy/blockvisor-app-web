@@ -61,8 +61,8 @@ export const NodeListHeader = () => {
       )}
       <ViewPicker activeView={activeView} handleActiveView={handleActiveView} />
       <div css={[styles.listTypePicker]}>
-        <NodeSorting />
-        <NodeCustomize />
+        {activeView === 'grid' && <NodeSorting />}
+        {activeView === 'table' && <NodeCustomize />}
       </div>
     </div>
   );

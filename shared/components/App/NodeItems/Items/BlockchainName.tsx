@@ -6,7 +6,7 @@ import { typo } from 'styles/utils.typography.styles';
 type Props = Partial<Pick<Node, 'blockchainName'>> & { showName?: boolean };
 
 export const BlockchainName = ({ blockchainName, showName = true }: Props) => (
-  <span css={styles.blockchainName} className="has-hover-color">
+  <span css={styles.wrapper} className="has-hover-color">
     <BlockchainIcon size="38px" blockchainName={blockchainName} />
     <ProtocolIcon size="36px" protocolName={node.versionKey?.protocolKey} />
     <p css={middleRowStyles}>
@@ -17,7 +17,7 @@ export const BlockchainName = ({ blockchainName, showName = true }: Props) => (
 );
 
 const styles = {
-  blockchainName: css`
+  wrapper: css`
     display: flex;
     flex-direction: row;
     align-items: center;
