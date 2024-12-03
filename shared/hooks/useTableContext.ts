@@ -50,8 +50,11 @@ const getPosition = (
 
   if (shoudlAlignToRight) left += headerRect?.width - menuWidth;
 
-  if (left + menuWidth > wrapperRect?.right)
+  if (left + menuWidth > wrapperRect?.right) {
     left = wrapperRect?.right - menuWidth;
+  } else if (headerRect.left < wrapperRect.left) {
+    left = wrapperRect.left;
+  }
 
   return { top, left };
 };
