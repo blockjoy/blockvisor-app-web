@@ -84,6 +84,7 @@ export const OrganizationPicker = ({
   return (
     <OrgSelectDropdown
       items={allOrganizations}
+      idKey="orgId"
       selectedItem={selectedOrg.current!}
       handleSelected={handleChange}
       isOpen={isOpen}
