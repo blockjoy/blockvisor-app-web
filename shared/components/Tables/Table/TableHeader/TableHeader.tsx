@@ -1,4 +1,4 @@
-import { forwardRef, PropsWithChildren, Ref } from 'react';
+import { PropsWithChildren } from 'react';
 import { SerializedStyles } from '@emotion/react';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { generateCellStyles, SvgIcon } from '@shared/components';
@@ -19,142 +19,141 @@ type Props = {
   isFirst?: boolean;
   isLast?: boolean;
   additionalStyles?: ((theme: ITheme) => SerializedStyles)[];
+  handleRef?: (el: HTMLTableCellElement | null) => void;
   handleSort?: (key: any) => void;
 } & PropsWithChildren;
 
-export const TableHeader = forwardRef(
-  (
+export const TableHeader = ({
+  children,
+  header,
+  index,
+  resize,
+  drag,
+  context,
+  sort,
+  handleSort,
+  additionalStyles,
+  isFirst,
+  isLast,
+  handleRef,
+}: Props) => {
+  const { isHiddenOnMobile, dataField } = header;
+
+  const isSortable = handleSort && dataField;
+
+  const isActive = sort?.field === dataField;
+  const isAscending = sort?.order === SortOrder.SORT_ORDER_ASCENDING;
+
+  const { isResizing, isResizable, resizeIndex, onResize } = resize ?? {};
+
+  const {
+    isDraggable,
+    draggingIndex,
+    targetIndex,
+    deltaX,
+    itemShiftsX,
+    onDrag,
+  } = drag ?? {};
+
+  const cellStyles = generateCellStyles(
+    'th',
+    isResizing,
+    header,
     {
-      children,
-      header,
-      index,
-      resize,
-      drag,
-      context,
-      sort,
-      handleSort,
-      additionalStyles,
-      isFirst,
-      isLast,
-    }: Props,
-    ref: Ref<HTMLTableCellElement>,
+      col: index,
+      drag: draggingIndex,
+      resize: resizeIndex,
+      target: targetIndex,
+    },
+    deltaX,
+  );
+
+  const handleResize = (
+    e: React.MouseEvent<HTMLTableCellElement, MouseEvent>,
   ) => {
-    const { isHiddenOnMobile, dataField } = header;
+    e.stopPropagation();
+    onResize?.(e, index!);
+  };
 
-    const isSortable = handleSort && dataField;
+  const handleDrag = (
+    e: React.MouseEvent<HTMLTableCellElement, MouseEvent>,
+  ) => {
+    onDrag?.(e, index!);
+  };
 
-    const isActive = sort?.field === dataField;
-    const isAscending = sort?.order === SortOrder.SORT_ORDER_ASCENDING;
+  const handleContext = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (isResizing) return;
+    e.stopPropagation();
 
-    const { isResizing, isResizable, resizeIndex, onResize } = resize ?? {};
+    context?.onClick?.(header.key === context.key ? null : header.key, index);
+  };
 
-    const {
-      isDraggable,
-      draggingIndex,
-      targetIndex,
-      deltaX,
-      itemShiftsX,
-      onDrag,
-    } = drag ?? {};
+  const headerClasses = [];
+  if (isHiddenOnMobile) headerClasses.push('hidden-on-mobile');
+  if (header.key === context?.key) headerClasses.push('active');
 
-    const cellStyles = generateCellStyles(
-      'th',
-      isResizing,
-      header,
-      {
-        col: index,
-        drag: draggingIndex,
-        resize: resizeIndex,
-        target: targetIndex,
-      },
-      deltaX,
-    );
-
-    const handleResize = (
-      e: React.MouseEvent<HTMLTableCellElement, MouseEvent>,
-    ) => {
-      e.stopPropagation();
-      onResize?.(e, index!);
-    };
-
-    const handleDrag = (
-      e: React.MouseEvent<HTMLTableCellElement, MouseEvent>,
-    ) => {
-      onDrag?.(e, index!);
-    };
-
-    const handleContext = () => {
-      if (isResizing) return;
-      context?.onClick?.(header.key === context.key ? null : header.key);
-    };
-
-    const headerClasses = [];
-    if (isHiddenOnMobile) headerClasses.push('hidden-on-mobile');
-    if (header.key === context?.key) headerClasses.push('active');
-
-    return (
-      <th
-        ref={ref}
-        className={headerClasses.join(' ')}
-        css={[
-          styles.header,
-          Boolean(additionalStyles) && additionalStyles,
-          Boolean(cellStyles) && cellStyles,
-        ]}
-        {...(draggingIndex !== null && {
-          style: {
-            transform: `translateX(${itemShiftsX?.[index!]}px)`,
-          },
-        })}
-        {...(isDraggable && {
-          onMouseDown: handleDrag,
+  return (
+    <th
+      ref={handleRef}
+      className={headerClasses.join(' ')}
+      css={[
+        styles.header,
+        Boolean(additionalStyles) && additionalStyles,
+        Boolean(cellStyles) && cellStyles,
+      ]}
+      {...(draggingIndex !== null && {
+        style: {
+          transform: `translateX(${itemShiftsX?.[index!]}px)`,
+        },
+      })}
+      {...(isDraggable && {
+        onMouseDown: handleDrag,
+      })}
+    >
+      <div
+        css={styles.headerWrapper}
+        {...(context?.onClick && {
+          onClick: handleContext,
         })}
       >
-        <div
-          css={styles.headerWrapper}
-          {...(context?.onClick && {
-            onClick: handleContext,
-          })}
-        >
-          <span css={[styles.text(!!isSortable)]}>{children}</span>
-          {(isSortable || isDraggable) && (
-            <>
-              {isSortable && (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleSort(dataField || '');
-                  }}
-                  css={[styles.button, isActive && styles.buttonActive]}
-                  className="table-sort"
+        <span css={[styles.text(!!isSortable)]}>{children}</span>
+        {(isSortable || isDraggable) && (
+          <>
+            {isSortable && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleSort(dataField || '');
+                }}
+                css={[styles.button, isActive && styles.buttonActive]}
+                className="table-sort"
+              >
+                <SvgIcon
+                  size="10px"
+                  additionalStyles={[styles.icon(isActive, isAscending)]}
                 >
-                  <SvgIcon
-                    size="10px"
-                    additionalStyles={[styles.icon(isActive, isAscending)]}
-                  >
-                    {isActive ? <IconArrowDown /> : <IconSort />}
-                  </SvgIcon>
-                </button>
-              )}
-            </>
-          )}
-          {isResizable && (
-            <div
-              className="table-resize"
-              css={styles.resizer}
-              onMouseDown={handleResize}
-            ></div>
-          )}
-        </div>
-        {header.key === context?.key && (
-          <TableContextMenu
-            context={context}
-            header={header}
-            isFirst={isFirst}
-            isLast={isLast}
-          />
+                  {isActive ? <IconArrowDown /> : <IconSort />}
+                </SvgIcon>
+              </button>
+            )}
+          </>
         )}
-      </th>
-    );
-  },
-);
+        {isResizable && (
+          <div
+            className="table-resize"
+            css={styles.resizer}
+            onMouseDown={handleResize}
+          ></div>
+        )}
+      </div>
+      {header.key === context?.key && (
+        <TableContextMenu
+          context={context}
+          header={header}
+          isFirst={isFirst}
+          isLast={isLast}
+        />
+      )}
+    </th>
+  );
+};

@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { useClickOutside } from '@shared/index';
-import { SvgIcon } from '@shared/components';
+import { SvgIcon, Portal } from '@shared/components';
 import { styles } from './TableContextMenu.styles';
 
 type Props = {
@@ -16,7 +16,7 @@ export const TableContextMenu = ({
   isFirst,
   isLast,
 }: Props) => {
-  const { onClick, items } = context ?? {};
+  const { onClick, items, position } = context ?? {};
 
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -37,37 +37,39 @@ export const TableContextMenu = ({
   useClickOutside<HTMLDivElement>(dropdownRef, handleClickOutside);
 
   return (
-    <div ref={dropdownRef} css={styles.wrapper}>
-      {items?.map((item) => {
-        const filteredItems = item.items?.filter((itemInner) => {
-          if (
-            (itemInner.id === 'move_to_left' && isFirst) ||
-            (itemInner.id === 'move_to_right' && isLast)
-          )
-            return false;
-          return header?.actions?.includes(itemInner?.id!);
-        });
+    <Portal wrapperId="table-context-menu" inContainer>
+      <div ref={dropdownRef} css={[styles.wrapper(position)]}>
+        {items?.map((item) => {
+          const filteredItems = item.items?.filter((itemInner) => {
+            if (
+              (itemInner.id === 'move_to_left' && isFirst) ||
+              (itemInner.id === 'move_to_right' && isLast)
+            )
+              return false;
+            return header?.actions?.includes(itemInner?.id!);
+          });
 
-        return (
-          <React.Fragment key={item.title}>
-            {Boolean(filteredItems.length) && (
-              <span css={styles.title}>{item.title}</span>
-            )}
-            {filteredItems.map((item) => (
-              <>
-                {item.id === 'hide' && <div css={styles.spacer}></div>}
-                <div
-                  css={styles.item}
-                  onClick={(e) => handleClick(e, item.onClick)}
-                >
-                  <SvgIcon size="12px">{item.icon}</SvgIcon>
-                  <span>{item.title}</span>
-                </div>
-              </>
-            ))}
-          </React.Fragment>
-        );
-      })}
-    </div>
+          return (
+            <React.Fragment key={item.title}>
+              {Boolean(filteredItems.length) && (
+                <span css={styles.title}>{item.title}</span>
+              )}
+              {filteredItems.map((item) => (
+                <React.Fragment key={item.id}>
+                  {item.id === 'hide' && <div css={styles.spacer}></div>}
+                  <div
+                    css={styles.item}
+                    onClick={(e) => handleClick(e, item.onClick)}
+                  >
+                    <SvgIcon size="12px">{item.icon}</SvgIcon>
+                    <span>{item.title}</span>
+                  </div>
+                </React.Fragment>
+              ))}
+            </React.Fragment>
+          );
+        })}
+      </div>
+    </Portal>
   );
 };

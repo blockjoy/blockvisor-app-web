@@ -2,12 +2,9 @@ import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { NodeSortField } from '@modules/grpc/library/blockjoy/v1/node';
 import { NodeStatus, SortingItem } from '@shared/components';
-import {
-  NodeItems,
-  NodeGroups,
-} from '@shared/components/App/NodeItems/NodeItems';
+import { NodeItems, NodeGroups } from '@shared/components';
+import { NodeTags } from '@modules/node';
 import { NodeListGroupLayoutItem, NodeListItem } from '../types/common';
-import { NodeTags } from '../components/NodeList/NodeName/NodeTags/NodeTags';
 
 const SORT_ACTIONS: TableHeaderAction[] = ['sort_asc', 'sort_desc'];
 const LAYOUT_ACTIONS: TableHeaderAction[] = [
@@ -176,13 +173,13 @@ export const NODE_LIST_SORTING: SortingItem<NodeSortField>[] = [
   {
     id: 'name-asc',
     name: 'Name: A-Z',
-    field: NodeSortField.NODE_SORT_FIELD_NODE_NAME,
+    field: NodeSortField.NODE_SORT_FIELD_DISPLAY_NAME,
     order: SortOrder.SORT_ORDER_ASCENDING,
   },
   {
     id: 'name-desc',
     name: 'Name: Z-A',
-    field: NodeSortField.NODE_SORT_FIELD_NODE_NAME,
+    field: NodeSortField.NODE_SORT_FIELD_DISPLAY_NAME,
     order: SortOrder.SORT_ORDER_DESCENDING,
   },
   {

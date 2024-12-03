@@ -160,5 +160,9 @@ export const styles = {
       right: 0;
       bottom: 0;
     }
+
+    .table-resize {
+      pointer-events: none;
+    }
   `,
 };

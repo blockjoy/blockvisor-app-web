@@ -17,6 +17,7 @@ export * from './hooks/useModal';
 export * from './hooks/useNavigate';
 export * from './hooks/usePageVisibility';
 export * from './hooks/usePipedriveForm';
+export * from './hooks/useTableContext';
 export * from './hooks/useTableDnD';
 export * from './hooks/useTableResize';
 export * from './hooks/useTabs';
