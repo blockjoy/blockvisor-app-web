@@ -49,7 +49,7 @@ export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
           </li>
         )}
         <li>
-          {!isSuperUser || (isConfigValid && isNodeValid) ? (
+          {isConfigValid && isNodeValid ? (
             <span css={styles.summaryIcon}>
               <IconCheckCircle />
             </span>
@@ -62,14 +62,14 @@ export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
           <div>
             <label>Configuration</label>
             <span>
-              {!isSuperUser || (isConfigValid && isNodeValid)
+              {isConfigValid && isNodeValid
                 ? 'Ready For Liftoff'
                 : 'Needs Work'}
             </span>
           </div>
         </li>
       </ul>
-      {(!isConfigValid || !isNodeValid) && isSuperUser && (
+      {(!isConfigValid || !isNodeValid) && (
         <>
           <h2 css={styles.missingFieldsTitle}>
             The following needs to be added:

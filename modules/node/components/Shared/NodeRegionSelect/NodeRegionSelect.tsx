@@ -32,6 +32,7 @@ export const NodeRegionSelect = ({
 
   return (
     <Dropdown
+      idKey="regionId"
       items={regions}
       handleSelected={onChange}
       selectedItem={region}
@@ -40,7 +41,7 @@ export const NodeRegionSelect = ({
       {...(!region
         ? isSuperUser
           ? error && { error }
-          : { defaultText: <p>Auto select</p> }
+          : { defaultText: <>Auto select</> }
         : null)}
       isOpen={isOpen}
       handleOpen={handleOpen}

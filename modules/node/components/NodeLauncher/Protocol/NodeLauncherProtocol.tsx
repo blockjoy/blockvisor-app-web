@@ -9,12 +9,9 @@ import {
 } from '@shared/components';
 import { colors } from 'styles/utils.colors.styles';
 import { typo } from 'styles/utils.typography.styles';
-import {
-  protocolAtoms,
-  nodeLauncherAtoms,
-  nodeLauncherSelectors,
-} from '@modules/node';
+import { protocolAtoms, nodeLauncherAtoms } from '@modules/node';
 import { styles } from './NodeLauncherProtocol.styles';
+import { capitalize } from 'utils/capitalize';
 
 type NodeLauncherProtocolProps = {
   onProtocolSelected: (protocol: Protocol) => void;
@@ -37,7 +34,6 @@ export const NodeLauncherProtocol = ({
 
   const handleSelect = useCallback(
     (activeProtocol: Protocol) => {
-      // const nodeTypes = getNodeTypes(activeProtocol!);
       onProtocolSelected(activeProtocol);
     },
     [onProtocolSelected],
@@ -67,8 +63,8 @@ export const NodeLauncherProtocol = ({
         }`}
         onClick={(e) => handleProtocolSelected(e, protocol)}
       >
-        <ProtocolIcon size="28px" hideTooltip protocolName={protocol.name} />
-        <p>{protocol.name}</p>
+        <ProtocolIcon size="28px" hideTooltip protocolName={protocol.key} />
+        <p>{capitalize(protocol.key)}</p>
       </div>
     );
   };

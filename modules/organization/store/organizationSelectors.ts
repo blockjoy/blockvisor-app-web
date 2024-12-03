@@ -25,7 +25,7 @@ const defaultOrganization = selector<DefaultOrganization | null>({
 
     const defOrg = orgSettings?.default ?? null;
 
-    if (organizations?.length && defOrg && !isSuperUser) {
+    if (organizations?.length && !isSuperUser) {
       const org = organizations.find((org) => org?.orgId === defOrg?.orgId);
 
       if (!org)
@@ -33,6 +33,11 @@ const defaultOrganization = selector<DefaultOrganization | null>({
           orgId: organizations[0].orgId,
           name: organizations[0].name,
         };
+    } else if (organizations?.length && isSuperUser && !defOrg) {
+      return {
+        orgId: organizations[0].orgId,
+        name: organizations[0].name,
+      };
     }
 
     return defOrg;

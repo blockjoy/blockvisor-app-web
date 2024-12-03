@@ -30,6 +30,7 @@ export const AdminUser = () => {
 
   const handleDeleteSettings = async () => {
     await userClient.deleteSettings(id as string, 'admin');
+    await userClient.deleteSettings(id as string, 'organization');
     toast.success('Settings deleted');
   };
 
