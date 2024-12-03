@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { css, Global } from '@emotion/react';
-import { useTableDnD, useTableResize } from '@shared/index';
+import { useTableContext, useTableDnD, useTableResize } from '@shared/index';
 import { Table } from '@shared/components';
 import { BaseQueryParams } from '@shared/common/common';
 import { styles } from './table.styles';
@@ -22,7 +22,6 @@ export const TableDynamic = <T extends BaseQueryParams>({
   const headersRef = useRef<(HTMLTableCellElement | null)[]>([]);
 
   const [columns, setColumns] = useState<TableHeader[]>([]);
-  const [context, setContext] = useState<string | null>(null);
 
   useEffect(() => {
     const filteredHeaders =
@@ -59,18 +58,25 @@ export const TableDynamic = <T extends BaseQueryParams>({
     headersRef.current[colIndex] = el;
   };
 
-  const handleContext = (key: string | null) => {
-    setContext(key);
-  };
+  const {
+    context,
+    position,
+    handleMouseDown: handleContext,
+  } = useTableContext(headersRef, wrapperRef);
 
   return (
     <>
-      {draggingIndex || resizeIndex ? (
+      {draggingIndex || resizeIndex || context ? (
         <Global
           styles={css`
-            body * {
+            ${(draggingIndex || resizeIndex) &&
+            `body * {
               user-select: none;
-            }
+            }`}
+            ${context &&
+            `.table-wrapper {
+              overflow: hidden !important;
+            }`}
           `}
         />
       ) : null}
@@ -80,7 +86,7 @@ export const TableDynamic = <T extends BaseQueryParams>({
         columns={columns}
         handleHeaderRef={handleHeaderRef}
         resize={{
-          isResizable: isResizable && !context,
+          isResizable: isResizable,
           isResizing,
           resizeIndex,
           onResize: handleResize,
@@ -97,6 +103,7 @@ export const TableDynamic = <T extends BaseQueryParams>({
           key: context,
           onClick: handleContext,
           items: contextItems,
+          position,
         }}
         additionalStyles={[
           ...(additionalStyles ?? []),

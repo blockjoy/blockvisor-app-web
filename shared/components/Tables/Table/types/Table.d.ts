@@ -50,9 +50,9 @@ type TableProps<T> = {
   resize?: TableResize;
   drag?: TableDrag;
   context?: TableContext;
-  contextItems?: any;
-  tableRef?: MutableRefObject<HTMLTableElement | null>;
-  wrapperRef?: MutableRefObject<HTMLDivElement | null>;
+  contextItems?: TableContextGroup[];
+  tableRef?: React.MutableRefObject<HTMLTableElement | null>;
+  wrapperRef?: React.MutableRefObject<HTMLDivElement | null>;
   handleHeaderRef?: (el: HTMLTableCellElement | null, colIndex: number) => void;
 };
 
@@ -87,8 +87,9 @@ type TableDrag = {
 
 type TableContext = {
   key?: string | null;
-  onClick?: (key: string | null) => void;
+  onClick?: (key: string | null, index?: number) => void;
   items?: TableContextGroup[];
+  position?: TableContextPosition;
 };
 
 type TableContextItem = {
@@ -96,6 +97,11 @@ type TableContextItem = {
   icon?: React.ReactNode;
   title?: string;
   onClick?: (header?: TableHeader) => void;
+};
+
+type TableContextPosition = {
+  top?: number;
+  left?: number;
 };
 
 type TableContextGroup = { title?: string; items: TableContextItem[] };

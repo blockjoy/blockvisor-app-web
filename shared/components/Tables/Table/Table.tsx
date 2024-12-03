@@ -67,7 +67,7 @@ export const Table = <T extends BaseQueryParams>({
                   <TableHeader
                     key={key}
                     {...(handleHeaderRef && {
-                      ref: (el) => handleHeaderRef(el, colIndex),
+                      handleRef: (el) => handleHeaderRef(el, colIndex),
                     })}
                     header={col}
                     index={colIndex}
