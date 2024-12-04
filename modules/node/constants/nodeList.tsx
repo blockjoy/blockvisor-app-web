@@ -168,7 +168,7 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
   },
   {
     key: 'ipGateway',
-    label: 'Ip Getaway',
+    label: 'Ip Gateway',
     width: '160px',
     isVisible: false,
     component: (node: Node) => (
