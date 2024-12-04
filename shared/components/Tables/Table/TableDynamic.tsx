@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { css, Global } from '@emotion/react';
 import { useTableContext, useTableDnD, useTableResize } from '@shared/index';
 import { Table } from '@shared/components';
+import { TableScroller } from './TableScroller/TableScroller';
 import { BaseQueryParams } from '@shared/common/common';
 import { styles } from './table.styles';
 
@@ -112,6 +113,7 @@ export const TableDynamic = <T extends BaseQueryParams>({
         ]}
         {...props}
       />
+      <TableScroller wrapperRef={wrapperRef} tableRef={tableRef} />
     </>
   );
 };
