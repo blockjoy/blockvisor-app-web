@@ -82,7 +82,7 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
   {
     key: 'nodeType',
     label: 'Node Type',
-    minWidth: '110px',
+    minWidth: '115px',
     width: '160px',
     dataField: NodeSortField.NODE_SORT_FIELD_NODE_TYPE,
     isVisible: true,
@@ -108,6 +108,10 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
         status={node.nodeStatus?.state!}
         downloadingCurrent={progress?.current}
         downloadingTotal={progress?.total}
+        status={node.status}
+        jobs={node.jobs}
+        hasBorder={false}
+        view="simple"
       />
     ),
     actions: ALL_ACTIONS,
@@ -115,17 +119,24 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
   {
     key: 'syncStatus',
     label: 'Sync Status',
+    minWidth: '130px',
     width: '200px',
     dataField: NodeSortField.NODE_SORT_FIELD_SYNC_STATUS,
     isVisible: false,
     component: (node: Node) => (
-      <NodeStatus status={node.syncStatus} hasBorder={false} type="sync" />
+      <NodeStatus
+        status={node.syncStatus}
+        hasBorder={false}
+        type="sync"
+        view="simple"
+      />
     ),
     actions: ALL_ACTIONS,
   },
   {
     key: 'containerStatus',
     label: 'Container Status',
+    minWidth: '170px',
     width: '200px',
     dataField: NodeSortField.NODE_SORT_FIELD_CONTAINER_STATUS,
     isVisible: false,
@@ -134,6 +145,7 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
         status={node.containerStatus}
         hasBorder={false}
         type="container"
+        view="simple"
       />
     ),
     actions: ALL_ACTIONS,
@@ -167,6 +179,7 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
   {
     key: 'blockHeight',
     label: 'Block Height',
+    minWidth: '140px',
     width: '250px',
     dataField: NodeSortField.NODE_SORT_FIELD_BLOCK_HEIGHT,
     isVisible: false,

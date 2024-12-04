@@ -14,6 +14,8 @@ import {
 
 export type NodeStatusType = 'protocol';
 
+export type NodeStatusViewType = 'default' | 'simple';
+
 export type NodeStatusListItem = {
   id: string | number;
   name: string;
@@ -25,6 +27,7 @@ type Props = {
   type?: NodeStatusType;
   jobs?: NodeJob[];
   hasBorder?: boolean;
+  view?: NodeStatusViewType;
 };
 
 export const getNodeStatusInfo = (status: NodeState) => {
@@ -66,7 +69,21 @@ export const getNodeStatusColor = (status: number, type?: NodeStatusType) => {
   }
 };
 
-export const NodeStatus = ({ status, type, jobs, hasBorder = true }: Props) => {
+export const checkIfUnspecified = (status: number, type?: NodeStatusType) => {
+  const statusName = getNodeStatusInfo(status, type)?.name!;
+
+  if (statusName?.match(/UNSPECIFIED/g)) return true;
+
+  return false;
+};
+
+export const NodeStatus = ({
+  status,
+  type,
+  jobs,
+  hasBorder = true,
+  view = 'default',
+}: Props) => {
   const nameRef = useRef<HTMLParagraphElement>(null);
 
   const progress = getNodeJobProgress(jobs!);
@@ -87,24 +104,40 @@ export const NodeStatus = ({ status, type, jobs, hasBorder = true }: Props) => {
     setStatusNameWidth(nameRef.current?.clientWidth!);
   }, []);
 
+  const isUnspecified = checkIfUnspecified(status!, type);
+  if (isUnspecified) return <span>-</span>;
+
   return (
     <span
       css={[
         styles.status(!hasBorder),
         hasBorder && styles.statusBorder,
-        isDownloading && styles.statusLoading(statusNameWidth),
+        isDownloading &&
+          view === 'default' &&
+          styles.statusLoading(statusNameWidth),
         statusColor,
       ]}
     >
-      {isDownloading && (
+      {isDownloading && view === 'default' && (
         <NodeStatusLoader
           current={downloadingCurrent!}
           total={downloadingTotal!}
+          view={view}
         />
       )}
       <NodeStatusIcon size="12px" status={status!} type={type} />
       <p ref={nameRef} css={[styles.statusText(!hasBorder), statusColor]}>
         <NodeStatusName status={status!} type={type} />
+        {isDownloading && view === 'simple' && (
+          <>
+            {` `}
+            <NodeStatusLoader
+              current={downloadingCurrent!}
+              total={downloadingTotal!}
+              view={view}
+            />
+          </>
+        )}
       </p>
     </span>
   );

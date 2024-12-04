@@ -59,7 +59,7 @@ export const NodeLayout = () => {
 
   return (
     <>
-      <span css={styles.title}>Table layout</span>
+      <span css={styles.title}>Table Layout</span>
       <List
         items={items}
         handleClick={handleNodeinfoGrouping}
