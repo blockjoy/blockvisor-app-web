@@ -6,13 +6,14 @@ import { organizationAtoms } from '@modules/organization';
 import { authAtoms, authSelectors } from '@modules/auth';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 
-const settings = selector<OrganizationSettings>({
+const settings = selector<OrganizationSettings | undefined>({
   key: 'organization.settings',
   get: ({ get }) => {
     const userSettings = get(authAtoms.userSettings);
+
     if (!userSettings?.hasOwnProperty('organization')) return {};
 
-    return JSON.parse(userSettings?.organization ?? '{}');
+    return JSON.parse(userSettings?.organization!);
   },
 });
 
@@ -20,20 +21,19 @@ const defaultOrganization = selector<DefaultOrganization | null>({
   key: 'organization.settings.default',
   get: ({ get }) => {
     const orgSettings = get(settings);
+    const orgSettingsLoadingState = get(authAtoms.userSettingsLoadingState);
     const organizations = get(organizationAtoms.allOrganizations);
-    const isSuperUser = get(authSelectors.isSuperUser);
-
     const defOrg = orgSettings?.default ?? null;
 
-    if (organizations?.length && !isSuperUser) {
-      const org = organizations.find((org) => org?.orgId === defOrg?.orgId);
+    if (!orgSettings && orgSettingsLoadingState === 'finished') {
+      return null;
+    }
 
-      if (!org)
-        return {
-          orgId: organizations[0].orgId,
-          name: organizations[0].name,
-        };
-    } else if (organizations?.length && isSuperUser && !defOrg) {
+    if (
+      !defOrg &&
+      organizations.length &&
+      orgSettingsLoadingState === 'finished'
+    ) {
       return {
         orgId: organizations[0].orgId,
         name: organizations[0].name,

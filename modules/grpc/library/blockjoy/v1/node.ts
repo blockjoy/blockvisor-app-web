@@ -31,7 +31,7 @@ export enum NodeSortField {
 export interface Node {
   nodeId: string;
   nodeName: string;
-  displayName?: string | undefined;
+  displayName: string;
   oldNodeId?: string | undefined;
   imageId: string;
   configId: string;
@@ -298,7 +298,7 @@ function createBaseNode(): Node {
   return {
     nodeId: "",
     nodeName: "",
-    displayName: undefined,
+    displayName: "",
     oldNodeId: undefined,
     imageId: "",
     configId: "",
@@ -343,7 +343,7 @@ export const Node = {
     if (message.nodeName !== "") {
       writer.uint32(18).string(message.nodeName);
     }
-    if (message.displayName !== undefined) {
+    if (message.displayName !== "") {
       writer.uint32(26).string(message.displayName);
     }
     if (message.oldNodeId !== undefined) {
@@ -724,7 +724,7 @@ export const Node = {
     const message = createBaseNode();
     message.nodeId = object.nodeId ?? "";
     message.nodeName = object.nodeName ?? "";
-    message.displayName = object.displayName ?? undefined;
+    message.displayName = object.displayName ?? "";
     message.oldNodeId = object.oldNodeId ?? undefined;
     message.imageId = object.imageId ?? "";
     message.configId = object.configId ?? "";

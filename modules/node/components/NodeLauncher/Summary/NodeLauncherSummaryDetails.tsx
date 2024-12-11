@@ -5,6 +5,8 @@ import { authSelectors } from '@modules/auth';
 import { styles } from './NodeLauncherSummaryDetails.styles';
 import IconCheckCircle from '@public/assets/icons/common/CheckCircle.svg';
 import IconUncheckCircle from '@public/assets/icons/common/UncheckCircle.svg';
+import { capitalized } from '@modules/admin';
+import { kebabToCapitalized } from 'utils';
 
 type Props = {
   totalNodesToLaunch: number;
@@ -33,8 +35,8 @@ export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
             <IconCheckCircle />
           </span>
           <div>
-            <label>Blockchain</label>
-            <span>{selectedProtocol?.name || 'Not Selected'}</span>
+            <label>Protocol</label>
+            <span>{capitalized(selectedProtocol?.key!) || 'Not Selected'}</span>
           </div>
         </li>
         {isSuperUser && selectedHosts && (
@@ -60,7 +62,7 @@ export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
           )}
 
           <div>
-            <label>Configuration</label>
+            <label>Config</label>
             <span>
               {isConfigValid && isNodeValid
                 ? 'Ready For Liftoff'
@@ -79,7 +81,9 @@ export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
               ? properties
                   ?.filter((property) => !property.value)
                   .map((property) => (
-                    <div key={property.name}>{property.name}</div>
+                    <div key={property.key}>
+                      {kebabToCapitalized(property.key)}
+                    </div>
                   ))
               : null}
             {!isNodeValid ? (

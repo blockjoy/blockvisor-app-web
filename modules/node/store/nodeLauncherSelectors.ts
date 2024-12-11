@@ -1,37 +1,7 @@
 import { selector, selectorFamily } from 'recoil';
-import { ProtocolVersion } from '@modules/grpc/library/blockjoy/v1/protocol';
-import { nodeLauncherAtoms, sortNetworks, sortVersions } from '@modules/node';
+import { nodeLauncherAtoms } from '@modules/node';
 import { authSelectors } from '@modules/auth';
 import { billingAtoms } from '@modules/billing';
-import { ImageProperty } from '@modules/grpc/library/blockjoy/v1/image';
-import { UiType } from '@modules/grpc/library/blockjoy/common/v1/protocol';
-
-const networks = selector<any[]>({
-  key: 'nodeLauncher.networks',
-  get: ({ get }) => {
-    const selectedVersion = get(nodeLauncherAtoms.selectedVersion);
-
-    return sortNetworks([]);
-  },
-});
-
-const versions = selector<ProtocolVersion[]>({
-  key: 'nodeLauncher.versions',
-  get: ({ get }) => {
-    const selectedProtocol = get(nodeLauncherAtoms.selectedProtocol);
-
-    return sortVersions(selectedProtocol?.versions);
-  },
-});
-
-const hasNetworkList = selector<boolean>({
-  key: 'nodeLauncher.hasNetworkList',
-  get: ({ get }) => {
-    const selectedVersion = get(nodeLauncherAtoms.selectedVersion);
-
-    return Boolean([]);
-  },
-});
 
 const hasProtocol = selector<boolean>({
   key: 'nodeLauncher.hasProtocol',
@@ -136,7 +106,6 @@ const nodeLauncherStatus = selectorFamily<
       const selectedHosts = get(nodeLauncherAtoms.selectedHosts);
       const selectedRegion = get(nodeLauncherAtoms.selectedRegion);
       const selectedProtocol = get(nodeLauncherAtoms.selectedProtocol);
-      const hasNetworkListVal = get(hasNetworkList);
       const isConfigValidVal = get(isConfigValid);
       const error = get(nodeLauncherAtoms.error);
       const price = get(billingAtoms.price);
@@ -145,7 +114,6 @@ const nodeLauncherStatus = selectorFamily<
 
       const disablingConditions: Record<string, boolean> = {
         NoPermission: !hasPermissionsToCreate,
-        NoNetworks: !hasNetworkListVal,
         NoProtocol: !selectedProtocol,
         NoRegion: !(selectedHosts?.length || selectedRegion),
         InvalidConfig: !isConfigValidVal,
@@ -165,10 +133,6 @@ const nodeLauncherStatus = selectorFamily<
 });
 
 export const nodeLauncherSelectors = {
-  networks,
-  versions,
-
-  hasNetworkList,
   hasProtocol,
   hasSummary,
   hasConfig,
