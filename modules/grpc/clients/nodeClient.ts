@@ -77,16 +77,13 @@ class NodeClient {
       orgIds: orgId ? [orgId!] : filter?.orgIds!,
       hostIds: filter?.hostIds!,
       ipAddresses: filter?.ips!,
-      // networks: filter?.networks!,
+      // TODO: Filter nodes by region and variant
       // regions: filter?.regions!,
       userIds: filter?.userIds!,
       semanticVersions: filter?.versions!,
       offset: getPaginationOffset(pagination!),
       limit: pagination?.itemsPerPage!,
       nodeStates: filter?.nodeStatus?.map((f) => +f)!,
-      // containerStatuses: filter?.containerStatus?.map((f) => +f)!,
-      // syncStatuses: filter?.syncStatus?.map((f) => +f)!,
-      // nodeTypes: filter?.nodeType?.map((f) => +f)!,
       protocolIds: filter?.protocol!,
       nextStates: [],
       sort: sort || [

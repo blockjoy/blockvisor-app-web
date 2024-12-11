@@ -346,8 +346,6 @@ export const useNodeLauncherHandlers = ({
       properties: propertiesCopy,
     }));
 
-    console.log('handleNodeConfigPropertyChanged', { name, value });
-
     Mixpanel.track('Launch Node - Node Config Property Changed', {
       propertyName: updatedProperty.keyGroup,
       propertyValue: value?.toString(),

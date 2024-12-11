@@ -16,6 +16,8 @@ import {
   ProtocolVersion,
   ProtocolServiceListVariantsRequest,
   ProtocolServiceListVariantsResponse,
+  ProtocolServiceListVersionsRequest,
+  ProtocolServiceListVersionsResponse,
 } from '../library/blockjoy/v1/protocol';
 import {
   callWithTokenRefresh,
@@ -139,6 +141,23 @@ class ProtocolClient {
         );
       console.log('listVariantsResponse', response);
       return response.variantKeys;
+    } catch (err: any) {
+      return handleError(err);
+    }
+  }
+
+  async listVersions(
+    request: ProtocolServiceListVersionsRequest,
+  ): Promise<ProtocolVersion[]> {
+    console.log('listVersionsRequest', request);
+    try {
+      const response: ProtocolServiceListVersionsResponse =
+        await callWithTokenRefresh(
+          this.client.listVersions.bind(this.client),
+          request,
+        );
+      console.log('listVersionsResponse', response);
+      return response.protocolVersions;
     } catch (err: any) {
       return handleError(err);
     }
