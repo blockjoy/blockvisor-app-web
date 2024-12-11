@@ -1,4 +1,9 @@
 import {
+  FirewallAction,
+  FirewallRule,
+  IpName,
+} from '@modules/grpc/library/blockjoy/common/v1/config';
+import {
   ChangeEvent,
   FC,
   KeyboardEvent,
@@ -11,28 +16,33 @@ import { styles } from './FirewallDropdownForm.styles';
 type Props = {
   isOpen: boolean;
   activeTabIndex: number;
-  fullIpList: FilteredIpAddr[];
-  onRuleAdded: (params: FilteredIpAddr) => void;
+  fullIpList: IpName[];
+  onRuleAdded: (params: FirewallRule) => void;
 };
 
-export const FirewallDropdownForm: FC<Props> = ({
+type FirewallRuleSimple = {
+  ip: string;
+  comment: string;
+};
+
+export const FirewallDropdownForm = ({
   isOpen,
   activeTabIndex,
   fullIpList,
   onRuleAdded,
-}) => {
+}: Props) => {
   const ipRef = useRef<HTMLInputElement>(null);
 
   const [isValidIp, setIsValidIp] = useState(true);
 
   const [ipAlreadyAdded, setIpAlreadyAdded] = useState(false);
 
-  const [state, setState] = useState<FilteredIpAddr>({
+  const [rule, setRule] = useState<FirewallRuleSimple>({
     ip: '',
-    description: '',
+    comment: '',
   });
 
-  const isFormValid = isValidIp && state.ip && !ipAlreadyAdded;
+  const isFormValid = isValidIp && rule.ip && !ipAlreadyAdded;
 
   const handleInputChanged = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.name === 'ip') {
@@ -44,19 +54,27 @@ export const FirewallDropdownForm: FC<Props> = ({
       setIpAlreadyAdded(fullIpList.some((item) => item.ip === e.target.value));
     }
 
-    setState({
-      ...state,
+    setRule({
+      ...rule,
       [e.target.name]: e.target.value,
     });
+  };
+
+  const handleRuleAdded = (rule: FirewallRuleSimple) => {
+    console.log('onRuleAdded', rule);
+
+    // onRuleAdded({
+    //   action: FirewallAction.
+    // })
   };
 
   const handleSubmit = (e?: KeyboardEvent<HTMLInputElement>) => {
     if ((!e || e?.key === 'Enter') && isFormValid) {
       if (ipAlreadyAdded) setIpAlreadyAdded(false);
-      onRuleAdded(state);
-      setState({
+      handleRuleAdded(rule);
+      setRule({
         ip: '',
-        description: '',
+        comment: '',
       });
       ipRef?.current?.focus();
     }
@@ -84,7 +102,7 @@ export const FirewallDropdownForm: FC<Props> = ({
           onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChanged(e)}
           onKeyUp={handleSubmit}
           placeholder="IP"
-          value={state.ip}
+          value={rule.ip}
           {...(!isOpen && { tabIndex: -1 })}
         />
         <input
@@ -93,7 +111,7 @@ export const FirewallDropdownForm: FC<Props> = ({
           onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChanged(e)}
           onKeyUp={handleSubmit}
           placeholder="Comment"
-          value={state.description}
+          value={rule.comment}
           {...(!isOpen && { tabIndex: -1 })}
         />
         <button

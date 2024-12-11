@@ -10,9 +10,10 @@ import { Image } from '@modules/grpc/library/blockjoy/v1/image';
 const nodeLauncher = atom<NodeLauncherState>({
   key: 'nodeLauncher',
   default: {
-    allowIps: [],
-    denyIps: [],
+    defaultFirewall: [],
+    firewall: [],
     placement: {},
+    properties: [],
   },
 });
 
@@ -46,6 +47,11 @@ const variants = atom<string[]>({
   default: [],
 });
 
+const versions = atom<ProtocolVersion[]>({
+  key: 'nodeLauncher.versions',
+  default: [],
+});
+
 const selectedVariant = atom<string | null>({
   key: 'nodeLauncher.variant',
   default: null,
@@ -69,6 +75,7 @@ const isLaunching = atom<boolean>({
 export const nodeLauncherAtoms = {
   nodeLauncher,
   variants,
+  versions,
 
   selectedProtocol,
   selectedRegion,

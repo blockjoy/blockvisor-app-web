@@ -12,7 +12,9 @@ export const NodeName = ({ node }: NodeNameProps) => {
 
   return (
     <span css={styles.wrapper(nodeTags.length > 0)}>
-      <span css={styles.title}>{escapeHtml(node.displayName!)}</span>
+      <span css={styles.title}>
+        {escapeHtml(node.displayName! || node.nodeName)}
+      </span>
       <NodeTags node={node} />
     </span>
   );

@@ -1,6 +1,15 @@
+import { capitalized } from '@modules/admin';
+import {
+  FirewallAction,
+  FirewallDirection,
+  ImagePropertyValue,
+} from '@modules/grpc/library/blockjoy/common/v1/config';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { Copy } from '@shared/components';
 import { styles } from '@shared/components/Buttons/NextLink/NextLink.styles';
+import { escapeHtml } from '@shared/utils/escapeHtml';
+import { spacing } from 'styles/utils.spacing.styles';
+import { getNameFromEnum } from 'utils/getNameFromEnum';
 
 export const mapNodeToDetails = (node: Node) => {
   const rpcUrl = `http://${node.dnsUrl}`;
@@ -49,35 +58,6 @@ export const mapNodeToDetails = (node: Node) => {
   }
 
   // TODO: implement new node firewall rules
-  // if (node.length || node.denyIps.length) {
-  //   details.push({
-  //     label: 'Firewall Rules',
-  //     data: <NodeFirewall allowIps={node.allowIps} denyIps={node.denyIps} />,
-  //   });
-  // }
-
-  // TODO: node.properties are missing
-  // details.push(
-  //   ...node.properties
-  //     ?.filter(
-  //       (property: NodeProperty) =>
-  //         property.uiType !== UiType.UI_TYPE_FILE_UPLOAD &&
-  //         property.uiType !== UiType.UI_TYPE_PASSWORD,
-  //     )
-  //     .map((property: NodeProperty) => ({
-  //       label: <>{property.displayName}</>,
-  //       data:
-  //         property.uiType === UiType.UI_TYPE_SWITCH ? (
-  //           <LockedSwitch
-  //             isChecked={property.value === 'true' ? true : false}
-  //           />
-  //         ) : property.value === 'null' ? (
-  //           ''
-  //         ) : (
-  //           escapeHtml(property.value!)
-  //         ),
-  //     })),
-  // );
 
   return details;
 };

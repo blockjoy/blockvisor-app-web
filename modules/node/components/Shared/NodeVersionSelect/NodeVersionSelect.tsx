@@ -25,8 +25,7 @@ export const NodeVersionSelect = ({
 }: NodeVersionSelectProps) => {
   const selectedProtocol = useRecoilValue(nodeLauncherAtoms.selectedProtocol);
   const selectedVersion = useRecoilValue(nodeLauncherAtoms.selectedVersion);
-
-  const { versions } = selectedProtocol!;
+  const versions = useRecoilValue(nodeLauncherAtoms.versions);
 
   const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
 

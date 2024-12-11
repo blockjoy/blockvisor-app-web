@@ -1,9 +1,10 @@
 import { Scrollbar, SvgIcon } from '@shared/components';
+import { IpName } from '@modules/grpc/library/blockjoy/common/v1/config';
 import { styles } from './FirewallDropdownItems.styles';
 import IconTrash from '@public/assets/icons/common/Trash.svg';
 
 type Props = {
-  items: FilteredIpAddr[];
+  items: IpName[];
   listType: 'allow' | 'deny';
   onRemoveClicked: (index: number) => void;
 };
@@ -25,7 +26,7 @@ export const FirewallDropdownItems = ({
             items?.map((item, index) => (
               <tr key={item.ip}>
                 <td style={{ width: '35%' }}>{item.ip}</td>
-                <td style={{ width: '50%' }}>{item.description}</td>
+                <td style={{ width: '50%' }}>{item.name}</td>
                 <td
                   style={{ width: '15%', minWidth: '70px', textAlign: 'right' }}
                 >

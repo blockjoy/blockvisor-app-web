@@ -4,20 +4,28 @@ import { NodeSort } from '@modules/grpc/library/blockjoy/v1/node';
 import { NodePlacement } from '@modules/grpc/library/blockjoy/common/v1/node';
 import { ImageProperty } from '@modules/grpc/library/blockjoy/v1/image';
 import { UiType } from '@modules/grpc/library/blockjoy/common/v1/protocol';
+import { FirewallRule } from '@modules/grpc/library/blockjoy/common/v1/config';
 
-export type NodeLauncherPropertyGroup = {
-  name: string;
+export type NodePropertyGroup = {
+  key: string;
+  keyGroup?: string;
   value: string;
   uiType: UiType;
   properties: ImageProperty[];
 };
 
+export type NodeConfig = {
+  properties: NodePropertyGroup[];
+  firewall: FirewallRule[];
+  selfUpdate: boolean;
+};
+
 export type NodeLauncherState = {
-  properties?: NodeLauncherPropertyGroup[];
+  properties?: NodePropertyGroup[];
   keyFiles?: NodeFiles[];
-  allowIps: FilteredIpAddr[];
-  denyIps: FilteredIpAddr[];
   placement: NodePlacement;
+  firewall: FirewallRule[];
+  defaultFirewall: FirewallRule[];
 };
 
 export type NodeLauncherHost = {
@@ -30,7 +38,6 @@ export type CreateNodeParams = {
   version: string;
   nodeType: number;
   blockchain: string;
-  // nodeTypeProperties: NodeProperty[];
   key_files?: File[];
   network: string;
   allowedIps: FilteredIpAddr[];
@@ -39,7 +46,6 @@ export type CreateNodeParams = {
 
 export type BlockchainSimple = {
   protocolId?: string;
-  // nodeType?: NodeType;
   version?: string;
 };
 
@@ -51,7 +57,6 @@ export type NetworkConfigSimple = {
   id: string;
   protocolId?: string;
   name?: string;
-  // netType?: NetType;
 };
 
 export type InitialNodeQueryParams = {
