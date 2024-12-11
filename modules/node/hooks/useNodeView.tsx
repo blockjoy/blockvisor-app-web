@@ -1,5 +1,5 @@
 import { toast } from 'react-toastify';
-import { nodeClient } from '@modules/grpc';
+import { imageClient, nodeClient } from '@modules/grpc';
 import { SetterOrUpdater, useRecoilState, useRecoilValue } from 'recoil';
 import { nodeAtoms } from '../store/nodeAtoms';
 import { useNodeList } from './useNodeList';
@@ -12,6 +12,7 @@ import {
   useSwitchOrganization,
 } from '@modules/organization';
 import { authSelectors } from '@modules/auth';
+import { Image } from '@modules/grpc/library/blockjoy/v1/image';
 
 type Args = string | string[] | undefined;
 
@@ -24,6 +25,7 @@ type Hook = {
   isLoading: boolean;
   unloadNode: any;
   node: Node | null;
+  nodeImage: Image | null;
   setIsLoading: SetterOrUpdater<LoadingState>;
 };
 
@@ -40,6 +42,7 @@ export const useNodeView = (): Hook => {
     nodeAtoms.isLoadingActiveNode,
   );
   const [node, setNode] = useRecoilState(nodeAtoms.activeNode);
+  const [nodeImage, setNodeImage] = useRecoilState(nodeAtoms.nodeImage);
   const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
   const defaultOrganization = useRecoilValue(
     organizationSelectors.defaultOrganization,
@@ -80,6 +83,9 @@ export const useNodeView = (): Hook => {
           switchOrganization(node.orgId, node.orgName);
       }
 
+      const imageResponse = await imageClient.getImage(foundNode.versionKey!);
+      setNodeImage(imageResponse?.image!);
+
       return;
     }
 
@@ -87,9 +93,12 @@ export const useNodeView = (): Hook => {
       const nodeId = convertRouteParamToString(id);
       const node = await nodeClient.getNode(nodeId);
       setNode(node);
-      setIsLoading('finished');
       if (node.orgId !== defaultOrganization?.orgId)
         switchOrganization(node.orgId, node.orgName);
+
+      const imageResponse = await imageClient.getImage(node.versionKey!);
+      setNodeImage(imageResponse?.image!);
+      setIsLoading('finished');
     } catch (err) {
       setNode(null);
     } finally {
@@ -132,6 +141,7 @@ export const useNodeView = (): Hook => {
     updateNode,
     modifyNode,
     node,
+    nodeImage,
     isLoading: isLoading !== 'finished',
     setIsLoading,
   };

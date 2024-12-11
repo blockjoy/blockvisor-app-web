@@ -20,7 +20,7 @@ import {
   useGetRegions,
   NodeLauncherHost,
   NodeLauncherState,
-  NodeLauncherPropertyGroup,
+  NodePropertyGroup,
 } from '@modules/node';
 import { organizationSelectors } from '@modules/organization';
 import { ROUTES, useNavigate } from '@shared/index';
@@ -44,7 +44,8 @@ interface IUseNodeLauncherHandlersHook {
     value: NodeLauncherState[K],
   ) => void;
   handleNodeConfigPropertyChanged: (
-    name: string,
+    key: string,
+    keyGroup: string,
     value: string | boolean,
   ) => void;
   handleVersionChanged: (version: ProtocolVersion | null) => void;
@@ -101,8 +102,9 @@ export const useNodeLauncherHandlers = ({
   );
 
   const setVariants = useSetRecoilState(nodeLauncherAtoms.variants);
+  const setVersions = useSetRecoilState(nodeLauncherAtoms.versions);
 
-  const setSelectedVariant = useSetRecoilState(
+  const [selectedVariant, setSelectedVariant] = useRecoilState(
     nodeLauncherAtoms.selectedVariant,
   );
 
@@ -142,7 +144,9 @@ export const useNodeLauncherHandlers = ({
   }, [selectedProtocol]);
 
   useEffect(() => {
-    const properties: NodeLauncherPropertyGroup[] = [];
+    if (!selectedImage) return;
+
+    const properties: NodePropertyGroup[] = [];
 
     const keyGroups = Array.from(
       new Set(
@@ -152,11 +156,13 @@ export const useNodeLauncherHandlers = ({
       ),
     );
 
-    const propertiesWithoutKeyGroup: NodeLauncherPropertyGroup[] =
+    console.log('selectedImageProperties', selectedImage?.properties);
+
+    const propertiesWithoutKeyGroup: NodePropertyGroup[] =
       selectedImage?.properties
         .filter((property) => !property.keyGroup)
         .map((property) => ({
-          name: property.key,
+          key: property.key,
           uiType: property.uiType,
           value: property.defaultValue || '',
           properties: [property],
@@ -173,19 +179,25 @@ export const useNodeLauncherHandlers = ({
 
       if (!firstProperty) return;
 
+      const defaultProperty = selectedImage?.properties.find(
+        (property) => property.keyGroup === keyGroup && property.isGroupDefault,
+      );
+
       properties.push({
-        name: keyGroup!,
+        key: defaultProperty?.key!,
+        keyGroup: keyGroup!,
         uiType: firstProperty.uiType,
-        value: firstProperty.key,
+        value: defaultProperty?.key!,
         properties: keyGroupProperties!,
       });
     }
 
-    console.log('properties', properties);
+    const defaultFirewall = selectedImage?.firewall?.rules! ?? [];
 
     setNodeLauncherState((nodeLauncherOldState) => ({
       ...nodeLauncherOldState,
       properties,
+      defaultFirewall,
     }));
   }, [selectedImage]);
 
@@ -244,6 +256,21 @@ export const useNodeLauncherHandlers = ({
     if (defaultOrganization?.orgId && selectedImage) getRegions();
   }, [defaultOrganization?.orgId, selectedImage]);
 
+  useEffect(() => {
+    if (selectedVariant && selectedProtocol) {
+      (async () => {
+        const versionsResponse = await protocolClient.listVersions({
+          versionKey: {
+            protocolKey: selectedProtocol?.key,
+            variantKey: selectedVariant,
+          },
+        });
+
+        setVersions([...versionsResponse]);
+      })();
+    }
+  }, [selectedVariant, selectedProtocol]);
+
   const handleHostsChanged = (hosts: NodeLauncherHost[] | null) => {
     Mixpanel.track('Launch Node - Host Changed');
     setSelectedHosts(hosts);
@@ -286,23 +313,28 @@ export const useNodeLauncherHandlers = ({
   };
 
   const handleNodeConfigPropertyChanged = (
-    name: string,
+    key: string,
+    keyGroup: string,
     value: boolean | string,
   ) => {
     setError('');
     setIsLaunchError(false);
+
+    console.log('handleNodeConfigPropertyChanged', { key, keyGroup, value });
+
     if (!nodeLauncherState.properties) return;
 
     const propertiesCopy = [...nodeLauncherState.properties!];
 
     const propertyIndex = propertiesCopy.findIndex(
-      (property) => property.name === name,
+      (property) => property.keyGroup === keyGroup,
     );
 
     if (propertyIndex === -1) return;
 
     const updatedProperty = {
       ...propertiesCopy[propertyIndex],
+      key,
       value: value?.toString(),
     };
 
@@ -313,10 +345,8 @@ export const useNodeLauncherHandlers = ({
       properties: propertiesCopy,
     }));
 
-    console.log('handleNodeConfigPropertyChanged', { name, value });
-
     Mixpanel.track('Launch Node - Node Config Property Changed', {
-      propertyName: updatedProperty.name,
+      propertyName: updatedProperty.keyGroup,
       propertyValue: value?.toString(),
     });
   };
@@ -337,13 +367,13 @@ export const useNodeLauncherHandlers = ({
 
     const params: NodeServiceCreateRequest = {
       orgId: defaultOrganization!.orgId,
-      addRules: [],
       imageId: selectedImage?.imageId!,
       newValues: nodeLauncherState.properties?.map((property) => ({
-        key: property.name,
+        key: property.key,
         value: property.value,
       }))!,
       placement: {},
+      addRules: nodeLauncherState.firewall,
     };
 
     console.log('createNodeParams', params);

@@ -48,7 +48,7 @@ export interface ProtocolServiceAddProtocolRequest {
   orgId?:
     | string
     | undefined;
-  /** The lookup key for this protocol. */
+  /** The lookup key for this protocol (in lower-kebab-case). */
   key: string;
   /** The display name for this protocol. */
   name: string;

@@ -50,12 +50,20 @@ export interface ImageProperty {
   defaultValue: string;
   /** Whether the value may change at runtime. */
   dynamicValue: boolean;
-  /** A readable description of this property. */
+  /** How this field should be displayed in the UI. */
+  uiType: UiType;
+  /** The display name of this property. */
+  displayName?:
+    | string
+    | undefined;
+  /** The display name of the property group. */
+  displayGroup?:
+    | string
+    | undefined;
+  /** Additional information describing this property. */
   description?:
     | string
     | undefined;
-  /** How this field should be displayed in the UI. */
-  uiType: UiType;
   /** Additional CPU cores needed when using this property. */
   addCpuCores?:
     | number
@@ -108,7 +116,7 @@ export interface ImageServiceAddImageRequest {
 }
 
 export interface AddImageProperty {
-  /** The lookup key for this image property. */
+  /** The lookup key for this property (in lower-kebab-case). */
   key: string;
   /** A repeated key to group switches and enums. */
   keyGroup?:
@@ -124,12 +132,20 @@ export interface AddImageProperty {
   defaultValue: string;
   /** Whether the value may change at runtime. */
   dynamicValue: boolean;
-  /** A readable description of this property. */
+  /** How this field should be displayed in the UI. */
+  uiType: UiType;
+  /** The display name of this property. */
+  displayName?:
+    | string
+    | undefined;
+  /** The display name of the property group. */
+  displayGroup?:
+    | string
+    | undefined;
+  /** Additional information describing this property. */
   description?:
     | string
     | undefined;
-  /** How this field should be displayed in the UI. */
-  uiType: UiType;
   /** Additional CPU cores needed when using this property. */
   addCpuCores?:
     | number
@@ -434,8 +450,10 @@ function createBaseImageProperty(): ImageProperty {
     newArchive: false,
     defaultValue: "",
     dynamicValue: false,
-    description: undefined,
     uiType: 0,
+    displayName: undefined,
+    displayGroup: undefined,
+    description: undefined,
     addCpuCores: undefined,
     addMemoryBytes: undefined,
     addDiskBytes: undefined,
@@ -468,20 +486,26 @@ export const ImageProperty = {
     if (message.dynamicValue === true) {
       writer.uint32(64).bool(message.dynamicValue);
     }
-    if (message.description !== undefined) {
-      writer.uint32(74).string(message.description);
-    }
     if (message.uiType !== 0) {
-      writer.uint32(80).int32(message.uiType);
+      writer.uint32(72).int32(message.uiType);
+    }
+    if (message.displayName !== undefined) {
+      writer.uint32(82).string(message.displayName);
+    }
+    if (message.displayGroup !== undefined) {
+      writer.uint32(90).string(message.displayGroup);
+    }
+    if (message.description !== undefined) {
+      writer.uint32(98).string(message.description);
     }
     if (message.addCpuCores !== undefined) {
-      writer.uint32(88).int64(message.addCpuCores);
+      writer.uint32(104).int64(message.addCpuCores);
     }
     if (message.addMemoryBytes !== undefined) {
-      writer.uint32(96).int64(message.addMemoryBytes);
+      writer.uint32(112).int64(message.addMemoryBytes);
     }
     if (message.addDiskBytes !== undefined) {
-      writer.uint32(104).int64(message.addDiskBytes);
+      writer.uint32(120).int64(message.addDiskBytes);
     }
     return writer;
   },
@@ -550,35 +574,49 @@ export const ImageProperty = {
           message.dynamicValue = reader.bool();
           continue;
         case 9:
-          if (tag !== 74) {
-            break;
-          }
-
-          message.description = reader.string();
-          continue;
-        case 10:
-          if (tag !== 80) {
+          if (tag !== 72) {
             break;
           }
 
           message.uiType = reader.int32() as any;
           continue;
+        case 10:
+          if (tag !== 82) {
+            break;
+          }
+
+          message.displayName = reader.string();
+          continue;
         case 11:
-          if (tag !== 88) {
+          if (tag !== 90) {
+            break;
+          }
+
+          message.displayGroup = reader.string();
+          continue;
+        case 12:
+          if (tag !== 98) {
+            break;
+          }
+
+          message.description = reader.string();
+          continue;
+        case 13:
+          if (tag !== 104) {
             break;
           }
 
           message.addCpuCores = longToNumber(reader.int64() as Long);
           continue;
-        case 12:
-          if (tag !== 96) {
+        case 14:
+          if (tag !== 112) {
             break;
           }
 
           message.addMemoryBytes = longToNumber(reader.int64() as Long);
           continue;
-        case 13:
-          if (tag !== 104) {
+        case 15:
+          if (tag !== 120) {
             break;
           }
 
@@ -607,8 +645,10 @@ export const ImageProperty = {
     message.newArchive = object.newArchive ?? false;
     message.defaultValue = object.defaultValue ?? "";
     message.dynamicValue = object.dynamicValue ?? false;
-    message.description = object.description ?? undefined;
     message.uiType = object.uiType ?? 0;
+    message.displayName = object.displayName ?? undefined;
+    message.displayGroup = object.displayGroup ?? undefined;
+    message.description = object.description ?? undefined;
     message.addCpuCores = object.addCpuCores ?? undefined;
     message.addMemoryBytes = object.addMemoryBytes ?? undefined;
     message.addDiskBytes = object.addDiskBytes ?? undefined;
@@ -873,8 +913,10 @@ function createBaseAddImageProperty(): AddImageProperty {
     newArchive: false,
     defaultValue: "",
     dynamicValue: false,
-    description: undefined,
     uiType: 0,
+    displayName: undefined,
+    displayGroup: undefined,
+    description: undefined,
     addCpuCores: undefined,
     addMemoryBytes: undefined,
     addDiskBytes: undefined,
@@ -901,20 +943,26 @@ export const AddImageProperty = {
     if (message.dynamicValue === true) {
       writer.uint32(48).bool(message.dynamicValue);
     }
-    if (message.description !== undefined) {
-      writer.uint32(58).string(message.description);
-    }
     if (message.uiType !== 0) {
-      writer.uint32(64).int32(message.uiType);
+      writer.uint32(56).int32(message.uiType);
+    }
+    if (message.displayName !== undefined) {
+      writer.uint32(66).string(message.displayName);
+    }
+    if (message.displayGroup !== undefined) {
+      writer.uint32(74).string(message.displayGroup);
+    }
+    if (message.description !== undefined) {
+      writer.uint32(82).string(message.description);
     }
     if (message.addCpuCores !== undefined) {
-      writer.uint32(72).int64(message.addCpuCores);
+      writer.uint32(88).int64(message.addCpuCores);
     }
     if (message.addMemoryBytes !== undefined) {
-      writer.uint32(80).int64(message.addMemoryBytes);
+      writer.uint32(96).int64(message.addMemoryBytes);
     }
     if (message.addDiskBytes !== undefined) {
-      writer.uint32(88).int64(message.addDiskBytes);
+      writer.uint32(104).int64(message.addDiskBytes);
     }
     return writer;
   },
@@ -969,35 +1017,49 @@ export const AddImageProperty = {
           message.dynamicValue = reader.bool();
           continue;
         case 7:
-          if (tag !== 58) {
-            break;
-          }
-
-          message.description = reader.string();
-          continue;
-        case 8:
-          if (tag !== 64) {
+          if (tag !== 56) {
             break;
           }
 
           message.uiType = reader.int32() as any;
           continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.displayName = reader.string();
+          continue;
         case 9:
-          if (tag !== 72) {
+          if (tag !== 74) {
+            break;
+          }
+
+          message.displayGroup = reader.string();
+          continue;
+        case 10:
+          if (tag !== 82) {
+            break;
+          }
+
+          message.description = reader.string();
+          continue;
+        case 11:
+          if (tag !== 88) {
             break;
           }
 
           message.addCpuCores = longToNumber(reader.int64() as Long);
           continue;
-        case 10:
-          if (tag !== 80) {
+        case 12:
+          if (tag !== 96) {
             break;
           }
 
           message.addMemoryBytes = longToNumber(reader.int64() as Long);
           continue;
-        case 11:
-          if (tag !== 88) {
+        case 13:
+          if (tag !== 104) {
             break;
           }
 
@@ -1024,8 +1086,10 @@ export const AddImageProperty = {
     message.newArchive = object.newArchive ?? false;
     message.defaultValue = object.defaultValue ?? "";
     message.dynamicValue = object.dynamicValue ?? false;
-    message.description = object.description ?? undefined;
     message.uiType = object.uiType ?? 0;
+    message.displayName = object.displayName ?? undefined;
+    message.displayGroup = object.displayGroup ?? undefined;
+    message.description = object.description ?? undefined;
     message.addCpuCores = object.addCpuCores ?? undefined;
     message.addMemoryBytes = object.addMemoryBytes ?? undefined;
     message.addDiskBytes = object.addDiskBytes ?? undefined;

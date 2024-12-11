@@ -1,12 +1,10 @@
 import { selector, selectorFamily } from 'recoil';
 import isEqual from 'lodash/isEqual';
-import { Region } from '@modules/grpc/library/blockjoy/v1/host';
 import { Protocol } from '@modules/grpc/library/blockjoy/v1/protocol';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { NodeSort } from '@modules/grpc/library/blockjoy/v1/node';
 import { Tag } from '@modules/grpc/library/blockjoy/common/v1/tag';
 import { UINodeFilterCriteria } from '@modules/grpc';
-import { nodeStatusList } from '@shared/constants/nodeStatusList';
 import {
   NODE_FILTERS_DEFAULT,
   NODE_SORT_DEFAULT,
@@ -15,10 +13,7 @@ import { NodeStatusListItem, sort } from '@shared/components';
 import {
   nodeAtoms,
   protocolAtoms,
-  protocolSelectors,
-  NetworkConfigSimple,
   InitialNodeQueryParams,
-  nodeLauncherAtoms,
 } from '@modules/node';
 import { authAtoms } from '@modules/auth';
 import { createDropdownValuesFromEnum } from '@modules/admin';
@@ -138,50 +133,6 @@ const filtersStatusAll = selectorFamily<FilterListItem[], string[]>({
   },
 });
 
-// TODO: add node type filters
-// const filtersTypeAll = selectorFamily<FilterListItem[], string[]>({
-//   key: 'node.filters.nodeType.all',
-//   get: (tempFilters: string[]) => () => {
-//     // const allTypes = nodeTypeList.map((item) => ({
-//     //   name: item.name,
-//     //   id: item.id.toString()!,
-//     // }));
-
-//     // if (!allTypes.length) return [];
-
-//     // const allFilters = allTypes.map((type) => ({
-//     //   ...type,
-//     //   isChecked: tempFilters?.some((filter) => type.id === filter),
-//     // }));
-
-//     return [];
-//   },
-// });
-
-// TODO: add node network filters
-// const filtersNetworksAll = selectorFamily<
-//   (NetworkConfigSimple & FilterListItem)[],
-//   string[]
-// >({
-//   key: 'node.filters.networks.all',
-//   get:
-//     (tempFilters: string[]) =>
-//     ({ get }) => {
-//       const filterProtocolsIDs = get(filtersProtocolSelectedIds);
-
-//       const allNetworks = get(
-//         protocolSelectors.protocolNetworks(filterProtocolsIDs),
-//       );
-
-//       const allFilters = allNetworks.map((network) => ({
-//         ...network,
-//         isChecked: tempFilters?.some((filter) => network.id === filter),
-//       }));
-
-//       return allFilters;
-//     },
-// });
-
 const inactiveTags = selectorFamily<Tag[], any[]>({
   key: 'node.tags.inactive',
   get:
@@ -225,8 +176,6 @@ export const nodeSelectors = {
 
   filtersProtocolAll,
   filtersStatusAll,
-  // filtersTypeAll,
-  // filtersNetworksAll,
 
   inactiveTags,
 

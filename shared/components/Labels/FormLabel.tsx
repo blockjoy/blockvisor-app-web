@@ -17,6 +17,7 @@ const styles = {
     display: flex;
     align-items: center;
     gap: 8px;
+    text-transform: capitalize;
     color: ${theme.colorLabel};
   `,
   labelCompact: css`
@@ -25,6 +26,8 @@ const styles = {
   `,
   requiredAsterix: (theme: ITheme) => css`
     display: inline-block;
+    height: 16px;
+    margin-top: -2px;
     color: ${theme.colorDanger};
     transform: translateY(2px);
     font-size: 20px;

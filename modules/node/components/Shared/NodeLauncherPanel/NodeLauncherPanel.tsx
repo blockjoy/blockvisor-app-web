@@ -14,6 +14,7 @@ const styles = {
     flex: 1 1 auto;
     @media ${breakpoints.fromXLrg} {
       flex: 1 1 400px;
+      min-width: 400px;
       max-height: calc(100vh - 72px);
       min-height: calc(100vh - 72px);
     }
