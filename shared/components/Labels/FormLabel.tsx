@@ -18,6 +18,7 @@ const styles = {
     display: flex;
     align-items: center;
     gap: 8px;
+    text-transform: capitalize;
     color: ${theme.colorLabel};
   `,
   labelCapitalized: css`
