@@ -15,6 +15,7 @@ export * from './components/NodeView/Tabs/Jobs/JobList/NodeViewJobList';
 export * from './components/NodeView/Tabs/Jobs/JobView/NodeViewJobView';
 export * from './components/NodeView/Tabs/Commands/NodeCommands';
 export * from './components/NodeView/Tabs/Settings/NodeViewSettings';
+export * from './components/NodeView/Tabs/Config/NodeViewConfig';
 export * from './components/Shared';
 
 export * from './hooks/useNodeFilters';

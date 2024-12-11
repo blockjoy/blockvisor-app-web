@@ -7,18 +7,22 @@ import {
   NodeLauncherPanel,
   NodeVersionSelect,
   nodeLauncherAtoms,
-  FirewallDropdown,
   NodeLauncherState,
   NodeVariantSelect,
-  NodeLauncherPropertyGroup,
+  NodePropertyGroup,
+  NodeFirewallRules,
 } from '@modules/node';
-import { authSelectors } from '@modules/auth';
 import { styles } from './NodeLauncherConfig.styles';
-import { ImageProperty } from '@modules/grpc/library/blockjoy/v1/image';
 import { UiType } from '@modules/grpc/library/blockjoy/common/v1/protocol';
+import { kebabToCapitalized } from 'utils';
+import { FirewallRule } from '@modules/grpc/library/blockjoy/common/v1/config';
 
 type NodeLauncherConfigProps = {
-  onNodeConfigPropertyChanged: (name: string, value: string | boolean) => void;
+  onNodeConfigPropertyChanged: (
+    key: string,
+    keyGroup: string,
+    value: string | boolean,
+  ) => void;
   onNodePropertyChanged: <K extends keyof NodeLauncherState>(
     name: K,
     value: NodeLauncherState[K],
@@ -34,14 +38,16 @@ export const NodeLauncherConfig = ({
   onVariantChanged,
 }: NodeLauncherConfigProps) => {
   const nodeLauncher = useRecoilValue(nodeLauncherAtoms.nodeLauncher);
-  const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
 
   const { properties } = nodeLauncher;
+
+  const handleFirewallChanged = (nextFirewall: FirewallRule[]) =>
+    onNodePropertyChanged('firewall', nextFirewall);
 
   return (
     <NodeLauncherPanel>
       <div css={styles.wrapper}>
-        <FormHeader>Configure</FormHeader>
+        <FormHeader>Config</FormHeader>
 
         <FormLabel>Version</FormLabel>
         <NodeVersionSelect onVersionChanged={onVersionChanged} />
@@ -52,22 +58,23 @@ export const NodeLauncherConfig = ({
         <FormLabel hint="Add IP addresses that are allowed/denied">
           Firewall Rules
         </FormLabel>
-        <FirewallDropdown
-          isDisabled={!isSuperUser}
-          onPropertyChanged={onNodePropertyChanged}
-          allowedIps={nodeLauncher?.allowIps}
-          deniedIps={nodeLauncher?.denyIps}
+        <NodeFirewallRules
+          rules={nodeLauncher.firewall}
+          onFirewallChanged={handleFirewallChanged}
         />
 
-        {properties?.map((propertyGroup: NodeLauncherPropertyGroup) => {
+        {properties?.map((propertyGroup: NodePropertyGroup, index) => {
           const isRequired =
-            propertyGroup.uiType === UiType.UI_TYPE_TEXT ||
-            propertyGroup.uiType === UiType.UI_TYPE_PASSWORD;
+            (propertyGroup.uiType === UiType.UI_TYPE_TEXT ||
+              propertyGroup.uiType === UiType.UI_TYPE_PASSWORD) &&
+            propertyGroup.value === '';
 
           return (
-            <Fragment key={propertyGroup.name}>
+            <Fragment key={propertyGroup.keyGroup! + index!}>
               <FormLabel isRequired={isRequired}>
-                {propertyGroup.name}
+                {kebabToCapitalized(
+                  propertyGroup.keyGroup || propertyGroup.key,
+                )}
               </FormLabel>
               {renderControls(propertyGroup, onNodeConfigPropertyChanged)}
             </Fragment>

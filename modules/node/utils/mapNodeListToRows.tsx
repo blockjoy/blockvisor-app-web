@@ -49,7 +49,10 @@ export const mapNodeListToRows = (nodeList?: Node[]) => {
           key: '1',
           component: (
             <div style={{ marginTop: '4px', marginLeft: '8px' }}>
-              <ProtocolIcon size="36px" protocolName={node.protocolName} />
+              <ProtocolIcon
+                size="36px"
+                protocolName={node.versionKey?.protocolKey}
+              />
             </div>
           ),
         },
@@ -63,7 +66,7 @@ export const mapNodeListToRows = (nodeList?: Node[]) => {
                 //   {node.network}
                 // </p>
                 <p css={middleRowStyles}>
-                  {node.protocolName} | {node.versionKey?.variantKey}
+                  {node.versionKey?.protocolKey} | {node.versionKey?.variantKey}
                 </p>
               }
               topRow={<NodeName node={node} />}

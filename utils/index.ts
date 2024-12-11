@@ -1,0 +1,1 @@
+export { kebabToCapitalized } from './kebabToCapitalized';

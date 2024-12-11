@@ -42,11 +42,14 @@ export const mapNodeListToGrid = (
         <TableGridCell
           key={node.nodeId}
           onCellClick={() => onCellClick(node.nodeId)}
-          titleText={escapeHtml(node.displayName!)}
+          titleText={escapeHtml(node.displayName! || node.nodeName)}
           {...(hasTags && { titleStyle: styles.header })}
           titleStyle={styles.header}
           titleIcon={
-            <ProtocolIcon size="28px" protocolName={node.protocolName} />
+            <ProtocolIcon
+              size="28px"
+              protocolName={node.versionKey?.protocolKey}
+            />
           }
           footer={
             <NodeStatus
@@ -60,7 +63,7 @@ export const mapNodeListToGrid = (
             <>
               <NodeTags autoHide={false} node={node} itemsPerView={3} />
               <p css={styles.blockchainNetwork}>
-                {node.protocolName} | {node.versionKey?.variantKey}
+                {node.versionKey?.protocolKey} | {node.versionKey?.variantKey}
               </p>
             </>
           }

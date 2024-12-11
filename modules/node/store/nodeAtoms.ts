@@ -3,6 +3,8 @@ import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { Region } from '@modules/grpc/library/blockjoy/v1/host';
 import { localStorageEffect } from 'utils/store/persist';
 import { NODE_PAGINATION_DEFAULT } from '@shared/index';
+import { Image } from '@modules/grpc/library/blockjoy/v1/image';
+import { NodeConfig, NodePropertyGroup } from '../types/common';
 
 const nodeLoadingState = atom<LoadingState>({
   key: 'node.loadingState',
@@ -12,6 +14,20 @@ const nodeLoadingState = atom<LoadingState>({
 const activeNode = atom<Node | null>({
   key: 'node.activeNode',
   default: null,
+});
+
+const nodeImage = atom<Image | null>({
+  key: 'node.nodeImage',
+  default: null,
+});
+
+const nodeConfig = atom<NodeConfig>({
+  key: 'node.nodeConfig',
+  default: {
+    properties: [],
+    firewall: [],
+    selfUpdate: false,
+  },
 });
 
 const nodeList = atom<Node[]>({
@@ -84,12 +100,14 @@ export const nodeAtoms = {
   nodeLoadingState,
 
   activeNode,
+  nodeImage,
   nodeList,
   nodeListPagination,
   nodeCount,
   nodeListLoadingState,
   isLoadingActiveNode,
   selectedSKU,
+  nodeConfig,
 
   filtersTempTotal,
   filtersSearchQuery,

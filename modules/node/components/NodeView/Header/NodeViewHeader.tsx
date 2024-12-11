@@ -95,6 +95,7 @@ export const NodeViewHeader = () => {
       addRules: [],
       newValues: [],
       tags: node.tags,
+      // TODO: Fix recreate node
       // blockchainId: node.protocolId,
       // version: node.version,
       // nodeType: node.nodeType,
@@ -124,7 +125,7 @@ export const NodeViewHeader = () => {
       {actionView === 'delete' && (
         <DeleteModal
           portalId="delete-node-modal"
-          elementName={escapeHtml(node?.displayName!)}
+          elementName={escapeHtml(node?.displayName! || node?.nodeName!)}
           entityName="Node"
           onHide={handleClose}
           onSubmit={handleDeleteNode}
@@ -136,7 +137,7 @@ export const NodeViewHeader = () => {
         <DeleteModal
           portalId="recreate-node-modal"
           type="Recreate"
-          elementName={escapeHtml(node?.displayName!)}
+          elementName={escapeHtml(node?.displayName! || node?.nodeName!)}
           entityName="Node"
           onHide={handleClose}
           onSubmit={handleRecreateNode}
@@ -161,12 +162,15 @@ export const NodeViewHeader = () => {
             node?.nodeId && (
               <>
                 <div css={styles.blockchainIcon}>
-                  <ProtocolIcon size="40px" protocolName={node.protocolName} />
+                  <ProtocolIcon
+                    size="40px"
+                    protocolName={node.versionKey?.protocolKey}
+                  />
                 </div>
                 <div css={styles.name}>
                   <div css={styles.title}>
                     <EditableTitle
-                      initialValue={node.displayName!}
+                      initialValue={node.displayName! || node.nodeName}
                       isLoading={isLoading}
                       isSaving={isSaving!}
                       additionalContentRight={
@@ -189,7 +193,8 @@ export const NodeViewHeader = () => {
                           {node.network}
                         </p> */}
                         <p>
-                          {node.protocolName} | {node.versionKey?.variantKey}
+                          {node.versionKey?.protocolKey} |{' '}
+                          {node.versionKey?.variantKey}
                         </p>
                       </div>
                       {node!.createdAt && (
