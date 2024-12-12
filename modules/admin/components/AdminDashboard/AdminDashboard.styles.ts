@@ -26,6 +26,15 @@ export const styles = {
       translate: 0 2px;
     }
   `,
+  sectionHeaderLinks: (theme: ITheme) => css`
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    > a {
+      border-right: 1px solid ${theme.colorBorder};
+    }
+  `,
   grid: css`
     display: grid;
     width: 100%;

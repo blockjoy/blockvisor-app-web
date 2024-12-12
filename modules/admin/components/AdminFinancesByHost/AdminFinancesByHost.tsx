@@ -1,7 +1,7 @@
 import { hostClient, nodeClient } from '@modules/grpc';
 import { NextLink, SvgIcon, TableSkeleton } from '@shared/components';
 import { KeyboardEvent, PropsWithChildren, useEffect, useState } from 'react';
-import { styles } from './AdminFinances.styles';
+import { styles } from './AdminFinancesByHost.styles';
 import { Currency } from './Currency/Currency';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import IconArrowDown from '@public/assets/icons/common/ArrowDown.svg';
@@ -138,7 +138,7 @@ const SortButton = ({
   );
 };
 
-export const AdminFinances = () => {
+export const AdminFinancesByHost = () => {
   const [hostsProfit, setHostsProfit] = useState<HostProfit[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 

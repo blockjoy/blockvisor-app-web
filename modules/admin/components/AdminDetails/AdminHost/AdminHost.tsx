@@ -21,7 +21,7 @@ import {
   NextLink,
   TagList,
 } from '@shared/components';
-import { Currency } from '../../AdminFinances/Currency/Currency';
+import { Currency } from '../../AdminFinancesByHost/Currency/Currency';
 
 export const AdminHost = () => {
   const router = useRouter();

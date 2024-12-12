@@ -11,7 +11,7 @@ import {
 import { createAdminUpdateRequest } from '@modules/admin/utils';
 import { AdminNodeUpgrade } from './AdminNodeUpgrade/AdminNodeUpgrade';
 import { escapeHtml } from '@shared/utils/escapeHtml';
-import { Currency } from '../../AdminFinances/Currency/Currency';
+import { Currency } from '../../AdminFinancesByHost/Currency/Currency';
 
 const ignoreItems = [
   'id',
