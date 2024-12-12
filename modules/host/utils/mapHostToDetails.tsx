@@ -70,7 +70,9 @@ export const mapHostToDetailsLaunch = (host: Host) => {
   const details: { label: string; data: any | undefined }[] = [
     {
       label: 'Organization',
-      data: (
+      data: !host.orgName ? (
+        '-'
+      ) : (
         <NextLink href={ROUTES.ORGANIZATION(host.orgId!)}>
           {host.orgName}
         </NextLink>
