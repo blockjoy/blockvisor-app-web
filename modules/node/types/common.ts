@@ -12,12 +12,13 @@ export type NodePropertyGroup = {
   value: string;
   uiType: UiType;
   properties: ImageProperty[];
+  displayName: string;
 };
 
 export type NodeConfig = {
   properties: NodePropertyGroup[];
   firewall: FirewallRule[];
-  selfUpdate: boolean;
+  autoUpgrade: boolean;
 };
 
 export type NodeLauncherState = {

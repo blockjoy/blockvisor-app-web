@@ -13,7 +13,6 @@ export const NodeViewTabs = () => {
   const tabs: { href: string; name: string; className?: string }[] = [
     { href: createPath(''), name: 'Details' },
     { href: createPath('config'), name: 'Config' },
-    { href: createPath('settings'), name: 'Settings' },
     { href: createPath('jobs'), name: 'Jobs' },
     { href: createPath('commands'), name: 'Commands' },
   ];

@@ -9,9 +9,10 @@ export const styles = {
     }
   `,
   row: (theme: ITheme) => css`
-    &:first-child {
-      height: 50px;
-      padding-bottom: 16px;
+    &:first-of-type {
+      min-height: 50px;
+      padding-top: 0;
+      padding-bottom: 6px;
     }
 
     display: flex;
@@ -25,12 +26,14 @@ export const styles = {
       flex-direction: row;
       align-items: center;
       gap: 0;
-      height: 72px;
+      min-height: 72px;
       padding: 12px 0;
 
       > h4 {
         width: 220px;
         flex: 0 0 220px;
+        align-self: stretch;
+        padding-top: 18px;
       }
     }
   `,

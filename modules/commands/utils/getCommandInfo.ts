@@ -6,6 +6,10 @@ const commandExitCodeDescriptions: Record<CommandExitCode, string> = {
   [CommandExitCode.COMMAND_EXIT_CODE_NODE_NOT_FOUND]: 'NodeNotFound',
   [CommandExitCode.COMMAND_EXIT_CODE_SERVICE_BROKEN]: 'ServiceBroken',
   [CommandExitCode.COMMAND_EXIT_CODE_NOT_SUPPORTED]: 'NotSupported',
+  [CommandExitCode.COMMAND_EXIT_CODE_NODE_UPGRADE_ROLLBACK]:
+    'NodeUpgradeRollback',
+  [CommandExitCode.COMMAND_EXIT_CODE_NODE_UPGRADE_FAILURE]:
+    'NodeUpgradeFailure',
   [CommandExitCode.UNRECOGNIZED]: ' ',
   [CommandExitCode.COMMAND_EXIT_CODE_BLOCKING_JOB_RUNNING]:
     'BlockingJobRunning',

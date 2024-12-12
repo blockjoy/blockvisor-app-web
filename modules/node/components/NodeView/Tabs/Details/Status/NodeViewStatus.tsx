@@ -52,9 +52,21 @@ export const NodeViewStatus = () => {
         </div>
         {node.nodeStatus?.protocol && (
           <div css={styles.card}>
-            <NodeStatusIcon size={iconSize} status={1} />
-            <var css={[styles.cardValue, getNodeStatusColor(1)]}>
-              {node.nodeStatus?.protocol?.toString()}
+            <NodeStatusIcon
+              type="protocol"
+              size={iconSize}
+              status={node.nodeStatus.protocol.health}
+            />
+            <var
+              css={[
+                styles.cardValue,
+                getNodeStatusColor(node.nodeStatus.protocol.health),
+              ]}
+            >
+              <NodeStatusName
+                status={node.nodeStatus.protocol.health}
+                type="protocol"
+              />
             </var>
             <h3 css={styles.cardLabel}>Protocol Health</h3>
           </div>
