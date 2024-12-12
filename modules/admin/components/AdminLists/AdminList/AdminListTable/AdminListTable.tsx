@@ -207,7 +207,7 @@ export const AdminListTable = ({
     if (selectedIds?.length === list.length) {
       onIdAllSelected?.([]);
     } else {
-      onIdAllSelected?.(list.map((item) => item.id));
+      onIdAllSelected?.(list.map((item) => item[idPropertyName]));
     }
   };
 
