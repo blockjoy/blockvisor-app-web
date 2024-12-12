@@ -82,16 +82,6 @@ const columns: AdminListColumn[] = [
     // filterComponent: AdminNodesFilterProtocol,
     // filterDropdownMinWidth: 200,
   },
-  // {
-  //   name: 'nodeType',
-  //   displayName: 'Node Type',
-  //   width: '140px',
-  //   sortField: NodeSortField.NODE_SORT_FIELD_NODE_TYPE,
-  //   isVisible: true,
-  //   filterComponent: AdminNodesFilterNodeType,
-  //   filterDropdownMinWidth: 100,
-  //   filterDropdownMaxWidth: 120,
-  // },
   {
     name: 'variant',
     width: '140px',
