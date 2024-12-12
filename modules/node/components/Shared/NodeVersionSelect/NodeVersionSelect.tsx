@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { useRecoilCallback, useRecoilValue } from 'recoil';
 import { css } from '@emotion/react';
 import { ProtocolVersion } from '@modules/grpc/library/blockjoy/v1/protocol';

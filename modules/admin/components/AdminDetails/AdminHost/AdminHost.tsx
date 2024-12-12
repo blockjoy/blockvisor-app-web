@@ -36,13 +36,21 @@ export const AdminHost = () => {
     onError: VoidFunction,
   ) => {
     const defaultRequest: HostServiceUpdateRequest = { hostId: id as string };
-    const request = createAdminUpdateRequest(defaultRequest, properties);
+    const request: HostServiceUpdateRequest = createAdminUpdateRequest(
+      defaultRequest,
+      properties,
+    );
     try {
       await hostClient.updateHost(request);
       onSuccess();
     } catch (err) {
       onError();
     }
+  };
+
+  const handleDelete = async (onSuccess: VoidFunction) => {
+    await hostClient.deleteHost(id as string);
+    onSuccess();
   };
 
   const getItem = async () => await hostClient.getHost(id as string);
@@ -84,7 +92,7 @@ export const AdminHost = () => {
       data: host.displayName,
       copyValue: host.displayName,
       editSettings: {
-        field: 'name',
+        field: 'displayName',
         isNumber: false,
         controlType: 'text',
         defaultValue: host.displayName,
@@ -182,6 +190,7 @@ export const AdminHost = () => {
       getItem={getItem}
       onOpenInApp={handleOpenInApp}
       onSaveChanges={handleSaveChanges}
+      onDelete={handleDelete}
       detailsName="hostId"
       metricsKey="name"
       hasMetrics

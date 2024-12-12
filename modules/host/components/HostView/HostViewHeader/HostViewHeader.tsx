@@ -31,7 +31,7 @@ export const HostViewHeader = () => {
       {isDeleteMode && (
         <DeleteModal
           portalId="delete-host-modal"
-          elementName={host?.displayName!}
+          elementName={host?.displayName! || host?.networkName}
           entityName="Host"
           onHide={handleDeleteToggled}
           onSubmit={handleDeleteHost}
@@ -45,7 +45,9 @@ export const HostViewHeader = () => {
         ) : (
           host?.hostId && (
             <div>
-              <h2 css={styles.detailsHeader}>{host!.displayName}</h2>
+              <h2 css={styles.detailsHeader}>
+                {host!.displayName || host.networkName}
+              </h2>
               <div css={styles.detailsFooter}>
                 {host!.createdAt && (
                   <small css={[typo.small, colors.text2]}>
