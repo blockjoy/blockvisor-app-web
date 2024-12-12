@@ -26,7 +26,7 @@ const nodeConfig = atom<NodeConfig>({
   default: {
     properties: [],
     firewall: [],
-    selfUpdate: false,
+    autoUpgrade: false,
   },
 });
 

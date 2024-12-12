@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import {
+  getNodeHealthInfo,
   getNodeStatusColor,
   getNodeStatusInfo,
   NodeStatusType,
@@ -19,6 +20,11 @@ const NodeStatusSpinner = dynamic(() => import('./NodeStatusSpinner'));
 const IconUndefined = dynamic(
   () => import('@public/assets/icons/nodeStatus/Undefined.svg'),
 );
+
+const IconBlockchain = dynamic(
+  () => import('@public/assets/icons/app/Blockchain.svg'),
+);
+
 const IconDeleted = dynamic(
   () => import('@public/assets/icons/common/Trash.svg'),
 );
@@ -97,6 +103,8 @@ const getIcon = (statusName: string) => {
     switch (statusName) {
       case 'EARNING':
         return <IconEarning />;
+      case 'HEALTHY':
+        return <IconBlockchain />;
       case 'BROADCASTING':
         return <IconBroadcasting />;
       case 'CANCELLED':
@@ -143,7 +151,7 @@ const getIcon = (statusName: string) => {
 };
 
 type NodeStatusIconProps = {
-  status: NodeState;
+  status: number;
   type?: NodeStatusType;
   size: string;
   isDefaultColor?: boolean;
@@ -155,12 +163,15 @@ export const NodeStatusIcon = ({
   size = '24px',
   isDefaultColor,
 }: NodeStatusIconProps) => {
-  const statusName = getNodeStatusInfo(status).name;
+  const statusName =
+    type === 'protocol'
+      ? getNodeHealthInfo(status).name
+      : getNodeStatusInfo(status).name;
 
   return (
     <Suspense fallback={null}>
-      {status === NodeState.NODE_STATE_STARTING ||
-      status === NodeState.NODE_STATE_UPGRADING ? (
+      {(type !== 'protocol' && status === NodeState.NODE_STATE_STARTING) ||
+      (type !== 'protocol' && status === NodeState.NODE_STATE_UPGRADING) ? (
         // status === NodeStatusEnum.NODE_STATUS_UPLOADING ||
         // status === NodeStatusEnum.NODE_STATUS_DOWNLOADING ||
         // status === NodeStatusEnum.NODE_STATUS_UPDATING

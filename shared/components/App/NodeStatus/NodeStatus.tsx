@@ -1,10 +1,16 @@
 import { styles } from './NodeStatus.styles';
-import { nodeStatusList } from '@shared/constants/nodeStatusList';
+import {
+  nodeHealthList,
+  nodeStatusList,
+} from '@shared/constants/nodeStatusList';
 import { NodeStatusIcon } from './NodeStatusIcon';
 import { NodeStatusLoader } from './NodeStatusLoader';
 import { NodeStatusName } from './NodeStatusName';
 import { useLayoutEffect, useRef, useState } from 'react';
-import { NodeState } from '@modules/grpc/library/blockjoy/common/v1/node';
+import {
+  NodeHealth,
+  NodeState,
+} from '@modules/grpc/library/blockjoy/common/v1/node';
 
 export type NodeStatusType = 'protocol';
 
@@ -31,11 +37,20 @@ export const getNodeStatusInfo = (status: NodeState) => {
   };
 };
 
-export const getNodeStatusColor = (
-  nodeState: NodeState,
-  type?: NodeStatusType,
-) => {
-  const statusName = getNodeStatusInfo(nodeState)?.name!;
+export const getNodeHealthInfo = (status: NodeHealth) => {
+  const statusInfo = nodeHealthList.find((l) => l.id === status);
+
+  return {
+    id: status,
+    name: statusInfo?.name,
+  };
+};
+
+export const getNodeStatusColor = (status: number, type?: NodeStatusType) => {
+  const statusName =
+    type === 'protocol'
+      ? getNodeHealthInfo(status)?.name!
+      : getNodeStatusInfo(status)?.name!;
 
   if (
     statusName?.match(

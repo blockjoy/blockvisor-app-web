@@ -15,4 +15,7 @@ export const styles = {
     padding: 20px 30px;
     border-top: 1px solid ${theme.colorBorder};
   `,
+  firewall: css`
+    margin-bottom: 12px;
+  `,
 };

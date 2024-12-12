@@ -2,27 +2,34 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import isEqual from 'lodash/isEqual';
-import { authSelectors } from '@modules/auth';
 import { UiType } from '@modules/grpc/library/blockjoy/common/v1/protocol';
 import {
   NodeFirewallRules,
   useNodeView,
   nodeAtoms,
   NodeConfig,
+  LockedSwitch,
 } from '@modules/node';
 import { renderControls } from '@modules/node/utils/renderNodeLauncherConfigControls';
 import {
   Button,
   ButtonGroup,
   FormLabelCaps,
+  Switch,
   TableSkeleton,
 } from '@shared/components';
 import { styles } from './NodeViewConfig.styles';
 import { kebabToCapitalized } from 'utils';
-import { FirewallRule } from '@modules/grpc/library/blockjoy/common/v1/config';
+import {
+  FirewallConfig,
+  FirewallRule,
+} from '@modules/grpc/library/blockjoy/common/v1/config';
+import { authSelectors } from '@modules/auth';
 
 export const NodeViewConfig = () => {
   const { node, nodeImage, isLoading, updateNode } = useNodeView();
+
+  const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
 
   const [nodeConfig, setNodeConfig] = useRecoilState<NodeConfig>(
     nodeAtoms.nodeConfig,
@@ -32,9 +39,39 @@ export const NodeViewConfig = () => {
     string[]
   >([]);
 
+  const [originalFirewall, setOriginalFirewall] = useState<FirewallRule[]>([]);
+
   const { properties } = nodeConfig;
 
-  const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
+  const handlePropertyChanged = (
+    key: string,
+    keyGroup: string,
+    value: string,
+  ) => {
+    const nextProperties = nodeConfig.properties.map((property) =>
+      property.key === key || property.keyGroup === keyGroup
+        ? { ...property, key, value }
+        : property,
+    );
+
+    setNodeConfig({
+      ...nodeConfig,
+      properties: nextProperties,
+    });
+  };
+
+  const handleFirewallChanged = (nextFirewall: FirewallRule[]) =>
+    setNodeConfig({
+      ...nodeConfig,
+      firewall: nextFirewall,
+    });
+
+  const handleAutoUpgradeChanged = (nextAutoUpgrade: boolean) => {
+    setNodeConfig({
+      ...nodeConfig,
+      autoUpgrade: nextAutoUpgrade,
+    });
+  };
 
   useEffect(() => {
     if (!nodeImage || !node) return;
@@ -54,56 +91,54 @@ export const NodeViewConfig = () => {
         keyGroup: imageProperty?.keyGroup || property.key,
         properties: imageProperties,
         uiType: imageProperty?.uiType!,
+        displayName:
+          imageProperty?.displayGroup! || imageProperty?.displayName!,
       };
     })!;
 
     setNodeConfig({
       ...nodeConfig,
       properties: nextProperties,
+      firewall: node.config?.firewall?.rules!,
+      autoUpgrade: node.autoUpgrade,
     });
 
     setOriginalPropertyValues(nextProperties.map((p) => p.value));
+
+    const firewallCopy = [...node.config?.firewall?.rules!];
+
+    setOriginalFirewall(firewallCopy);
   }, [node, nodeImage]);
 
-  const handlePropertyChanged = (
-    key: string,
-    keyGroup: string,
-    value: string,
-  ) => {
-    const nextProperties = nodeConfig.properties.map((property) =>
-      property.key === key || property.keyGroup === keyGroup
-        ? { ...property, key, value }
-        : property,
-    );
-
-    setNodeConfig({
-      ...nodeConfig,
-      properties: nextProperties,
-    });
-  };
-
-  const handleFirewallChanged = (nextFirewall: FirewallRule[]) => {
-    setNodeConfig({
-      ...nodeConfig,
-      firewall: nextFirewall,
-    });
-  };
-
   const handleSave = async () => {
-    await updateNode({
-      nodeId: node?.nodeId!,
-      newValues: nodeConfig.properties.map((property) => ({
-        key: property.key,
-        value: property.value,
-      })),
-    });
+    if (!node?.config?.firewall) return;
 
-    toast.success('Node Updated');
+    const newFirewall: FirewallConfig = {
+      ...node?.config?.firewall,
+      rules: nodeConfig.firewall,
+    };
+
+    try {
+      await updateNode({
+        nodeId: node?.nodeId!,
+        autoUpgrade: nodeConfig.autoUpgrade,
+        newValues: nodeConfig.properties.map((property) => ({
+          key: property.key,
+          value: property.value,
+        })),
+        newFirewall,
+      });
+
+      toast.success('Node Updated');
+    } catch (err) {}
   };
 
   const editedValues = nodeConfig.properties.map((p) => p.value);
 
-  const isDirty = !isEqual(editedValues, originalPropertyValues);
+  const isDirty =
+    !isEqual(editedValues, originalPropertyValues) ||
+    !isEqual([...nodeConfig.firewall], originalFirewall) ||
+    nodeConfig.autoUpgrade !== node?.autoUpgrade;
 
   const isValid = nodeConfig.properties.every(
     (property) =>
@@ -116,28 +151,51 @@ export const NodeViewConfig = () => {
     <TableSkeleton />
   ) : (
     <div css={styles.wrapper}>
+      <div css={styles.row}>
+        <FormLabelCaps noBottomMargin>Auto Upgrade</FormLabelCaps>
+        {isSuperUser ? (
+          <Switch
+            noBottomMargin
+            // checked={node!.autoUpgrade}
+            checked={nodeConfig.autoUpgrade}
+            tooltip=""
+            disabled={false}
+            name="autoUpdates"
+            onChange={(name: string, value: boolean) =>
+              handleAutoUpgradeChanged(value)
+            }
+          />
+        ) : (
+          <LockedSwitch isChecked={node!.autoUpgrade} />
+        )}
+      </div>
+
+      <div css={styles.row}>
+        <FormLabelCaps noBottomMargin>Firewall Rules</FormLabelCaps>
+        <NodeFirewallRules
+          onFirewallChanged={handleFirewallChanged}
+          rules={nodeConfig.firewall}
+        />
+      </div>
+
       {properties.map((propertyGroup) => (
         <div css={styles.row} key={propertyGroup.keyGroup}>
           <FormLabelCaps noBottomMargin>
-            {kebabToCapitalized(propertyGroup.keyGroup || propertyGroup.key)}
+            {propertyGroup.displayName ||
+              kebabToCapitalized(propertyGroup.keyGroup || propertyGroup.key)}
           </FormLabelCaps>
           {renderControls(propertyGroup, handlePropertyChanged, true)}
         </div>
       ))}
 
-      {/* 
-      <div css={styles.row}>
-        <FormLabelCaps noBottomMargin>Firewall Rules</FormLabelCaps>
-        <NodeFirewallRules />
-      </div> */}
-
       <ButtonGroup>
         <Button
+          size="small"
           loading={isLoading}
           disabled={!isDirty || !isValid}
           onClick={handleSave}
         >
-          Save
+          Update
         </Button>
       </ButtonGroup>
     </div>
