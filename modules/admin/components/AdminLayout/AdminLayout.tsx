@@ -54,6 +54,8 @@ export const AdminLayout = () => {
 
   const type = getType(name, id, ip);
 
+  console.log('type', type);
+
   return (
     <>
       <PageTitle
