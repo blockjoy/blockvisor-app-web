@@ -117,6 +117,7 @@ export interface NodeStop {}
 
 export interface NodeUpdate {
   nodeId: string;
+  configId: string;
   autoUpgrade?: boolean | undefined;
   newOrgId?: string | undefined;
   newOrgName?: string | undefined;
@@ -1641,6 +1642,7 @@ export const NodeRestart = {
 function createBaseNodeUpdate(): NodeUpdate {
   return {
     nodeId: '',
+    configId: '',
     autoUpgrade: undefined,
     newOrgId: undefined,
     newOrgName: undefined,
@@ -1659,28 +1661,31 @@ export const NodeUpdate = {
     if (message.nodeId !== '') {
       writer.uint32(10).string(message.nodeId);
     }
+    if (message.configId !== '') {
+      writer.uint32(18).string(message.configId);
+    }
     if (message.autoUpgrade !== undefined) {
-      writer.uint32(16).bool(message.autoUpgrade);
+      writer.uint32(24).bool(message.autoUpgrade);
     }
     if (message.newOrgId !== undefined) {
-      writer.uint32(26).string(message.newOrgId);
+      writer.uint32(34).string(message.newOrgId);
     }
     if (message.newOrgName !== undefined) {
-      writer.uint32(34).string(message.newOrgName);
+      writer.uint32(42).string(message.newOrgName);
     }
     if (message.newDisplayName !== undefined) {
-      writer.uint32(42).string(message.newDisplayName);
+      writer.uint32(50).string(message.newDisplayName);
     }
     if (message.newNote !== undefined) {
-      writer.uint32(50).string(message.newNote);
+      writer.uint32(58).string(message.newNote);
     }
     for (const v of message.newValues) {
-      ImagePropertyValue.encode(v!, writer.uint32(58).fork()).ldelim();
+      ImagePropertyValue.encode(v!, writer.uint32(66).fork()).ldelim();
     }
     if (message.newFirewall !== undefined) {
       FirewallConfig.encode(
         message.newFirewall,
-        writer.uint32(66).fork(),
+        writer.uint32(74).fork(),
       ).ldelim();
     }
     return writer;
@@ -1702,42 +1707,49 @@ export const NodeUpdate = {
           message.nodeId = reader.string();
           continue;
         case 2:
-          if (tag !== 16) {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.configId = reader.string();
+          continue;
+        case 3:
+          if (tag !== 24) {
             break;
           }
 
           message.autoUpgrade = reader.bool();
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.newOrgId = reader.string();
           continue;
         case 4:
           if (tag !== 34) {
             break;
           }
 
-          message.newOrgName = reader.string();
+          message.newOrgId = reader.string();
           continue;
         case 5:
           if (tag !== 42) {
             break;
           }
 
-          message.newDisplayName = reader.string();
+          message.newOrgName = reader.string();
           continue;
         case 6:
           if (tag !== 50) {
             break;
           }
 
-          message.newNote = reader.string();
+          message.newDisplayName = reader.string();
           continue;
         case 7:
           if (tag !== 58) {
+            break;
+          }
+
+          message.newNote = reader.string();
+          continue;
+        case 8:
+          if (tag !== 66) {
             break;
           }
 
@@ -1745,8 +1757,8 @@ export const NodeUpdate = {
             ImagePropertyValue.decode(reader, reader.uint32()),
           );
           continue;
-        case 8:
-          if (tag !== 66) {
+        case 9:
+          if (tag !== 74) {
             break;
           }
 
@@ -1768,6 +1780,7 @@ export const NodeUpdate = {
   fromPartial(object: DeepPartial<NodeUpdate>): NodeUpdate {
     const message = createBaseNodeUpdate();
     message.nodeId = object.nodeId ?? '';
+    message.configId = object.configId ?? '';
     message.autoUpgrade = object.autoUpgrade ?? undefined;
     message.newOrgId = object.newOrgId ?? undefined;
     message.newOrgName = object.newOrgName ?? undefined;
