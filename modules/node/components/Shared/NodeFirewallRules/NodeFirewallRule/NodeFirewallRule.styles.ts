@@ -6,6 +6,10 @@ export const styles = {
     border-radius: 6px;
     border: 1px solid ${theme.colorBorder};
     margin-bottom: 16px;
+
+    :last-of-type {
+      margin-bottom: 6px;
+    }
   `,
   tabs: (theme: ITheme) => css`
     margin: 0 0 10px;

@@ -1,4 +1,8 @@
-import { getNodeStatusInfo, NodeStatusType } from '@shared/components';
+import {
+  getNodeHealthInfo,
+  getNodeStatusInfo,
+  NodeStatusType,
+} from '@shared/components';
 
 type Props = {
   status: number;
@@ -6,7 +10,8 @@ type Props = {
 };
 
 export const NodeStatusName = ({ status, type }: Props) => {
-  const statusInfo = getNodeStatusInfo(status);
+  const statusInfo =
+    type === 'protocol' ? getNodeHealthInfo(status) : getNodeStatusInfo(status);
 
   let statusName = statusInfo.name?.toLowerCase();
 

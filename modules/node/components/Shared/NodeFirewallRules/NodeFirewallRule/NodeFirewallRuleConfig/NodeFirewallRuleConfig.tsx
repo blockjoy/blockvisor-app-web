@@ -1,11 +1,9 @@
-import { useRecoilValue } from 'recoil';
 import {
   FirewallAction,
   FirewallDirection,
   FirewallProtocol,
   FirewallRule,
 } from '@modules/grpc/library/blockjoy/common/v1/config';
-import { nodeLauncherAtoms } from '@modules/node/store/nodeLauncherAtoms';
 import { NodeFirewallRuleConfigDropdown } from './NodeFirewallRuleConfigDropdown/NodeFirewallRuleConfigDropdown';
 import { styles } from './NodeFirewallRuleConfig.styles';
 import { SvgIcon } from '@shared/components';
@@ -69,15 +67,15 @@ const dropdowns: ConfigDropdown[] = [
 
 type NodeFirewallRuleConfig = {
   rule?: FirewallRule;
+  rules: FirewallRule[];
   onFirewallChanged: (nextFirewall: FirewallRule[]) => void;
 };
 
 export const NodeFirewallRuleConfig = ({
   rule,
+  rules,
   onFirewallChanged,
 }: NodeFirewallRuleConfig) => {
-  const rules = useRecoilValue(nodeLauncherAtoms.nodeLauncher)?.firewall;
-
   const handleConfigChanged = (name: string, value: number) => {
     const nextRules = rules
       ? rules.map((r) => {

@@ -23,6 +23,7 @@ type Props<T = any> = {
   rows: T[];
   columns: string[];
   rule?: FirewallRule;
+  rules: FirewallRule[];
   onFirewallChanged: (nextFirewall: FirewallRule[]) => void;
 };
 
@@ -32,9 +33,9 @@ export const NodeFirewallRuleTable = ({
   rows,
   columns,
   rule,
+  rules,
   onFirewallChanged,
 }: Props) => {
-  const rules = useRecoilValue(nodeLauncherAtoms.nodeLauncher)?.firewall;
   const propertyValue = property.substring(0, property.length - 1);
   const selectedList: typeof type[] = rule?.[property]!;
 

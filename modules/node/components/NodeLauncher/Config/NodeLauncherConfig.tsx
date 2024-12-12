@@ -59,6 +59,7 @@ export const NodeLauncherConfig = ({
           Firewall Rules
         </FormLabel>
         <NodeFirewallRules
+          wrapperStyles={styles.firewall}
           rules={nodeLauncher.firewall}
           onFirewallChanged={handleFirewallChanged}
         />
@@ -72,9 +73,10 @@ export const NodeLauncherConfig = ({
           return (
             <Fragment key={propertyGroup.keyGroup! + index!}>
               <FormLabel isRequired={isRequired}>
-                {kebabToCapitalized(
-                  propertyGroup.keyGroup || propertyGroup.key,
-                )}
+                {propertyGroup.displayName ||
+                  kebabToCapitalized(
+                    propertyGroup.keyGroup || propertyGroup.key,
+                  )}
               </FormLabel>
               {renderControls(propertyGroup, onNodeConfigPropertyChanged)}
             </Fragment>

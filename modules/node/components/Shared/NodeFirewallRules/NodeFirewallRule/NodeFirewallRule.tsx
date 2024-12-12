@@ -10,11 +10,13 @@ import { NodeFirewallRuleConfig } from './NodeFirewallRuleConfig/NodeFirewallRul
 
 type Props = {
   rule: FirewallRule;
+  rules: FirewallRule[];
   onFirewallChanged: (nextFirewall: FirewallRule[]) => void;
 };
 
 type RuleTableProps<T = any> = {
   rule: FirewallRule;
+  rules: FirewallRule[];
   type: T;
   property: 'ips' | 'ports';
   columns: string[];
@@ -22,11 +24,12 @@ type RuleTableProps<T = any> = {
   onFirewallChanged: (nextFirewall: FirewallRule[]) => void;
 };
 
-export const NodeFirewallRule = ({ rule, onFirewallChanged }: Props) => {
+export const NodeFirewallRule = ({ rule, rules, onFirewallChanged }: Props) => {
   const [activeTab, setActiveTab] = useState<'ips' | 'ports'>('ips');
 
   const RuleTable = ({
     rule,
+    rules,
     type,
     property,
     columns,
@@ -35,6 +38,7 @@ export const NodeFirewallRule = ({ rule, onFirewallChanged }: Props) => {
   }: RuleTableProps) => (
     <NodeFirewallRuleTable
       rule={rule}
+      rules={rules}
       type={type}
       property={property}
       onFirewallChanged={onFirewallChanged}
@@ -64,6 +68,7 @@ export const NodeFirewallRule = ({ rule, onFirewallChanged }: Props) => {
         <div css={styles.configWrapper}>
           <NodeFirewallRuleConfig
             rule={rule}
+            rules={rules}
             onFirewallChanged={onFirewallChanged}
           />
         </div>
@@ -72,6 +77,7 @@ export const NodeFirewallRule = ({ rule, onFirewallChanged }: Props) => {
         {activeTab === 'ips' && (
           <RuleTable
             rule={rule}
+            rules={rules}
             type={IpName}
             property="ips"
             onFirewallChanged={onFirewallChanged}
@@ -82,6 +88,7 @@ export const NodeFirewallRule = ({ rule, onFirewallChanged }: Props) => {
         {activeTab === 'ports' && (
           <RuleTable
             rule={rule}
+            rules={rules}
             type={PortName}
             property="ports"
             onFirewallChanged={onFirewallChanged}
