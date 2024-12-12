@@ -19,7 +19,16 @@ type Props = { tab: string };
 
 const links = [
   { name: 'dashboard', icon: <IconDashboard />, href: '/admin?name=dashboard' },
-  { name: 'finances', icon: <IconBilling />, href: '/admin?name=finances' },
+  {
+    name: 'Host Finances',
+    icon: <IconBilling />,
+    href: '/admin?name=finances-by-host',
+  },
+  {
+    name: 'Org Finances',
+    icon: <IconBilling />,
+    href: '/admin?name=finances-by-org',
+  },
   { name: 'nodes', icon: <IconNode />, href: '/admin?name=nodes' },
   { name: 'hosts', icon: <IconHost />, href: '/admin?name=hosts' },
   {

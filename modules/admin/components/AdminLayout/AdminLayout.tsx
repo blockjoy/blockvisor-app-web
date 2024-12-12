@@ -8,7 +8,8 @@ import { AdminLists } from '../AdminLists/AdminLists';
 import { AdminDetails } from '../AdminDetails/AdminDetails';
 import { AdminDashboard } from '../AdminDashboard/AdminDashboard';
 import { AdminSettings } from '../AdminSettings/AdminSettings';
-import { AdminFinances } from '../AdminFinances/AdminFinances';
+import { AdminFinancesByHost } from '../AdminFinancesByHost/AdminFinancesByHost';
+import { AdminFinancesByOrg } from '../AdminFinancesByOrg/AdminFinancesByOrg';
 import { PageTitle } from '@shared/components';
 import { layoutSelectors } from '@modules/layout';
 import { capitalized } from '@modules/admin/utils/capitalized';
@@ -19,7 +20,8 @@ type AdminLayoutType =
   | 'details'
   | 'list'
   | 'settings'
-  | 'finances';
+  | 'finances-by-host'
+  | 'finances-by-org';
 
 const getType = (
   name?: string | null,
@@ -30,7 +32,8 @@ const getType = (
   return ({
     dashboard: 'dashboard',
     settings: 'settings',
-    finances: 'finances',
+    'finances-by-host': 'finances-by-host',
+    'finances-by-org': 'finances-by-org',
   }[name] || (id || ip ? 'details' : 'list')) as AdminLayoutType;
 };
 
@@ -50,6 +53,8 @@ export const AdminLayout = () => {
   }, [name]);
 
   const type = getType(name, id, ip);
+
+  console.log('type', type);
 
   return (
     <>
@@ -71,8 +76,10 @@ export const AdminLayout = () => {
           <AdminDashboard />
         ) : type === 'settings' ? (
           <AdminSettings />
-        ) : type === 'finances' ? (
-          <AdminFinances />
+        ) : type === 'finances-by-host' ? (
+          <AdminFinancesByHost />
+        ) : type === 'finances-by-org' ? (
+          <AdminFinancesByOrg />
         ) : type === 'details' ? (
           <AdminDetails />
         ) : (

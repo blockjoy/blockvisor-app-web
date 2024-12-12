@@ -1,7 +1,7 @@
 import { hostClient, nodeClient } from '@modules/grpc';
 import { Skeleton } from '@shared/components';
 import { useEffect, useState } from 'react';
-import { Currency } from '../../AdminFinances/Currency/Currency';
+import { Currency } from '../../AdminFinancesByHost/Currency/Currency';
 import { styles } from './AdminDashboardFinances.styles';
 
 type Totals = {
