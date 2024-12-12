@@ -26,12 +26,6 @@ export type NodeConfig = {
   autoUpgrade: boolean;
 };
 
-export type NodeConfig = {
-  properties: NodePropertyGroup[];
-  firewall: FirewallRule[];
-  selfUpdate: boolean;
-};
-
 export type NodeLauncherState = {
   properties?: NodePropertyGroup[];
   keyFiles?: NodeFiles[];
