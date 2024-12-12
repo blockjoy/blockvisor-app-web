@@ -156,8 +156,6 @@ export const useNodeLauncherHandlers = ({
       ),
     );
 
-    console.log('selectedImageProperties', selectedImage?.properties);
-
     const propertiesWithoutKeyGroup: NodePropertyGroup[] =
       selectedImage?.properties
         .filter((property) => !property.keyGroup)
@@ -166,6 +164,7 @@ export const useNodeLauncherHandlers = ({
           uiType: property.uiType,
           value: property.defaultValue || '',
           properties: [property],
+          displayName: property.displayName!,
         })) ?? [];
 
     properties.push(...propertiesWithoutKeyGroup!);
@@ -189,15 +188,16 @@ export const useNodeLauncherHandlers = ({
         uiType: firstProperty.uiType,
         value: defaultProperty?.key!,
         properties: keyGroupProperties!,
+        displayName: firstProperty.displayName!,
       });
     }
 
-    const defaultFirewall = selectedImage?.firewall?.rules! ?? [];
+    const firewall = selectedImage?.firewall?.rules! ?? [];
 
     setNodeLauncherState((nodeLauncherOldState) => ({
       ...nodeLauncherOldState,
       properties,
-      defaultFirewall,
+      firewall,
     }));
   }, [selectedImage]);
 

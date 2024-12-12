@@ -4,7 +4,6 @@ import { ITheme } from 'types/theme';
 export const styles = {
   wrapper: css`
     gap: 10px;
-    margin-bottom: 24px;
   `,
   rule: (theme: ITheme) => css`
     border-radius: 6px;
@@ -26,7 +25,7 @@ export const styles = {
     gap: 8px;
     background: transparent;
     border: 0;
-    padding: 8px 0;
+    padding: 16px 4px;
     font-size: 14px;
     color: ${theme.colorText};
     opacity: 0.7;
