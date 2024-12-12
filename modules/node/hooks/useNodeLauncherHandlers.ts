@@ -21,6 +21,7 @@ import {
   NodeLauncherHost,
   NodeLauncherState,
   NodePropertyGroup,
+  sortVersions,
 } from '@modules/node';
 import { organizationSelectors } from '@modules/organization';
 import { ROUTES, useNavigate } from '@shared/index';
@@ -48,7 +49,7 @@ interface IUseNodeLauncherHandlersHook {
     keyGroup: string,
     value: string | boolean,
   ) => void;
-  handleVersionChanged: (version: ProtocolVersion | null) => void;
+  handleVersionChanged: (version: ProtocolVersion) => void;
   handleVariantChanged: (variant: string) => void;
   handleCreateNodeClicked: () => void;
 }
@@ -140,7 +141,7 @@ export const useNodeLauncherHandlers = ({
 
   useEffect(() => {
     if (!selectedProtocol) return;
-    setSelectedVersion(selectedProtocol.versions[0]);
+    setSelectedVersion(sortVersions(selectedProtocol.versions)[0]);
   }, [selectedProtocol]);
 
   useEffect(() => {
@@ -351,7 +352,7 @@ export const useNodeLauncherHandlers = ({
     });
   };
 
-  const handleVersionChanged = (version: ProtocolVersion | null) => {
+  const handleVersionChanged = (version: ProtocolVersion) => {
     Mixpanel.track('Launch Node - Version Changed');
     setSelectedVersion(version);
   };

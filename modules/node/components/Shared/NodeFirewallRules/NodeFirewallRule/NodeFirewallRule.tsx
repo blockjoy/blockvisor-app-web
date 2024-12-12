@@ -55,7 +55,7 @@ export const NodeFirewallRule = ({ rule, rules, onFirewallChanged }: Props) => {
           type="button"
           onClick={() => setActiveTab('ips')}
         >
-          Ip's
+          Ips
         </button>
         <button
           css={styles.tabButton(activeTab === 'ports')}
