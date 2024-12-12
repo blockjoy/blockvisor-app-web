@@ -22,7 +22,7 @@ import { capitalized, createAdminNodeFilters } from '@modules/admin';
 import { AdminListColumn } from '@modules/admin/types/AdminListColumn';
 import { useEffect, useState } from 'react';
 import { Protocol } from '@modules/grpc/library/blockjoy/v1/protocol';
-import { Currency } from '../../AdminFinances/Currency/Currency';
+import { Currency } from '../../AdminFinancesByHost/Currency/Currency';
 import { AdminListEditCost } from '../AdminListEditCost/AdminListEditCost';
 import { BillingAmount } from '@modules/grpc/library/blockjoy/common/v1/currency';
 
