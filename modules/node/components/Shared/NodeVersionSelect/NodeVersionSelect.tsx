@@ -26,7 +26,6 @@ export const NodeVersionSelect = ({
   onVersionChanged,
 }: NodeVersionSelectProps) => {
   const selectedVersion = useRecoilValue(nodeLauncherAtoms.selectedVersion);
-
   const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
 
   const [isOpen, setIsOpen] = useState(false);
