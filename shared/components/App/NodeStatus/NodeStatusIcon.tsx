@@ -6,10 +6,7 @@ import {
   getNodeStatusInfo,
   NodeStatusType,
 } from './NodeStatus';
-import {
-  NodeState,
-  NodeStatus as NodeStatusEnum,
-} from '@modules/grpc/library/blockjoy/common/v1/node';
+import { NodeState } from '@modules/grpc/library/blockjoy/common/v1/node';
 
 import { SvgIcon } from '@shared/components';
 
@@ -20,11 +17,9 @@ const NodeStatusSpinner = dynamic(() => import('./NodeStatusSpinner'));
 const IconUndefined = dynamic(
   () => import('@public/assets/icons/nodeStatus/Undefined.svg'),
 );
-
 const IconBlockchain = dynamic(
   () => import('@public/assets/icons/app/Blockchain.svg'),
 );
-
 const IconDeleted = dynamic(
   () => import('@public/assets/icons/common/Trash.svg'),
 );
@@ -57,6 +52,9 @@ const IconElecting = dynamic(
 );
 const IconExporting = dynamic(
   () => import('@public/assets/icons/nodeStatus/Exporting.svg'),
+);
+const IconHeart = dynamic(
+  () => import('@public/assets/icons/common/Heart.svg'),
 );
 const IconIngesting = dynamic(
   () => import('@public/assets/icons/nodeStatus/Ingesting.svg'),
@@ -104,7 +102,9 @@ const getIcon = (statusName: string) => {
       case 'EARNING':
         return <IconEarning />;
       case 'HEALTHY':
-        return <IconBlockchain />;
+      case 'UNHEALTHY':
+      case 'NEUTRAL':
+        return <IconHeart />;
       case 'BROADCASTING':
         return <IconBroadcasting />;
       case 'CANCELLED':

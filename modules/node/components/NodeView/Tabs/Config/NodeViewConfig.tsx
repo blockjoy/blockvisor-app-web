@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import isEqual from 'lodash/isEqual';
 import { UiType } from '@modules/grpc/library/blockjoy/common/v1/protocol';
@@ -11,13 +10,7 @@ import {
   LockedSwitch,
 } from '@modules/node';
 import { renderControls } from '@modules/node/utils/renderNodeLauncherConfigControls';
-import {
-  Button,
-  ButtonGroup,
-  FormLabelCaps,
-  Switch,
-  TableSkeleton,
-} from '@shared/components';
+import { Button, ButtonGroup, FormLabelCaps, Switch } from '@shared/components';
 import { styles } from './NodeViewConfig.styles';
 import { kebabToCapitalized } from 'utils';
 import {
@@ -30,6 +23,8 @@ export const NodeViewConfig = () => {
   const { node, nodeImage, isLoading, updateNode } = useNodeView();
 
   const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
+
+  const [isLoadingConfig, setIsLoadingConfig] = useState(true);
 
   const [nodeConfig, setNodeConfig] = useRecoilState<NodeConfig>(
     nodeAtoms.nodeConfig,
@@ -108,6 +103,8 @@ export const NodeViewConfig = () => {
     const firewallCopy = [...node.config?.firewall?.rules!];
 
     setOriginalFirewall(firewallCopy);
+
+    setIsLoadingConfig(false);
   }, [node, nodeImage]);
 
   const handleSave = async () => {
@@ -118,19 +115,15 @@ export const NodeViewConfig = () => {
       rules: nodeConfig.firewall,
     };
 
-    try {
-      await updateNode({
-        nodeId: node?.nodeId!,
-        autoUpgrade: nodeConfig.autoUpgrade,
-        newValues: nodeConfig.properties.map((property) => ({
-          key: property.key,
-          value: property.value,
-        })),
-        newFirewall,
-      });
-
-      toast.success('Node Updated');
-    } catch (err) {}
+    await updateNode({
+      nodeId: node?.nodeId!,
+      autoUpgrade: nodeConfig.autoUpgrade,
+      newValues: nodeConfig.properties.map((property) => ({
+        key: property.key,
+        value: property.value,
+      })),
+      newFirewall,
+    });
   };
 
   const editedValues = nodeConfig.properties.map((p) => p.value);
@@ -147,8 +140,8 @@ export const NodeViewConfig = () => {
       property.value,
   );
 
-  return isLoading && !node?.nodeId ? (
-    <TableSkeleton />
+  return (isLoading && !node?.nodeId) || isLoadingConfig ? (
+    <></>
   ) : (
     <div css={styles.wrapper}>
       <div css={styles.row}>
@@ -156,11 +149,10 @@ export const NodeViewConfig = () => {
         {isSuperUser ? (
           <Switch
             noBottomMargin
-            // checked={node!.autoUpgrade}
             checked={nodeConfig.autoUpgrade}
             tooltip=""
             disabled={false}
-            name="autoUpdates"
+            name="autoUpgrade"
             onChange={(name: string, value: boolean) =>
               handleAutoUpgradeChanged(value)
             }

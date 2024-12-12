@@ -27,7 +27,7 @@ type NodeLauncherConfigProps = {
     name: K,
     value: NodeLauncherState[K],
   ) => void;
-  onVersionChanged: (version: ProtocolVersion | null) => void;
+  onVersionChanged: (version: ProtocolVersion) => void;
   onVariantChanged: (variant: string) => void;
 };
 
@@ -38,6 +38,7 @@ export const NodeLauncherConfig = ({
   onVariantChanged,
 }: NodeLauncherConfigProps) => {
   const nodeLauncher = useRecoilValue(nodeLauncherAtoms.nodeLauncher);
+  const versions = useRecoilValue(nodeLauncherAtoms.versions);
 
   const { properties } = nodeLauncher;
 
@@ -50,7 +51,10 @@ export const NodeLauncherConfig = ({
         <FormHeader>Config</FormHeader>
 
         <FormLabel>Version</FormLabel>
-        <NodeVersionSelect onVersionChanged={onVersionChanged} />
+        <NodeVersionSelect
+          versions={versions}
+          onVersionChanged={onVersionChanged}
+        />
 
         <FormLabel>Variant</FormLabel>
         <NodeVariantSelect onChange={onVariantChanged} />
