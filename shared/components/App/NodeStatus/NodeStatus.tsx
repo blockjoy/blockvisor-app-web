@@ -54,11 +54,13 @@ export const getNodeStatusColor = (status: number, type?: NodeStatusType) => {
 
   if (
     statusName?.match(
-      /RUNNING|SYNCED|SYNCING|FOLLOWER|BROADCASTING|PROVISIONING|UPDATING|UPLOADING|DOWNLOADING/g,
+      /HEALTHY|RUNNING|SYNCED|SYNCING|FOLLOWER|BROADCASTING|PROVISIONING|UPDATING|UPLOADING|DOWNLOADING/g,
     )
   ) {
     return styles.statusColorGreen;
-  } else if (statusName?.match(/UNDEFINED|DELETED|DELINQUENT|FAILED/g)) {
+  } else if (
+    statusName?.match(/UNHEALTHY|UNDEFINED|DELETED|DELINQUENT|FAILED/g)
+  ) {
     return styles.statusColorRed;
   } else {
     return styles.statusColorDefault;

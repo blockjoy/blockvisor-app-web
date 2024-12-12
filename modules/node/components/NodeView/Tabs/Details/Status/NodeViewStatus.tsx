@@ -3,9 +3,9 @@ import { NodeStatusIcon, SvgIcon } from '@shared/components';
 import { useNodeView } from '@modules/node';
 import { styles } from './NodeViewStatus.styles';
 import { getNodeStatusColor, NodeStatusName } from '@shared/components';
-import IconBlockHeight from '@public/assets/icons/app/BlockHeight.svg';
 import { NodeState } from '@modules/grpc/library/blockjoy/common/v1/node';
 import { authSelectors } from '@modules/auth';
+import IconBlockHeight from '@public/assets/icons/app/BlockHeight.svg';
 
 const iconSize = '24px';
 
@@ -60,7 +60,7 @@ export const NodeViewStatus = () => {
             <var
               css={[
                 styles.cardValue,
-                getNodeStatusColor(node.nodeStatus.protocol.health),
+                getNodeStatusColor(node.nodeStatus.protocol.health, 'protocol'),
               ]}
             >
               <NodeStatusName
