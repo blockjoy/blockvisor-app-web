@@ -5,12 +5,13 @@ import { styles } from './AdminSidebar.styles';
 import { SvgIcon } from '@shared/components';
 import IconNode from '@public/assets/icons/app/Node.svg';
 import IconOrganization from '@public/assets/icons/app/Organization.svg';
+import IconOrgFinance from '@public/assets/icons/app/OrgFinance.svg';
+import IconHostFinance from '@public/assets/icons/app/HostFinance.svg';
 import IconHost from '@public/assets/icons/app/Host.svg';
 import IconPerson from '@public/assets/icons/common/Person.svg';
 import IconDashboard from '@public/assets/icons/common/Grid.svg';
 import IconCog from '@public/assets/icons/common/Cog.svg';
 import IconBlockchain from '@public/assets/icons/app/Blockchain.svg';
-import IconBilling from '@public/assets/icons/common/Billing.svg';
 import { layoutSelectors } from '@modules/layout';
 import { useSettings } from '@modules/settings';
 import { useDebounce } from '@shared/index';
@@ -21,12 +22,12 @@ const links = [
   { name: 'dashboard', icon: <IconDashboard />, href: '/admin?name=dashboard' },
   {
     name: 'Host Finances',
-    icon: <IconBilling />,
+    icon: <IconHostFinance />,
     href: '/admin?name=finances-by-host',
   },
   {
     name: 'Org Finances',
-    icon: <IconBilling />,
+    icon: <IconOrgFinance />,
     href: '/admin?name=finances-by-org',
   },
   { name: 'nodes', icon: <IconNode />, href: '/admin?name=nodes' },
