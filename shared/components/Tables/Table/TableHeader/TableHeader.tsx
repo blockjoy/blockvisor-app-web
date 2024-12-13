@@ -145,6 +145,9 @@ export const TableHeader = ({
           header={header}
           isFirst={isFirst}
           isLast={isLast}
+          {...(isActive && {
+            sortOrder: sort?.order,
+          })}
         />
       )}
     </th>

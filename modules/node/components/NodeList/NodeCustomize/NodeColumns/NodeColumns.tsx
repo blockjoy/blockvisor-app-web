@@ -1,16 +1,18 @@
 import { useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
 import { Switch, SwitchLabel, DraggableList } from '@shared/components';
+import { getUpdatedHeaders } from '@shared/index';
 import {
   nodeSelectors,
   useNodeListLayout,
   NODE_LIST_LAYOUT_GROUPED_FIELDS,
 } from '@modules/node';
+import { layoutSelectors } from '@modules/layout';
 import { styles } from './NodeColumns.styles';
 
 export const NodeColumns = () => {
   const headers = useRecoilValue(nodeSelectors.nodeListHeaders);
-  const tableLayout = useRecoilValue(nodeSelectors.tableLayout);
+  const tableColumnGroups = useRecoilValue(layoutSelectors.tableColumnGroups);
 
   const { updateColumns, updateColumnVisibility } = useNodeListLayout();
 
@@ -26,13 +28,20 @@ export const NodeColumns = () => {
     return [visible, hidden];
   }, [headers]);
 
-  const handleOrder = (columns: TableColumn[]) => {
-    updateColumns?.(columns);
+  const handleOrder = (movingIndex?: number, targetIndex?: number) => {
+    const updatedColumns = getUpdatedHeaders(
+      headers,
+      visibleHeaders,
+      movingIndex ?? 0,
+      targetIndex ?? 0,
+    );
+
+    updateColumns?.(updatedColumns);
   };
 
   const disabledFields = NODE_LIST_LAYOUT_GROUPED_FIELDS.reduce(
     (acc, field) => {
-      const savedIsGrouped = tableLayout[field.key];
+      const savedIsGrouped = tableColumnGroups[field.key];
 
       acc[field.key] = !(savedIsGrouped ?? field.isGrouped);
 
@@ -79,15 +88,23 @@ export const NodeColumns = () => {
         <>
           <span css={styles.title}>Hidden</span>
           <ul css={styles.list}>
-            {hiddenHeaders.map((header) => (
-              <li
-                key={header.key}
-                css={styles.listItem(disabledFields[header.key])}
-                onClick={() => updateColumnVisibility(header.key)}
-              >
-                {renderItem(header)}
-              </li>
-            ))}
+            {hiddenHeaders.map((header) => {
+              const isDisabled = disabledFields[header.key];
+
+              return (
+                <li
+                  key={header.key}
+                  css={styles.listItem(isDisabled)}
+                  onClick={
+                    !isDisabled
+                      ? () => updateColumnVisibility(header.key)
+                      : undefined
+                  }
+                >
+                  {renderItem(header)}
+                </li>
+              );
+            })}
           </ul>
         </>
       )}

@@ -1,3 +1,4 @@
+import { css, Global } from '@emotion/react';
 import {
   useEffect,
   useLayoutEffect,
@@ -85,12 +86,26 @@ export const TableScroller = ({ tableRef, wrapperRef }: Props) => {
   }, [handleWindowSizeChange]);
 
   return (
-    <div
-      ref={scrollbarRef}
-      css={styles.wrapper(isVisible)}
-      style={{ width: wrapperWidth }}
-    >
-      <div style={{ width: tableWidth }} css={styles.scroller}></div>
-    </div>
+    <>
+      {isVisible && (
+        <Global
+          styles={css`
+            .table-wrapper {
+              ::-webkit-scrollbar,
+              ::-webkit-scrollbar-track {
+                display: none;
+              }
+            }
+          `}
+        />
+      )}
+      <div
+        ref={scrollbarRef}
+        css={styles.wrapper(isVisible)}
+        style={{ width: wrapperWidth }}
+      >
+        <div style={{ width: tableWidth }} css={styles.scroller}></div>
+      </div>
+    </>
   );
 };

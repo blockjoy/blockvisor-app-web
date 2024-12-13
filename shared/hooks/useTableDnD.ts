@@ -1,12 +1,13 @@
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import throttle from 'lodash/throttle';
-import { getOrderedColumns } from '@shared/components';
+import { getUpdatedHeaders } from '@shared/index';
 
 export const useTableDnD = (
-  headersRef: React.MutableRefObject<(HTMLTableCellElement | null)[]>,
+  headers: TableHeader[] = [],
   columns: TableHeader[] = [],
   setColumns?: React.Dispatch<React.SetStateAction<TableHeader[]>>,
   handleUpdateColumns?: (columns: TableColumn[]) => void,
+  headersRef?: React.MutableRefObject<(HTMLTableCellElement | null)[]>,
   wrapperRef?: React.RefObject<HTMLDivElement | null>,
   tableRef?: React.RefObject<HTMLDivElement | null>,
 ) => {
@@ -63,7 +64,7 @@ export const useTableDnD = (
 
       itemShiftsX.current = new Array(columns.length).fill(0);
 
-      const draggingHeader = headersRef.current[index];
+      const draggingHeader = headersRef?.current[index];
       const draggingRect = draggingHeader?.getBoundingClientRect();
 
       maxDeltaXRight.current =
@@ -85,7 +86,7 @@ export const useTableDnD = (
     (e: MouseEvent) => {
       if (draggingIndex.current === null) return;
 
-      const draggingHeader = headersRef.current[draggingIndex.current];
+      const draggingHeader = headersRef?.current[draggingIndex.current];
       if (!draggingHeader) return;
 
       const draggingRect = draggingHeader.getBoundingClientRect();
@@ -212,7 +213,12 @@ export const useTableDnD = (
       setColumns?.(updatedColumns);
 
       if (movedColumn) {
-        const sortedColumns = getOrderedColumns(columns, updatedColumns);
+        const sortedColumns = getUpdatedHeaders(
+          headers,
+          columns,
+          draggingIndex.current,
+          targetIndex.current,
+        );
 
         handleUpdateColumns?.(sortedColumns);
       }

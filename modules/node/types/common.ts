@@ -69,13 +69,18 @@ export type InitialNodeQueryParams = {
 
 export type NodeListColumnKey = keyof Node | 'customNodeInfo';
 
-export type NodeListGroupLayoutItem = {
+export type NodeListLayoutGroupItem = {
   key: NodeListColumnKey;
   name: string;
   label?: string;
   dependencies?: NodeListColumnKey[];
   isGrouped?: boolean;
 };
+
+export type NodeListLayoutInputItem = {
+  id?: string;
+  label?: string;
+} & React.InputHTMLAttributes<HTMLInputElement>;
 
 export type NodeListItem = TableHeader<NodeListColumnKey> & {
   component: (node: Node) => EmotionJSX.Element;

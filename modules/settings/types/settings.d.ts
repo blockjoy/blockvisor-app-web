@@ -2,7 +2,6 @@ declare namespace globalThis {
   type NodeSettings = {
     filters: import('@modules/grpc').UINodeFilterCriteria;
     sort: import('@modules/grpc/library/blockjoy/v1/node').NodeSort[];
-    columns?: TableColumn[];
   };
 
   type HostSettings = {
@@ -39,6 +38,8 @@ type LayoutBasicSettings = {
   'sidebar.isOpen': boolean;
   'nodes.view': View;
   'nodes.filters.isOpen': boolean;
+  'nodes.table.tagsPerView': number;
+  'nodes.table.columns': TableColumn[];
   'hosts.view': View;
   'hosts.filters.isOpen': boolean;
   'admin.fullWidth': boolean;

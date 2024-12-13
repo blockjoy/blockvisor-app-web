@@ -14,12 +14,12 @@ import {
   nodeAtoms,
   protocolAtoms,
   InitialNodeQueryParams,
-  NODE_LIST_LAYOUT_GROUPED_FIELDS,
   NODE_LIST_ITEMS,
 } from '@modules/node';
 import { authAtoms } from '@modules/auth';
 import { createDropdownValuesFromEnum } from '@modules/admin';
 import { NodeState } from '@modules/grpc/library/blockjoy/common/v1/node';
+import { layoutSelectors } from '@modules/layout';
 
 const settings = selector<NodeSettings>({
   key: 'node.settings',
@@ -52,41 +52,10 @@ const isFiltersEmpty = selector({
   },
 });
 
-const tableColumns = selector<TableColumn[]>({
-  key: 'node.table.columns',
-  get: ({ get }) => {
-    const nodeSettings = get(settings);
-
-    return nodeSettings?.columns ?? [];
-  },
-});
-
-const tableLayout = selector({
-  key: 'node.table.layout.nodeInfo.isGrouped',
-  get: ({ get }) => {
-    const tableColumnsVal = get(tableColumns);
-
-    const tableColumnsVisible = new Map();
-    tableColumnsVal.forEach((col) =>
-      tableColumnsVisible.set(col.key, col.isVisible),
-    );
-
-    const groupedFields = NODE_LIST_LAYOUT_GROUPED_FIELDS.reduce<
-      Record<string, boolean>
-    >((group, groupedField) => {
-      const isVisible = tableColumnsVisible.get(groupedField.key);
-      group[groupedField.key!] = isVisible ?? groupedField.isGrouped;
-      return group;
-    }, {});
-
-    return groupedFields;
-  },
-});
-
 const nodeListHeaders = selector<TableHeader[]>({
   key: 'node.table.headers',
   get: ({ get }) => {
-    const tableColumnsVal = get(tableColumns);
+    const tableColumnsVal = get(layoutSelectors.tableColumns);
 
     const headers = transformHeaders(NODE_LIST_ITEMS, tableColumnsVal);
 
@@ -214,9 +183,6 @@ export const nodeSelectors = {
 
   filters,
   isFiltersEmpty,
-
-  tableColumns,
-  tableLayout,
 
   nodeListHeaders,
 

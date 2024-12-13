@@ -1,11 +1,11 @@
 import { useRecoilValue } from 'recoil';
-import { getOrderedColumns } from '@shared/components';
-import { updateTableColumns } from '@shared/index';
+import { updateTableColumns, getUpdatedHeaders } from '@shared/index';
 import { nodeSelectors } from '@modules/node';
 import { useSettings } from '@modules/settings';
+import { layoutSelectors } from '@modules/layout';
 
 export const useNodeListLayout = () => {
-  const tableColumns = useRecoilValue(nodeSelectors.tableColumns);
+  const tableColumns = useRecoilValue(layoutSelectors.tableColumns);
   const nodeListHeaders = useRecoilValue(nodeSelectors.nodeListHeaders);
 
   const { updateSettings } = useSettings();
@@ -15,8 +15,8 @@ export const useNodeListLayout = () => {
       tableColumns,
       columns,
       (updatedColumns: TableColumn[]) => {
-        updateSettings('nodes', {
-          columns: updatedColumns,
+        updateSettings('layout', {
+          'nodes.table.columns': updatedColumns,
         });
       },
     );
@@ -35,7 +35,7 @@ export const useNodeListLayout = () => {
     ]);
   };
 
-  const updatePosition = (key?: string, direction?: 'left' | 'right') => {
+  const updatePosition = (key?: string, direction?: TableHeaderMoveAction) => {
     if (!key || !direction) return;
 
     const filteredHeaders =
@@ -45,17 +45,32 @@ export const useNodeListLayout = () => {
       (header) => header.key === key,
     );
 
-    const targetIndex =
-      direction === 'left' ? movingIndex - 1 : movingIndex + 1;
+    let targetIndex = movingIndex;
+    switch (direction) {
+      case 'start':
+        targetIndex = 0;
+        break;
+      case 'left':
+        targetIndex = movingIndex - 1;
+        break;
+      case 'right':
+        targetIndex = movingIndex + 1;
+        break;
+      case 'end':
+        targetIndex = filteredHeaders.length - 1;
+        break;
+      default:
+        break;
+    }
 
-    const updatedColumns = [...(filteredHeaders ?? [])];
-    const [movedColumn] = updatedColumns.splice(movingIndex, 1);
+    const updatedColumns = getUpdatedHeaders(
+      nodeListHeaders,
+      filteredHeaders,
+      movingIndex,
+      targetIndex,
+    );
 
-    updatedColumns.splice(targetIndex, 0, movedColumn);
-
-    const sortedColumns = getOrderedColumns(filteredHeaders, updatedColumns);
-
-    updateColumns?.(sortedColumns);
+    updateColumns?.(updatedColumns);
   };
 
   return {

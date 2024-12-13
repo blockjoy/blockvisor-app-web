@@ -12,14 +12,19 @@ export const transformHeaders = (
   });
 
   const headers = currentHeaders
-    .map((header) => ({
-      ...header,
-      width: columnSettings.get(header.key)?.width || header.width,
-      isVisible: columnSettings.get(header.key)?.isVisible ?? header.isVisible,
-    }))
+    .map((header, index) => {
+      const currentHeader = columnSettings.get(header.key);
+
+      return {
+        ...header,
+        width: currentHeader?.width || header.width,
+        isVisible: currentHeader?.isVisible ?? header.isVisible,
+        order: currentHeader?.order || index,
+      };
+    })
     .sort((a, b) => {
-      const orderA = columnSettings.get(a.key)?.order || 0;
-      const orderB = columnSettings.get(b.key)?.order || 0;
+      const orderA = a.order || 0;
+      const orderB = b.order || 0;
 
       return orderA - orderB;
     });

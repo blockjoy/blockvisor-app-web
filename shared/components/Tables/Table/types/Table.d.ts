@@ -8,6 +8,7 @@ type TableHeader<K = string> = {
   key: K;
   name?: string;
   label?: string;
+  order?: number;
   width?: string;
   minWidth?: string;
   maxWidth?: string;
@@ -109,6 +110,10 @@ type TableContextGroup = { title?: string; items: TableContextItem[] };
 type TableHeaderAction =
   | 'sort_asc'
   | 'sort_desc'
+  | 'move_to_start'
   | 'move_to_left'
   | 'move_to_right'
+  | 'move_to_end'
   | 'hide';
+
+type TableHeaderMoveAction = 'start' | 'left' | 'right' | 'end';
