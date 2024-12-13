@@ -38,10 +38,11 @@ export const TableDynamic = <T extends BaseQueryParams>({
     itemShiftsX,
     handleMouseDown: handleReorder,
   } = useTableDnD(
-    headersRef,
+    headers,
     columns,
     setColumns,
     handleUpdateColumns,
+    headersRef,
     wrapperRef,
     tableRef,
   );

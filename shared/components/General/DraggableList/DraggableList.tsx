@@ -7,9 +7,9 @@ import { getItemStyle } from './utils/getItemStyle';
 import { styles } from './DraggableList.styles';
 import IconDrag from '@public/assets/icons/common/Drag.svg';
 
-type Props<T, C> = {
+type Props<T> = {
   items: T[];
-  onChange: (columns: C[]) => void;
+  onChange: (movingIndex?: number, targetIndex?: number) => void;
   renderItem?: (item: T, isActiveItem?: boolean) => React.ReactNode;
   additionalyStyles?:
     | SerializedStyles[]
@@ -21,7 +21,7 @@ export const DraggableList = <T extends { key: string }, I>({
   onChange,
   renderItem,
   additionalyStyles,
-}: Props<T, I>) => {
+}: Props<T>) => {
   const itemRefs = useRef<(HTMLLIElement | null)[]>([]);
 
   const {

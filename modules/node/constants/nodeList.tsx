@@ -4,12 +4,14 @@ import { NodeSortField } from '@modules/grpc/library/blockjoy/v1/node';
 import { NodeStatus, SortingItem } from '@shared/components';
 import { NodeItems, NodeGroups } from '@shared/components';
 import { NodeTags } from '@modules/node';
-import { NodeListGroupLayoutItem, NodeListItem } from '../types/common';
+import { NodeListLayoutGroupItem, NodeListItem } from '../types/common';
 
 const SORT_ACTIONS: TableHeaderAction[] = ['sort_asc', 'sort_desc'];
 const LAYOUT_ACTIONS: TableHeaderAction[] = [
+  'move_to_start',
   'move_to_left',
   'move_to_right',
+  'move_to_end',
   'hide',
 ];
 const ALL_ACTIONS: TableHeaderAction[] = [...SORT_ACTIONS, ...LAYOUT_ACTIONS];
@@ -30,7 +32,7 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
         createdAt={node.createdAt}
       />
     ),
-    actions: SORT_ACTIONS,
+    actions: ALL_ACTIONS,
   },
   {
     key: 'blockchainName',
@@ -64,7 +66,7 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
     minWidth: '140px',
     width: '300px',
     isVisible: true,
-    component: (node: Node) => <NodeTags node={node} />,
+    component: (node: Node) => <NodeTags node={node} type="list" />,
     actions: LAYOUT_ACTIONS,
   },
   {
@@ -209,7 +211,7 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
   },
 ];
 
-export const NODE_LIST_LAYOUT_GROUPED_FIELDS: NodeListGroupLayoutItem[] = [
+export const NODE_LIST_LAYOUT_GROUPED_FIELDS: NodeListLayoutGroupItem[] = [
   {
     key: 'customNodeInfo',
     name: 'group-node-info',

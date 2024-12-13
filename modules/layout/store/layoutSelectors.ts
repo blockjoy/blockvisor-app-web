@@ -1,5 +1,6 @@
 import { selector, selectorFamily } from 'recoil';
 import { authAtoms } from '@modules/auth';
+import { NODE_LIST_LAYOUT_GROUPED_FIELDS } from '@modules/node';
 
 const layout = selector<LayoutSettings>({
   key: 'layout',
@@ -44,6 +45,46 @@ const isNodeFiltersOpen = selector<boolean>({
     const layoutVal = get(layout);
 
     return layoutVal?.['nodes.filters.isOpen'] ?? false;
+  },
+});
+
+const tableColumns = selector<TableColumn[]>({
+  key: 'layout.nodes.table.columns',
+  get: ({ get }) => {
+    const layoutVal = get(layout);
+
+    return layoutVal?.['nodes.table.columns'] ?? [];
+  },
+});
+
+const tableColumnGroups = selector({
+  key: 'layout.nodes.table.columns.groups',
+  get: ({ get }) => {
+    const tableColumnsVal = get(tableColumns);
+
+    const tableColumnsVisible = new Map();
+    tableColumnsVal.forEach((col) =>
+      tableColumnsVisible.set(col.key, col.isVisible),
+    );
+
+    const groupedFields = NODE_LIST_LAYOUT_GROUPED_FIELDS.reduce<
+      Record<string, boolean>
+    >((group, groupedField) => {
+      const isVisible = tableColumnsVisible.get(groupedField.key);
+      group[groupedField.key!] = isVisible ?? groupedField.isGrouped;
+      return group;
+    }, {});
+
+    return groupedFields;
+  },
+});
+
+const tableTagsPerView = selector<number>({
+  key: 'layout.nodes.table.tags.itemsPerView',
+  get: ({ get }) => {
+    const layoutVal = get(layout);
+
+    return layoutVal?.['nodes.table.tagsPerView'] ?? 3;
   },
 });
 
@@ -125,6 +166,10 @@ export const layoutSelectors = {
   nodeViewMobile,
   activeNodeView,
   isNodeFiltersOpen,
+
+  tableColumns,
+  tableColumnGroups,
+  tableTagsPerView,
 
   hostView,
   hostViewMobile,

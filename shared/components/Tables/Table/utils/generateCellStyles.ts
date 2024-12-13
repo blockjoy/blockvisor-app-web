@@ -31,7 +31,9 @@ export const generateCellStyles = (
       indexes?.drag !== indexes?.col &&
       `transition: all .2s ease !important;`}
       
-      ${indexes?.drag && indexes?.drag === indexes?.col && `z-index: 2;`}
+      ${indexes?.drag !== null &&
+      indexes?.drag === indexes?.col &&
+      `z-index: 2;`}
 
        ${deltaX && indexes?.drag === indexes?.col && type === 'th'
         ? `background-color: ${theme.colorBorder}; span { color: ${theme.colorText};}`

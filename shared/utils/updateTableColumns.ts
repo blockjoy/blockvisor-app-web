@@ -3,17 +3,27 @@ export const updateTableColumns = (
   newColumns: TableColumn[],
   callback?: (columns: TableColumn[]) => void,
 ) => {
-  const updatedColumns = [...oldColumns];
+  const columnsMap = new Map<string, TableColumn>();
 
-  newColumns.forEach((column) => {
-    const index = updatedColumns.findIndex((col) => col.key === column.key);
+  for (const column of oldColumns) {
+    const { key, ...rest } = column;
+    if (!key) continue;
 
-    if (index !== -1) {
-      updatedColumns[index] = { ...updatedColumns[index], ...column };
-    } else {
-      updatedColumns.push({ ...column });
-    }
-  });
+    columnsMap.set(key, rest);
+  }
+
+  for (const column of newColumns) {
+    const { key, ...rest } = column;
+    if (!key) continue;
+
+    const currentCol = columnsMap.get(key) ?? {};
+    columnsMap.set(key, { ...currentCol, ...rest });
+  }
+
+  const updatedColumns = Array.from(columnsMap, ([key, col]) => ({
+    key,
+    ...col,
+  }));
 
   callback?.(updatedColumns);
 };

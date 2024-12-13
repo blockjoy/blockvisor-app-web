@@ -34,8 +34,16 @@ export const styles = {
     font-size: 14px;
     cursor: pointer;
 
-    :hover {
+    :hover,
+    &.active {
       background-color: ${rgba(theme.colorText, 0.1)};
+    }
+
+    &.active {
+      cursor: no-drop;
+      pointer-events: none;
+      margin-top: 2px;
+      margin-bottom: 2px;
     }
   `,
   spacer: (theme: ITheme) => css`

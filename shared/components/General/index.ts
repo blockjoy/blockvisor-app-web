@@ -42,4 +42,3 @@ export * from './Tooltip/Tooltip';
 export * from './Unauthorized/Unauthorized';
 
 export * from './DraggableList/utils/getItemStyle';
-export * from './DraggableList/utils/getOrderedColumns';

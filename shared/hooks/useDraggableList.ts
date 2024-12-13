@@ -5,11 +5,10 @@ import React, {
   useRef,
   RefObject,
 } from 'react';
-import { getOrderedColumns } from '@shared/components';
 
-export const useDraggableList = <T extends { key: string }, C>(
+export const useDraggableList = <T extends { key: string }>(
   items: T[],
-  onChange: (columns: C[]) => void,
+  onChange: (movingIndex?: number, targetIndex?: number) => void,
   itemRefs: RefObject<(HTMLLIElement | null)[]>,
 ) => {
   const [currentItems, setCurrentItems] = useState<T[]>(items);
@@ -192,23 +191,25 @@ export const useDraggableList = <T extends { key: string }, C>(
     setIsDragging(false);
     setWillEndDragging(true);
 
-    if (draggingIndex.current === targetIndex.current) {
+    if (
+      draggingIndex.current === null ||
+      targetIndex.current === null ||
+      draggingIndex.current === targetIndex.current
+    ) {
       reset();
       return;
     }
 
-    const newItems = [...currentItems];
-    const [movedItem] = newItems.splice(draggingIndex.current!, 1);
-    newItems.splice(targetIndex.current!, 0, movedItem);
+    const updatedItems = [...currentItems];
+    const [movedItem] = updatedItems.splice(draggingIndex.current, 1);
+    updatedItems.splice(targetIndex.current, 0, movedItem);
+
+    if (movedItem && draggingIndex.current !== targetIndex.current) {
+      onChange?.(draggingIndex.current, targetIndex.current);
+    }
 
     setTimeout(() => {
-      if (movedItem && draggingIndex.current !== targetIndex.current) {
-        const updatedColumns = getOrderedColumns<T, C>(currentItems, newItems);
-
-        onChange?.(updatedColumns);
-      }
-
-      setCurrentItems(newItems);
+      setCurrentItems(updatedItems);
 
       reset();
     }, 200);
