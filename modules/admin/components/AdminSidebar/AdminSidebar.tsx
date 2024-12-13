@@ -12,7 +12,6 @@ import IconPerson from '@public/assets/icons/common/Person.svg';
 import IconDashboard from '@public/assets/icons/common/Grid.svg';
 import IconCog from '@public/assets/icons/common/Cog.svg';
 import IconBlockchain from '@public/assets/icons/app/Blockchain.svg';
-import IconBilling from '@public/assets/icons/common/Billing.svg';
 import { layoutSelectors } from '@modules/layout';
 import { useSettings } from '@modules/settings';
 import { useDebounce } from '@shared/index';
