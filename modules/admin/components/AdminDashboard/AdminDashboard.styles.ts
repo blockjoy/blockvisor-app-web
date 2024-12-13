@@ -31,8 +31,8 @@ export const styles = {
     align-items: center;
     gap: 10px;
 
-    > a {
-      border-right: 1px solid ${theme.colorBorder};
+    > a::after {
+      padding-right: 10px;
     }
   `,
   grid: css`

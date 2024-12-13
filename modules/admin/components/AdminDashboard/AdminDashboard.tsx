@@ -63,7 +63,7 @@ export const AdminDashboard = () => {
         Finances
         <div css={styles.sectionHeaderLinks}>
           <NextLink href="/admin?name=finances-by-host">Hosts</NextLink>
-          <NextLink href="/admin?name=finances-by-host">Hosts</NextLink>
+          <NextLink href="/admin?name=finances-by-org">Orgs</NextLink>
         </div>
       </h2>
       <div css={styles.grid}>

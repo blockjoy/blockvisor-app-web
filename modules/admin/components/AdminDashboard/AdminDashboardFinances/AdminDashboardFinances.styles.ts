@@ -37,8 +37,9 @@ export const styles = {
     font-size: 34px;
 
     abbr {
+      translate: 0 -4px;
       font-size: 12px;
-      color: ${theme.colorDefault}
+      color: ${theme.colorDefault};
     }
   `,
   subtitle: (theme: ITheme) => css`
