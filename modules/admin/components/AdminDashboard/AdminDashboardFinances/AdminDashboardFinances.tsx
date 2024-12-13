@@ -59,9 +59,10 @@ export const AdminDashboardFinances = () => {
           : revenue - (host.cost?.amount?.amountMinorUnits! ?? 0);
 
         totalRevenue += revenue;
-        totalProfit += profit;
         totalCost += host.cost?.amount?.amountMinorUnits ?? 0;
       }
+
+      totalProfit = totalRevenue - totalCost;
 
       const totalProfitPercent = (totalProfit / totalCost) * 100;
 

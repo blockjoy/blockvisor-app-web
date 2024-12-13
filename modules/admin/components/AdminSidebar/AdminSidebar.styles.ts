@@ -41,6 +41,7 @@ export const styles = {
     overflow: hidden;
     color: ${theme.colorText};
     width: 100%;
+    white-space: nowrap;
     min-width: 40px;
     height: 100%;
     display: flex;
@@ -86,6 +87,7 @@ export const styles = {
     :active {
       background: rgb(255 255 255 / 10%);
       cursor: col-resize;
+      user-select: none;
     }
   `,
 };

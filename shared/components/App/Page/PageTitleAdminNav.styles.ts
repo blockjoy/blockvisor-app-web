@@ -51,6 +51,7 @@ export const styles = {
     gap: 10px;
     height: 44px;
     padding: 0 16px;
+    white-space: nowrap;
     font-size: 14px;
   `,
   icon: (theme: ITheme) => css`
@@ -72,6 +73,7 @@ export const styles = {
     width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
     line-height: 1.6;
   `,
   nameIcon: css`

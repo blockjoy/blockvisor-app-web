@@ -28,6 +28,13 @@ const columns = [
   },
 ];
 
+const blockjoyOrgs = [
+  'f0210007-f981-4f53-8826-efa2509991d2',
+  '2a98604b-8d01-4dda-8516-a3e99f564170',
+  'c71f6380-0c26-479c-a220-463d1637844b',
+  '15d793dd-84da-4eb5-b617-64c714ff056b',
+];
+
 const sort = (
   items: OrgRevenue[],
   sortField: SortField,
@@ -139,7 +146,9 @@ export const AdminFinancesByOrg = () => {
       setOrgRevenue(
         sort(
           orgRevenueArray.filter(
-            (org) => org.orgName !== 'Personal' && org.nodes !== 0,
+            (org) =>
+              (org.orgName === 'Personal' && org.nodes > 0) ||
+              (org.nodes > 0 && !blockjoyOrgs.includes(org.orgId)),
           ),
           'revenue',
           SortOrder.SORT_ORDER_DESCENDING,

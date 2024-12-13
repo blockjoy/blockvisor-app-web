@@ -10,7 +10,8 @@ import IconUser from '@public/assets/icons/common/Person.svg';
 import IconDashboard from '@public/assets/icons/common/Grid.svg';
 import IconCog from '@public/assets/icons/common/Cog.svg';
 import IconBlockchain from '@public/assets/icons/app/Blockchain.svg';
-import IconBilling from '@public/assets/icons/common/Billing.svg';
+import IconOrgFinance from '@public/assets/icons/app/OrgFinance.svg';
+import IconHostFinance from '@public/assets/icons/app/HostFinance.svg';
 
 type LinkItem = {
   id?: string;
@@ -24,10 +25,14 @@ export const PageTitleAdminNav = () => {
       { id: 'dashboard', name: 'Dashboard', icon: <IconDashboard /> },
       {
         id: 'finances-by-host',
-        name: 'Finances By Host',
-        icon: <IconBilling />,
+        name: 'Host Finances',
+        icon: <IconHostFinance />,
       },
-      { id: 'finances-by-org', name: 'Finances By Org', icon: <IconBilling /> },
+      {
+        id: 'finances-by-org',
+        name: 'Org Finances',
+        icon: <IconOrgFinance />,
+      },
       { id: 'nodes', name: 'Nodes', icon: <IconNode /> },
       { id: 'hosts', name: 'Hosts', icon: <IconHost /> },
       { id: 'protocols', name: 'Protocols', icon: <IconBlockchain /> },
