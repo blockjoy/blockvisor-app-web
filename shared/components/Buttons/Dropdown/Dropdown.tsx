@@ -1,4 +1,4 @@
-import { ReactNode, RefObject, useEffect, useRef } from 'react';
+import React, { ReactNode, RefObject, useEffect, useRef } from 'react';
 import isEqual from 'lodash/isEqual';
 import { SerializedStyles } from '@emotion/react';
 import { ITheme } from 'types/theme';

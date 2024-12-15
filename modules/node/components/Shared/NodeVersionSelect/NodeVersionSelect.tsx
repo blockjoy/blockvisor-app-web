@@ -52,7 +52,9 @@ export const NodeVersionSelect = ({
       disabled={!isSuperUser || versions.length < 2}
       items={sortVersions(versions).map((version) => ({
         id: version.protocolVersionId,
-        name: version.semanticVersion,
+        name: isSuperUser
+          ? `${version.semanticVersion} - ${version.description}`
+          : version.semanticVersion,
       }))}
       {...(selectedVersion
         ? {
@@ -63,14 +65,7 @@ export const NodeVersionSelect = ({
         : isSuperUser
         ? { error: 'No Versions Available' }
         : { defaultText: <p css={styles.buttonText}>Auto select</p> })}
-      renderItem={(item) => (
-        <>
-          {item.name}
-          {isSuperUser && (
-            <span css={styles.versionDescription}> {item.name}</span>
-          )}
-        </>
-      )}
+      renderItem={(item) => item.name}
       isOpen={isOpen}
       handleOpen={handleOpen}
       handleSelected={(item: {

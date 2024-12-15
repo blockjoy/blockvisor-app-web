@@ -21,13 +21,9 @@ const nodeImage = atom<Image | null>({
   default: null,
 });
 
-const nodeConfig = atom<NodeConfig>({
+const nodeConfig = atom<NodeConfig | null>({
   key: 'node.nodeConfig',
-  default: {
-    properties: [],
-    firewall: [],
-    autoUpgrade: false,
-  },
+  default: null,
 });
 
 const nodeList = atom<Node[]>({
