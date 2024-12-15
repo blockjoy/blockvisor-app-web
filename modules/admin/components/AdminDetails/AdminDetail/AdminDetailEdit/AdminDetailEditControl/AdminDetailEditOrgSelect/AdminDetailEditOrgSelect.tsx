@@ -51,6 +51,7 @@ export const AdminDetailEditOrgSelect = ({
   return (
     <OrgSelectDropdown
       items={orgs}
+      idKey="orgId"
       noBottomMargin
       renderItem={(item: Org) => (
         <>

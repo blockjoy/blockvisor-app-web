@@ -113,6 +113,10 @@ export const EditableTitle = ({
     }
   }, [isSaving]);
 
+  useEffect(() => {
+    inputValue.current = initialValue;
+  }, [initialValue]);
+
   return (
     <div
       css={[styles.wrapper, canUpdate && !isEditMode && styles.wrapperEditable]}
