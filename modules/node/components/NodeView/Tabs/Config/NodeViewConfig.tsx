@@ -10,7 +10,13 @@ import {
   LockedSwitch,
 } from '@modules/node';
 import { renderControls } from '@modules/node/utils/renderNodeLauncherConfigControls';
-import { Button, ButtonGroup, FormLabelCaps, Switch } from '@shared/components';
+import {
+  Button,
+  ButtonGroup,
+  FormLabelCaps,
+  sort,
+  Switch,
+} from '@shared/components';
 import { styles } from './NodeViewConfig.styles';
 import { kebabToCapitalized } from 'utils';
 import {
@@ -26,7 +32,7 @@ export const NodeViewConfig = () => {
 
   const [isLoadingConfig, setIsLoadingConfig] = useState(true);
 
-  const [nodeConfig, setNodeConfig] = useRecoilState<NodeConfig>(
+  const [nodeConfig, setNodeConfig] = useRecoilState<NodeConfig | null>(
     nodeAtoms.nodeConfig,
   );
 
@@ -36,39 +42,44 @@ export const NodeViewConfig = () => {
 
   const [originalFirewall, setOriginalFirewall] = useState<FirewallRule[]>([]);
 
-  const { properties } = nodeConfig;
+  const sortedProperties = sort(nodeConfig?.properties ?? [], { field: 'key' });
 
   const handlePropertyChanged = (
     key: string,
     keyGroup: string,
     value: string,
   ) => {
-    const nextProperties = nodeConfig.properties.map((property) =>
+    const nextProperties = sortedProperties.map((property) =>
       property.key === key || property.keyGroup === keyGroup
         ? { ...property, key, value }
         : property,
     );
 
     setNodeConfig({
-      ...nodeConfig,
+      ...nodeConfig!,
       properties: nextProperties,
     });
   };
 
   const handleFirewallChanged = (nextFirewall: FirewallRule[]) =>
     setNodeConfig({
-      ...nodeConfig,
+      ...nodeConfig!,
       firewall: nextFirewall,
     });
 
   const handleAutoUpgradeChanged = (nextAutoUpgrade: boolean) => {
     setNodeConfig({
-      ...nodeConfig,
+      ...nodeConfig!,
       autoUpgrade: nextAutoUpgrade,
     });
   };
 
   useEffect(() => {
+    if (nodeConfig) {
+      setIsLoadingConfig(false);
+      return;
+    }
+
     if (!nodeImage || !node) return;
 
     const nextProperties = node.config?.image?.values?.map((property) => {
@@ -92,7 +103,7 @@ export const NodeViewConfig = () => {
     })!;
 
     setNodeConfig({
-      ...nodeConfig,
+      ...nodeConfig!,
       properties: nextProperties,
       firewall: node.config?.firewall?.rules!,
       autoUpgrade: node.autoUpgrade,
@@ -112,28 +123,31 @@ export const NodeViewConfig = () => {
 
     const newFirewall: FirewallConfig = {
       ...node?.config?.firewall,
-      rules: nodeConfig.firewall,
+      rules: nodeConfig?.firewall!,
     };
 
-    await updateNode({
-      nodeId: node?.nodeId!,
-      autoUpgrade: nodeConfig.autoUpgrade,
-      newValues: nodeConfig.properties.map((property) => ({
-        key: property.key,
-        value: property.value,
-      })),
-      newFirewall,
-    });
+    await updateNode(
+      {
+        nodeId: node?.nodeId!,
+        autoUpgrade: nodeConfig?.autoUpgrade,
+        newValues: sortedProperties.map((property) => ({
+          key: property.key,
+          value: property.value,
+        })),
+        newFirewall,
+      },
+      true,
+    );
   };
 
-  const editedValues = nodeConfig.properties.map((p) => p.value);
+  const editedValues = nodeConfig?.properties.map((p) => p.value);
 
   const isDirty =
     !isEqual(editedValues, originalPropertyValues) ||
-    !isEqual([...nodeConfig.firewall], originalFirewall) ||
-    nodeConfig.autoUpgrade !== node?.autoUpgrade;
+    !isEqual([...nodeConfig?.firewall!], originalFirewall) ||
+    nodeConfig?.autoUpgrade !== node?.autoUpgrade;
 
-  const isValid = nodeConfig.properties.every(
+  const isValid = nodeConfig?.properties.every(
     (property) =>
       property.uiType === UiType.UI_TYPE_TEXT ||
       property.uiType === UiType.UI_TYPE_PASSWORD ||
@@ -149,7 +163,7 @@ export const NodeViewConfig = () => {
         {isSuperUser ? (
           <Switch
             noBottomMargin
-            checked={nodeConfig.autoUpgrade}
+            checked={nodeConfig?.autoUpgrade}
             tooltip=""
             disabled={false}
             name="autoUpgrade"
@@ -166,11 +180,11 @@ export const NodeViewConfig = () => {
         <FormLabelCaps noBottomMargin>Firewall Rules</FormLabelCaps>
         <NodeFirewallRules
           onFirewallChanged={handleFirewallChanged}
-          rules={nodeConfig.firewall}
+          rules={nodeConfig?.firewall}
         />
       </div>
 
-      {properties.map((propertyGroup) => (
+      {sortedProperties.map((propertyGroup) => (
         <div css={styles.row} key={propertyGroup.keyGroup}>
           <FormLabelCaps noBottomMargin>
             {propertyGroup.displayName ||

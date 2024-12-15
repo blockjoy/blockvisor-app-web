@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { css } from '@emotion/react';
-import { ProtocolVersion } from '@modules/grpc/library/blockjoy/v1/protocol';
-import { Dropdown } from '@shared/components';
-import { nodeLauncherAtoms, nodeLauncherSelectors } from '@modules/node';
+import { Dropdown, sort } from '@shared/components';
+import { nodeLauncherAtoms } from '@modules/node';
 import { authSelectors } from '@modules/auth';
 import { ITheme } from 'types/theme';
 
@@ -36,12 +35,13 @@ export const NodeVariantSelect = ({ onChange }: NodeVariantSelectProps) => {
   return (
     <Dropdown
       disabled={!isSuperUser || variants?.length! < 2}
-      items={
+      items={sort(
         variants?.map((variant) => ({
           id: variant,
           name: variant,
-        }))!
-      }
+        }))!,
+        { field: 'name' },
+      )}
       itemKey="version"
       {...(selectedProtocol
         ? {
