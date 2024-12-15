@@ -2,7 +2,7 @@ import { Fragment } from 'react';
 import { useRecoilValue } from 'recoil';
 import { renderControls } from '@modules/node/utils/renderNodeLauncherConfigControls';
 import { ProtocolVersion } from '@modules/grpc/library/blockjoy/v1/protocol';
-import { FormLabel, FormHeader } from '@shared/components';
+import { FormLabel, FormHeader, sort } from '@shared/components';
 import {
   NodeLauncherPanel,
   NodeVersionSelect,
@@ -42,6 +42,8 @@ export const NodeLauncherConfig = ({
 
   const { properties } = nodeLauncher;
 
+  const sortedProperties = sort(properties, { field: 'key' });
+
   const handleFirewallChanged = (nextFirewall: FirewallRule[]) =>
     onNodePropertyChanged('firewall', nextFirewall);
 
@@ -68,7 +70,7 @@ export const NodeLauncherConfig = ({
           onFirewallChanged={handleFirewallChanged}
         />
 
-        {properties?.map((propertyGroup: NodePropertyGroup, index) => {
+        {sortedProperties?.map((propertyGroup: NodePropertyGroup, index) => {
           const isRequired =
             (propertyGroup.uiType === UiType.UI_TYPE_TEXT ||
               propertyGroup.uiType === UiType.UI_TYPE_PASSWORD) &&

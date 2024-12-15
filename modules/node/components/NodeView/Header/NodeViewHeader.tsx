@@ -72,10 +72,10 @@ export const NodeViewHeader = () => {
     handleClose();
   };
 
-  const handleUpdateNode = async (value: string) => {
+  const handleUpdateNode = async (newDisplayName: string) => {
     setIsSaving(true);
     await updateNode({
-      newDisplayName: value,
+      newDisplayName,
       nodeId: node?.nodeId!,
       newValues: [],
     });
@@ -95,14 +95,6 @@ export const NodeViewHeader = () => {
       addRules: [],
       newValues: [],
       tags: node.tags,
-      // TODO: Fix recreate node
-      // blockchainId: node.protocolId,
-      // version: node.version,
-      // nodeType: node.nodeType,
-      // properties: node.properties,
-      // network: node.network,
-      // allowIps: node.allowIps,
-      // denyIps: node.denyIps,
     };
 
     await createNode(
@@ -170,11 +162,11 @@ export const NodeViewHeader = () => {
                 <div css={styles.name}>
                   <div css={styles.title}>
                     <EditableTitle
-                      initialValue={node.displayName! || node.nodeName}
+                      initialValue={node.displayName}
                       isLoading={isLoading}
                       isSaving={isSaving!}
                       additionalContentRight={
-                        <Copy value={node?.displayName!} />
+                        <Copy value={node.displayName!} />
                       }
                       onSaveClicked={handleUpdateNode}
                       onEditClicked={handleEditClicked}
@@ -185,15 +177,9 @@ export const NodeViewHeader = () => {
                     <NodeTags node={node} additionalStyles={[styles.tags]} />
                     <div css={styles.detailsFooter}>
                       <div css={styles.nodeType}>
-                        {/* <p>
-                          {node.protocolName}
-                          {' | '}
-                          {convertNodeTypeToName(node.nodeType)}
-                          {' | '}
-                          {node.network}
-                        </p> */}
                         <p>
-                          {node.versionKey?.protocolKey} |{' '}
+                          {node.versionKey?.protocolKey}
+                          {' | '}
                           {node.versionKey?.variantKey}
                         </p>
                       </div>
