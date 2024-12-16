@@ -342,6 +342,7 @@ function createBaseNode(): Node {
     createdBy: undefined,
     createdAt: undefined,
     updatedAt: undefined,
+    cost: undefined,
   };
 }
 
@@ -825,10 +826,6 @@ export const Node = {
     message.tags =
       object.tags !== undefined && object.tags !== null
         ? Tags.fromPartial(object.tags)
-        : undefined;
-    message.cost =
-      object.cost !== undefined && object.cost !== null
-        ? BillingAmount.fromPartial(object.cost)
         : undefined;
     message.createdBy =
       object.createdBy !== undefined && object.createdBy !== null
