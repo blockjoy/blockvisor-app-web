@@ -69,8 +69,6 @@ export interface Host {
   ipGateway: string;
   /** IP addresses available to nodes running on this host. */
   ipAddresses: HostIpAddress[];
-  /** Monthly cost of this host. */
-  cost?: BillingAmount | undefined;
   /** The number of logical cores this host has. */
   cpuCores: number;
   /** The amount of memory this host has (in bytes). */
@@ -87,6 +85,8 @@ export interface Host {
   createdAt: Date | undefined;
   /** When this host was last updated. */
   updatedAt: Date | undefined;
+  /** The cost of this host. */
+  cost?: BillingAmount | undefined;
 }
 
 export interface HostServiceCreateRequest {
@@ -294,6 +294,7 @@ function createBaseHost(): Host {
     createdBy: undefined,
     createdAt: undefined,
     updatedAt: undefined,
+    cost: undefined,
   };
 }
 
@@ -367,9 +368,6 @@ export const Host = {
         toTimestamp(message.updatedAt),
         writer.uint32(170).fork(),
       ).ldelim();
-    }
-    if (message.cost !== undefined) {
-      BillingAmount.encode(message.cost, writer.uint32(202).fork()).ldelim();
     }
     if (message.cost !== undefined) {
       BillingAmount.encode(message.cost, writer.uint32(178).fork()).ldelim();
@@ -538,13 +536,6 @@ export const Host = {
             Timestamp.decode(reader, reader.uint32()),
           );
           continue;
-        case 25:
-          if (tag !== 202) {
-            break;
-          }
-
-          message.cost = BillingAmount.decode(reader, reader.uint32());
-          continue;
         case 22:
           if (tag !== 178) {
             break;
@@ -588,10 +579,6 @@ export const Host = {
     message.tags =
       object.tags !== undefined && object.tags !== null
         ? Tags.fromPartial(object.tags)
-        : undefined;
-    message.cost =
-      object.cost !== undefined && object.cost !== null
-        ? BillingAmount.fromPartial(object.cost)
         : undefined;
     message.createdBy =
       object.createdBy !== undefined && object.createdBy !== null

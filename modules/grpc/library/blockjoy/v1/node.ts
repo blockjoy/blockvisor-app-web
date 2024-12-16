@@ -300,6 +300,7 @@ function createBaseNode(): Node {
     createdBy: undefined,
     createdAt: undefined,
     updatedAt: undefined,
+    cost: undefined,
   };
 }
 
@@ -421,9 +422,6 @@ export const Node = {
         toTimestamp(message.updatedAt),
         writer.uint32(282).fork(),
       ).ldelim();
-    }
-    if (message.cost !== undefined) {
-      BillingAmount.encode(message.cost, writer.uint32(314).fork()).ldelim();
     }
     if (message.cost !== undefined) {
       BillingAmount.encode(message.cost, writer.uint32(290).fork()).ldelim();
@@ -691,13 +689,6 @@ export const Node = {
             Timestamp.decode(reader, reader.uint32()),
           );
           continue;
-        case 39:
-          if (tag !== 314) {
-            break;
-          }
-
-          message.cost = BillingAmount.decode(reader, reader.uint32());
-          continue;
         case 36:
           if (tag !== 290) {
             break;
@@ -767,10 +758,6 @@ export const Node = {
     message.tags =
       object.tags !== undefined && object.tags !== null
         ? Tags.fromPartial(object.tags)
-        : undefined;
-    message.cost =
-      object.cost !== undefined && object.cost !== null
-        ? BillingAmount.fromPartial(object.cost)
         : undefined;
     message.createdBy =
       object.createdBy !== undefined && object.createdBy !== null
