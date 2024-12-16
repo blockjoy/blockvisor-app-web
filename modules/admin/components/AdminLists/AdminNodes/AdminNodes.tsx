@@ -216,7 +216,6 @@ export const AdminNodes = () => {
             onUpdate={handleUpdate}
           />
         ),
-        host: node.hostDisplayName || node.hostNetworkName,
       };
     });
 

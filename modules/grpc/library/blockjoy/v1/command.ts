@@ -388,6 +388,109 @@ export const CommandServiceAckResponse = {
   },
 };
 
+function createBaseCommandServiceAckRequest(): CommandServiceAckRequest {
+  return { commandId: '' };
+}
+
+export const CommandServiceAckRequest = {
+  encode(
+    message: CommandServiceAckRequest,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    if (message.commandId !== '') {
+      writer.uint32(10).string(message.commandId);
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): CommandServiceAckRequest {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCommandServiceAckRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.commandId = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<CommandServiceAckRequest>,
+  ): CommandServiceAckRequest {
+    return CommandServiceAckRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(
+    object: DeepPartial<CommandServiceAckRequest>,
+  ): CommandServiceAckRequest {
+    const message = createBaseCommandServiceAckRequest();
+    message.commandId = object.commandId ?? '';
+    return message;
+  },
+};
+
+function createBaseCommandServiceAckResponse(): CommandServiceAckResponse {
+  return {};
+}
+
+export const CommandServiceAckResponse = {
+  encode(
+    _: CommandServiceAckResponse,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): CommandServiceAckResponse {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCommandServiceAckResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<CommandServiceAckResponse>,
+  ): CommandServiceAckResponse {
+    return CommandServiceAckResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(
+    _: DeepPartial<CommandServiceAckResponse>,
+  ): CommandServiceAckResponse {
+    const message = createBaseCommandServiceAckResponse();
+    return message;
+  },
+};
+
 function createBaseCommandServiceListRequest(): CommandServiceListRequest {
   return { nodeId: undefined, hostId: undefined, exitCode: undefined };
 }
@@ -1238,6 +1341,59 @@ export const NodeCommand = {
     message.delete =
       object.delete !== undefined && object.delete !== null
         ? NodeDelete.fromPartial(object.delete)
+        : undefined;
+    return message;
+  },
+};
+
+function createBaseNodeCreate(): NodeCreate {
+  return { node: undefined };
+}
+
+export const NodeCreate = {
+  encode(
+    message: NodeCreate,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    if (message.node !== undefined) {
+      Node.encode(message.node, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): NodeCreate {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNodeCreate();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.node = Node.decode(reader, reader.uint32());
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<NodeCreate>): NodeCreate {
+    return NodeCreate.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<NodeCreate>): NodeCreate {
+    const message = createBaseNodeCreate();
+    message.node =
+      object.node !== undefined && object.node !== null
+        ? Node.fromPartial(object.node)
         : undefined;
     return message;
   },
