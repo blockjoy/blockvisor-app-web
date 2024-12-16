@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { Global, SerializedStyles } from '@emotion/react';
 import { Tag } from '@modules/grpc/library/blockjoy/common/v1/tag';
 import { Tag as SingleTag } from './Tag';
@@ -11,6 +11,7 @@ type TagsProps = {
   inactiveTags?: Tag[];
   autoHide?: boolean;
   itemsPerView?: number;
+  adjust?: boolean;
   additionalStyles?: SerializedStyles[];
   handleNew?: (tag: string) => void;
   handleRemove?: (tag: Tag) => void;
@@ -18,16 +19,34 @@ type TagsProps = {
 
 export const Tags = ({
   name,
-  tags,
+  tags = [],
   inactiveTags = [],
   autoHide,
   itemsPerView,
+  adjust,
   additionalStyles,
   handleNew,
   handleRemove,
 }: TagsProps) => {
+  const ref = useRef<HTMLDivElement>(null);
+
   const [isOpen, setIsOpen] = useState(false);
-  const visibleTags = tags?.slice(0, itemsPerView ?? 3) ?? [];
+  const [fitItemsPerPage, setFitItemsPerPage] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (ref.current && tags.length && adjust) {
+      const width = ref.current.clientWidth;
+      const calculated = Math.floor((width - 25) / 55);
+      setFitItemsPerPage(calculated);
+    }
+  }, [ref.current?.clientWidth, tags.length]);
+
+  let localItemsPerView = itemsPerView ?? 3;
+  if (fitItemsPerPage && fitItemsPerPage < localItemsPerView) {
+    localItemsPerView = fitItemsPerPage;
+  }
+
+  const visibleTags = tags?.slice(0, localItemsPerView);
 
   const handleWrapperClick = (e: React.MouseEvent<HTMLSpanElement>) => {
     e.stopPropagation();
@@ -35,14 +54,15 @@ export const Tags = ({
 
   const handleOpen = (open: boolean = true) => setIsOpen(open);
 
-  const shouldAutoHide = autoHide && !Boolean(tags?.length) && !isOpen;
+  const shouldAutoHide = autoHide && !Boolean(tags.length) && !isOpen;
 
   return (
     <>
       {isOpen && <Global styles={globalStyles} />}
       <div
+        ref={ref}
         css={[
-          styles.wrapper(shouldAutoHide, Boolean(tags?.length)),
+          styles.wrapper(shouldAutoHide, Boolean(tags.length)),
           additionalStyles && additionalStyles,
         ]}
         {...(isOpen && { onClick: handleWrapperClick })}
@@ -53,13 +73,7 @@ export const Tags = ({
           {...(!isOpen && { onClick: handleWrapperClick })}
         >
           {visibleTags?.map((tag) => (
-            <SingleTag
-              key={tag.name}
-              tag={tag}
-              // handleUpdate={handleUpdate}
-              handleRemove={handleRemove}
-              // maxWidth={maxWidth}
-            />
+            <SingleTag key={tag.name} tag={tag} handleRemove={handleRemove} />
           ))}
         </div>
         <TagsDropdown
@@ -70,7 +84,7 @@ export const Tags = ({
           inactiveTags={inactiveTags}
           handleNew={handleNew}
           handleRemove={handleRemove}
-          itemsPerView={itemsPerView}
+          itemsPerView={localItemsPerView}
         />
       </div>
     </>

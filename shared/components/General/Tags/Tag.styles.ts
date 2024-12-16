@@ -12,7 +12,7 @@ export const styles = {
     justify-content: center;
     align-items: center;
     width: 100%;
-    min-width: ${minWidth && minWidth > 0 ? minWidth + 'px' : 0};
+    min-width: 50px;
     max-width: max-content;
     padding: 3px 10px;
     background-color: ${bgColor};
