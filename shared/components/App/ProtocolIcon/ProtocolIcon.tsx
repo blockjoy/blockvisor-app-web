@@ -134,6 +134,14 @@ const IconPolygon = dynamic(
   () => import(`@public/assets/icons/blockchain/Polygon.svg`),
 );
 
+const IconSelfID = dynamic(
+  () => import(`@public/assets/icons/blockchain/SelfID.svg`),
+);
+
+const IconShape = dynamic(
+  () => import(`@public/assets/icons/blockchain/Shape.svg`),
+);
+
 const IconSolana = dynamic(
   () => import(`@public/assets/icons/blockchain/Solana.svg`),
 );
@@ -271,6 +279,12 @@ export const ProtocolIcon = ({
       break;
     case 'polygon':
       Component = IconPolygon;
+      break;
+    case 'selfid':
+      Component = IconSelfID;
+      break;
+    case 'shape':
+      Component = IconShape;
       break;
     case 'solana':
       Component = IconSolana;

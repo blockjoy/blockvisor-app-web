@@ -301,11 +301,14 @@ export const AdminListTable = ({
                   css={styles.tableCell(
                     column.width!,
                     index === columnsVisible.length - 1,
+                    true,
+                    true,
                   )}
                 >
                   <AdminListTableHeader
                     index={index}
                     canResize={index !== columnsVisible.length - 1}
+                    isLastColumn={index === columnsVisible.length - 1}
                     initResize={initResize}
                     listAll={listAll}
                     protocols={protocols}
@@ -363,6 +366,8 @@ export const AdminListTable = ({
                     css={styles.tableCell(
                       column.width!,
                       index === columnsVisible.length - 1,
+                      column.isRowClickDisabled!,
+                      column.isOverflowHidden !== false,
                     )}
                     onClick={() =>
                       column.isRowClickDisabled

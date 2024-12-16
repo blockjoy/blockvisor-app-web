@@ -13,6 +13,8 @@ import {
 import { AdminListColumn } from '@modules/admin/types/AdminListColumn';
 import { AdminHostsTag } from './AdminHostsTag/AdminHostsTag';
 import { useState } from 'react';
+import { BillingAmount } from '@modules/grpc/library/blockjoy/common/v1/currency';
+import { AdminListEditCost } from '../AdminListEditCost/AdminListEditCost';
 
 const columns: AdminListColumn[] = [
   {
@@ -31,7 +33,14 @@ const columns: AdminListColumn[] = [
     name: 'tags',
     isVisible: true,
     isRowClickDisabled: true,
+    isOverflowHidden: false,
     width: '250px',
+  },
+  {
+    name: 'cost',
+    width: '100px',
+    isVisible: true,
+    isRowClickDisabled: true,
   },
   {
     name: 'ipAddress',
@@ -195,6 +204,13 @@ export const AdminHosts = () => {
     setTagsAdded(tagsAddedCopy);
   };
 
+  const handleUpdate = async (hostId: string, cost: BillingAmount) => {
+    hostClient.updateHost({
+      hostId,
+      cost,
+    });
+  };
+
   const listMap = (list: Host[]) =>
     list.map((host) => {
       return {
@@ -203,6 +219,13 @@ export const AdminHosts = () => {
         availableIps: <HostIpStatus ipAddresses={host.ipAddresses} />,
         // managedBy: <HostManagedBy managedBy={host.managedBy} />,
         createdAt: <DateTime date={host.createdAt!} />,
+        cost: (
+          <AdminListEditCost
+            id={host.hostId}
+            defaultValue={host.cost?.amount?.amountMinorUnits}
+            onUpdate={handleUpdate}
+          />
+        ),
         tags: (
           <TagList
             isInTable

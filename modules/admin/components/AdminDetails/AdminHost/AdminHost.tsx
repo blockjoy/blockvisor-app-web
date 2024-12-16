@@ -1,3 +1,6 @@
+import { useState } from 'react';
+import { toast } from 'react-toastify';
+import { v4 as uuidv4 } from 'uuid';
 import { hostClient } from '@modules/grpc/clients/hostClient';
 import { useRouter } from 'next/router';
 import { AdminDetail } from '../AdminDetail/AdminDetail';
@@ -15,11 +18,15 @@ import {
   HostIpStatus,
   HostManagedBy,
   NextLink,
+  TagList,
 } from '@shared/components';
+import { Currency } from '../../AdminFinancesByHost/Currency/Currency';
 
 export const AdminHost = () => {
   const router = useRouter();
   const { id } = router.query;
+
+  const [shouldRefresh, setShouldRefresh] = useState(false);
 
   const handleOpenInApp = () => router.push(`/hosts/${id as string}`);
 
@@ -48,6 +55,36 @@ export const AdminHost = () => {
 
   const getItem = async () => await hostClient.getHost(id as string);
 
+  const handleAddTag = async (nextTag: string, id?: string) => {
+    try {
+      await hostClient.updateHost({
+        hostId: id!,
+        updateTags: {
+          addTag: { name: nextTag },
+        },
+      });
+      toast.success('Host Tags Updated');
+      setShouldRefresh(true);
+    } catch (err) {
+      toast.error('Error Updating Host');
+    }
+  };
+
+  const handleRemoveTag = async (nextTags: string[], id?: string) => {
+    try {
+      await hostClient.updateHost({
+        hostId: id!,
+        updateTags: {
+          overwriteTags: { tags: nextTags.map((tag) => ({ name: tag })) },
+        },
+      });
+      toast.success('Host Tags Updated');
+      setShouldRefresh(true);
+    } catch (err) {
+      toast.error('Error Updating Host');
+    }
+  };
+
   const customItems = (host: Host): AdminDetailProperty[] => [
     {
       id: 'displayName',
@@ -66,6 +103,11 @@ export const AdminHost = () => {
       label: 'Id',
       data: host.hostId,
       copyValue: host.hostId,
+    },
+    {
+      id: 'cost',
+      label: 'Cost',
+      data: <Currency cents={host.cost?.amount?.amountMinorUnits!} />,
     },
     // {
     //   id: 'managedBy',
@@ -94,6 +136,20 @@ export const AdminHost = () => {
     //   label: 'Billing Amount',
     //   data: host. ? `$${host.billingAmount?.amount}` : '-',
     // },
+    {
+      id: 'tags',
+      label: 'Tags',
+      data: (
+        <TagList
+          key={uuidv4()}
+          id={host.hostId}
+          tags={host.tags?.tags.map((tag) => tag.name)!}
+          noPadding
+          onAdd={handleAddTag}
+          onRemove={handleRemoveTag}
+        />
+      ),
+    },
     {
       id: 'availableIps',
       label: `Available Ip's`,
@@ -139,6 +195,8 @@ export const AdminHost = () => {
       metricsKey="name"
       hasMetrics
       hasLogs
+      shouldRefresh={shouldRefresh}
+      onRefreshed={() => setShouldRefresh(false)}
       customItems={customItems}
       ignoreItems={[
         'hostId',
@@ -150,6 +208,7 @@ export const AdminHost = () => {
         'orgName',
         'managedBy',
         'billingAmount',
+        'tags',
       ]}
     />
   );

@@ -22,6 +22,9 @@ import { capitalized, createAdminNodeFilters } from '@modules/admin';
 import { AdminListColumn } from '@modules/admin/types/AdminListColumn';
 import { useEffect, useState } from 'react';
 import { Protocol } from '@modules/grpc/library/blockjoy/v1/protocol';
+import { Currency } from '../../AdminFinancesByHost/Currency/Currency';
+import { AdminListEditCost } from '../AdminListEditCost/AdminListEditCost';
+import { BillingAmount } from '@modules/grpc/library/blockjoy/common/v1/currency';
 
 const columns: AdminListColumn[] = [
   {
@@ -50,6 +53,11 @@ const columns: AdminListColumn[] = [
     isVisible: true,
     // filterComponent: AdminNodesFilterStatus,
     // filterDropdownMinWidth: 160,
+  },
+  {
+    name: 'cost',
+    width: '100px',
+    isRowClickDisabled: true,
   },
   {
     name: 'host',
@@ -181,6 +189,14 @@ export const AdminNodes = () => {
     }
   };
 
+  const handleUpdate = async (nodeId: string, cost: BillingAmount) => {
+    nodeClient.updateNode({
+      nodeId,
+      cost,
+      newValues: [],
+    });
+  };
+
   const listMap = (list: Node[]) =>
     list.map((node) => {
       return {
@@ -189,21 +205,17 @@ export const AdminNodes = () => {
         nodeState: (
           <NodeStatus status={node.nodeStatus?.state!} hasBorder={false} />
         ),
-        // containerStatus: (
-        //   <NodeStatus
-        //     status={node.containerStatus}
-        //     type="container"
-        //     hasBorder={false}
-        //   />
-        // ),
-        // syncStatus: (
-        //   <NodeStatus status={node.syncStatus} type="sync" hasBorder={false} />
-        // ),
-        // nodeType: capitalized(convertNodeTypeToName(node.nodeType)),
         region: node.placement?.scheduler?.region,
         createdAt: <DateTime date={node.createdAt!} />,
         // createdBy: node.createdBy?.resourceId,
         host: node.hostDisplayName || node.hostNetworkName,
+        cost: (
+          <AdminListEditCost
+            id={node.nodeId}
+            defaultValue={node.cost?.amount?.amountMinorUnits}
+            onUpdate={handleUpdate}
+          />
+        ),
       };
     });
 

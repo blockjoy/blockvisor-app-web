@@ -57,7 +57,5 @@ export const mapNodeToDetails = (node: Node) => {
     });
   }
 
-  // TODO: implement new node firewall rules
-
   return details;
 };

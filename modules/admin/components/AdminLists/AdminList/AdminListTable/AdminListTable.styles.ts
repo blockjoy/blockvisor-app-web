@@ -106,7 +106,6 @@ export const styles = {
         opacity: 0.7;
         padding: 0 12px 0 0;
         white-space: nowrap;
-        overflow: hidden;
         text-overflow: ellipsis;
         transition-property: opacity, border-color;
         transition-duration: 0.3s;
@@ -118,10 +117,6 @@ export const styles = {
 
       tbody tr.selected td {
         opacity: 1;
-      }
-
-      tbody tr {
-        cursor: pointer;
       }
 
       tbody tr:hover td {
@@ -163,13 +158,28 @@ export const styles = {
           visibility: visible;
         }
       `,
-  tableCell: (width?: string, isLastColumn?: boolean) => css`
-    min-width: ${width};
-
+  tableCell: (
+    width: string,
+    isLastColumn: boolean,
+    isRowClickDisabled: boolean,
+    isOverflowHidden: boolean,
+  ) => css`
     ${!isLastColumn &&
     css`
       max-width: ${width};
       width: ${width};
+    `};
+
+    ${isOverflowHidden &&
+    css`
+      overflow: hidden;
+    `}
+
+    min-width: ${width};
+
+    ${!isRowClickDisabled &&
+    css`
+      cursor: pointer;
     `}
 
     box-sizing: border-box;
@@ -190,7 +200,7 @@ export const styles = {
     right: 0;
     display: flex;
     align-items: center;
-    padding: 24px 16px;
+    padding: 24px 16px 24px 0;
     font-size: 14px;
     margin: 0;
     border-bottom: 1px solid ${theme.colorBorder};

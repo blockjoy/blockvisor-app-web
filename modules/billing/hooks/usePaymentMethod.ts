@@ -1,5 +1,8 @@
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { StripeCardNumberElement } from '@stripe/stripe-js';
+import {
+  PaymentMethodCreateParams,
+  StripeCardNumberElement,
+} from '@stripe/stripe-js';
 import {
   CardNumberElement,
   useElements,
@@ -15,15 +18,7 @@ import { organizationClient } from '@modules/grpc';
 import { organizationSelectors } from '@modules/organization';
 import { ApplicationError } from '@modules/auth/utils/Errors';
 
-interface PaymentMethodHook {
-  paymentMethodLoadingState: LoadingState;
-  initPaymentMethod: (
-    onSuccess: VoidFunction,
-    onError?: (errorMessage: string) => void,
-  ) => Promise<void>;
-}
-
-export const usePaymentMethod = (): PaymentMethodHook => {
+export const usePaymentMethod = () => {
   const stripe = useStripe();
   const elements = useElements();
 
@@ -37,7 +32,8 @@ export const usePaymentMethod = (): PaymentMethodHook => {
   const { getPaymentMethods } = usePaymentMethods();
 
   const initPaymentMethod = async (
-    onSuccess: VoidFunction,
+    billingDetails: PaymentMethodCreateParams.BillingDetails,
+    onSuccess?: VoidFunction,
     onError?: (errorMessage: string) => void,
   ) => {
     setPaymentMethodLoadingState('initializing');
@@ -59,6 +55,7 @@ export const usePaymentMethod = (): PaymentMethodHook => {
             card: elements.getElement(
               CardNumberElement,
             ) as StripeCardNumberElement,
+            billing_details: billingDetails,
           },
         },
         {
@@ -75,13 +72,11 @@ export const usePaymentMethod = (): PaymentMethodHook => {
       await new Promise((resolve) => setTimeout(resolve, 5000));
 
       const paymentMethods = await getPaymentMethods();
-      console.log('setupIntent', setupIntent);
-      console.log('paymentMethods', paymentMethods);
 
       if (!paymentMethods.length)
         throw new ApplicationError('InitCardError', 'Webhook failed');
 
-      onSuccess();
+      onSuccess?.();
     } catch (error) {
       onError?.(PAYMENT_ERRORS.FAILED);
     } finally {

@@ -9,6 +9,7 @@ import { Protocol } from '@modules/grpc/library/blockjoy/v1/protocol';
 
 type Props = {
   index: number;
+  isLastColumn: boolean;
   column: AdminListColumn;
   activeSortField: number;
   activeSortOrder: SortOrder;
@@ -26,6 +27,7 @@ type Props = {
 
 export const AdminListTableHeader = ({
   index,
+  isLastColumn,
   column,
   activeSortField,
   activeSortOrder,
@@ -49,7 +51,7 @@ export const AdminListTableHeader = ({
   return (
     <span ref={headerRef} css={styles.tableHeader}>
       <>
-        {column.isResizable !== false && canResize && (
+        {column.isResizable !== false && canResize && !isLastColumn && (
           <span
             ref={resizerRef}
             css={styles.resizer}

@@ -4,18 +4,7 @@ import { billingAtoms } from '@modules/billing';
 import { organizationClient } from '@modules/grpc';
 import { organizationSelectors } from '@modules/organization';
 
-interface IBillingAddressHook {
-  billingAddress: Address | null;
-  billingAddressLoadingState: LoadingState;
-  getBillingAddress: VoidFunction;
-  createBillingAddress: (
-    address: Address,
-    onSuccess?: VoidFunction,
-    onError?: (errorMessage: string) => void,
-  ) => Promise<void>;
-}
-
-export const useBillingAddress = (): IBillingAddressHook => {
+export const useBillingAddress = () => {
   const defaultOrganization = useRecoilValue(
     organizationSelectors.defaultOrganization,
   );

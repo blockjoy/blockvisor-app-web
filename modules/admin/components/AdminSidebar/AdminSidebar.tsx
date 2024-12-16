@@ -5,6 +5,8 @@ import { styles } from './AdminSidebar.styles';
 import { SvgIcon } from '@shared/components';
 import IconNode from '@public/assets/icons/app/Node.svg';
 import IconOrganization from '@public/assets/icons/app/Organization.svg';
+import IconOrgFinance from '@public/assets/icons/app/OrgFinance.svg';
+import IconHostFinance from '@public/assets/icons/app/HostFinance.svg';
 import IconHost from '@public/assets/icons/app/Host.svg';
 import IconPerson from '@public/assets/icons/common/Person.svg';
 import IconDashboard from '@public/assets/icons/common/Grid.svg';
@@ -18,6 +20,16 @@ type Props = { tab: string };
 
 const links = [
   { name: 'dashboard', icon: <IconDashboard />, href: '/admin?name=dashboard' },
+  {
+    name: 'Host Finances',
+    icon: <IconHostFinance />,
+    href: '/admin?name=finances-by-host',
+  },
+  {
+    name: 'Org Finances',
+    icon: <IconOrgFinance />,
+    href: '/admin?name=finances-by-org',
+  },
   { name: 'nodes', icon: <IconNode />, href: '/admin?name=nodes' },
   { name: 'hosts', icon: <IconHost />, href: '/admin?name=hosts' },
   {
