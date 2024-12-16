@@ -47,7 +47,7 @@ export const AdminDashboardFinances = () => {
 
       for (let host of hosts) {
         const nodesWithRevenue = customerNodes.filter(
-          (node) => node.hostId === host.id && node.cost,
+          (node) => node.hostId === host.hostId && node.cost,
         );
 
         const revenue = nodesWithRevenue
