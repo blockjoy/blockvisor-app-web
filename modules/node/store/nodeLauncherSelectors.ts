@@ -17,6 +17,7 @@ import {
 import { authSelectors } from '@modules/auth';
 import { nodeTypeList } from '@shared/index';
 import { billingAtoms } from '@modules/billing';
+import { organizationSelectors } from '@modules/organization';
 
 const networks = selector<NetworkConfig[]>({
   key: 'nodeLauncher.networks',
@@ -196,6 +197,10 @@ const nodeLauncherStatus = selectorFamily<
   get:
     (hasPermissionsToCreate) =>
     ({ get }) => {
+      const isSuperUser = get(authSelectors.isSuperUser);
+      const defaultOrganization = get(
+        organizationSelectors.defaultOrganization,
+      );
       const nodeLauncher = get(nodeLauncherAtoms.nodeLauncher);
       const selectedHosts = get(nodeLauncherAtoms.selectedHosts);
       const selectedRegion = get(nodeLauncherAtoms.selectedRegion);
@@ -205,6 +210,9 @@ const nodeLauncherStatus = selectorFamily<
       const price = get(billingAtoms.price);
       const isNodeAllocationValidVal = get(isNodeAllocationValid);
       const billingExempt = get(authSelectors.hasPermission('billing-exempt'));
+      const isCustomerHost =
+        !isSuperUser &&
+        defaultOrganization?.id === selectedHosts?.[0]?.host?.orgId;
 
       const disablingConditions: Record<string, boolean> = {
         NoPermission: !hasPermissionsToCreate,
@@ -214,7 +222,7 @@ const nodeLauncherStatus = selectorFamily<
         NoRegion: !(selectedHosts?.length || selectedRegion),
         InvalidConfig: !isConfigValidVal,
         ErrorExists: Boolean(error),
-        NoPrice: !price && !billingExempt,
+        NoPrice: !price && !billingExempt && !isCustomerHost,
         InvalidNodeAllocation: !isNodeAllocationValidVal,
       };
 
