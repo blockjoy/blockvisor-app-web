@@ -63,6 +63,7 @@ export const NodeTags = ({
       handleNew={handleNewTag}
       handleRemove={handleRemoveTag}
       additionalStyles={additionalStyles}
+      adjust
     />
   );
 };

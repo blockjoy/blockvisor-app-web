@@ -1,6 +1,9 @@
 import { selector, selectorFamily } from 'recoil';
 import { authAtoms } from '@modules/auth';
-import { NODE_LIST_LAYOUT_GROUPED_FIELDS } from '@modules/node';
+import {
+  NODE_LIST_LAYOUT_GROUPED_FIELDS,
+  NODE_LIST_TAGS_PER_VIEW,
+} from '@modules/node';
 
 const layout = selector<LayoutSettings>({
   key: 'layout',
@@ -84,7 +87,7 @@ const tableTagsPerView = selector<number>({
   get: ({ get }) => {
     const layoutVal = get(layout);
 
-    return layoutVal?.['nodes.table.tagsPerView'] ?? 3;
+    return layoutVal?.['nodes.table.tagsPerView'] ?? NODE_LIST_TAGS_PER_VIEW;
   },
 });
 

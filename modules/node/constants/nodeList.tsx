@@ -211,6 +211,8 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
   },
 ];
 
+export const NODE_LIST_TAGS_PER_VIEW = 3;
+
 export const NODE_LIST_LAYOUT_GROUPED_FIELDS: NodeListLayoutGroupItem[] = [
   {
     key: 'customNodeInfo',

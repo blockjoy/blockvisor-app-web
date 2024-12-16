@@ -43,8 +43,6 @@ export const Tag = ({
 
   const [hasTooltip, setHasTooltip] = useState(false);
 
-  const minWidth = tagRef.current?.offsetWidth! + 32 > 80 ? 0 : 30;
-
   useEffect(() => {
     if (tagRef.current && !isInner) {
       const tooltip = tagRef.current.scrollWidth > tagRef.current.offsetWidth;
@@ -59,7 +57,6 @@ export const Tag = ({
           DEFAULT_TAG_COLOR ?? themeDefault.colorBorder,
           isOpenActions,
           updateMode === 'change-color',
-          minWidth,
         )}
       >
         {hasTooltip && (
