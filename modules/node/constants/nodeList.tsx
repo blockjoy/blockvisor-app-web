@@ -36,7 +36,7 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
   },
   {
     key: 'versionKey',
-    label: 'Blockchain',
+    label: 'Protocol',
     minWidth: '110px',
     width: '180px',
     isVisible: false,
@@ -64,7 +64,7 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
     key: 'tags',
     label: 'Tags',
     minWidth: '140px',
-    width: '300px',
+    width: '200px',
     isVisible: true,
     component: (node: Node) => <NodeTags node={node} type="list" />,
     actions: LAYOUT_ACTIONS,
@@ -84,7 +84,7 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
   {
     key: 'nodeStatus',
     label: 'Status',
-    width: '400px',
+    width: '200px',
     dataField: NodeSortField.NODE_SORT_FIELD_NODE_STATE,
     isVisible: true,
     component: (node: Node) => (
@@ -96,6 +96,23 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
       />
     ),
     actions: ALL_ACTIONS,
+  },
+  {
+    key: 'customNodeHealth',
+    label: 'Protocol Health',
+    minWidth: '150px',
+    width: '150px',
+    isVisible: true,
+    component: (node: Node) => (
+      <NodeStatus
+        status={node.nodeStatus?.protocol?.health!}
+        jobs={node.jobs}
+        hasBorder={false}
+        view="simple"
+        type="protocol"
+      />
+    ),
+    actions: LAYOUT_ACTIONS,
   },
   {
     key: 'semanticVersion',
@@ -111,7 +128,7 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
     key: 'ipAddress',
     label: 'Ip Address',
     width: '160px',
-    isVisible: false,
+    isVisible: true,
     component: (node: Node) => (
       <NodeItems.IpAddress ipAddress={node.ipAddress} />
     ),
@@ -133,7 +150,7 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
     minWidth: '140px',
     width: '250px',
     dataField: NodeSortField.NODE_SORT_FIELD_BLOCK_HEIGHT,
-    isVisible: false,
+    isVisible: true,
     component: (node: Node) => (
       <NodeItems.BlockHeight blockHeight={node.blockHeight} />
     ),
@@ -143,7 +160,7 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
     key: 'placement',
     label: 'Region',
     width: '160px',
-    isVisible: false,
+    isVisible: true,
     component: (node: Node) => <NodeItems.Region placement={node.placement} />,
     actions: LAYOUT_ACTIONS,
   },
@@ -152,7 +169,7 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
     label: 'Launched By',
     minWidth: '110px',
     width: '160px',
-    isVisible: false,
+    isVisible: true,
     component: (node: Node) => (
       <NodeItems.CreatedBy createdBy={node.createdBy} />
     ),
