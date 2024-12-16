@@ -1,4 +1,10 @@
-import { styles } from './NodeStatus.styles';
+import { useLayoutEffect, useRef, useState } from 'react';
+import {
+  NodeHealth,
+  NodeJob,
+  NodeState,
+} from '@modules/grpc/library/blockjoy/common/v1/node';
+import { getNodeJobProgress } from '@modules/node/utils/getNodeJobProgress';
 import {
   nodeHealthList,
   nodeStatusList,
@@ -6,11 +12,7 @@ import {
 import { NodeStatusIcon } from './NodeStatusIcon';
 import { NodeStatusLoader } from './NodeStatusLoader';
 import { NodeStatusName } from './NodeStatusName';
-import { useLayoutEffect, useRef, useState } from 'react';
-import {
-  NodeHealth,
-  NodeState,
-} from '@modules/grpc/library/blockjoy/common/v1/node';
+import { styles } from './NodeStatus.styles';
 
 export type NodeStatusType = 'protocol';
 
@@ -69,8 +71,8 @@ export const getNodeStatusColor = (status: number, type?: NodeStatusType) => {
   }
 };
 
-export const checkIfUnspecified = (status: number, type?: NodeStatusType) => {
-  const statusName = getNodeStatusInfo(status, type)?.name!;
+export const checkIfUnspecified = (status: number) => {
+  const statusName = getNodeStatusInfo(status)?.name!;
 
   if (statusName?.match(/UNSPECIFIED/g)) return true;
 
@@ -94,7 +96,7 @@ export const NodeStatus = ({
   const isDownloading =
     downloadingCurrent! >= 0 && downloadingCurrent !== downloadingTotal;
 
-  const statusColor = getNodeStatusColor(status!, type);
+  const statusColor = getNodeStatusColor(status, type);
 
   const [statusNameWidth, setStatusNameWidth] = useState(
     nameRef.current?.clientWidth!,
@@ -104,7 +106,7 @@ export const NodeStatus = ({
     setStatusNameWidth(nameRef.current?.clientWidth!);
   }, []);
 
-  const isUnspecified = checkIfUnspecified(status!, type);
+  const isUnspecified = checkIfUnspecified(status!);
   if (isUnspecified) return <span>-</span>;
 
   return (
@@ -127,7 +129,7 @@ export const NodeStatus = ({
       )}
       <NodeStatusIcon size="12px" status={status!} type={type} />
       <p ref={nameRef} css={[styles.statusText(!hasBorder), statusColor]}>
-        <NodeStatusName status={status!} type={type} />
+        <NodeStatusName status={status} type={type} />
         {isDownloading && view === 'simple' && (
           <>
             {` `}

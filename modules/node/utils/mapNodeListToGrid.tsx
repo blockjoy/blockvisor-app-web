@@ -53,8 +53,7 @@ export const mapNodeListToGrid = (
             <NodeStatus
               hasBorder
               status={node.nodeStatus?.state!}
-              downloadingCurrent={progress?.current}
-              downloadingTotal={progress?.total}
+              jobs={node.jobs}
             />
           }
           middleRow={

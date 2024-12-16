@@ -66,11 +66,7 @@ export const mapHostNodesToRows = (nodeList: Node[]) => {
         {
           key: '3',
           component: (
-            <NodeStatus
-              status={node.nodeStatus?.state!}
-              downloadingCurrent={progress?.current}
-              downloadingTotal={progress?.total}
-            />
+            <NodeStatus status={node.nodeStatus?.state!} jobs={node.jobs} />
           ),
         },
       ],

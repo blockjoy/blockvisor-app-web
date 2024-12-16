@@ -1,7 +1,7 @@
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import { UINodeFilterCriteria } from '@modules/grpc';
 import { Host, Region } from '@modules/grpc/library/blockjoy/v1/host';
-import { NodeSort } from '@modules/grpc/library/blockjoy/v1/node';
+import { Node, NodeSort } from '@modules/grpc/library/blockjoy/v1/node';
 import { NodePlacement } from '@modules/grpc/library/blockjoy/common/v1/node';
 import { ImageProperty } from '@modules/grpc/library/blockjoy/v1/image';
 import { UiType } from '@modules/grpc/library/blockjoy/common/v1/protocol';
