@@ -1,8 +1,7 @@
 import {
-  Node,
   NodeJob,
   NodeJobStatus,
-} from '@modules/grpc/library/blockjoy/v1/node';
+} from '@modules/grpc/library/blockjoy/common/v1/node';
 
 export const getNodeJobProgress = (jobs: NodeJob[]) =>
   jobs?.find(

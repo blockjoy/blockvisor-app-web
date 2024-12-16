@@ -1,27 +1,23 @@
-import { BlockchainName } from './Items/BlockchainName';
+import { ProtocolName } from './Items/ProtocolName';
 import { BlockHeight } from './Items/BlockHeight';
 import { CreatedAt } from './Items/CreatedAt';
 import { CreatedBy } from './Items/CreatedBy';
 import { DisplayName } from './Items/DisplayName';
-import { Ip } from './Items/Ip';
+import { IpAddress } from './Items/IpAddress';
 import { IpGetaway } from './Items/IpGetaway';
-import { Network } from './Items/Network';
-import { NodeType } from './Items/NodeType';
 import { Region } from './Items/Region';
 import { Version } from './Items/Version';
 
 import { Info } from './Groups/Info';
 
 export const NodeItems = {
-  BlockchainName,
+  ProtocolName,
   BlockHeight,
   CreatedAt,
   CreatedBy,
   DisplayName,
-  Ip,
+  IpAddress,
   IpGetaway,
-  Network,
-  NodeType,
   Region,
   Version,
 };

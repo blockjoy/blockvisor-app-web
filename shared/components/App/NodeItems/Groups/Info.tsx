@@ -4,17 +4,19 @@ import { NodeItems } from '@shared/components';
 import { typo } from 'styles/utils.typography.styles';
 
 type Props = Partial<
-  Pick<Node, 'displayName' | 'blockchainName' | 'createdAt'>
+  Pick<Node, 'displayName' | 'nodeName' | 'versionKey' | 'createdAt'>
 >;
 
-export const Info = ({ displayName, blockchainName, createdAt }: Props) => (
+export const Info = ({
+  displayName,
+  nodeName,
+  versionKey,
+  createdAt,
+}: Props) => (
   <span css={styles.wrapper}>
-    <NodeItems.BlockchainName
-      blockchainName={blockchainName}
-      showName={false}
-    />
+    <NodeItems.ProtocolName versionKey={versionKey} showName={false} />
     <span css={[styles.rightColumn, typo.ellipsis]}>
-      <NodeItems.DisplayName displayName={displayName} />
+      <NodeItems.DisplayName displayName={displayName} nodeName={nodeName} />
       <NodeItems.CreatedAt createdAt={createdAt} />
     </span>
   </span>

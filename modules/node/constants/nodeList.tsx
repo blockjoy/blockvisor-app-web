@@ -28,23 +28,20 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
     component: (node: Node) => (
       <NodeGroups.Info
         displayName={node.displayName}
-        blockchainName={node.blockchainName}
+        versionKey={node.versionKey}
         createdAt={node.createdAt}
       />
     ),
     actions: ALL_ACTIONS,
   },
   {
-    key: 'blockchainName',
+    key: 'versionKey',
     label: 'Blockchain',
     minWidth: '110px',
     width: '180px',
     isVisible: false,
     component: (node: Node) => (
-      <NodeItems.BlockchainName
-        blockchainName={node.blockchainName}
-        showName={true}
-      />
+      <NodeItems.ProtocolName versionKey={node.versionKey} showName={true} />
     ),
     actions: LAYOUT_ACTIONS,
   },
@@ -56,7 +53,10 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
     dataField: NodeSortField.NODE_SORT_FIELD_DISPLAY_NAME,
     isVisible: false,
     component: (node: Node) => (
-      <NodeItems.DisplayName displayName={node.displayName} />
+      <NodeItems.DisplayName
+        displayName={node.displayName}
+        nodeName={node.nodeName}
+      />
     ),
     actions: ALL_ACTIONS,
   },
@@ -82,35 +82,14 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
     actions: ALL_ACTIONS,
   },
   {
-    key: 'nodeType',
-    label: 'Node Type',
-    minWidth: '115px',
-    width: '160px',
-    dataField: NodeSortField.NODE_SORT_FIELD_NODE_TYPE,
-    isVisible: true,
-    component: (node: Node) => <NodeItems.NodeType nodeType={node.nodeType} />,
-    actions: ALL_ACTIONS,
-  },
-  {
-    key: 'network',
-    label: 'Network',
-    width: '160px',
-    isVisible: true,
-    component: (node: Node) => <NodeItems.Network network={node.network} />,
-    actions: LAYOUT_ACTIONS,
-  },
-  {
-    key: 'status',
+    key: 'nodeStatus',
     label: 'Status',
     width: '400px',
-    dataField: NodeSortField.NODE_SORT_FIELD_NODE_STATUS,
+    dataField: NodeSortField.NODE_SORT_FIELD_NODE_STATE,
     isVisible: true,
     component: (node: Node) => (
       <NodeStatus
         status={node.nodeStatus?.state!}
-        downloadingCurrent={progress?.current}
-        downloadingTotal={progress?.total}
-        status={node.status}
         jobs={node.jobs}
         hasBorder={false}
         view="simple"
@@ -119,53 +98,23 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
     actions: ALL_ACTIONS,
   },
   {
-    key: 'syncStatus',
-    label: 'Sync Status',
-    minWidth: '130px',
-    width: '200px',
-    dataField: NodeSortField.NODE_SORT_FIELD_SYNC_STATUS,
-    isVisible: false,
-    component: (node: Node) => (
-      <NodeStatus
-        status={node.syncStatus}
-        hasBorder={false}
-        type="sync"
-        view="simple"
-      />
-    ),
-    actions: ALL_ACTIONS,
-  },
-  {
-    key: 'containerStatus',
-    label: 'Container Status',
-    minWidth: '170px',
-    width: '200px',
-    dataField: NodeSortField.NODE_SORT_FIELD_CONTAINER_STATUS,
-    isVisible: false,
-    component: (node: Node) => (
-      <NodeStatus
-        status={node.containerStatus}
-        hasBorder={false}
-        type="container"
-        view="simple"
-      />
-    ),
-    actions: ALL_ACTIONS,
-  },
-  {
-    key: 'version',
+    key: 'semanticVersion',
     label: 'Version',
     width: '160px',
     isVisible: false,
-    component: (node: Node) => <NodeItems.Version version={node.version} />,
+    component: (node: Node) => (
+      <NodeItems.Version semanticVersion={node.semanticVersion} />
+    ),
     actions: LAYOUT_ACTIONS,
   },
   {
-    key: 'ip',
-    label: 'Ip',
+    key: 'ipAddress',
+    label: 'Ip Address',
     width: '160px',
     isVisible: false,
-    component: (node: Node) => <NodeItems.Ip ip={node.ip} />,
+    component: (node: Node) => (
+      <NodeItems.IpAddress ipAddress={node.ipAddress} />
+    ),
     actions: LAYOUT_ACTIONS,
   },
   {
@@ -218,7 +167,7 @@ export const NODE_LIST_LAYOUT_GROUPED_FIELDS: NodeListLayoutGroupItem[] = [
     key: 'customNodeInfo',
     name: 'group-node-info',
     label: 'Group Node Info',
-    dependencies: ['displayName', 'blockchainName', 'createdAt'],
+    dependencies: ['displayName', 'versionKey', 'createdAt'],
     isGrouped: true,
   },
 ];
@@ -251,13 +200,13 @@ export const NODE_LIST_SORTING: SortingItem<NodeSortField>[] = [
   {
     id: 'status-asc',
     name: 'Status: A-Z',
-    field: NodeSortField.NODE_SORT_FIELD_NODE_STATUS,
+    field: NodeSortField.NODE_SORT_FIELD_NODE_STATE,
     order: SortOrder.SORT_ORDER_ASCENDING,
   },
   {
     id: 'status-desc',
     name: 'Status: Z-A',
-    field: NodeSortField.NODE_SORT_FIELD_NODE_STATUS,
+    field: NodeSortField.NODE_SORT_FIELD_NODE_STATE,
     order: SortOrder.SORT_ORDER_DESCENDING,
   },
 ];

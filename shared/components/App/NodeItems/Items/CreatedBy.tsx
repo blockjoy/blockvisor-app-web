@@ -4,5 +4,5 @@ import { display } from 'styles/utils.display.styles';
 type Props = Partial<Pick<Node, 'createdBy'>>;
 
 export const CreatedBy = ({ createdBy }: Props) => (
-  <span css={display.ellipsis}>{createdBy?.name}</span>
+  <span css={display.ellipsis}>{createdBy?.resourceId}</span>
 );
