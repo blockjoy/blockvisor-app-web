@@ -67,7 +67,10 @@ export type InitialNodeQueryParams = {
   sort: NodeSort[];
 };
 
-export type NodeListColumnKey = keyof Node | 'customNodeInfo';
+export type NodeListColumnKey =
+  | keyof Node
+  | 'customNodeInfo'
+  | 'customNodeHealth';
 
 export type NodeListLayoutGroupItem = {
   key: NodeListColumnKey;

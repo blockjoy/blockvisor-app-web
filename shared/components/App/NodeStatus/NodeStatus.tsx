@@ -25,7 +25,7 @@ export type NodeStatusListItem = {
 };
 
 type Props = {
-  status: NodeState;
+  status: NodeState | NodeHealth;
   type?: NodeStatusType;
   jobs?: NodeJob[];
   hasBorder?: boolean;
@@ -71,7 +71,9 @@ export const getNodeStatusColor = (status: number, type?: NodeStatusType) => {
   }
 };
 
-export const checkIfUnspecified = (status: number) => {
+export const checkIfUnspecified = (status: number, type?: NodeStatusType) => {
+  if (type === 'protocol' && status === undefined) return true;
+
   const statusName = getNodeStatusInfo(status)?.name!;
 
   if (statusName?.match(/UNSPECIFIED/g)) return true;
@@ -106,7 +108,7 @@ export const NodeStatus = ({
     setStatusNameWidth(nameRef.current?.clientWidth!);
   }, []);
 
-  const isUnspecified = checkIfUnspecified(status!);
+  const isUnspecified = checkIfUnspecified(status!, type);
   if (isUnspecified) return <span>-</span>;
 
   return (
