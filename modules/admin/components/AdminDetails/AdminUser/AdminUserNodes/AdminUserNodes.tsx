@@ -33,8 +33,8 @@ export const AdminUserNodes = ({ userId }: Props) => {
   return (
     <ul>
       {nodes.map((node) => (
-        <li key={node.id}>
-          <NextLink href={`/admin?name=nodes&id=${node.id}`}>
+        <li key={node.nodeId}>
+          <NextLink href={`/admin?name=nodes&id=${node.nodeId}`}>
             {node.displayName}
           </NextLink>
         </li>

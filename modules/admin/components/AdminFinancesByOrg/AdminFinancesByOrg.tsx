@@ -131,13 +131,13 @@ export const AdminFinancesByOrg = () => {
       for (let org of orgs) {
         console.log('org', org);
         const revenue = nodes
-          .filter((node) => node.orgId === org.id && node.cost)
+          .filter((node) => node.orgId === org.orgId && node.cost)
           .map((node) => node.cost?.amount?.amountMinorUnits ?? 0)
           .reduce((prevValue, currentValue) => prevValue + currentValue, 0);
 
         orgRevenueArray.push({
           nodes: org.nodeCount,
-          orgId: org.id,
+          orgId: org.orgId,
           orgName: org.name,
           revenue,
         });

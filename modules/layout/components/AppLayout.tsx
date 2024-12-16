@@ -45,7 +45,7 @@ const Layout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   const { loadHosts } = useHostList();
   const { getProvisionToken, provisionToken } = useProvisionToken();
 
-  // useBilling();
+  useBilling();
   useGetProtocols();
 
   useEffect(() => {
