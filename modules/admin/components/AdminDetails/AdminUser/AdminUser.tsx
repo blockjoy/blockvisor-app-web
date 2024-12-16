@@ -77,7 +77,7 @@ export const AdminUser = () => {
     {
       id: 'nodes',
       label: 'Nodes',
-      data: <AdminUserNodes userId={item.id} />,
+      data: <AdminUserNodes userId={item.userId} />,
     },
     {
       id: 'userSettings',
