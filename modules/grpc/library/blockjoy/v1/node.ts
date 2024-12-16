@@ -2042,9 +2042,6 @@ export const NodeServiceUpdateConfigRequest = {
     if (message.cost !== undefined) {
       BillingAmount.encode(message.cost, writer.uint32(74).fork()).ldelim();
     }
-    if (message.cost !== undefined) {
-      BillingAmount.encode(message.cost, writer.uint32(90).fork()).ldelim();
-    }
     return writer;
   },
 
