@@ -87,6 +87,8 @@ export interface Host {
   createdAt: Date | undefined;
   /** When this host was last updated. */
   updatedAt: Date | undefined;
+  /** The cost of this host. */
+  cost?: BillingAmount | undefined;
 }
 
 export interface HostServiceCreateRequest {
@@ -290,6 +292,7 @@ function createBaseHost(): Host {
     createdBy: undefined,
     createdAt: undefined,
     updatedAt: undefined,
+    cost: undefined,
   };
 }
 
