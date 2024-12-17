@@ -13,6 +13,7 @@ export const AdminNodesFilterUser = ({
   columnName,
   values,
   listAll,
+  users,
   onFilterChange,
 }: AdminFilterControlProps) => {
   const [list, setList] = useState<AdminFilterDropdownItem[]>();
@@ -32,10 +33,15 @@ export const AdminNodesFilterUser = ({
           (!protocolFilters?.length ||
             protocolFilters?.includes(node.protocolId)),
       )
-      ?.map(({ createdBy }) => ({
-        id: createdBy?.resourceId,
-        // name: createdBy?.name,
-      }));
+      ?.map(({ createdBy }) => {
+        const user = users?.find(
+          (user) => user.userId === createdBy?.resourceId,
+        );
+        return {
+          id: createdBy?.resourceId,
+          name: `${user?.firstName} ${user?.lastName}`,
+        };
+      });
 
     setList(sort(dedupedAdminDropdownList(all!), { field: 'name' }));
   }, [listAll]);

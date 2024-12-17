@@ -18,6 +18,7 @@ import {
 import { AdminListTableHeader } from './AdminListTableHeader/AdminListTableHeader';
 import { AdminListColumn } from '@modules/admin/types/AdminListColumn';
 import { Protocol } from '@modules/grpc/library/blockjoy/v1/protocol';
+import { User } from '@modules/grpc/library/blockjoy/v1/user';
 
 type Props = {
   name: string;
@@ -33,6 +34,7 @@ type Props = {
   activeSortOrder: SortOrder;
   selectedIds?: string[];
   protocols?: Protocol[];
+  users?: User[];
   onIdSelected?: (id: string, isSelected: boolean) => void;
   onIdAllSelected?: (ids: string[]) => void;
   onPageChanged: (page: number) => void;
@@ -55,6 +57,7 @@ export const AdminListTable = ({
   activeSortOrder,
   selectedIds,
   protocols,
+  users,
   onIdSelected,
   onIdAllSelected,
   onPageChanged,
@@ -312,6 +315,7 @@ export const AdminListTable = ({
                     initResize={initResize}
                     listAll={listAll}
                     protocols={protocols}
+                    users={users}
                     activeSortField={activeSortField}
                     activeSortOrder={activeSortOrder}
                     column={column}

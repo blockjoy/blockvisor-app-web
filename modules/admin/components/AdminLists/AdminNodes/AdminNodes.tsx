@@ -1,5 +1,5 @@
 import { AdminList } from '../AdminList/AdminList';
-import { protocolClient, nodeClient } from '@modules/grpc';
+import { protocolClient, nodeClient, userClient } from '@modules/grpc';
 import { DateTime, NodeStatus } from '@shared/components';
 import {
   AdminNodesFilterProtocol,
@@ -20,11 +20,11 @@ import { Node, NodeSortField } from '@modules/grpc/library/blockjoy/v1/node';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { capitalized, createAdminNodeFilters } from '@modules/admin';
 import { AdminListColumn } from '@modules/admin/types/AdminListColumn';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Protocol } from '@modules/grpc/library/blockjoy/v1/protocol';
-import { Currency } from '../../AdminFinancesByHost/Currency/Currency';
 import { AdminListEditCost } from '../AdminListEditCost/AdminListEditCost';
 import { BillingAmount } from '@modules/grpc/library/blockjoy/common/v1/currency';
+import { User } from '@modules/grpc/library/blockjoy/v1/user';
 
 const columns: AdminListColumn[] = [
   {
@@ -129,8 +129,6 @@ const columns: AdminListColumn[] = [
     name: 'region',
     width: '140px',
     isVisible: true,
-    // filterComponent: AdminNodesFilterRegion,
-    // filterDropdownMinWidth: 200,
   },
   {
     name: 'address',
@@ -153,19 +151,20 @@ const columns: AdminListColumn[] = [
     sortField: NodeSortField.NODE_SORT_FIELD_CREATED_AT,
     isVisible: true,
   },
-  // {
-  //   name: 'createdBy',
-  //   displayName: 'Launched By',
-  //   width: '140px',
-  //   isVisible: true,
-  //   // filterComponent: AdminNodesFilterUser,
-  //   // filterDropdownMaxWidth: 200,
-  //   // filterDropdownMinWidth: 160,
-  // },
+  {
+    name: 'createdBy',
+    displayName: 'Launched By',
+    width: '140px',
+    isVisible: true,
+    filterComponent: AdminNodesFilterUser,
+    filterDropdownMaxWidth: 200,
+    filterDropdownMinWidth: 160,
+  },
 ];
 
 export const AdminNodes = () => {
   const [protocols, setProtocols] = useState<Protocol[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
 
   const getList = async (
     keyword?: string,
@@ -174,6 +173,16 @@ export const AdminNodes = () => {
     sortOrder?: SortOrder,
     filters?: AdminListColumn[],
   ) => {
+    if (!users.length) {
+      const usersResponse = await userClient.listUsers();
+      setUsers(usersResponse.users);
+    }
+
+    if (!protocols?.length) {
+      const protocolsResponse = await protocolClient.listProtocols();
+      setProtocols(protocolsResponse.protocols);
+    }
+
     const sort =
       page === -1 ? undefined : [{ field: sortField!, order: sortOrder! }];
 
@@ -213,6 +222,8 @@ export const AdminNodes = () => {
 
   const listMap = (list: Node[]) =>
     list.map((node) => {
+      const user = users.find((u) => u.userId === node.createdBy?.resourceId);
+      const createdBy = `${user?.firstName} ${user?.lastName}`;
       return {
         ...node,
         variant: node.versionKey?.variantKey,
@@ -230,7 +241,7 @@ export const AdminNodes = () => {
         ),
         region: node.placement?.scheduler?.region,
         createdAt: <DateTime date={node.createdAt!} />,
-        // createdBy: node.createdBy?.resourceId,
+        createdBy,
         host: node.hostDisplayName || node.hostNetworkName,
         cost: (
           <AdminListEditCost
@@ -261,14 +272,6 @@ export const AdminNodes = () => {
     }
   };
 
-  useEffect(() => {
-    (async () => {
-      const protocolsResponse = await protocolClient.listProtocols();
-      console.log('protocolsResponse', protocolsResponse);
-      setProtocols(protocolsResponse.protocols);
-    })();
-  }, []);
-
   return (
     <AdminList
       name="nodes"
@@ -280,6 +283,7 @@ export const AdminNodes = () => {
       listMap={listMap}
       selectedIds={selectedIds}
       protocols={protocols}
+      users={users}
       onIdSelected={handleIdSelected}
       onIdAllSelected={handleIdAllSelected}
       additionalHeaderButtons={[

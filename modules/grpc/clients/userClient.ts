@@ -59,7 +59,7 @@ class UserClient {
       userIds: [],
       orgIds: [],
       offset: getPaginationOffset(pagination),
-      limit: pagination?.itemsPerPage!,
+      limit: pagination?.itemsPerPage! ?? 100000,
       sort: sort || [
         {
           field: UserSortField.USER_SORT_FIELD_FIRST_NAME,
@@ -72,7 +72,6 @@ class UserClient {
       request.search = {
         name: createSearch(keyword),
         email: createSearch(keyword),
-        // userId: createSearch(keyword),
         operator: SearchOperator.SEARCH_OPERATOR_OR,
       };
     }
