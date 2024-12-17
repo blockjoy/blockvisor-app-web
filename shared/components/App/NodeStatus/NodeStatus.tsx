@@ -21,7 +21,7 @@ export type NodeStatusListItem = {
 };
 
 type Props = {
-  status: NodeState;
+  status: NodeState | NodeHealth;
   type?: NodeStatusType;
   hasBorder?: boolean;
   downloadingCurrent?: number;

@@ -21,7 +21,6 @@ export const NODE_FILTERS_DEFAULT: UINodeFilterCriteria = {
   nodeStatus: [],
   nodeType: [],
   networks: [],
-  versions: [],
   keyword: '',
 };
 

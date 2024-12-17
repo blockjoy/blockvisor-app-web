@@ -7,6 +7,7 @@ import {
 import { sort } from '@shared/components';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { AdminFilterControlProps } from '@modules/admin/types/AdminFilterControlProps';
+import { capitalize } from 'utils/capitalize';
 
 export const AdminNodesFilterProtocol = ({
   columnName,
@@ -18,9 +19,9 @@ export const AdminNodesFilterProtocol = ({
 
   useEffect(() => {
     const all: AdminFilterDropdownItem[] | undefined = (listAll as Node[])?.map(
-      ({ protocolId, protocolName }) => ({
+      ({ protocolId, versionKey }) => ({
         id: protocolId,
-        name: protocolName,
+        name: capitalize(versionKey?.protocolKey!),
       }),
     );
     setList(sort(dedupedAdminDropdownList(all!), { field: 'name' }));

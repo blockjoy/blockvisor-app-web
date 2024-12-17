@@ -14,7 +14,7 @@ export const AdminNodesFilterHost = ({
   values,
   listAll,
   onFilterChange,
-}: AdminFilterControlProps) => {
+}: AdminFilterControlProps<Node>) => {
   const [list, setList] = useState<AdminFilterDropdownItem[]>();
 
   const settings = useRecoilValue(adminSelectors.settings);
@@ -25,15 +25,15 @@ export const AdminNodesFilterHost = ({
   )?.filterSettings?.values;
 
   useEffect(() => {
-    const all: AdminFilterDropdownItem[] | undefined = (listAll as Node[])
+    const all: AdminFilterDropdownItem[] | undefined = listAll
       ?.filter(
         (node) =>
           !protocolFilters?.length ||
           protocolFilters?.includes(node.protocolId),
       )
-      ?.map(({ hostId, hostDisplayName }) => ({
+      ?.map(({ hostId, hostDisplayName, hostNetworkName }) => ({
         id: hostId,
-        name: hostDisplayName,
+        name: hostDisplayName || hostNetworkName,
       }));
     setList(sort(dedupedAdminDropdownList(all!), { field: 'name' }));
   }, [listAll]);

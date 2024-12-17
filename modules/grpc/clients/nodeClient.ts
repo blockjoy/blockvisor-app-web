@@ -40,15 +40,13 @@ export type UINodeFilterCriteria = {
   protocol?: string[];
   nodeType?: string[];
   nodeStatus?: string[];
-  containerStatus?: string[];
-  syncStatus?: string[];
   keyword?: string;
   orgIds?: string[];
   hostIds?: string[];
   userIds?: string[];
   regions?: string[];
   ips?: string[];
-  versions?: string[];
+  semanticVersions?: string[];
   networks?: string[];
 };
 
@@ -78,14 +76,14 @@ class NodeClient {
       hostIds: filter?.hostIds!,
       ipAddresses: filter?.ips!,
       // TODO: Filter nodes by region and variant
-      // regions: filter?.regions!,
       userIds: filter?.userIds!,
-      semanticVersions: filter?.versions!,
+      semanticVersions: filter?.semanticVersions!,
       offset: getPaginationOffset(pagination!),
       limit: pagination?.itemsPerPage!,
       nodeStates: filter?.nodeStatus?.map((f) => +f)!,
       protocolIds: filter?.protocol!,
       nextStates: [],
+      versionKeys: [],
       sort: sort || [
         {
           field: NodeSortField.NODE_SORT_FIELD_CREATED_AT,
@@ -137,6 +135,7 @@ class NodeClient {
       ipAddresses: [],
       semanticVersions: [],
       nextStates: [],
+      versionKeys: [],
       sort: [
         {
           field: NodeSortField.NODE_SORT_FIELD_CREATED_AT,
