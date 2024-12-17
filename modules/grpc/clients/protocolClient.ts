@@ -60,7 +60,6 @@ class ProtocolClient {
     pagination?: ProtocolPagination,
     sort?: ProtocolSort[],
   ): Promise<ProtocolServiceListProtocolsResponse> {
-    this.client.listVersions;
     const request: ProtocolServiceListProtocolsRequest = {
       orgIds: orgId ? [orgId!] : [],
       offset: getPaginationOffset(pagination!),
