@@ -78,6 +78,10 @@ export interface ImageConfig {
 export interface ImagePropertyValue {
   /** The key of the image property. */
   key: string;
+  /** The group key for switches and enums. */
+  keyGroup?:
+    | string
+    | undefined;
   /** The configured value of the image property. */
   value: string;
 }
@@ -427,7 +431,7 @@ export const ImageConfig = {
 };
 
 function createBaseImagePropertyValue(): ImagePropertyValue {
-  return { key: "", value: "" };
+  return { key: "", keyGroup: undefined, value: "" };
 }
 
 export const ImagePropertyValue = {
@@ -435,8 +439,11 @@ export const ImagePropertyValue = {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
     }
+    if (message.keyGroup !== undefined) {
+      writer.uint32(18).string(message.keyGroup);
+    }
     if (message.value !== "") {
-      writer.uint32(18).string(message.value);
+      writer.uint32(26).string(message.value);
     }
     return writer;
   },
@@ -460,6 +467,13 @@ export const ImagePropertyValue = {
             break;
           }
 
+          message.keyGroup = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.value = reader.string();
           continue;
       }
@@ -478,6 +492,7 @@ export const ImagePropertyValue = {
   fromPartial(object: DeepPartial<ImagePropertyValue>): ImagePropertyValue {
     const message = createBaseImagePropertyValue();
     message.key = object.key ?? "";
+    message.keyGroup = object.keyGroup ?? undefined;
     message.value = object.value ?? "";
     return message;
   },
