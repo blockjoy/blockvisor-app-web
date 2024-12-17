@@ -363,10 +363,10 @@ export const UserServiceListRequest = {
       writer.uint32(18).string(v!);
     }
     if (message.offset !== 0) {
-      writer.uint32(16).uint64(message.offset);
+      writer.uint32(24).uint64(message.offset);
     }
     if (message.limit !== 0) {
-      writer.uint32(24).uint64(message.limit);
+      writer.uint32(32).uint64(message.limit);
     }
     if (message.search !== undefined) {
       UserSearch.encode(message.search, writer.uint32(42).fork()).ldelim();
@@ -403,14 +403,21 @@ export const UserServiceListRequest = {
           message.orgIds.push(reader.string());
           continue;
         case 2:
-          if (tag !== 16) {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.orgIds.push(reader.string());
+          continue;
+        case 3:
+          if (tag !== 24) {
             break;
           }
 
           message.offset = longToNumber(reader.uint64() as Long);
           continue;
-        case 3:
-          if (tag !== 24) {
+        case 4:
+          if (tag !== 32) {
             break;
           }
 
