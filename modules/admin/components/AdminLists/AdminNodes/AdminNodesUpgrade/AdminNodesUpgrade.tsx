@@ -10,7 +10,7 @@ import {
   Scrollbar,
 } from '@shared/components';
 import { AdminDropdownHeader } from '@modules/admin/components';
-import { protocolClient, nodeClient } from '@modules/grpc';
+import { protocolClient, nodeClient, imageClient } from '@modules/grpc';
 import { toast } from 'react-toastify';
 import { ProtocolVersion } from '@modules/grpc/library/blockjoy/v1/protocol';
 import IconUpgrade from '@public/assets/icons/app/NodeUpgrade.svg';
@@ -39,10 +39,14 @@ export const AdminNodesUpgrade = ({ selectedIds, list, setList }: Props) => {
     const listCopy = [...list];
 
     try {
-      await nodeClient.upgradeNode(
-        selectedIds,
-        selectedVersion?.semanticVersion!,
-      );
+      const firstNode = list.find((n) => selectedIds.includes(n.nodeId));
+
+      const imageResponse = await imageClient.getImage({
+        versionKey: firstNode?.versionKey,
+        semanticVersion: selectedVersion?.semanticVersion,
+      });
+
+      await nodeClient.upgradeNode(selectedIds, imageResponse.image?.imageId!);
 
       for (const id of selectedIds) {
         const foundNode = list.find((n) => n.nodeId === id);
@@ -66,12 +70,10 @@ export const AdminNodesUpgrade = ({ selectedIds, list, setList }: Props) => {
   useEffect(() => {
     (async () => {
       if (selectedIds.length && !versions.length) {
-        const protocolId = (await nodeClient.getNode(selectedIds[0]))
-          .protocolId!;
-
-        const versions = (await protocolClient.getProtocol(protocolId))
-          .versions;
-
+        const { versionKey } = await nodeClient.getNode(selectedIds[0]);
+        const versions = await protocolClient.listVersions({
+          versionKey,
+        });
         setVersions(versions);
       }
     })();

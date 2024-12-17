@@ -86,7 +86,9 @@ export const useNodeView = (): Hook => {
           switchOrganization(node.orgId, node.orgName);
       }
 
-      const imageResponse = await imageClient.getImage(foundNode.versionKey!);
+      const imageResponse = await imageClient.getImage({
+        versionKey: foundNode.versionKey!,
+      });
       setNodeImage(imageResponse?.image!);
 
       return;
@@ -99,7 +101,9 @@ export const useNodeView = (): Hook => {
       if (node.orgId !== defaultOrganization?.orgId)
         switchOrganization(node.orgId, node.orgName);
 
-      const imageResponse = await imageClient.getImage(node.versionKey!);
+      const imageResponse = await imageClient.getImage({
+        versionKey: node.versionKey!,
+      });
       setNodeImage(imageResponse?.image!);
       setIsLoading('finished');
     } catch (err) {

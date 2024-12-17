@@ -40,11 +40,13 @@ export const AdminNodesOrgAssign = ({ selectedIds, list, setList }: Props) => {
 
     const listCopy = [...list];
 
+    console.log('handleOrgAssign', selectedIds, selectedOrg);
+
     try {
       const calls = [];
 
       for (let id of selectedIds) {
-        calls.push(async () =>
+        calls.push(
           nodeClient.updateNode({
             nodeId: id,
             newOrgId: selectedOrg?.orgId,
@@ -53,10 +55,9 @@ export const AdminNodesOrgAssign = ({ selectedIds, list, setList }: Props) => {
         );
       }
 
-      // await nodeClient.updateNode({
-      //   ids: selectedIds,
-      //   newOrgId: selectedOrg?.orgId,
-      // });
+      console.log('calls', calls);
+
+      await Promise.all(calls);
 
       for (let id of selectedIds) {
         const foundNode = listCopy.find((n) => n.nodeId === id);

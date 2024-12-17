@@ -6,7 +6,6 @@ import {
   ImageServiceGetImageRequest,
   ImageServiceGetImageResponse,
 } from '../library/blockjoy/v1/image';
-import { ProtocolVersionKey } from '../library/blockjoy/common/v1/protocol';
 
 class ImageClient {
   private client: ImageServiceClient;
@@ -17,12 +16,8 @@ class ImageClient {
   }
 
   async getImage(
-    versionKey: ProtocolVersionKey,
+    request: ImageServiceGetImageRequest,
   ): Promise<ImageServiceGetImageResponse> {
-    const request: ImageServiceGetImageRequest = {
-      versionKey,
-    };
-
     console.log('getImageRequest', request);
 
     try {
