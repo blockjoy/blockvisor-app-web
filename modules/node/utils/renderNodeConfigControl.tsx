@@ -6,7 +6,7 @@ import {
   ImagePropertySwitch,
 } from '@modules/node';
 
-export const renderControls = (
+export const renderNodeConfigControl = (
   propertyGroup: NodePropertyGroup,
   onPropertyChanged: (key: string, keyGroup: string, value: string) => void,
   noBottomMargin?: boolean,

@@ -71,11 +71,11 @@ export interface ImageConfig {
   /** The store id pointing to external archive data. */
   storeId: string;
   /** The configured image property values. */
-  values: ImagePropertyValue[];
+  values: PropertyValueConfig[];
 }
 
 /** A configured image property. */
-export interface ImagePropertyValue {
+export interface PropertyValueConfig {
   /** The key of the image property. */
   key: string;
   /** The group key for switches and enums. */
@@ -359,7 +359,7 @@ export const ImageConfig = {
       writer.uint32(34).string(message.storeId);
     }
     for (const v of message.values) {
-      ImagePropertyValue.encode(v!, writer.uint32(42).fork()).ldelim();
+      PropertyValueConfig.encode(v!, writer.uint32(42).fork()).ldelim();
     }
     return writer;
   },
@@ -404,7 +404,7 @@ export const ImageConfig = {
             break;
           }
 
-          message.values.push(ImagePropertyValue.decode(reader, reader.uint32()));
+          message.values.push(PropertyValueConfig.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -425,17 +425,17 @@ export const ImageConfig = {
     message.imageUri = object.imageUri ?? "";
     message.archiveId = object.archiveId ?? "";
     message.storeId = object.storeId ?? "";
-    message.values = object.values?.map((e) => ImagePropertyValue.fromPartial(e)) || [];
+    message.values = object.values?.map((e) => PropertyValueConfig.fromPartial(e)) || [];
     return message;
   },
 };
 
-function createBaseImagePropertyValue(): ImagePropertyValue {
+function createBasePropertyValueConfig(): PropertyValueConfig {
   return { key: "", keyGroup: undefined, value: "" };
 }
 
-export const ImagePropertyValue = {
-  encode(message: ImagePropertyValue, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const PropertyValueConfig = {
+  encode(message: PropertyValueConfig, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
     }
@@ -448,10 +448,10 @@ export const ImagePropertyValue = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ImagePropertyValue {
+  decode(input: _m0.Reader | Uint8Array, length?: number): PropertyValueConfig {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseImagePropertyValue();
+    const message = createBasePropertyValueConfig();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -485,12 +485,12 @@ export const ImagePropertyValue = {
     return message;
   },
 
-  create(base?: DeepPartial<ImagePropertyValue>): ImagePropertyValue {
-    return ImagePropertyValue.fromPartial(base ?? {});
+  create(base?: DeepPartial<PropertyValueConfig>): PropertyValueConfig {
+    return PropertyValueConfig.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<ImagePropertyValue>): ImagePropertyValue {
-    const message = createBaseImagePropertyValue();
+  fromPartial(object: DeepPartial<PropertyValueConfig>): PropertyValueConfig {
+    const message = createBasePropertyValueConfig();
     message.key = object.key ?? "";
     message.keyGroup = object.keyGroup ?? undefined;
     message.value = object.value ?? "";

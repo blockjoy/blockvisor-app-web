@@ -1,9 +1,12 @@
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { ROUTES } from '@shared/constants/routes';
 import { NextLink, DateTime } from '@shared/components';
+import { OrgUser } from '@modules/grpc/library/blockjoy/v1/org';
 
-export const mapNodeToLaunchDetails = (node: Node) => {
-  // if (!node?.nodeType) return [];
+export const mapNodeToLaunchDetails = (node: Node, orgUsers?: OrgUser[]) => {
+  const launchedBy =
+    orgUsers?.find((u) => u.userId === node.createdBy?.resourceId!)?.name ||
+    '-';
 
   const details: { label: string; data: any | undefined }[] = [
     {
@@ -25,8 +28,10 @@ export const mapNodeToLaunchDetails = (node: Node) => {
         </NextLink>
       ),
     },
-    // TODO: createdBy name is missing
-    { label: 'Launched By', data: node.createdBy?.resourceId || '-' },
+    {
+      label: 'Launched By',
+      data: launchedBy,
+    },
     {
       label: 'Launched On',
       data: !node.createdAt ? '-' : <DateTime date={node.createdAt} />,

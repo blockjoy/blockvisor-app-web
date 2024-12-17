@@ -1,18 +1,9 @@
-import { capitalized } from '@modules/admin';
-import {
-  FirewallAction,
-  FirewallDirection,
-  ImagePropertyValue,
-} from '@modules/grpc/library/blockjoy/common/v1/config';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { Copy } from '@shared/components';
 import { styles } from '@shared/components/Buttons/NextLink/NextLink.styles';
-import { escapeHtml } from '@shared/utils/escapeHtml';
-import { spacing } from 'styles/utils.spacing.styles';
-import { getNameFromEnum } from 'utils/getNameFromEnum';
 
 export const mapNodeToDetails = (node: Node) => {
-  const rpcUrl = `http://${node.dnsUrl}`;
+  const rpcUrl = node.dnsUrl ? `http://${node.dnsUrl}` : undefined;
 
   const details: {
     label: string | any;

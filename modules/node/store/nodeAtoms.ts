@@ -4,7 +4,7 @@ import { Region } from '@modules/grpc/library/blockjoy/v1/host';
 import { localStorageEffect } from 'utils/store/persist';
 import { NODE_PAGINATION_DEFAULT } from '@shared/index';
 import { Image } from '@modules/grpc/library/blockjoy/v1/image';
-import { NodeConfig, NodePropertyGroup } from '../types/common';
+import { NodeConfig } from '../types/common';
 
 const nodeLoadingState = atom<LoadingState>({
   key: 'node.loadingState',

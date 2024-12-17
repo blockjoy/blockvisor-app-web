@@ -56,6 +56,8 @@ class UserClient {
     sort?: UserSort[],
   ): Promise<UserServiceListResponse> {
     const request: UserServiceListRequest = {
+      userIds: [],
+      orgIds: [],
       offset: getPaginationOffset(pagination),
       limit: pagination?.itemsPerPage!,
       sort: sort || [
@@ -70,7 +72,7 @@ class UserClient {
       request.search = {
         name: createSearch(keyword),
         email: createSearch(keyword),
-        userId: createSearch(keyword),
+        // userId: createSearch(keyword),
         operator: SearchOperator.SEARCH_OPERATOR_OR,
       };
     }

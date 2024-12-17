@@ -3,7 +3,6 @@ import { css } from '@emotion/react';
 import { protocolClient } from '@modules/grpc';
 import { Protocol } from '@modules/grpc/library/blockjoy/v1/protocol';
 import { AdminDetail } from '../AdminDetail/AdminDetail';
-// import { AdminBlockchainVersionAdd } from './AdminProtocolVersionAdd/AdminBlockchainVersionAdd';
 import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 import { useState } from 'react';
@@ -48,6 +47,7 @@ export const AdminProtocol = () => {
 
   const getItem = async () => await protocolClient.getProtocol(id as string);
 
+  // TODO: render versions
   // const renderVersions = (item: Protocol) => {
   //   const versions: any[] = [];
 
@@ -84,18 +84,13 @@ export const AdminProtocol = () => {
       data: item.name,
       copyValue: item.name,
     },
-    // {
-    //   id: 'displayName',
-    //   label: 'Display Name',
-    //   data: item.displayName,
-    //   copyValue: item.displayName,
-    // },
     {
       id: 'protocolId',
       label: 'Protocol Id',
       data: item.protocolId,
       copyValue: item.protocolId,
     },
+    // TODO: Protocol visibility
     // {
     //   id: 'visibilityText',
     //   label: 'Visibility',
@@ -106,6 +101,7 @@ export const AdminProtocol = () => {
     //       ?.toLowerCase(),
     //   ),
     // },
+
     // ...[...renderVersions(item)],
   ];
 
@@ -124,9 +120,6 @@ export const AdminProtocol = () => {
         'updatedAt',
       ]}
       customItems={customItems}
-      // additionalHeaderButtons={
-      //   <AdminBlockchainVersionAdd onRefreshed={handleRefreshed} />
-      // }
     />
   );
 };
