@@ -1027,6 +1027,72 @@ export const NewImagePropertyValue = {
   },
 };
 
+function createBaseNewImagePropertyValue(): NewImagePropertyValue {
+  return { key: '', value: '' };
+}
+
+export const NewImagePropertyValue = {
+  encode(
+    message: NewImagePropertyValue,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    if (message.key !== '') {
+      writer.uint32(10).string(message.key);
+    }
+    if (message.value !== '') {
+      writer.uint32(18).string(message.value);
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): NewImagePropertyValue {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNewImagePropertyValue();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.key = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.value = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<NewImagePropertyValue>): NewImagePropertyValue {
+    return NewImagePropertyValue.fromPartial(base ?? {});
+  },
+
+  fromPartial(
+    object: DeepPartial<NewImagePropertyValue>,
+  ): NewImagePropertyValue {
+    const message = createBaseNewImagePropertyValue();
+    message.key = object.key ?? '';
+    message.value = object.value ?? '';
+    return message;
+  },
+};
+
 function createBaseNodeServiceCreateResponse(): NodeServiceCreateResponse {
   return { nodes: [] };
 }
