@@ -33,10 +33,10 @@ export interface UserServiceGetResponse {
 }
 
 export interface UserServiceListRequest {
-  /** Return only users from this org. */
-  orgId?:
-    | string
-    | undefined;
+  /** If non-empty, list user details for these user ids. */
+  userIds: string[];
+  /** If non-empty, list users from these org ids. */
+  orgIds: string[];
   /** The number of results to skip. */
   offset: number;
   /** Limit the number of results. */
@@ -53,10 +53,6 @@ export interface UserServiceListRequest {
 export interface UserSearch {
   /** How to combine the parameters. */
   operator: SearchOperator;
-  /** Search for this user id. */
-  userId?:
-    | string
-    | undefined;
   /** Search for matching emails (case-insensitive and '%' is a wildcard). */
   email?:
     | string
@@ -318,19 +314,22 @@ export const UserServiceGetResponse = {
 };
 
 function createBaseUserServiceListRequest(): UserServiceListRequest {
-  return { orgId: undefined, offset: 0, limit: 0, search: undefined, sort: [] };
+  return { userIds: [], orgIds: [], offset: 0, limit: 0, search: undefined, sort: [] };
 }
 
 export const UserServiceListRequest = {
   encode(message: UserServiceListRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.orgId !== undefined) {
-      writer.uint32(10).string(message.orgId);
+    for (const v of message.userIds) {
+      writer.uint32(10).string(v!);
+    }
+    for (const v of message.orgIds) {
+      writer.uint32(18).string(v!);
     }
     if (message.offset !== 0) {
-      writer.uint32(16).uint64(message.offset);
+      writer.uint32(24).uint64(message.offset);
     }
     if (message.limit !== 0) {
-      writer.uint32(24).uint64(message.limit);
+      writer.uint32(32).uint64(message.limit);
     }
     if (message.search !== undefined) {
       UserSearch.encode(message.search, writer.uint32(42).fork()).ldelim();
@@ -353,17 +352,24 @@ export const UserServiceListRequest = {
             break;
           }
 
-          message.orgId = reader.string();
+          message.userIds.push(reader.string());
           continue;
         case 2:
-          if (tag !== 16) {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.orgIds.push(reader.string());
+          continue;
+        case 3:
+          if (tag !== 24) {
             break;
           }
 
           message.offset = longToNumber(reader.uint64() as Long);
           continue;
-        case 3:
-          if (tag !== 24) {
+        case 4:
+          if (tag !== 32) {
             break;
           }
 
@@ -398,7 +404,8 @@ export const UserServiceListRequest = {
 
   fromPartial(object: DeepPartial<UserServiceListRequest>): UserServiceListRequest {
     const message = createBaseUserServiceListRequest();
-    message.orgId = object.orgId ?? undefined;
+    message.userIds = object.userIds?.map((e) => e) || [];
+    message.orgIds = object.orgIds?.map((e) => e) || [];
     message.offset = object.offset ?? 0;
     message.limit = object.limit ?? 0;
     message.search = (object.search !== undefined && object.search !== null)
@@ -410,7 +417,7 @@ export const UserServiceListRequest = {
 };
 
 function createBaseUserSearch(): UserSearch {
-  return { operator: 0, userId: undefined, email: undefined, name: undefined };
+  return { operator: 0, email: undefined, name: undefined };
 }
 
 export const UserSearch = {
@@ -418,14 +425,11 @@ export const UserSearch = {
     if (message.operator !== 0) {
       writer.uint32(8).int32(message.operator);
     }
-    if (message.userId !== undefined) {
-      writer.uint32(18).string(message.userId);
-    }
     if (message.email !== undefined) {
-      writer.uint32(26).string(message.email);
+      writer.uint32(18).string(message.email);
     }
     if (message.name !== undefined) {
-      writer.uint32(34).string(message.name);
+      writer.uint32(26).string(message.name);
     }
     return writer;
   },
@@ -449,17 +453,10 @@ export const UserSearch = {
             break;
           }
 
-          message.userId = reader.string();
+          message.email = reader.string();
           continue;
         case 3:
           if (tag !== 26) {
-            break;
-          }
-
-          message.email = reader.string();
-          continue;
-        case 4:
-          if (tag !== 34) {
             break;
           }
 
@@ -481,7 +478,6 @@ export const UserSearch = {
   fromPartial(object: DeepPartial<UserSearch>): UserSearch {
     const message = createBaseUserSearch();
     message.operator = object.operator ?? 0;
-    message.userId = object.userId ?? undefined;
     message.email = object.email ?? undefined;
     message.name = object.name ?? undefined;
     return message;

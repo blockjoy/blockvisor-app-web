@@ -91,11 +91,19 @@ export interface NodeServiceCreateRequest {
   /** How to determine the host placment of the new node. */
   placement: NodePlacement | undefined;
   /** The image properties changed from their default values. */
-  newValues: ImagePropertyValue[];
+  newValues: NewImagePropertyValue[];
   /** Additional firewall rules to add to the node. */
   addRules: FirewallRule[];
   /** A list of tags that are attached to this node. */
   tags?: Tags | undefined;
+}
+
+/** An image property value changed from the default. */
+export interface NewImagePropertyValue {
+  /** The key of the image property. */
+  key: string;
+  /** The set value of the image property. */
+  value: string;
 }
 
 export interface NodeServiceCreateResponse {
@@ -215,7 +223,7 @@ export interface NodeServiceUpdateConfigRequest {
   /** Update the note that explains what this node is for. */
   newNote?: string | undefined;
   /** Update these property keys to these values. */
-  newValues: ImagePropertyValue[];
+  newValues: NewImagePropertyValue[];
   /** Replace the firewall config with a new one. */
   newFirewall?: FirewallConfig | undefined;
   /** Update the node tags. */
@@ -808,7 +816,7 @@ export const NodeServiceCreateRequest = {
       ).ldelim();
     }
     for (const v of message.newValues) {
-      ImagePropertyValue.encode(v!, writer.uint32(42).fork()).ldelim();
+      NewImagePropertyValue.encode(v!, writer.uint32(42).fork()).ldelim();
     }
     for (const v of message.addRules) {
       FirewallRule.encode(v!, writer.uint32(50).fork()).ldelim();
@@ -915,6 +923,72 @@ export const NodeServiceCreateRequest = {
       object.tags !== undefined && object.tags !== null
         ? Tags.fromPartial(object.tags)
         : undefined;
+    return message;
+  },
+};
+
+function createBaseNewImagePropertyValue(): NewImagePropertyValue {
+  return { key: '', value: '' };
+}
+
+export const NewImagePropertyValue = {
+  encode(
+    message: NewImagePropertyValue,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    if (message.key !== '') {
+      writer.uint32(10).string(message.key);
+    }
+    if (message.value !== '') {
+      writer.uint32(18).string(message.value);
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): NewImagePropertyValue {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNewImagePropertyValue();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.key = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.value = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<NewImagePropertyValue>): NewImagePropertyValue {
+    return NewImagePropertyValue.fromPartial(base ?? {});
+  },
+
+  fromPartial(
+    object: DeepPartial<NewImagePropertyValue>,
+  ): NewImagePropertyValue {
+    const message = createBaseNewImagePropertyValue();
+    message.key = object.key ?? '';
+    message.value = object.value ?? '';
     return message;
   },
 };
@@ -1216,7 +1290,9 @@ export const NodeServiceListRequest = {
             break;
           }
 
-          message.versionKeys.push(ProtocolVersionKey.decode(reader, reader.uint32()));
+          message.versionKeys.push(
+            ProtocolVersionKey.decode(reader, reader.uint32()),
+          );
           continue;
         case 8:
           if (tag !== 66) {
@@ -1306,7 +1382,8 @@ export const NodeServiceListRequest = {
         : undefined;
     message.sort = object.sort?.map((e) => NodeSort.fromPartial(e)) || [];
     message.protocolIds = object.protocolIds?.map((e) => e) || [];
-    message.versionKeys = object.versionKeys?.map((e) => ProtocolVersionKey.fromPartial(e)) || [];
+    message.versionKeys =
+      object.versionKeys?.map((e) => ProtocolVersionKey.fromPartial(e)) || [];
     message.semanticVersions = object.semanticVersions?.map((e) => e) || [];
     message.hostIds = object.hostIds?.map((e) => e) || [];
     message.userIds = object.userIds?.map((e) => e) || [];
@@ -1917,7 +1994,7 @@ export const NodeServiceUpdateConfigRequest = {
       writer.uint32(42).string(message.newNote);
     }
     for (const v of message.newValues) {
-      ImagePropertyValue.encode(v!, writer.uint32(50).fork()).ldelim();
+      NewImagePropertyValue.encode(v!, writer.uint32(50).fork()).ldelim();
     }
     if (message.newFirewall !== undefined) {
       FirewallConfig.encode(

@@ -123,7 +123,7 @@ export interface NodeUpdate {
   newOrgName?: string | undefined;
   newDisplayName?: string | undefined;
   newNote?: string | undefined;
-  newValues: ImagePropertyValue[];
+  newValues: PropertyValueConfig[];
   newFirewall?: FirewallConfig | undefined;
 }
 
@@ -1577,7 +1577,7 @@ export const NodeUpdate = {
       writer.uint32(58).string(message.newNote);
     }
     for (const v of message.newValues) {
-      ImagePropertyValue.encode(v!, writer.uint32(66).fork()).ldelim();
+      PropertyValueConfig.encode(v!, writer.uint32(66).fork()).ldelim();
     }
     if (message.newFirewall !== undefined) {
       FirewallConfig.encode(
