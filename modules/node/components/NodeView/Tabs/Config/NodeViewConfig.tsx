@@ -9,7 +9,7 @@ import {
   NodeConfig,
   LockedSwitch,
 } from '@modules/node';
-import { renderControls } from '@modules/node/utils/renderNodeLauncherConfigControls';
+import { renderNodeConfigControl } from '@modules/node/utils/renderNodeConfigControl';
 import {
   Button,
   ButtonGroup,
@@ -190,7 +190,7 @@ export const NodeViewConfig = () => {
             {propertyGroup.displayName ||
               kebabToCapitalized(propertyGroup.keyGroup || propertyGroup.key)}
           </FormLabelCaps>
-          {renderControls(propertyGroup, handlePropertyChanged, true)}
+          {renderNodeConfigControl(propertyGroup, handlePropertyChanged, true)}
         </div>
       ))}
 

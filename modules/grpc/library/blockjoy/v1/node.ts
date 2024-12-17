@@ -3,7 +3,7 @@ import Long from "long";
 import type { CallContext, CallOptions } from "nice-grpc-common";
 import _m0 from "protobufjs/minimal";
 import { Timestamp } from "../../google/protobuf/timestamp";
-import { FirewallConfig, FirewallRule, ImagePropertyValue, NodeConfig } from "../common/v1/config";
+import { FirewallConfig, FirewallRule, NodeConfig } from "../common/v1/config";
 import { BillingAmount } from "../common/v1/currency";
 import { NextState, NodeJob, NodePlacement, NodeReport, NodeState, NodeStatus } from "../common/v1/node";
 import { ProtocolVersionKey } from "../common/v1/protocol";
@@ -85,11 +85,19 @@ export interface NodeServiceCreateRequest {
     | NodePlacement
     | undefined;
   /** The image properties changed from their default values. */
-  newValues: ImagePropertyValue[];
+  newValues: NewImagePropertyValue[];
   /** Additional firewall rules to add to the node. */
   addRules: FirewallRule[];
   /** A list of tags that are attached to this node. */
   tags?: Tags | undefined;
+}
+
+/** An image property value changed from the default. */
+export interface NewImagePropertyValue {
+  /** The key of the image property. */
+  key: string;
+  /** The set value of the image property. */
+  value: string;
 }
 
 export interface NodeServiceCreateResponse {
@@ -240,7 +248,7 @@ export interface NodeServiceUpdateConfigRequest {
     | string
     | undefined;
   /** Update these property keys to these values. */
-  newValues: ImagePropertyValue[];
+  newValues: NewImagePropertyValue[];
   /** Replace the firewall config with a new one. */
   newFirewall?:
     | FirewallConfig
@@ -803,7 +811,7 @@ export const NodeServiceCreateRequest = {
       NodePlacement.encode(message.placement, writer.uint32(34).fork()).ldelim();
     }
     for (const v of message.newValues) {
-      ImagePropertyValue.encode(v!, writer.uint32(42).fork()).ldelim();
+      NewImagePropertyValue.encode(v!, writer.uint32(42).fork()).ldelim();
     }
     for (const v of message.addRules) {
       FirewallRule.encode(v!, writer.uint32(50).fork()).ldelim();
@@ -854,7 +862,7 @@ export const NodeServiceCreateRequest = {
             break;
           }
 
-          message.newValues.push(ImagePropertyValue.decode(reader, reader.uint32()));
+          message.newValues.push(NewImagePropertyValue.decode(reader, reader.uint32()));
           continue;
         case 6:
           if (tag !== 50) {
@@ -891,9 +899,66 @@ export const NodeServiceCreateRequest = {
     message.placement = (object.placement !== undefined && object.placement !== null)
       ? NodePlacement.fromPartial(object.placement)
       : undefined;
-    message.newValues = object.newValues?.map((e) => ImagePropertyValue.fromPartial(e)) || [];
+    message.newValues = object.newValues?.map((e) => NewImagePropertyValue.fromPartial(e)) || [];
     message.addRules = object.addRules?.map((e) => FirewallRule.fromPartial(e)) || [];
     message.tags = (object.tags !== undefined && object.tags !== null) ? Tags.fromPartial(object.tags) : undefined;
+    return message;
+  },
+};
+
+function createBaseNewImagePropertyValue(): NewImagePropertyValue {
+  return { key: "", value: "" };
+}
+
+export const NewImagePropertyValue = {
+  encode(message: NewImagePropertyValue, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.key !== "") {
+      writer.uint32(10).string(message.key);
+    }
+    if (message.value !== "") {
+      writer.uint32(18).string(message.value);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): NewImagePropertyValue {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNewImagePropertyValue();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.key = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.value = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<NewImagePropertyValue>): NewImagePropertyValue {
+    return NewImagePropertyValue.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<NewImagePropertyValue>): NewImagePropertyValue {
+    const message = createBaseNewImagePropertyValue();
+    message.key = object.key ?? "";
+    message.value = object.value ?? "";
     return message;
   },
 };
@@ -1788,7 +1853,7 @@ export const NodeServiceUpdateConfigRequest = {
       writer.uint32(42).string(message.newNote);
     }
     for (const v of message.newValues) {
-      ImagePropertyValue.encode(v!, writer.uint32(50).fork()).ldelim();
+      NewImagePropertyValue.encode(v!, writer.uint32(50).fork()).ldelim();
     }
     if (message.newFirewall !== undefined) {
       FirewallConfig.encode(message.newFirewall, writer.uint32(58).fork()).ldelim();
@@ -1849,7 +1914,7 @@ export const NodeServiceUpdateConfigRequest = {
             break;
           }
 
-          message.newValues.push(ImagePropertyValue.decode(reader, reader.uint32()));
+          message.newValues.push(NewImagePropertyValue.decode(reader, reader.uint32()));
           continue;
         case 7:
           if (tag !== 58) {
@@ -1892,7 +1957,7 @@ export const NodeServiceUpdateConfigRequest = {
     message.newOrgId = object.newOrgId ?? undefined;
     message.newDisplayName = object.newDisplayName ?? undefined;
     message.newNote = object.newNote ?? undefined;
-    message.newValues = object.newValues?.map((e) => ImagePropertyValue.fromPartial(e)) || [];
+    message.newValues = object.newValues?.map((e) => NewImagePropertyValue.fromPartial(e)) || [];
     message.newFirewall = (object.newFirewall !== undefined && object.newFirewall !== null)
       ? FirewallConfig.fromPartial(object.newFirewall)
       : undefined;

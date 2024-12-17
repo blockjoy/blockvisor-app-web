@@ -3,7 +3,7 @@ import Long from "long";
 import type { CallContext, CallOptions } from "nice-grpc-common";
 import _m0 from "protobufjs/minimal";
 import { Timestamp } from "../../google/protobuf/timestamp";
-import { FirewallConfig, ImagePropertyValue } from "../common/v1/config";
+import { FirewallConfig, PropertyValueConfig } from "../common/v1/config";
 import { Node } from "./node";
 
 export const protobufPackage = "blockjoy.v1";
@@ -139,7 +139,7 @@ export interface NodeUpdate {
   newOrgName?: string | undefined;
   newDisplayName?: string | undefined;
   newNote?: string | undefined;
-  newValues: ImagePropertyValue[];
+  newValues: PropertyValueConfig[];
   newFirewall?: FirewallConfig | undefined;
 }
 
@@ -1304,7 +1304,7 @@ export const NodeUpdate = {
       writer.uint32(58).string(message.newNote);
     }
     for (const v of message.newValues) {
-      ImagePropertyValue.encode(v!, writer.uint32(66).fork()).ldelim();
+      PropertyValueConfig.encode(v!, writer.uint32(66).fork()).ldelim();
     }
     if (message.newFirewall !== undefined) {
       FirewallConfig.encode(message.newFirewall, writer.uint32(74).fork()).ldelim();
@@ -1373,7 +1373,7 @@ export const NodeUpdate = {
             break;
           }
 
-          message.newValues.push(ImagePropertyValue.decode(reader, reader.uint32()));
+          message.newValues.push(PropertyValueConfig.decode(reader, reader.uint32()));
           continue;
         case 9:
           if (tag !== 74) {
@@ -1404,7 +1404,7 @@ export const NodeUpdate = {
     message.newOrgName = object.newOrgName ?? undefined;
     message.newDisplayName = object.newDisplayName ?? undefined;
     message.newNote = object.newNote ?? undefined;
-    message.newValues = object.newValues?.map((e) => ImagePropertyValue.fromPartial(e)) || [];
+    message.newValues = object.newValues?.map((e) => PropertyValueConfig.fromPartial(e)) || [];
     message.newFirewall = (object.newFirewall !== undefined && object.newFirewall !== null)
       ? FirewallConfig.fromPartial(object.newFirewall)
       : undefined;

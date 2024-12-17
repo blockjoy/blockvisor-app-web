@@ -1,6 +1,6 @@
 import { Fragment } from 'react';
 import { useRecoilValue } from 'recoil';
-import { renderControls } from '@modules/node/utils/renderNodeLauncherConfigControls';
+import { renderNodeConfigControl } from '@modules/node/utils/renderNodeConfigControl';
 import { ProtocolVersion } from '@modules/grpc/library/blockjoy/v1/protocol';
 import { FormLabel, FormHeader, sort } from '@shared/components';
 import {
@@ -84,7 +84,10 @@ export const NodeLauncherConfig = ({
                     propertyGroup.keyGroup || propertyGroup.key,
                   )}
               </FormLabel>
-              {renderControls(propertyGroup, onNodeConfigPropertyChanged)}
+              {renderNodeConfigControl(
+                propertyGroup,
+                onNodeConfigPropertyChanged,
+              )}
             </Fragment>
           );
         })}
