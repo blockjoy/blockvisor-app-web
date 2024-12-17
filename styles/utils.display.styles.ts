@@ -47,4 +47,11 @@ export const display = {
     white-space: nowrap;
     width: 1px;
   `,
+  ellipsis: css`
+    display: block;
+    max-width: 100%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  `,
 };

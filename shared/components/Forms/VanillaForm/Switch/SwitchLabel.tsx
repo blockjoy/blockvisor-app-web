@@ -1,20 +1,25 @@
+import { PropsWithChildren } from 'react';
 import { SerializedStyles } from '@emotion/react';
 import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './SwitchLabel.styles';
+import { ITheme } from 'types/theme';
 
-type SwitchLabelProps = {
-  label: string;
+type Props = {
+  label?: string;
   description?: string;
-  children: React.ReactNode;
-  additionalStyles?: SerializedStyles[];
-};
+  additionalStyles?:
+    | ((theme: ITheme) => SerializedStyles)[]
+    | SerializedStyles[];
+  additionalLabelStyles?: SerializedStyles[];
+} & PropsWithChildren;
 
 export const SwitchLabel = ({
+  children,
   label,
   description,
-  children,
   additionalStyles,
-}: SwitchLabelProps) => {
+  additionalLabelStyles,
+}: Props) => {
   return (
     <div
       css={[
@@ -25,7 +30,14 @@ export const SwitchLabel = ({
       ]}
     >
       <div css={styles.labelWrapper}>
-        <label css={styles.label}>{label}</label>
+        <label
+          css={[
+            styles.label,
+            additionalLabelStyles ? additionalLabelStyles : null,
+          ]}
+        >
+          {label}
+        </label>
         {description ? <span css={styles.labelDesc}>{description}</span> : null}
       </div>
       {children}

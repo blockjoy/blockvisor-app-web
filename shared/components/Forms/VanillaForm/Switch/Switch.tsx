@@ -11,6 +11,7 @@ type SwitchProps = {
   disabled?: boolean;
   defaultChecked?: boolean;
   noBottomMargin?: boolean;
+  size?: SwitchSize;
   onChange?: (name: string, value: boolean) => void;
 };
 
@@ -23,11 +24,13 @@ export const Switch = ({
   tabIndex,
   defaultChecked,
   noBottomMargin,
+  size = 'large',
 }: SwitchProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) =>
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     onChange?.(e.target.name, e.target.checked);
+  };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && inputRef.current) {
@@ -38,21 +41,24 @@ export const Switch = ({
   };
 
   return (
-    <div css={[styles.wrapper, noBottomMargin && styles.wrapperNoBottomMargin]}>
+    <div
+      css={[styles.wrapper, noBottomMargin && styles.wrapperNoBottomMargin]}
+      onClick={(e) => e.stopPropagation()}
+    >
       <label tabIndex={tabIndex}>
         <input
           ref={inputRef}
           disabled={disabled}
           name={name}
           type="checkbox"
-          css={styles.input}
+          css={styles.input(size)}
           onChange={handleChange}
           checked={checked}
           defaultChecked={defaultChecked}
           onKeyDown={handleKeyDown}
         />
-        <span className="switch" css={styles.switch}>
-          <span className="handle" css={styles.handle}>
+        <span className="switch" css={styles.switch(size)}>
+          <span className="handle" css={styles.handle(size)}>
             {disabled && <IconLock />}
           </span>
         </span>

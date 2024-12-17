@@ -3,7 +3,6 @@ import { css } from '@emotion/react';
 import { TableBlock } from '@shared/components';
 import { ProtocolIcon, NodeStatus } from '@shared/components';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
-import { getNodeJobProgress } from '@modules/node/utils/getNodeJobProgress';
 import { escapeHtml } from '@shared/utils/escapeHtml';
 import { authSelectors } from '@modules/auth';
 
@@ -33,7 +32,6 @@ export const mapHostNodesToRows = (nodeList: Node[]) => {
   ];
 
   const rows = nodeList?.map((node: Node) => {
-    const progress = getNodeJobProgress(node);
     return {
       key: node.nodeId,
       cells: [
@@ -68,11 +66,7 @@ export const mapHostNodesToRows = (nodeList: Node[]) => {
         {
           key: '3',
           component: (
-            <NodeStatus
-              status={node.nodeStatus?.state!}
-              downloadingCurrent={progress?.current}
-              downloadingTotal={progress?.total}
-            />
+            <NodeStatus status={node.nodeStatus?.state!} jobs={node.jobs} />
           ),
         },
       ],

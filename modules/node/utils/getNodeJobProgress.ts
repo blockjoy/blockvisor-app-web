@@ -1,8 +1,10 @@
-import { Node } from '@modules/grpc/library/blockjoy/v1/node';
-import { NodeJobStatus } from '@modules/grpc/library/blockjoy/common/v1/node';
+import {
+  NodeJob,
+  NodeJobStatus,
+} from '@modules/grpc/library/blockjoy/common/v1/node';
 
-export const getNodeJobProgress = (node: Node) =>
-  node.jobs.find(
+export const getNodeJobProgress = (jobs: NodeJob[]) =>
+  jobs?.find(
     (job) =>
       job.status === NodeJobStatus.NODE_JOB_STATUS_RUNNING &&
       job.progress?.current! > -1 &&

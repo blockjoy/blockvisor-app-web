@@ -1,4 +1,10 @@
-import { styles } from './NodeStatus.styles';
+import { useLayoutEffect, useRef, useState } from 'react';
+import {
+  NodeHealth,
+  NodeJob,
+  NodeState,
+} from '@modules/grpc/library/blockjoy/common/v1/node';
+import { getNodeJobProgress } from '@modules/node/utils/getNodeJobProgress';
 import {
   nodeHealthList,
   nodeStatusList,
@@ -6,13 +12,11 @@ import {
 import { NodeStatusIcon } from './NodeStatusIcon';
 import { NodeStatusLoader } from './NodeStatusLoader';
 import { NodeStatusName } from './NodeStatusName';
-import { useLayoutEffect, useRef, useState } from 'react';
-import {
-  NodeHealth,
-  NodeState,
-} from '@modules/grpc/library/blockjoy/common/v1/node';
+import { styles } from './NodeStatus.styles';
 
 export type NodeStatusType = 'protocol';
+
+export type NodeStatusViewType = 'default' | 'simple';
 
 export type NodeStatusListItem = {
   id: string | number;
@@ -21,11 +25,11 @@ export type NodeStatusListItem = {
 };
 
 type Props = {
-  status: NodeState;
+  status: NodeState | NodeHealth;
   type?: NodeStatusType;
+  jobs?: NodeJob[];
   hasBorder?: boolean;
-  downloadingCurrent?: number;
-  downloadingTotal?: number;
+  view?: NodeStatusViewType;
 };
 
 export const getNodeStatusInfo = (status: NodeState) => {
@@ -67,14 +71,29 @@ export const getNodeStatusColor = (status: number, type?: NodeStatusType) => {
   }
 };
 
+export const checkIfUnspecified = (status: number, type?: NodeStatusType) => {
+  if (type === 'protocol' && status === undefined) return true;
+
+  const statusName = getNodeStatusInfo(status)?.name!;
+
+  if (statusName?.match(/UNSPECIFIED/g)) return true;
+
+  return false;
+};
+
 export const NodeStatus = ({
   status,
   type,
+  jobs,
   hasBorder = true,
-  downloadingCurrent,
-  downloadingTotal,
+  view = 'default',
 }: Props) => {
   const nameRef = useRef<HTMLParagraphElement>(null);
+
+  const progress = getNodeJobProgress(jobs!);
+
+  const downloadingCurrent = progress?.current;
+  const downloadingTotal = progress?.total;
 
   const isDownloading =
     downloadingCurrent! >= 0 && downloadingCurrent !== downloadingTotal;
@@ -89,24 +108,40 @@ export const NodeStatus = ({
     setStatusNameWidth(nameRef.current?.clientWidth!);
   }, []);
 
+  const isUnspecified = checkIfUnspecified(status!, type);
+  if (isUnspecified) return <span>-</span>;
+
   return (
     <span
       css={[
         styles.status(!hasBorder),
         hasBorder && styles.statusBorder,
-        isDownloading && styles.statusLoading(statusNameWidth),
+        isDownloading &&
+          view === 'default' &&
+          styles.statusLoading(statusNameWidth),
         statusColor,
       ]}
     >
-      {isDownloading && (
+      {isDownloading && view === 'default' && (
         <NodeStatusLoader
           current={downloadingCurrent!}
           total={downloadingTotal!}
+          view={view}
         />
       )}
       <NodeStatusIcon size="12px" status={status!} type={type} />
       <p ref={nameRef} css={[styles.statusText(!hasBorder), statusColor]}>
         <NodeStatusName status={status} type={type} />
+        {isDownloading && view === 'simple' && (
+          <>
+            {` `}
+            <NodeStatusLoader
+              current={downloadingCurrent!}
+              total={downloadingTotal!}
+              view={view}
+            />
+          </>
+        )}
       </p>
     </span>
   );

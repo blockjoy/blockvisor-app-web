@@ -4,12 +4,14 @@ import { Tag } from '@modules/grpc/library/blockjoy/common/v1/tag';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { useNodeUpdate, nodeSelectors } from '@modules/node';
 import { Tags } from '@shared/components';
+import { layoutSelectors } from '@modules/layout';
 
 type NodeTagsProps = {
   node: Node;
   itemsPerView?: number;
   autoHide?: boolean;
   additionalStyles?: SerializedStyles[];
+  type?: 'default' | 'list';
 };
 
 export const NodeTags = ({
@@ -17,9 +19,14 @@ export const NodeTags = ({
   itemsPerView,
   autoHide = true,
   additionalStyles,
+  type = 'default',
 }: NodeTagsProps) => {
   const nodeTags = node?.tags?.tags ?? [];
+
   const inactiveTags = useRecoilValue(nodeSelectors.inactiveTags(nodeTags));
+  const tagsPerView = useRecoilValue(layoutSelectors.tableTagsPerView);
+
+  const localItemsPerView = type === 'list' ? tagsPerView : itemsPerView;
 
   const { updateNode } = useNodeUpdate();
 
@@ -52,10 +59,11 @@ export const NodeTags = ({
       tags={nodeTags}
       inactiveTags={inactiveTags}
       autoHide={autoHide}
-      itemsPerView={itemsPerView}
+      itemsPerView={localItemsPerView}
       handleNew={handleNewTag}
       handleRemove={handleRemoveTag}
       additionalStyles={additionalStyles}
+      adjust
     />
   );
 };

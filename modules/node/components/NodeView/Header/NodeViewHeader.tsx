@@ -42,8 +42,6 @@ export const NodeViewHeader = () => {
   const handleActionView = (action: NodeAction | null) => setActionView(action);
   const handleClose = () => setActionView(null);
 
-  const progress = getNodeJobProgress(node!);
-
   useEffect(() => {
     if (!actionView && error) setError('');
   }, [actionView]);
@@ -197,8 +195,7 @@ export const NodeViewHeader = () => {
                 <div css={styles.nodeStatus}>
                   <NodeStatus
                     status={node.nodeStatus?.state!}
-                    downloadingCurrent={progress?.current}
-                    downloadingTotal={progress?.total}
+                    jobs={node.jobs}
                   />
                 </div>
                 <div css={styles.actions}>

@@ -1,6 +1,7 @@
+import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import { UINodeFilterCriteria } from '@modules/grpc';
 import { Host, Region } from '@modules/grpc/library/blockjoy/v1/host';
-import { NodeSort } from '@modules/grpc/library/blockjoy/v1/node';
+import { Node, NodeSort } from '@modules/grpc/library/blockjoy/v1/node';
 import { NodePlacement } from '@modules/grpc/library/blockjoy/common/v1/node';
 import { ImageProperty } from '@modules/grpc/library/blockjoy/v1/image';
 import { UiType } from '@modules/grpc/library/blockjoy/common/v1/protocol';
@@ -64,4 +65,27 @@ export type InitialNodeQueryParams = {
   pagination: Pagination;
   filter: UINodeFilterCriteria;
   sort: NodeSort[];
+};
+
+export type NodeListColumnKey =
+  | keyof Node
+  | 'customNodeInfo'
+  | 'customNodeHealth';
+
+export type NodeListLayoutGroupItem = {
+  key: NodeListColumnKey;
+  name: string;
+  label?: string;
+  dependencies?: NodeListColumnKey[];
+  isGrouped?: boolean;
+};
+
+export type NodeListLayoutInputItem = {
+  id?: string;
+  label?: string;
+} & React.InputHTMLAttributes<HTMLInputElement>;
+
+export type NodeListItem = TableHeader<NodeListColumnKey> & {
+  component: (node: Node) => EmotionJSX.Element;
+  isDisabled?: boolean;
 };

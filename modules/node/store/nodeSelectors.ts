@@ -9,15 +9,17 @@ import {
   NODE_FILTERS_DEFAULT,
   NODE_SORT_DEFAULT,
 } from '@shared/constants/lookups';
-import { NodeStatusListItem, sort } from '@shared/components';
+import { NodeStatusListItem, sort, transformHeaders } from '@shared/components';
 import {
   nodeAtoms,
   protocolAtoms,
   InitialNodeQueryParams,
+  NODE_LIST_ITEMS,
 } from '@modules/node';
 import { authAtoms } from '@modules/auth';
 import { createDropdownValuesFromEnum } from '@modules/admin';
 import { NodeState } from '@modules/grpc/library/blockjoy/common/v1/node';
+import { layoutSelectors } from '@modules/layout';
 
 const settings = selector<NodeSettings>({
   key: 'node.settings',
@@ -47,6 +49,17 @@ const isFiltersEmpty = selector({
     const filtersVal = get(filters);
 
     return isEqual(filtersVal, NODE_FILTERS_DEFAULT);
+  },
+});
+
+const nodeListHeaders = selector<TableHeader[]>({
+  key: 'node.table.headers',
+  get: ({ get }) => {
+    const tableColumnsVal = get(layoutSelectors.tableColumns);
+
+    const headers = transformHeaders(NODE_LIST_ITEMS, tableColumnsVal);
+
+    return headers;
   },
 });
 
@@ -167,8 +180,12 @@ const nodesTagsAll = selector<Tag[]>({
 
 export const nodeSelectors = {
   settings,
+
   filters,
   isFiltersEmpty,
+
+  nodeListHeaders,
+
   nodeSort,
   queryParams,
 
