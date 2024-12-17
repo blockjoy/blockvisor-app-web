@@ -206,9 +206,9 @@ export const useNodeLauncherHandlers = ({
     (async () => {
       if (!selectedVersion) return;
 
-      const imageResponse = await imageClient.getImage(
-        selectedVersion?.versionKey!,
-      );
+      const imageResponse = await imageClient.getImage({
+        versionKey: selectedVersion.versionKey,
+      });
 
       setSelectedImage(imageResponse.image!);
     })();

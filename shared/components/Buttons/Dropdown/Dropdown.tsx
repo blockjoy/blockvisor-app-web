@@ -57,7 +57,7 @@ export type DropdownProps<T = any> = {
 
 export const Dropdown = <T extends { id?: string; name?: string }>({
   items,
-  idKey,
+  idKey = 'id',
   itemKey = 'name',
   selectedItem,
   handleSelected,
@@ -105,7 +105,7 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
   };
 
   let filteredItems = items.filter(
-    (item) => !excludeSelectedItem || item.id !== selectedItem?.id,
+    (item) => !excludeSelectedItem || item[idKey] !== selectedItem?.[idKey],
   );
 
   const {

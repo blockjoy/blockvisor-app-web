@@ -56,6 +56,11 @@ export const AdminNode = () => {
       newValues: [],
     };
     const request = createAdminUpdateRequest(defaultRequest, properties);
+
+    if (node.orgId === request.newOrgId) {
+      request.newOrgId = undefined;
+    }
+
     await nodeClient.updateNode(request);
     onSuccess();
   };
@@ -93,7 +98,7 @@ export const AdminNode = () => {
       data: escapeHtml(node.displayName!),
       copyValue: node.displayName,
       editSettings: {
-        field: 'displayName',
+        field: 'newDisplayName',
         isNumber: false,
         controlType: 'text',
         defaultValue: node.displayName,

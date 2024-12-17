@@ -57,8 +57,15 @@ const columns: AdminListColumn[] = [
   {
     name: 'protocolHealth',
     displayName: 'Protocol Health',
-    width: '200px',
+    width: '160px',
     sortField: NodeSortField.NODE_SORT_FIELD_PROTOCOL_HEALTH,
+    isVisible: true,
+  },
+  {
+    name: 'protocolState',
+    displayName: 'Protocol State',
+    width: '160px',
+    sortField: NodeSortField.NODE_SORT_FIELD_PROTOCOL_STATE,
     isVisible: true,
   },
   {
@@ -233,6 +240,9 @@ export const AdminNodes = () => {
           />
         ),
         protocolName: capitalized(node.versionKey?.protocolKey!),
+        protocolState: node.nodeStatus?.protocol?.state
+          ? capitalized(node.nodeStatus?.protocol?.state!)
+          : '-',
       };
     });
 

@@ -18,6 +18,8 @@ import {
   ProtocolServiceListVariantsResponse,
   ProtocolServiceListVersionsRequest,
   ProtocolServiceListVersionsResponse,
+  ProtocolServiceAddProtocolRequest,
+  ProtocolServiceAddProtocolResponse,
 } from '../library/blockjoy/v1/protocol';
 import {
   callWithTokenRefresh,
@@ -56,7 +58,6 @@ class ProtocolClient {
     pagination?: ProtocolPagination,
     sort?: ProtocolSort[],
   ): Promise<ProtocolServiceListProtocolsResponse> {
-    this.client.listVersions;
     const request: ProtocolServiceListProtocolsRequest = {
       orgIds: orgId ? [orgId!] : [],
       offset: getPaginationOffset(pagination!),
@@ -124,6 +125,23 @@ class ProtocolClient {
         );
       console.log('addVersionResponse', response);
       return response.version!;
+    } catch (err: any) {
+      return handleError(err);
+    }
+  }
+
+  async addProtocol(
+    request: ProtocolServiceAddProtocolRequest,
+  ): Promise<Protocol | undefined> {
+    console.log('addProtocolRequest', request);
+    try {
+      const response: ProtocolServiceAddProtocolResponse =
+        await callWithTokenRefresh(
+          this.client.addVersion.bind(this.client),
+          request,
+        );
+      console.log('addProtocolResponse', response);
+      return response.protocol;
     } catch (err: any) {
       return handleError(err);
     }
