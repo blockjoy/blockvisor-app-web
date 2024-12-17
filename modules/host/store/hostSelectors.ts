@@ -15,6 +15,8 @@ import {
   HOST_FILTERS_DEFAULT,
   HOST_SORT_DEFAULT,
 } from '@shared/constants/lookups';
+import { nodeLauncherAtoms } from '@modules/node';
+import { organizationSelectors } from '@modules/organization';
 
 const settings = selector<HostSettings>({
   key: 'host.settings',
@@ -154,6 +156,22 @@ const filtersStatusAll = selectorFamily<
   },
 });
 
+const isManagedHost = selector({
+  key: 'host.selected.isManaged',
+  get: ({ get }) => {
+    const selectedHosts = get(nodeLauncherAtoms.selectedHosts);
+    if (!selectedHosts?.length) return;
+
+    const isSuperUser = get(authSelectors.isSuperUser);
+    const defaultOrganization = get(organizationSelectors.defaultOrganization);
+
+    return (
+      !isSuperUser &&
+      defaultOrganization?.id === selectedHosts?.[0]?.host?.orgId
+    );
+  },
+});
+
 export const hostSelectors = {
   settings,
   filters,
@@ -166,4 +184,6 @@ export const hostSelectors = {
   hostById,
 
   hostListSorted,
+
+  isManagedHost,
 };
