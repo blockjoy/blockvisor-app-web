@@ -6,6 +6,7 @@ import { styles } from './AdminListTableHeader.styles';
 import { AdminListTableSortButton } from './AdminListTableSortButton/AdminListTableSortButton';
 import { AdminListFilter } from './AdminListFilter/AdminListFilter';
 import { Protocol } from '@modules/grpc/library/blockjoy/v1/protocol';
+import { User } from '@modules/grpc/library/blockjoy/v1/user';
 
 type Props = {
   index: number;
@@ -16,6 +17,7 @@ type Props = {
   scrollX: number;
   listAll: any[];
   protocols?: Protocol[];
+  users?: User[];
   canResize?: boolean;
   initResize: any;
   onSortChanged: (sortField: number, sortOrder: SortOrder) => void;
@@ -34,6 +36,7 @@ export const AdminListTableHeader = ({
   scrollX,
   listAll,
   protocols,
+  users,
   canResize,
   initResize,
   onSortChanged,
@@ -87,6 +90,7 @@ export const AdminListTableHeader = ({
             column={column}
             headerRef={headerRef}
             protocols={protocols}
+            users={users}
             onFilterChange={handleFilterChange}
             onReset={onReset}
             scrollX={scrollX}

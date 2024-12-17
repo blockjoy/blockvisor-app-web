@@ -16,6 +16,7 @@ import { styles } from './AdminList.styles';
 import { AdminListHeader } from './AdminListHeader/AdminListHeader';
 import { AdminListTable } from './AdminListTable/AdminListTable';
 import { Protocol } from '@modules/grpc/library/blockjoy/v1/protocol';
+import { User } from '@modules/grpc/library/blockjoy/v1/user';
 
 type Props = {
   name: keyof AdminSettings;
@@ -33,6 +34,7 @@ type Props = {
   tagsAdded?: AdminTags[];
   tagsRemoved?: AdminTags[];
   protocols?: Protocol[];
+  users?: User[];
   setTagsAdded?: Dispatch<SetStateAction<AdminTags[]>>;
   setTagsRemoved?: Dispatch<SetStateAction<AdminTags[]>>;
   onIdSelected?: (id: string, isSelected: boolean) => void;
@@ -70,6 +72,7 @@ export const AdminList = ({
   tagsAdded,
   tagsRemoved,
   protocols,
+  users,
   setTagsAdded,
   setTagsRemoved,
   onIdSelected,
@@ -339,6 +342,7 @@ export const AdminList = ({
         activeSortOrder={sortOrder}
         selectedIds={selectedIds}
         protocols={protocols}
+        users={users}
         onIdSelected={onIdSelected}
         onIdAllSelected={onIdAllSelected}
         onPageChanged={handlePageChanged}
