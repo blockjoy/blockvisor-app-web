@@ -9,7 +9,7 @@ import { spacing } from 'styles/utils.spacing.styles';
 import { DateTime } from '@shared/components';
 import { AdminDetailEdit } from './AdminDetailEdit/AdminDetailEdit';
 
-type Props = {
+type Props<T = any> = {
   ignoreItems?: string[];
   detailsName: string;
   metricsKey?: string;
@@ -19,13 +19,15 @@ type Props = {
   customItemsAtEnd?: boolean;
   shouldRefresh?: boolean;
   onRefreshed?: VoidFunction;
-  getItem: () => Promise<{}>;
-  customItems?: (item: any) => AdminDetailProperty[];
+  getItem: () => Promise<T>;
+  customItems?: (
+    item: T,
+  ) => Promise<AdminDetailProperty[]> | AdminDetailProperty[];
   onOpenInApp?: () => void;
   onSaveChanges?: (
     properties: AdminDetailProperty[],
     onSuccess: VoidFunction,
-    item?: any,
+    item?: T,
   ) => void;
   onDelete?: (onSuccess: VoidFunction) => void;
 };
@@ -56,7 +58,7 @@ export const AdminDetail = ({
     [],
   );
 
-  const buildProperties = () => {
+  const buildProperties = async () => {
     const properties: AdminDetailProperty[] =
       item &&
       Object.entries(item)
@@ -81,9 +83,9 @@ export const AdminDetail = ({
 
     if (properties && customItems) {
       if (customItemsAtEnd) {
-        properties.push(...customItems(item));
+        properties.push(...(await customItems(item)));
       } else {
-        properties.unshift(...customItems(item));
+        properties.unshift(...(await customItems(item)));
       }
     }
 
@@ -91,12 +93,18 @@ export const AdminDetail = ({
   };
 
   useEffect(() => {
-    if (shouldRefresh) {
-      setPropertiesState(buildProperties());
-    }
+    (async () => {
+      if (shouldRefresh) {
+        setPropertiesState(await buildProperties());
+      }
+    })();
   }, [shouldRefresh]);
 
-  useEffect(() => setPropertiesState(buildProperties()), [item]);
+  useEffect(() => {
+    (async () => {
+      setPropertiesState(await buildProperties());
+    })();
+  }, [item]);
 
   const handleCopyObject = () =>
     copyToClipboard(JSON.stringify(item, undefined, 2));
@@ -118,7 +126,7 @@ export const AdminDetail = ({
         );
         const item = await nodeClient.getNode(nodeResults.nodes[0].nodeId);
         setItem(item);
-        setPropertiesState(buildProperties());
+        setPropertiesState(await buildProperties());
       } else {
         const item = await getItem();
         setItem(item);

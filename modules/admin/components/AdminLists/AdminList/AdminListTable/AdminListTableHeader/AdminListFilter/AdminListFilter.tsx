@@ -6,6 +6,7 @@ import { useClickOutside } from '@shared/hooks/useClickOutside';
 import { styles } from './AdminListFilter.styles';
 import { AdminListColumn } from '@modules/admin/types/AdminListColumn';
 import { Protocol } from '@modules/grpc/library/blockjoy/v1/protocol';
+import { User } from '@modules/grpc/library/blockjoy/v1/user';
 import IconFilter from '@public/assets/icons/common/Filter.svg';
 
 type Props = {
@@ -14,6 +15,7 @@ type Props = {
   headerRef: RefObject<HTMLSpanElement>;
   listAll: any[];
   protocols?: Protocol[];
+  users?: User[];
   onFilterChange: (item: AdminFilterDropdownItem) => void;
   onReset: (columnName: string) => void;
 };
@@ -23,6 +25,7 @@ export const AdminListFilter = ({
   headerRef,
   listAll,
   protocols,
+  users,
   scrollX,
   onFilterChange,
   onReset,
@@ -93,6 +96,7 @@ export const AdminListFilter = ({
       <FilterControls
         listAll={listAll}
         protocols={protocols}
+        users={users}
         isOpen={isOpen}
         columnName={column.name}
         onFilterChange={onFilterChange}
