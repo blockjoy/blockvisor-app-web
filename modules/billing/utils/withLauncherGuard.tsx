@@ -7,6 +7,7 @@ import {
 } from '@modules/billing';
 import { organizationSelectors } from '@modules/organization';
 import { authSelectors } from '@modules/auth';
+import { hostSelectors } from '@modules/host';
 
 type LauncherView = 'payment-required' | 'confirm-subscription' | 'launcher';
 
@@ -48,9 +49,13 @@ export const withLauncherGuard = (Component: any) => {
     const billingExempt = useRecoilValue(
       authSelectors.hasPermission('billing-exempt'),
     );
+    const isManagedHost = useRecoilValue(hostSelectors.isManagedHost);
 
     const [activeView, setActiveView] = useState<LauncherView>('launcher');
     const [fulfilRequirements, setFulfilRequirements] = useState(false);
+
+    const localCanCreateResource =
+      (type === 'launch-node' && isManagedHost) || canCreateResource;
 
     useEffect(() => {
       setFulfilRequirements(false);
@@ -74,7 +79,7 @@ export const withLauncherGuard = (Component: any) => {
     };
 
     const handleCreateClicked = () => {
-      if (!canCreateResource && !billingExempt) {
+      if (!localCanCreateResource && !billingExempt) {
         const newActiveView: LauncherView = !hasPaymentMethod
           ? 'payment-required'
           : 'confirm-subscription';
