@@ -49,12 +49,10 @@ export const mapHostNodesToRows = (nodeList: Node[]) => {
             <div style={{ maxWidth: '400px' }}>
               <TableBlock
                 middleRow={
-                  // <p css={middleRowStyles}>
-                  //   {node.protocolName} | {convertNodeTypeToName(node.nodeType)}{' '}
-                  //   | {node.network}
-                  // </p>
                   <p css={middleRowStyles}>
-                    {node.protocolName} | {node.hostNetworkName}
+                    {node.versionKey?.protocolKey}
+                    {' | '}
+                    {node.versionKey?.variantKey}
                   </p>
                 }
                 topRow={escapeHtml(node.displayName!)}
