@@ -266,9 +266,6 @@ export const AdminNodes = () => {
         createdBy,
         host: node.hostDisplayName || node.hostNetworkName,
         protocolName: capitalized(node.versionKey?.protocolKey!),
-        protocolState: node.nodeStatus?.protocol?.state
-          ? capitalized(node.nodeStatus?.protocol?.state!)
-          : '-',
       };
     });
 
