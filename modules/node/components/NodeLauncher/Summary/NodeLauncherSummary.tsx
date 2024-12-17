@@ -174,11 +174,7 @@ export const NodeLauncherSummary = ({
           <div css={styles.buttons}>
             <button
               onClick={handleNodeClicked}
-              disabled={
-                isLaunching ||
-                // nodeLauncherStatus.isDisabled ||
-                isPropertiesValid
-              }
+              disabled={isLaunching || isPropertiesValid}
               css={[
                 styles.createButton,
                 isLaunching && !Boolean(error) && styles.createButtonLoading,
