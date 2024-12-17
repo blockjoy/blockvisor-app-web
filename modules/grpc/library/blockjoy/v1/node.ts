@@ -1268,10 +1268,10 @@ export const NodeServiceListRequest = {
     for (const v of message.hostIds) {
       writer.uint32(74).string(v!);
     }
-    for (const v of message.userIds) {
+    for (const v of message.semanticVersions) {
       writer.uint32(66).string(v!);
     }
-    for (const v of message.ipAddresses) {
+    for (const v of message.hostIds) {
       writer.uint32(74).string(v!);
     }
     writer.uint32(98).fork();
