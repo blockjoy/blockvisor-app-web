@@ -55,7 +55,8 @@ export const withLauncherGuard = (Component: any) => {
     const [fulfilRequirements, setFulfilRequirements] = useState(false);
 
     const localCanCreateResource =
-      (type === 'launch-node' && isManagedHost) || canCreateResource;
+      (type === 'launch-node' && isManagedHost && (isAdmin || isOwner)) ||
+      canCreateResource;
 
     useEffect(() => {
       setFulfilRequirements(false);
