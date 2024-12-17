@@ -15,7 +15,7 @@ export const AdminNodesFilterOrg = ({
   values,
   listAll,
   onFilterChange,
-}: AdminFilterControlProps) => {
+}: AdminFilterControlProps<Node>) => {
   const [list, setList] = useState<Org[]>();
 
   const settings = useRecoilValue(adminSelectors.settings);
@@ -26,7 +26,7 @@ export const AdminNodesFilterOrg = ({
   )?.filterSettings?.values;
 
   useEffect(() => {
-    const all: AdminFilterDropdownItem[] | undefined = (listAll as Node[])
+    const all: AdminFilterDropdownItem[] | undefined = listAll
       ?.filter(
         (node) =>
           !protocolFilters?.length ||

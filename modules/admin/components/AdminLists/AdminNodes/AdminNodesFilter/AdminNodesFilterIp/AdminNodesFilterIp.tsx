@@ -10,16 +10,14 @@ export const AdminNodesFilterIp = ({
   columnName,
   listAll,
   onFilterChange,
-}: AdminFilterControlProps) => {
+}: AdminFilterControlProps<Node>) => {
   const [list, setList] = useState<AdminFilterDropdownItem[]>([]);
 
   useEffect(() => {
-    const networks = Array.from(
-      new Set(
-        sortIpStringArray((listAll as Node[])?.map((node) => node.ipAddress)!),
-      ),
+    const ips = Array.from(
+      new Set(sortIpStringArray(listAll?.map((node) => node.ipAddress)!)),
     );
-    setList(networks.map((network) => ({ id: network, name: network })));
+    setList(ips.map((ip) => ({ id: ip, name: ip })));
   }, [listAll]);
 
   return (

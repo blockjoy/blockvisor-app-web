@@ -8,7 +8,7 @@ import {
   AdminNodesFilterHost,
   AdminNodesFilterRegion,
   AdminNodesFilterIp,
-  AdminNodesFilterNetwork,
+  AdminNodesFilterVariant,
   AdminNodesFilterVersion,
   AdminNodesFilterStatus,
 } from '@modules/admin/components';
@@ -50,8 +50,15 @@ const columns: AdminListColumn[] = [
     width: '200px',
     sortField: NodeSortField.NODE_SORT_FIELD_NODE_STATE,
     isVisible: true,
-    // filterComponent: AdminNodesFilterStatus,
-    // filterDropdownMinWidth: 160,
+    filterComponent: AdminNodesFilterStatus,
+    filterDropdownMinWidth: 160,
+  },
+  {
+    name: 'protocolHealth',
+    displayName: 'Protocol Health',
+    width: '200px',
+    sortField: NodeSortField.NODE_SORT_FIELD_PROTOCOL_HEALTH,
+    isVisible: true,
   },
   {
     name: 'cost',
@@ -63,9 +70,9 @@ const columns: AdminListColumn[] = [
     width: '200px',
     // sortField: NodeSortField.NODE_SORT_FIELD_HOST_NAME,
     isVisible: true,
-    // filterComponent: AdminNodesFilterHost,
-    // filterDropdownMaxWidth: 250,
-    // filterDropdownMinWidth: 220,
+    filterComponent: AdminNodesFilterHost,
+    filterDropdownMaxWidth: 250,
+    filterDropdownMinWidth: 220,
   },
   {
     name: 'blockHeight',
@@ -78,32 +85,32 @@ const columns: AdminListColumn[] = [
     displayName: 'protocol',
     width: '140px',
     isVisible: true,
-    // filterComponent: AdminNodesFilterProtocol,
-    // filterDropdownMinWidth: 200,
+    filterComponent: AdminNodesFilterProtocol,
+    filterDropdownMinWidth: 200,
   },
   {
     name: 'variant',
     width: '140px',
     isVisible: true,
-    // filterComponent: AdminNodesFilterNetwork,
-    // filterDropdownMinWidth: 160,
-    // filterDropdownMaxWidth: 200,
+    filterComponent: AdminNodesFilterVariant,
+    filterDropdownMinWidth: 160,
+    filterDropdownMaxWidth: 200,
   },
   {
     name: 'semanticVersion',
     displayName: 'Version',
     width: '100px',
     isVisible: true,
-    // filterComponent: AdminNodesFilterVersion,
-    // filterDropdownMinWidth: 190,
-    // filterDropdownMaxWidth: 220,
+    filterComponent: AdminNodesFilterVersion,
+    filterDropdownMinWidth: 190,
+    filterDropdownMaxWidth: 220,
   },
   {
     name: 'ipAddress',
     width: '140px',
     isVisible: false,
-    // filterComponent: AdminNodesFilterIp,
-    // filterDropdownMinWidth: 140,
+    filterComponent: AdminNodesFilterIp,
+    filterDropdownMinWidth: 170,
   },
   {
     name: 'ipGateway',
@@ -128,8 +135,8 @@ const columns: AdminListColumn[] = [
     displayName: 'Org',
     width: '100px',
     isVisible: true,
-    // filterComponent: AdminNodesFilterOrg,
-    // filterDropdownMinWidth: 200,
+    filterComponent: AdminNodesFilterOrg,
+    filterDropdownMinWidth: 200,
   },
   {
     name: 'createdAt',
@@ -204,17 +211,15 @@ export const AdminNodes = () => {
         nodeState: (
           <NodeStatus status={node.nodeStatus?.state!} hasBorder={false} />
         ),
-        // containerStatus: (
-        //   <NodeStatus
-        //     status={node.containerStatus}
-        //     type="container"
-        //     hasBorder={false}
-        //   />
-        // ),
-        // syncStatus: (
-        //   <NodeStatus status={node.syncStatus} type="sync" hasBorder={false} />
-        // ),
-        // nodeType: capitalized(convertNodeTypeToName(node.nodeType)),
+        protocolHealth: node.nodeStatus?.protocol ? (
+          <NodeStatus
+            status={node.nodeStatus?.protocol?.health!}
+            type="protocol"
+            hasBorder={false}
+          />
+        ) : (
+          '-'
+        ),
         region: node.placement?.scheduler?.region,
         createdAt: <DateTime date={node.createdAt!} />,
         cost: (
@@ -224,8 +229,8 @@ export const AdminNodes = () => {
             onUpdate={handleUpdate}
           />
         ),
-        // createdBy: node.createdBy?.resourceId,
         host: node.hostDisplayName || node.hostNetworkName,
+        protocolName: capitalized(node.versionKey?.protocolKey!),
       };
     });
 

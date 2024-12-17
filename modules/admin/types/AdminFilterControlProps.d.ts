@@ -1,11 +1,11 @@
-import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
+import { Protocol } from '@modules/grpc/library/blockjoy/v1/protocol';
 
-type AdminFilterControlProps = {
+type AdminFilterControlProps<T = any> = {
   isOpen?: boolean;
   columnName: string;
   items?: AdminFilterDropdownItem[];
   values?: string[];
-  listAll?: any[];
-  blockchains?: Blockchain[];
+  listAll?: T[];
+  protocols?: Protocol[];
   onFilterChange: (item: AdminFilterDropdownItem) => void;
 };

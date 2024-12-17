@@ -124,6 +124,10 @@ export interface NodeServiceListRequest {
   sort: NodeSort[];
   /** If non-empty, only return nodes for these protocol ids. */
   protocolIds: string[];
+  /** If non-empty, only return nodes for these protocol version keys. */
+  versionKeys: ProtocolVersionKey[];
+  /** If non-empty, only return nodes with these semantic versions. */
+  semanticVersions: string[];
   /** If non-empty, only return nodes running on these hosts. */
   hostIds: string[];
   /** If non-empty, only return nodes created by these user ids. */
@@ -134,8 +138,6 @@ export interface NodeServiceListRequest {
   nodeStates: NodeState[];
   /** If non-empty, only return nodes with these next states. */
   nextStates: NextState[];
-  /** If non-empty, only return nodes with these semantic versions. */
-  semanticVersions: string[];
 }
 
 /** The fields used to search nodes rather than just filtering them. */
@@ -1095,12 +1097,13 @@ function createBaseNodeServiceListRequest(): NodeServiceListRequest {
     search: undefined,
     sort: [],
     protocolIds: [],
+    versionKeys: [],
+    semanticVersions: [],
     hostIds: [],
     userIds: [],
     ipAddresses: [],
     nodeStates: [],
     nextStates: [],
-    semanticVersions: [],
   };
 }
 
@@ -1127,28 +1130,31 @@ export const NodeServiceListRequest = {
     for (const v of message.protocolIds) {
       writer.uint32(50).string(v!);
     }
-    for (const v of message.hostIds) {
-      writer.uint32(58).string(v!);
+    for (const v of message.versionKeys) {
+      ProtocolVersionKey.encode(v!, writer.uint32(58).fork()).ldelim();
     }
-    for (const v of message.userIds) {
+    for (const v of message.semanticVersions) {
       writer.uint32(66).string(v!);
     }
-    for (const v of message.ipAddresses) {
+    for (const v of message.hostIds) {
       writer.uint32(74).string(v!);
     }
-    writer.uint32(82).fork();
+    for (const v of message.userIds) {
+      writer.uint32(82).string(v!);
+    }
+    for (const v of message.ipAddresses) {
+      writer.uint32(90).string(v!);
+    }
+    writer.uint32(98).fork();
     for (const v of message.nodeStates) {
       writer.int32(v);
     }
     writer.ldelim();
-    writer.uint32(90).fork();
+    writer.uint32(106).fork();
     for (const v of message.nextStates) {
       writer.int32(v);
     }
     writer.ldelim();
-    for (const v of message.semanticVersions) {
-      writer.uint32(98).string(v!);
-    }
     return writer;
   },
 
@@ -1210,30 +1216,44 @@ export const NodeServiceListRequest = {
             break;
           }
 
-          message.hostIds.push(reader.string());
+          message.versionKeys.push(ProtocolVersionKey.decode(reader, reader.uint32()));
           continue;
         case 8:
           if (tag !== 66) {
             break;
           }
 
-          message.userIds.push(reader.string());
+          message.semanticVersions.push(reader.string());
           continue;
         case 9:
           if (tag !== 74) {
             break;
           }
 
-          message.ipAddresses.push(reader.string());
+          message.hostIds.push(reader.string());
           continue;
         case 10:
-          if (tag === 80) {
+          if (tag !== 82) {
+            break;
+          }
+
+          message.userIds.push(reader.string());
+          continue;
+        case 11:
+          if (tag !== 90) {
+            break;
+          }
+
+          message.ipAddresses.push(reader.string());
+          continue;
+        case 12:
+          if (tag === 96) {
             message.nodeStates.push(reader.int32() as any);
 
             continue;
           }
 
-          if (tag === 82) {
+          if (tag === 98) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
               message.nodeStates.push(reader.int32() as any);
@@ -1243,14 +1263,14 @@ export const NodeServiceListRequest = {
           }
 
           break;
-        case 11:
-          if (tag === 88) {
+        case 13:
+          if (tag === 104) {
             message.nextStates.push(reader.int32() as any);
 
             continue;
           }
 
-          if (tag === 90) {
+          if (tag === 106) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
               message.nextStates.push(reader.int32() as any);
@@ -1260,13 +1280,6 @@ export const NodeServiceListRequest = {
           }
 
           break;
-        case 12:
-          if (tag !== 98) {
-            break;
-          }
-
-          message.semanticVersions.push(reader.string());
-          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1293,12 +1306,13 @@ export const NodeServiceListRequest = {
         : undefined;
     message.sort = object.sort?.map((e) => NodeSort.fromPartial(e)) || [];
     message.protocolIds = object.protocolIds?.map((e) => e) || [];
+    message.versionKeys = object.versionKeys?.map((e) => ProtocolVersionKey.fromPartial(e)) || [];
+    message.semanticVersions = object.semanticVersions?.map((e) => e) || [];
     message.hostIds = object.hostIds?.map((e) => e) || [];
     message.userIds = object.userIds?.map((e) => e) || [];
     message.ipAddresses = object.ipAddresses?.map((e) => e) || [];
     message.nodeStates = object.nodeStates?.map((e) => e) || [];
     message.nextStates = object.nextStates?.map((e) => e) || [];
-    message.semanticVersions = object.semanticVersions?.map((e) => e) || [];
     return message;
   },
 };

@@ -4,14 +4,15 @@ import { AdminListFilterControl, adminSelectors } from '@modules/admin';
 import { useRecoilValue } from 'recoil';
 import { AdminFilterControlProps } from '@modules/admin/types/AdminFilterControlProps';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
+import { ProtocolVersionKey } from '@modules/grpc/library/blockjoy/common/v1/protocol';
 
-export const AdminNodesFilterNetwork = ({
+export const AdminNodesFilterVariant = ({
   columnName,
   values,
   listAll,
-  blockchains,
+  protocols,
   onFilterChange,
-}: AdminFilterControlProps) => {
+}: AdminFilterControlProps<Node>) => {
   const [list, setList] = useState<AdminFilterDropdownItem[]>([]);
 
   const settings = useRecoilValue(adminSelectors.settings);
@@ -21,43 +22,31 @@ export const AdminNodesFilterNetwork = ({
     (column) => column.name === 'protocolName',
   )?.filterSettings?.values;
 
-  const selectedBlockchains = blockchains?.filter((b) =>
-    protocolFilters?.some((blockchainFilter) => blockchainFilter === b.id),
+  const selectedProtocols = protocols?.filter((p) =>
+    protocolFilters?.some((protocolFilter) => protocolFilter === p.protocolId),
   );
 
   const filteredNetworks: AdminFilterDropdownItem[] = Array.from(
-    new Set(
-      sort(
-        selectedBlockchains
-          ?.flatMap(({ nodeTypes }) => nodeTypes)
-          .flatMap(({ versions }) => versions)
-          .flatMap(({ networks }) => networks)
-          .map(({ name }) => name),
-      ),
-    ),
+    new Set(sort(listAll?.map(({ versionKey }) => versionKey?.variantKey))),
   )
-    .filter((network) =>
-      (listAll as Node[])?.some(
-        (item) =>
-          item.hostNetworkName === network &&
-          selectedBlockchains?.some(
-            (blockain) => blockain.id === item.protocolId,
-          ),
-      ),
+    .filter(
+      (item) =>
+        !selectedProtocols?.length ||
+        selectedProtocols?.some((p) => p.protocolId === item.protocolId),
     )
-    .map((network) => ({
-      id: network,
-      name: network,
+    .map((variantKey) => ({
+      id: variantKey,
+      name: variantKey,
     }));
 
   useEffect(() => {
-    const networks = Array.from(
-      new Set(sort(listAll?.map((node) => node.network))),
+    const all: ProtocolVersionKey[] = Array.from(
+      new Set(sort(listAll?.map((node) => node.versionKey?.variantKey))),
     );
 
-    const networksMapped = networks.map((network) => ({
-      id: network,
-      name: network,
+    const networksMapped = all.map((versionKey) => ({
+      id: versionKey.protocolKey,
+      name: versionKey.variantKey,
     }));
 
     setList(networksMapped);
