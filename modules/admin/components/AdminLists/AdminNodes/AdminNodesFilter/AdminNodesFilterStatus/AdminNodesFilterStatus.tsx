@@ -25,7 +25,7 @@ export const AdminNodesFilterStatus = ({
       ?.map((node) => ({
         id: node.nodeStatus?.state,
         name: capitalize(
-          getNodeStatusInfo(node.nodeStatus?.state!).name?.toLowerCase()!,
+          getNodeStatusInfo(node.nodeStatus?.state!)?.name?.toLowerCase()!,
         ),
       }));
 

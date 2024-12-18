@@ -19,13 +19,25 @@ const styles = {
 type Props = {
   size: string;
   status: number;
+  protocolStatus?: string;
   isDefaultColor?: boolean;
 };
 
-const NodeStatusSpinner = ({ size, status, isDefaultColor }: Props) => (
+const NodeStatusSpinner = ({
+  size,
+  status,
+  protocolStatus,
+  isDefaultColor,
+}: Props) => (
   <div css={styles.wrapper}>
     <SvgIcon
-      additionalStyles={[getNodeStatusColor(isDefaultColor ? -1 : status)]}
+      additionalStyles={[
+        getNodeStatusColor(
+          isDefaultColor ? -1 : status,
+          undefined,
+          protocolStatus,
+        ),
+      ]}
       isDefaultColor={isDefaultColor}
       size={size}
     >

@@ -50,25 +50,51 @@ export const NodeViewStatus = () => {
           </var>
           <h3 css={styles.cardLabel}>Node Status</h3>
         </div>
-        {node.nodeStatus?.protocol && (
+        {Boolean(node.nodeStatus?.protocol?.health) && (
           <div css={styles.card}>
             <NodeStatusIcon
-              type="protocol"
               size={iconSize}
-              status={node.nodeStatus.protocol.health}
+              type="protocol"
+              status={node.nodeStatus?.protocol?.health}
             />
             <var
               css={[
                 styles.cardValue,
-                getNodeStatusColor(node.nodeStatus.protocol.health, 'protocol'),
+                getNodeStatusColor(
+                  node.nodeStatus?.protocol?.health,
+                  'protocol',
+                ),
               ]}
             >
               <NodeStatusName
-                status={node.nodeStatus.protocol.health}
+                status={node.nodeStatus?.protocol?.health}
                 type="protocol"
               />
             </var>
             <h3 css={styles.cardLabel}>Protocol Health</h3>
+          </div>
+        )}
+        {Boolean(node.nodeStatus?.protocol?.state) && (
+          <div css={styles.card}>
+            <NodeStatusIcon
+              size={iconSize}
+              protocolStatus={node?.nodeStatus?.protocol?.state}
+            />
+            <var
+              css={[
+                styles.cardValue,
+                getNodeStatusColor(
+                  undefined,
+                  undefined,
+                  node?.nodeStatus?.protocol?.state,
+                ),
+              ]}
+            >
+              <NodeStatusName
+                protocolStatus={node?.nodeStatus?.protocol?.state}
+              />
+            </var>
+            <h3 css={styles.cardLabel}>Protocol Status</h3>
           </div>
         )}
       </div>

@@ -1,7 +1,6 @@
 import { Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import {
-  getNodeHealthInfo,
   getNodeStatusColor,
   getNodeStatusInfo,
   NodeStatusType,
@@ -151,7 +150,8 @@ const getIcon = (statusName: string) => {
 };
 
 type NodeStatusIconProps = {
-  status: number;
+  status?: number;
+  protocolStatus?: string;
   type?: NodeStatusType;
   size: string;
   isDefaultColor?: boolean;
@@ -159,30 +159,28 @@ type NodeStatusIconProps = {
 
 export const NodeStatusIcon = ({
   status,
+  protocolStatus,
   type,
   size = '24px',
   isDefaultColor,
 }: NodeStatusIconProps) => {
-  const statusName =
-    type === 'protocol'
-      ? getNodeHealthInfo(status).name
-      : getNodeStatusInfo(status).name;
+  const statusName = getNodeStatusInfo(status, type, protocolStatus)?.name;
 
   return (
     <Suspense fallback={null}>
-      {(type !== 'protocol' && status === NodeState.NODE_STATE_STARTING) ||
+      {protocolStatus === 'downloading' ||
+      protocolStatus === 'uploading' ||
+      (type !== 'protocol' && status === NodeState.NODE_STATE_STARTING) ||
       (type !== 'protocol' && status === NodeState.NODE_STATE_UPGRADING) ? (
-        // status === NodeStatusEnum.NODE_STATUS_UPLOADING ||
-        // status === NodeStatusEnum.NODE_STATUS_DOWNLOADING ||
-        // status === NodeStatusEnum.NODE_STATUS_UPDATING
         <NodeStatusSpinner
           isDefaultColor={isDefaultColor}
           size={size}
           status={status!}
+          protocolStatus={protocolStatus}
         />
       ) : (
         <SvgIcon
-          additionalStyles={[getNodeStatusColor(status!, type)]}
+          additionalStyles={[getNodeStatusColor(status!, type, protocolStatus)]}
           size={size}
         >
           {status === undefined ? <IconNode /> : getIcon(statusName!)}
