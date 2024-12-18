@@ -5,11 +5,11 @@ import { formatters } from '@shared/index';
 import { SvgIcon } from '@shared/components';
 import IconCalendar from '@public/assets/icons/common/Calendar.svg';
 
-type Props = Partial<Pick<Node, 'createdAt'>>;
+type Props = Partial<Pick<Node, 'createdAt'>> & { inGroup?: boolean };
 
-export const CreatedAt = ({ createdAt }: Props) => (
-  <span css={styles.createdAt}>
-    <SvgIcon size="12px">
+export const CreatedAt = ({ createdAt, inGroup }: Props) => (
+  <span css={styles.createdAt(inGroup)}>
+    <SvgIcon size={`${inGroup ? 12 : 14}px`}>
       <IconCalendar />
     </SvgIcon>
     {createdAt ? (
@@ -24,16 +24,14 @@ export const CreatedAt = ({ createdAt }: Props) => (
 );
 
 const styles = {
-  createdAt: (theme: ITheme) => css`
-    color: ${theme.colorLabel};
-    font-size: 12px;
-    display: flex;
-    gap: 5px;
-
-    svg :is(path) {
-      fill: ${theme.colorLabel};
-    }
-  `,
+  createdAt: (inGroup?: boolean) => (theme: ITheme) =>
+    css`
+      display: flex;
+      gap: 5px;
+      font-size: ${inGroup ? 12 : 14}px;
+      ${inGroup && `color: ${theme.colorLabel};`}
+      ${!inGroup && `>span:first-child { color: ${theme.colorDefault}; }`}
+    `,
   time: css`
     display: flex;
     flex-flow: row wrap;
