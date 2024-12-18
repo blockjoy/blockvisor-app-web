@@ -1,5 +1,6 @@
 import { ProtocolName } from './Items/ProtocolName';
 import { BlockHeight } from './Items/BlockHeight';
+import { Cost } from './Items/Cost';
 import { CreatedAt } from './Items/CreatedAt';
 import { CreatedBy } from './Items/CreatedBy';
 import { DisplayName } from './Items/DisplayName';
@@ -13,6 +14,7 @@ import { Info } from './Groups/Info';
 export const NodeItems = {
   ProtocolName,
   BlockHeight,
+  Cost,
   CreatedAt,
   CreatedBy,
   DisplayName,

@@ -7,7 +7,7 @@ import { billingAtoms } from '@modules/billing';
 type UsePricingHook = {
   price: Amount | null;
   priceLoadingState: LoadingState;
-  getPrice: ({ region }: ProtocolServiceGetPricingRequest) => void;
+  getPrice: (params: ProtocolServiceGetPricingRequest) => void;
 };
 
 export const usePricing = (): UsePricingHook => {
@@ -20,9 +20,11 @@ export const usePricing = (): UsePricingHook => {
     try {
       setPriceLoadingState('loading');
 
-      const isValidParams = Object.values(params).every((val) => !!val);
+      const { region, versionKey } = params;
+      const isValidVersion =
+        versionKey && Object.values(versionKey).every((val) => !!val);
 
-      if (!isValidParams) {
+      if (!region || !isValidVersion) {
         setPrice(null);
         return;
       }
