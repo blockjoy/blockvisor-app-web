@@ -5,18 +5,9 @@ import { useNodeView } from '@modules/node';
 import { FormHeaderCaps } from '@shared/components';
 import { styles } from './NodeViewDetails.styles';
 import { NodeViewStatus } from './Status/NodeViewStatus';
-import {
-  useDefaultOrganization,
-  useGetOrganizations,
-} from '@modules/organization';
 
 export const NodeViewDetails = () => {
   const { node } = useNodeView();
-  const { organizations } = useGetOrganizations();
-  const { defaultOrganization } = useDefaultOrganization();
-  const selectedOrg = organizations.find(
-    (org) => org.orgId === defaultOrganization?.orgId,
-  );
 
   return (
     <>
@@ -26,9 +17,7 @@ export const NodeViewDetails = () => {
       </section>
       <section css={styles.section}>
         <FormHeaderCaps noBottomMargin>Launch Details</FormHeaderCaps>
-        <DetailsTable
-          bodyElements={mapNodeToLaunchDetails(node!, selectedOrg?.members)}
-        />
+        <DetailsTable bodyElements={mapNodeToLaunchDetails(node!)} />
       </section>
     </>
   );
