@@ -18,7 +18,6 @@ import {
 import { wrapper } from 'styles/wrapper.styles';
 import { ROUTES } from '@shared/constants/routes';
 import { NodeViewHeaderActions } from './NodeViewHeaderActions/NodeViewHeaderActions';
-import { getNodeJobProgress } from '@modules/node/utils/getNodeJobProgress';
 import { useGetOrganizations } from '@modules/organization';
 import { useHostList } from '@modules/host';
 import { nodeClient } from '@modules/grpc';
@@ -195,7 +194,21 @@ export const NodeViewHeader = () => {
                 <div css={styles.nodeStatus}>
                   <NodeStatus
                     status={node.nodeStatus?.state!}
+                    protocolStatus={node.nodeStatus?.protocol?.state}
                     jobs={node.jobs}
+                    // protocolStatus="uploading"
+                    // jobs={[
+                    //   {
+                    //     name: 'testing',
+                    //     status: 2,
+                    //     logs: [],
+                    //     restarts: 0,
+                    //     progress: {
+                    //       current: 10,
+                    //       total: 20,
+                    //     },
+                    //   },
+                    // ]}
                   />
                 </div>
                 <div css={styles.actions}>
