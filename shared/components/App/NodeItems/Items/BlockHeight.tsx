@@ -3,9 +3,9 @@ import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { NodeStatusIcon, SvgIcon } from '@shared/components';
 import IconBlockHeight from '@public/assets/icons/app/BlockHeight.svg';
 
-type Props = Partial<Pick<Node, 'blockHeight' | 'nodeStatus'>>;
+type Props = Partial<Pick<Node, 'blockHeight'>>;
 
-export const BlockHeight = ({ blockHeight, nodeStatus }: Props) => (
+export const BlockHeight = ({ blockHeight }: Props) => (
   <div css={styles.blockHeight}>
     <SvgIcon isDefaultColor size="14px">
       {blockHeight! > -1 ? (

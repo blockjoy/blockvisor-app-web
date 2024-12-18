@@ -175,6 +175,15 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
     ),
     actions: LAYOUT_ACTIONS,
   },
+  {
+    key: 'cost',
+    label: 'Cost per month',
+    minWidth: '130px',
+    width: '160px',
+    isVisible: true,
+    component: (node: Node) => <NodeItems.Cost cost={node.cost} />,
+    actions: LAYOUT_ACTIONS,
+  },
 ];
 
 export const NODE_LIST_TAGS_PER_VIEW = 3;

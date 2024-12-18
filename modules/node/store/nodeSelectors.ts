@@ -1,10 +1,10 @@
 import { selector, selectorFamily } from 'recoil';
 import isEqual from 'lodash/isEqual';
-import { Protocol } from '@modules/grpc/library/blockjoy/v1/protocol';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { NodeSort } from '@modules/grpc/library/blockjoy/v1/node';
 import { Tag } from '@modules/grpc/library/blockjoy/common/v1/tag';
 import { UINodeFilterCriteria } from '@modules/grpc';
+import { capitalize } from 'utils/capitalize';
 import {
   NODE_FILTERS_DEFAULT,
   NODE_SORT_DEFAULT,
@@ -20,6 +20,7 @@ import { authAtoms } from '@modules/auth';
 import { createDropdownValuesFromEnum } from '@modules/admin';
 import { NodeState } from '@modules/grpc/library/blockjoy/common/v1/node';
 import { layoutSelectors } from '@modules/layout';
+import { organizationSelectors } from '@modules/organization';
 
 const settings = selector<NodeSettings>({
   key: 'node.settings',
@@ -97,10 +98,7 @@ const filtersProtocolSelectedIds = selector<string[]>({
   get: ({ get }) => get(filters)?.protocol ?? [],
 });
 
-const filtersProtocolAll = selectorFamily<
-  (Protocol & FilterListItem)[],
-  string[]
->({
+const filtersProtocolAll = selectorFamily<FilterListItem[], string[]>({
   key: 'node.filters.protocol.all',
   get:
     (tempFilters: string[]) =>
@@ -109,8 +107,8 @@ const filtersProtocolAll = selectorFamily<
       if (!allProtocols.length) return [];
 
       const allFilters = allProtocols.map((protocol) => ({
-        ...protocol,
-        name: protocol.name,
+        id: protocol.protocolId,
+        name: capitalize(protocol.key),
         isChecked: tempFilters?.some(
           (filter) => protocol.protocolId === filter,
         ),
@@ -178,6 +176,23 @@ const nodesTagsAll = selector<Tag[]>({
   },
 });
 
+const nodesCreatedBy = selector({
+  key: 'nodes.list.createdBy',
+  get: ({ get }) => {
+    const nodeList = get(nodeAtoms.nodeList);
+
+    const createdByIds: string[] = nodeList.map(
+      (node) => node.createdBy?.resourceId!,
+    );
+
+    const organizationMembersByIds = get(
+      organizationSelectors.organizationMembersByIds(createdByIds),
+    );
+
+    return organizationMembersByIds;
+  },
+});
+
 export const nodeSelectors = {
   settings,
 
@@ -197,4 +212,6 @@ export const nodeSelectors = {
   inactiveTags,
 
   nodesTagsAll,
+
+  nodesCreatedBy,
 };

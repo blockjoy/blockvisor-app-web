@@ -1,13 +1,8 @@
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { ROUTES } from '@shared/constants/routes';
-import { NextLink, DateTime } from '@shared/components';
-import { OrgUser } from '@modules/grpc/library/blockjoy/v1/org';
+import { NextLink, DateTime, NodeItems } from '@shared/components';
 
-export const mapNodeToLaunchDetails = (node: Node, orgUsers?: OrgUser[]) => {
-  const launchedBy =
-    orgUsers?.find((u) => u.userId === node.createdBy?.resourceId!)?.name ||
-    '-';
-
+export const mapNodeToLaunchDetails = (node: Node) => {
   const details: { label: string; data: any | undefined }[] = [
     {
       label: 'Host',
@@ -30,7 +25,7 @@ export const mapNodeToLaunchDetails = (node: Node, orgUsers?: OrgUser[]) => {
     },
     {
       label: 'Launched By',
-      data: launchedBy,
+      data: <NodeItems.CreatedBy createdBy={node.createdBy} />,
     },
     {
       label: 'Launched On',
