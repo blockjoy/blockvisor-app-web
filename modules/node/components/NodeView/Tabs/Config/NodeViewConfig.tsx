@@ -8,6 +8,7 @@ import {
   nodeAtoms,
   NodeConfig,
   LockedSwitch,
+  NodePropertyGroup,
 } from '@modules/node';
 import { renderNodeConfigControl } from '@modules/node/utils/renderNodeConfigControl';
 import {
@@ -42,7 +43,10 @@ export const NodeViewConfig = () => {
 
   const [originalFirewall, setOriginalFirewall] = useState<FirewallRule[]>([]);
 
-  const sortedProperties = sort(nodeConfig?.properties ?? [], { field: 'key' });
+  const sortedProperties: NodePropertyGroup[] = sort(
+    nodeConfig?.properties ?? [],
+    { field: 'key' },
+  );
 
   const handlePropertyChanged = (
     key: string,
@@ -188,7 +192,11 @@ export const NodeViewConfig = () => {
         <div css={styles.row} key={propertyGroup.keyGroup}>
           <FormLabelCaps noBottomMargin>
             {propertyGroup.displayName ||
-              kebabToCapitalized(propertyGroup.keyGroup || propertyGroup.key)}
+              kebabToCapitalized(
+                propertyGroup.displayGroup ||
+                  propertyGroup.keyGroup ||
+                  propertyGroup.key,
+              )}
           </FormLabelCaps>
           {renderNodeConfigControl(propertyGroup, handlePropertyChanged, true)}
         </div>

@@ -14,6 +14,7 @@ export type NodePropertyGroup = {
   uiType: UiType;
   properties: ImageProperty[];
   displayName: string;
+  displayGroup?: string;
 };
 
 export type NodeConfig = {
