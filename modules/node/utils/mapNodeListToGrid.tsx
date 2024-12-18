@@ -53,6 +53,7 @@ export const mapNodeListToGrid = (
             <NodeStatus
               hasBorder
               status={node.nodeStatus?.state!}
+              protocolStatus={node.nodeStatus?.protocol?.state}
               jobs={node.jobs}
             />
           }

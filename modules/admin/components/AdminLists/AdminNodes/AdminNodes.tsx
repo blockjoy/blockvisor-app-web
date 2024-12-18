@@ -230,11 +230,21 @@ export const AdminNodes = () => {
         nodeState: (
           <NodeStatus status={node.nodeStatus?.state!} hasBorder={false} />
         ),
-        protocolHealth: node.nodeStatus?.protocol ? (
+        protocolHealth: node.nodeStatus?.protocol?.health ? (
           <NodeStatus
             status={node.nodeStatus?.protocol?.health!}
             type="protocol"
             hasBorder={false}
+          />
+        ) : (
+          '-'
+        ),
+        protocolState: node.nodeStatus?.protocol?.state ? (
+          <NodeStatus
+            view="simple"
+            protocolStatus={node.nodeStatus?.protocol?.state}
+            hasBorder={false}
+            jobs={node.jobs}
           />
         ) : (
           '-'
@@ -251,9 +261,6 @@ export const AdminNodes = () => {
           />
         ),
         protocolName: capitalized(node.versionKey?.protocolKey!),
-        protocolState: node.nodeStatus?.protocol?.state
-          ? capitalized(node.nodeStatus?.protocol?.state!)
-          : '-',
       };
     });
 
