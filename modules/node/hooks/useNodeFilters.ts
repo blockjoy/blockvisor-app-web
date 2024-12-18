@@ -85,14 +85,13 @@ export const useNodeFilters = (): UseNodeFiltersHook => {
   const isDirty = !isEqual(filters, tempFilters);
 
   const filtersAll: FilterItem[] = [
-    // TODO: implement node protocol filtering
-    // {
-    //   id: 'protocol',
-    //   name: 'Protocol',
-    //   disabled: false,
-    //   count: tempFilters.protocol?.length,
-    //   list: filtersProtocolAll,
-    // },
+    {
+      id: 'protocol',
+      name: 'Protocol',
+      disabled: false,
+      count: tempFilters.protocol?.length,
+      list: filtersProtocolAll,
+    },
     {
       id: 'nodeStatus',
       name: 'Node Status',
