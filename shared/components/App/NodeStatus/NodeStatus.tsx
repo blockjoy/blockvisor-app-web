@@ -25,7 +25,7 @@ export type NodeStatusListItem = {
 };
 
 type Props = {
-  status: NodeState | NodeHealth;
+  status?: number;
   protocolStatus?: string;
   jobs?: NodeJob[];
   hasBorder?: boolean;
@@ -56,7 +56,7 @@ export const getNodeStatusColor = (
   type?: NodeStatusType,
   protocolStatus?: string,
 ) => {
-  const statusName = getNodeStatusInfo(status, type!, protocolStatus)?.name;
+  const statusName = getNodeStatusInfo(status, type, protocolStatus)?.name;
 
   if (
     statusName?.match(
@@ -147,7 +147,7 @@ export const NodeStatus = ({
         )}
         {isDownloading && view === 'simple' && (
           <>
-            {` `}
+            {view === 'simple' && ` `}
             <NodeStatusLoader
               current={downloadingCurrent!}
               total={downloadingTotal!}
