@@ -144,11 +144,32 @@ export const AdminNode = () => {
       },
       {
         id: 'status',
-        label: 'Node Status',
+        label: 'Node State',
         data: (
           <NodeStatus
             hasBorder={false}
             status={node.nodeStatus?.state!}
+          ></NodeStatus>
+        ),
+      },
+      {
+        id: 'health',
+        label: 'Node Health',
+        data: (
+          <NodeStatus
+            hasBorder={false}
+            status={node.nodeStatus?.protocol?.health}
+            type="protocol"
+          ></NodeStatus>
+        ),
+      },
+      {
+        id: 'protocolState',
+        label: 'Protocol State',
+        data: (
+          <NodeStatus
+            hasBorder={false}
+            protocolStatus={node.nodeStatus?.protocol?.state}
           ></NodeStatus>
         ),
       },

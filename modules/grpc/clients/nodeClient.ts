@@ -10,6 +10,7 @@ import {
   NodeSort,
   NodeSortField,
   NodeServiceGetRequest,
+  NodeServiceDeleteRequest,
 } from '../library/blockjoy/v1/node';
 import { NodeReport } from '../library/blockjoy/common/v1/node';
 import {
@@ -199,7 +200,7 @@ class NodeClient {
   }
 
   async deleteNode(nodeId: string): Promise<void> {
-    const request = { nodeId };
+    const request: NodeServiceDeleteRequest = { nodeId };
     console.log('deleteNodeRequest', request);
     try {
       await authClient.refreshToken();
