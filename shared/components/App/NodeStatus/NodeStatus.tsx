@@ -26,39 +26,41 @@ export type NodeStatusListItem = {
 
 type Props = {
   status: NodeState | NodeHealth;
-  type?: NodeStatusType;
+  protocolStatus?: string;
   jobs?: NodeJob[];
   hasBorder?: boolean;
+  type?: NodeStatusType;
   view?: NodeStatusViewType;
 };
 
-export const getNodeStatusInfo = (status: NodeState) => {
-  const statusInfo = nodeStatusList.find((l) => l.id === status);
-
-  return {
-    id: status,
-    name: statusInfo?.name,
-  };
+export const getNodeStatusInfo = (
+  status?: number,
+  type?: string,
+  protocolStatus?: string,
+) => {
+  switch (true) {
+    case Boolean(protocolStatus):
+      return {
+        id: protocolStatus,
+        name: protocolStatus?.toUpperCase(),
+      };
+    case type === 'protocol':
+      return nodeHealthList.find((l) => l.id === status);
+    default:
+      return nodeStatusList.find((l) => l.id === status);
+  }
 };
 
-export const getNodeHealthInfo = (status: NodeHealth) => {
-  const statusInfo = nodeHealthList.find((l) => l.id === status);
-
-  return {
-    id: status,
-    name: statusInfo?.name,
-  };
-};
-
-export const getNodeStatusColor = (status: number, type?: NodeStatusType) => {
-  const statusName =
-    type === 'protocol'
-      ? getNodeHealthInfo(status)?.name!
-      : getNodeStatusInfo(status)?.name!;
+export const getNodeStatusColor = (
+  status?: number,
+  type?: NodeStatusType,
+  protocolStatus?: string,
+) => {
+  const statusName = getNodeStatusInfo(status, type!, protocolStatus)?.name;
 
   if (
     statusName?.match(
-      /HEALTHY|RUNNING|SYNCED|SYNCING|FOLLOWER|BROADCASTING|PROVISIONING|UPDATING|UPLOADING|DOWNLOADING/g,
+      /UPLOADING|DOWNLOADING|HEALTHY|RUNNING|SYNCED|SYNCING|FOLLOWER|BROADCASTING|PROVISIONING|UPDATING|UPLOADING|DOWNLOADING/g,
     )
   ) {
     return styles.statusColorGreen;
@@ -74,7 +76,7 @@ export const getNodeStatusColor = (status: number, type?: NodeStatusType) => {
 export const checkIfUnspecified = (status: number, type?: NodeStatusType) => {
   if (type === 'protocol' && status === undefined) return true;
 
-  const statusName = getNodeStatusInfo(status)?.name!;
+  const statusName = getNodeStatusInfo(status, type)?.name!;
 
   if (statusName?.match(/UNSPECIFIED/g)) return true;
 
@@ -83,6 +85,7 @@ export const checkIfUnspecified = (status: number, type?: NodeStatusType) => {
 
 export const NodeStatus = ({
   status,
+  protocolStatus,
   type,
   jobs,
   hasBorder = true,
@@ -98,7 +101,7 @@ export const NodeStatus = ({
   const isDownloading =
     downloadingCurrent! >= 0 && downloadingCurrent !== downloadingTotal;
 
-  const statusColor = getNodeStatusColor(status, type);
+  const statusColor = getNodeStatusColor(status, type, protocolStatus);
 
   const [statusNameWidth, setStatusNameWidth] = useState(
     nameRef.current?.clientWidth!,
@@ -129,9 +132,19 @@ export const NodeStatus = ({
           view={view}
         />
       )}
-      <NodeStatusIcon size="12px" status={status!} type={type} />
+      <NodeStatusIcon
+        size="12px"
+        status={status!}
+        type={type}
+        protocolStatus={protocolStatus}
+      />
       <p ref={nameRef} css={[styles.statusText(!hasBorder), statusColor]}>
-        <NodeStatusName status={status} type={type} />
+        {status !== NodeState.NODE_STATE_FAILED &&
+        (protocolStatus === 'downloading' || protocolStatus === 'uploading') ? (
+          protocolStatus
+        ) : (
+          <NodeStatusName status={status} type={type} />
+        )}
         {isDownloading && view === 'simple' && (
           <>
             {` `}
