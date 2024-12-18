@@ -166,6 +166,7 @@ export const useNodeLauncherHandlers = ({
           value: property.defaultValue || '',
           properties: [property],
           displayName: property.displayName!,
+          displayGroup: property.displayGroup,
         })) ?? [];
 
     properties.push(...propertiesWithoutKeyGroup!);
@@ -190,6 +191,7 @@ export const useNodeLauncherHandlers = ({
         value: defaultProperty?.key!,
         properties: keyGroupProperties!,
         displayName: firstProperty.displayName!,
+        displayGroup: defaultProperty?.displayGroup,
       });
     }
 

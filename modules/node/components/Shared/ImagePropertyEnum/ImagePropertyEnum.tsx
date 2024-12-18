@@ -26,7 +26,7 @@ export const ImagePropertyEnum = ({
       }}
       items={propertyGroup.properties.map((property) => ({
         id: property.key,
-        name: kebabToCapitalized(property.key),
+        name: property.displayName || kebabToCapitalized(property.key),
       }))}
     />
   );
