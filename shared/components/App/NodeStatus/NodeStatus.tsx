@@ -1,6 +1,5 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 import {
-  NodeHealth,
   NodeJob,
   NodeState,
 } from '@modules/grpc/library/blockjoy/common/v1/node';
@@ -33,21 +32,25 @@ type Props = {
   view?: NodeStatusViewType;
 };
 
+const protocolProgressStatuses = ['uploading', 'downloading'];
+
 export const getNodeStatusInfo = (
   status?: number,
   type?: string,
   protocolStatus?: string,
 ) => {
   switch (true) {
+    case type !== 'protocol' &&
+      !protocolProgressStatuses.includes(protocolStatus!) &&
+      Boolean(status):
+      return nodeStatusList.find((l) => l.id === status);
+    case type === 'protocol':
+      return nodeHealthList.find((l) => l.id === status);
     case Boolean(protocolStatus):
       return {
         id: protocolStatus,
         name: protocolStatus?.toUpperCase(),
       };
-    case type === 'protocol':
-      return nodeHealthList.find((l) => l.id === status);
-    default:
-      return nodeStatusList.find((l) => l.id === status);
   }
 };
 
@@ -139,22 +142,25 @@ export const NodeStatus = ({
         protocolStatus={protocolStatus}
       />
       <p ref={nameRef} css={[styles.statusText(!hasBorder), statusColor]}>
-        {status !== NodeState.NODE_STATE_FAILED &&
-        (protocolStatus === 'downloading' || protocolStatus === 'uploading') ? (
-          protocolStatus
-        ) : (
-          <NodeStatusName status={status} type={type} />
+        {status !== NodeState.NODE_STATE_FAILED && (
+          <NodeStatusName
+            status={status}
+            type={type}
+            protocolStatus={protocolStatus}
+          />
         )}
-        {isDownloading && view === 'simple' && (
-          <>
-            {view === 'simple' && ` `}
-            <NodeStatusLoader
-              current={downloadingCurrent!}
-              total={downloadingTotal!}
-              view={view}
-            />
-          </>
-        )}
+        {protocolProgressStatuses.includes(protocolStatus!) &&
+          isDownloading &&
+          view === 'simple' && (
+            <>
+              {view === 'simple' && ` `}
+              <NodeStatusLoader
+                current={downloadingCurrent!}
+                total={downloadingTotal!}
+                view={view}
+              />
+            </>
+          )}
       </p>
     </span>
   );

@@ -28,16 +28,13 @@ const ignoreItems = [
   'protocolName',
   'blockHeight',
   'autoUpgrade',
-  'status',
-  'containerStatus',
-  'syncStatus',
-  'stakingStatus',
+  'nodeStatus',
+  'reports',
+  'tags',
   'createdBy',
-  'properties',
-  'allowIps',
-  'denyIps',
-  'nodeType',
   'jobs',
+  'config',
+  'cost',
 ];
 
 export const AdminNode = () => {
