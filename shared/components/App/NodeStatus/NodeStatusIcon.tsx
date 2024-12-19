@@ -165,7 +165,6 @@ export const NodeStatusIcon = ({
   isDefaultColor,
 }: NodeStatusIconProps) => {
   const statusName = getNodeStatusInfo(status, type, protocolStatus)?.name;
-
   return (
     <Suspense fallback={null}>
       {protocolStatus === 'downloading' ||
@@ -183,7 +182,7 @@ export const NodeStatusIcon = ({
           additionalStyles={[getNodeStatusColor(status!, type, protocolStatus)]}
           size={size}
         >
-          {status === undefined ? <IconNode /> : getIcon(statusName!)}
+          {getIcon(statusName!)}
         </SvgIcon>
       )}
     </Suspense>
