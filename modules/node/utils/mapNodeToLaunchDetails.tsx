@@ -2,12 +2,12 @@ import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { ROUTES } from '@shared/constants/routes';
 import { NextLink, DateTime, NodeItems } from '@shared/components';
 
-export const mapNodeToLaunchDetails = (node: Node) => {
+export const mapNodeToLaunchDetails = (node: Node, isSuperUser?: boolean) => {
   const details: { label: string; data: any | undefined }[] = [
     {
       label: 'Host',
       data:
-        node.orgId === node.hostOrgId ? (
+        node.orgId === node.hostOrgId || isSuperUser ? (
           <NextLink href={ROUTES.HOST(node.hostId)}>
             {node.hostDisplayName}
           </NextLink>

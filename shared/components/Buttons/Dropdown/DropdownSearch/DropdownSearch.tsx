@@ -6,6 +6,7 @@ type DropdownSearchProps = {
   value: string;
   isOpen?: boolean;
   isEmpty?: boolean;
+  isValid?: boolean;
   placeholder?: string;
   emptyMessage?: string;
   handleChange?: (e: ChangeEvent<HTMLInputElement>) => void;
@@ -17,6 +18,7 @@ export const DropdownSearch = ({
   value,
   isOpen,
   isEmpty,
+  isValid,
   placeholder,
   emptyMessage,
   handleChange,
@@ -36,15 +38,21 @@ export const DropdownSearch = ({
 
   const handleKeyDown = Boolean(handleSubmit)
     ? (e: KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter') handleSubmit?.(e.target.value);
+        if (e.key === 'Enter') {
+          if (!isValid) return;
+
+          handleSubmit?.(e.target.value);
+        }
       }
     : null;
+
+  const isEmptyValue = !Boolean(value.length);
 
   return (
     <>
       <input
         ref={searchRef}
-        css={styles.input}
+        css={styles.input(isValid, isEmptyValue, isEmpty)}
         name={name}
         type="text"
         placeholder={placeholder ?? 'Search...'}
@@ -54,7 +62,9 @@ export const DropdownSearch = ({
         {...(handleKeyDown && { onKeyDown: handleKeyDown })}
       />
       {isEmpty && (
-        <p css={styles.empty}>{emptyMessage ?? 'No results found'}</p>
+        <p css={styles.empty(isValid, isEmptyValue)}>
+          {emptyMessage ?? 'No results found'}
+        </p>
       )}
     </>
   );

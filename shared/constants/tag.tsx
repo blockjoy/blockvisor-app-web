@@ -35,3 +35,11 @@ export const TAG_COLORS = [];
 // ];
 
 export const DEFAULT_TAG_COLOR = 'rgb(84, 84, 84)';
+
+export const TAG_VALIDATION_REGEX = /^[a-z0-9]+(-[a-z0-9]+)*$/;
+
+export const TAG_VALIDATION_MESSAGES = {
+  required: 'Tag is required.',
+  minLength: 'Must be at least 3 characters.',
+  invalidFormat: 'Please provide a valid kebab-case tag.',
+};

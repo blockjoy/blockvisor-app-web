@@ -17,7 +17,7 @@ export const Info = ({
     <NodeItems.ProtocolName versionKey={versionKey} showName={false} />
     <span css={[styles.rightColumn, typo.ellipsis]}>
       <NodeItems.DisplayName displayName={displayName} nodeName={nodeName} />
-      <NodeItems.CreatedAt createdAt={createdAt} />
+      <NodeItems.CreatedAt createdAt={createdAt} inGroup />
     </span>
   </span>
 );
