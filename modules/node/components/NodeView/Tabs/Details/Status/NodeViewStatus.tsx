@@ -9,6 +9,8 @@ import IconBlockHeight from '@public/assets/icons/app/BlockHeight.svg';
 
 const iconSize = '24px';
 
+const protocolProgressStatuses = ['uploading', 'downloading'];
+
 export const NodeViewStatus = () => {
   const { node } = useNodeView();
 
@@ -38,42 +40,51 @@ export const NodeViewStatus = () => {
             <h3 css={styles.cardLabel}>Block Height</h3>
           </div>
         )}
-        <div css={styles.card}>
-          <NodeStatusIcon size={iconSize} status={node!.nodeStatus?.state!} />
-          <var
-            css={[
-              styles.cardValue,
-              getNodeStatusColor(node.nodeStatus?.state!),
-            ]}
-          >
-            <NodeStatusName status={node.nodeStatus?.state!} />
-          </var>
-          <h3 css={styles.cardLabel}>Node Status</h3>
-        </div>
-        {Boolean(node.nodeStatus?.protocol?.health) && (
+        {(!protocolProgressStatuses.includes(
+          node.nodeStatus?.protocol?.state!,
+        ) ||
+          isSuperUser) && (
           <div css={styles.card}>
-            <NodeStatusIcon
-              size={iconSize}
-              type="protocol"
-              status={node.nodeStatus?.protocol?.health}
-            />
+            <NodeStatusIcon size={iconSize} status={node!.nodeStatus?.state!} />
             <var
               css={[
                 styles.cardValue,
-                getNodeStatusColor(
-                  node.nodeStatus?.protocol?.health,
-                  'protocol',
-                ),
+                getNodeStatusColor(node.nodeStatus?.state!),
               ]}
             >
-              <NodeStatusName
-                status={node.nodeStatus?.protocol?.health}
-                type="protocol"
-              />
+              <NodeStatusName status={node.nodeStatus?.state!} />
             </var>
-            <h3 css={styles.cardLabel}>Protocol Health</h3>
+            <h3 css={styles.cardLabel}>Node Status</h3>
           </div>
         )}
+        {Boolean(node.nodeStatus?.protocol?.health) &&
+          (!protocolProgressStatuses.includes(
+            node.nodeStatus?.protocol?.state!,
+          ) ||
+            isSuperUser) && (
+            <div css={styles.card}>
+              <NodeStatusIcon
+                size={iconSize}
+                type="protocol"
+                status={node.nodeStatus?.protocol?.health}
+              />
+              <var
+                css={[
+                  styles.cardValue,
+                  getNodeStatusColor(
+                    node.nodeStatus?.protocol?.health,
+                    'protocol',
+                  ),
+                ]}
+              >
+                <NodeStatusName
+                  status={node.nodeStatus?.protocol?.health}
+                  type="protocol"
+                />
+              </var>
+              <h3 css={styles.cardLabel}>Protocol Health</h3>
+            </div>
+          )}
         {Boolean(node.nodeStatus?.protocol?.state) && (
           <div css={styles.card}>
             <NodeStatusIcon
