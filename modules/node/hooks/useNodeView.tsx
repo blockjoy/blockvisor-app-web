@@ -87,6 +87,7 @@ export const useNodeView = (): Hook => {
 
       const imageResponse = await imageClient.getImage({
         versionKey: nextNode.versionKey!,
+        semanticVersion: nextNode.semanticVersion,
       });
       setNodeImage(imageResponse?.image!);
 

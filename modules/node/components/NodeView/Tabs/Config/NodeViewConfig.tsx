@@ -191,12 +191,8 @@ export const NodeViewConfig = () => {
       {sortedProperties.map((propertyGroup) => (
         <div css={styles.row} key={propertyGroup.keyGroup}>
           <FormLabelCaps noBottomMargin>
-            {propertyGroup.displayName ||
-              kebabToCapitalized(
-                propertyGroup.displayGroup ||
-                  propertyGroup.keyGroup ||
-                  propertyGroup.key,
-              )}
+            {propertyGroup.displayGroup ||
+              kebabToCapitalized(propertyGroup.keyGroup || propertyGroup.key)}
           </FormLabelCaps>
           {renderNodeConfigControl(propertyGroup, handlePropertyChanged, true)}
         </div>
