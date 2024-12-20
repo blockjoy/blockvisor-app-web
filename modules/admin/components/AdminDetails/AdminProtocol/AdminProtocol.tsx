@@ -1,12 +1,21 @@
 import { useRouter } from 'next/router';
 import { css } from '@emotion/react';
 import { protocolClient } from '@modules/grpc';
-import { Protocol } from '@modules/grpc/library/blockjoy/v1/protocol';
+import {
+  Protocol,
+  ProtocolServiceUpdateProtocolRequest,
+} from '@modules/grpc/library/blockjoy/v1/protocol';
 import { AdminDetail } from '../AdminDetail/AdminDetail';
 import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 import { useState } from 'react';
 import { delay } from '@shared/utils/delay';
+import {
+  createAdminUpdateRequest,
+  createDropdownValuesFromEnum,
+} from '@modules/admin/utils';
+import { Visibility } from '@modules/grpc/library/blockjoy/common/v1/protocol';
+import { capitalize } from 'utils/capitalize';
 
 const styles = {
   versionList: css`
@@ -77,12 +86,34 @@ export const AdminProtocol = () => {
   //   return versions;
   // };
 
+  const handleSaveChanges = async (
+    properties: AdminDetailProperty[],
+    onSuccess: VoidFunction,
+  ) => {
+    const defaultRequest: ProtocolServiceUpdateProtocolRequest = {
+      protocolId: id as string,
+    };
+    const request =
+      createAdminUpdateRequest<ProtocolServiceUpdateProtocolRequest>(
+        defaultRequest,
+        properties,
+      );
+    await protocolClient.updateProtocol(request);
+    onSuccess();
+  };
+
   const customItems = (item: Protocol): AdminDetailProperty[] => [
     {
       id: 'name',
       label: 'Name',
       data: item.name,
       copyValue: item.name,
+      editSettings: {
+        field: 'name',
+        isNumber: false,
+        controlType: 'text',
+        defaultValue: item.name,
+      },
     },
     {
       id: 'protocolId',
@@ -90,18 +121,28 @@ export const AdminProtocol = () => {
       data: item.protocolId,
       copyValue: item.protocolId,
     },
-    // TODO: Protocol visibility
-    // {
-    //   id: 'visibilityText',
-    //   label: 'Visibility',
-    //   data: capitalize(
-    //     BlockchainVisibility[item.visibility]
-    //       ?.toString()
-    //       ?.replace('BLOCKCHAIN_VISIBILITY_', '')
-    //       ?.toLowerCase(),
-    //   ),
-    // },
-
+    {
+      id: 'visibilityText',
+      label: 'Visibility',
+      data: capitalize(
+        Visibility[item.visibility]
+          ?.toString()
+          ?.replace('VISIBILITY_', '')
+          ?.toLowerCase(),
+      ),
+      editSettings: {
+        field: 'visibility',
+        isNumber: true,
+        controlType: 'dropdown',
+        dropdownValues: createDropdownValuesFromEnum(Visibility, 'VISIBILITY_'),
+        defaultValue: item.visibility?.toString(),
+      },
+    },
+    {
+      id: 'orgId',
+      label: 'Org Id',
+      data: item.orgId,
+    },
     // ...[...renderVersions(item)],
   ];
 
@@ -109,6 +150,7 @@ export const AdminProtocol = () => {
     <AdminDetail
       shouldRefresh={shouldRefresh}
       onRefreshed={handleRefreshed}
+      onSaveChanges={handleSaveChanges}
       getItem={getItem}
       detailsName="name"
       ignoreItems={[
@@ -118,6 +160,7 @@ export const AdminProtocol = () => {
         'stats',
         'visibility',
         'updatedAt',
+        'orgId',
       ]}
       customItems={customItems}
     />

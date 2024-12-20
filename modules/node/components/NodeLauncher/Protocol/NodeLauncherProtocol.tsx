@@ -63,8 +63,8 @@ export const NodeLauncherProtocol = ({
         }`}
         onClick={(e) => handleProtocolSelected(e, protocol)}
       >
-        <ProtocolIcon size="28px" hideTooltip protocolName={protocol.key} />
-        <p>{capitalize(protocol.key)}</p>
+        <ProtocolIcon size="28px" hideTooltip protocolName={protocol.name} />
+        <p>{capitalize(protocol.name)}</p>
       </div>
     );
   };
