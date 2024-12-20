@@ -38,7 +38,6 @@ export const NodeLauncherConfig = ({
   onVariantChanged,
 }: NodeLauncherConfigProps) => {
   const nodeLauncher = useRecoilValue(nodeLauncherAtoms.nodeLauncher);
-  const versions = useRecoilValue(nodeLauncherAtoms.versions);
 
   const { properties } = nodeLauncher;
 
@@ -52,14 +51,11 @@ export const NodeLauncherConfig = ({
       <div css={styles.wrapper}>
         <FormHeader>Config</FormHeader>
 
-        <FormLabel>Version</FormLabel>
-        <NodeVersionSelect
-          versions={versions}
-          onVersionChanged={onVersionChanged}
-        />
-
         <FormLabel>Variant</FormLabel>
         <NodeVariantSelect onChange={onVariantChanged} />
+
+        <FormLabel>Version</FormLabel>
+        <NodeVersionSelect onVersionChanged={onVersionChanged} />
 
         <FormLabel hint="Add IP addresses that are allowed/denied">
           Firewall Rules
