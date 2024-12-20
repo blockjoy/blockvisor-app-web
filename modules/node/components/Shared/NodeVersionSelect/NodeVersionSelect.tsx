@@ -8,7 +8,6 @@ import { authSelectors } from '@modules/auth';
 import { ITheme } from 'types/theme';
 
 type NodeVersionSelectProps = {
-  versions: ProtocolVersion[];
   onVersionChanged: (version: ProtocolVersion) => void;
 };
 
@@ -22,10 +21,12 @@ const styles = {
 };
 
 export const NodeVersionSelect = ({
-  versions,
   onVersionChanged,
 }: NodeVersionSelectProps) => {
   const selectedVersion = useRecoilValue(nodeLauncherAtoms.selectedVersion);
+
+  const versions = useRecoilValue(nodeLauncherAtoms.versions);
+
   const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
 
   const [isOpen, setIsOpen] = useState(false);
