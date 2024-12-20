@@ -36,7 +36,9 @@ export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
           </span>
           <div>
             <label>Protocol</label>
-            <span>{capitalized(selectedProtocol?.key!) || 'Not Selected'}</span>
+            <span>
+              {capitalized(selectedProtocol?.name!) || 'Not Selected'}
+            </span>
           </div>
         </li>
         {isSuperUser && selectedHosts && (

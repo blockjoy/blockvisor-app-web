@@ -210,6 +210,8 @@ export const useNodeLauncherHandlers = ({
 
       const imageResponse = await imageClient.getImage({
         versionKey: selectedVersion.versionKey,
+        semanticVersion: selectedVersion.semanticVersion,
+        orgId: defaultOrganization?.orgId,
       });
 
       setSelectedImage(imageResponse.image!);
@@ -267,6 +269,7 @@ export const useNodeLauncherHandlers = ({
             protocolKey: selectedProtocol?.key,
             variantKey: selectedVariant,
           },
+          orgId: defaultOrganization?.orgId,
         });
 
         setVersions([...versionsResponse]);
