@@ -1,5 +1,5 @@
-export const createAdminUpdateRequest = (
-  defaultRequest: any,
+export const createAdminUpdateRequest = <T = any>(
+  defaultRequest: T,
   properties: AdminDetailProperty[],
 ) => {
   for (let property of properties) {

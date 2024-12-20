@@ -8,6 +8,7 @@ import {
   ProtocolSortField,
 } from '@modules/grpc/library/blockjoy/v1/protocol';
 import { DateTime } from '@shared/components';
+import { Visibility } from '@modules/grpc/library/blockjoy/common/v1/protocol';
 
 const columns: AdminListColumn[] = [
   {
@@ -22,17 +23,10 @@ const columns: AdminListColumn[] = [
     width: '200px',
     sortField: ProtocolSortField.PROTOCOL_SORT_FIELD_KEY,
   },
-  // {
-  //   name: 'displayName',
-  //   isVisible: true,
-  //   width: '200px',
-  //   sortField: ProtocolSortField.BLOCKCHAIN_SORT_FIELD_DISPLAY_NAME,
-  // },
-  // { name: 'ticker', isVisible: true, width: '120px' },
-  // { name: 'nodes', isVisible: true, width: '80px' },
-  // { name: 'nodeTypes', isVisible: true, width: '120px' },
-  // { name: 'visibility', isVisible: true, width: '120px' },
-  // { name: 'createdAt', isVisible: true, width: '160px' },
+  { name: 'visibility', isVisible: true, width: '160px' },
+  { name: 'ticker', isVisible: true, width: '160px' },
+  { name: 'orgId', isVisible: true, width: '160px' },
+  { name: 'createdAt', isVisible: true, width: '160px' },
 ];
 
 export const AdminProtocols = () => {
@@ -62,12 +56,10 @@ export const AdminProtocols = () => {
     list.map((protocol) => {
       return {
         ...protocol,
-        // nodes: protoco,
-        // nodeTypes: protocol.nodeTypes.length,
-        // createdAt: <DateTime date={protocol.createdAt!} />,
-        // visibility: ProtocolVisibility[protocol.visibility]
-        //   ?.toString()
-        //   .replace('BLOCKCHAIN_VISIBILITY_', ''),
+        createdAt: <DateTime date={protocol.createdAt!} />,
+        visibility: Visibility[protocol.visibility]
+          ?.toString()
+          .replace('VISIBILITY_', ''),
       };
     });
 

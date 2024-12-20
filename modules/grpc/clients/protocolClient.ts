@@ -20,6 +20,8 @@ import {
   ProtocolServiceListVersionsResponse,
   ProtocolServiceAddProtocolRequest,
   ProtocolServiceAddProtocolResponse,
+  ProtocolServiceUpdateProtocolRequest,
+  ProtocolServiceUpdateProtocolResponse,
 } from '../library/blockjoy/v1/protocol';
 import {
   callWithTokenRefresh,
@@ -137,10 +139,27 @@ class ProtocolClient {
     try {
       const response: ProtocolServiceAddProtocolResponse =
         await callWithTokenRefresh(
-          this.client.addVersion.bind(this.client),
+          this.client.addProtocol.bind(this.client),
           request,
         );
       console.log('addProtocolResponse', response);
+      return response.protocol;
+    } catch (err: any) {
+      return handleError(err);
+    }
+  }
+
+  async updateProtocol(
+    request: ProtocolServiceUpdateProtocolRequest,
+  ): Promise<Protocol | undefined> {
+    console.log('updateProtocolRequest', request);
+    try {
+      const response: ProtocolServiceUpdateProtocolResponse =
+        await callWithTokenRefresh(
+          this.client.updateProtocol.bind(this.client),
+          request,
+        );
+      console.log('updateProtocolResponse', response);
       return response.protocol;
     } catch (err: any) {
       return handleError(err);

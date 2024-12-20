@@ -79,7 +79,7 @@ export const NodeLauncherConfig = ({
           return (
             <Fragment key={propertyGroup.keyGroup! + index!}>
               <FormLabel isRequired={isRequired}>
-                {propertyGroup.displayName ||
+                {propertyGroup.displayGroup ||
                   kebabToCapitalized(
                     propertyGroup.keyGroup || propertyGroup.key,
                   )}
