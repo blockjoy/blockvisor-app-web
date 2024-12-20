@@ -103,7 +103,7 @@ export const useNodeLauncherHandlers = ({
   );
 
   const setVariants = useSetRecoilState(nodeLauncherAtoms.variants);
-  const setVersions = useSetRecoilState(nodeLauncherAtoms.versions);
+  const [versions, setVersions] = useRecoilState(nodeLauncherAtoms.versions);
 
   const [selectedVariant, setSelectedVariant] = useRecoilState(
     nodeLauncherAtoms.selectedVariant,
@@ -141,7 +141,7 @@ export const useNodeLauncherHandlers = ({
 
   useEffect(() => {
     if (!selectedProtocol) return;
-    setSelectedVersion(sortVersions(selectedProtocol.versions)[0]);
+    setSelectedVersion(sortVersions(versions)[0]);
   }, [selectedProtocol]);
 
   useEffect(() => {
@@ -272,10 +272,11 @@ export const useNodeLauncherHandlers = ({
           orgId: defaultOrganization?.orgId,
         });
 
-        setVersions([...versionsResponse]);
+        setVersions(versionsResponse);
+        setSelectedVersion(sortVersions(versionsResponse)[0]);
       })();
     }
-  }, [selectedVariant, selectedProtocol]);
+  }, [selectedVariant]);
 
   const handleHostsChanged = (hosts: NodeLauncherHost[] | null) => {
     Mixpanel.track('Launch Node - Host Changed');
