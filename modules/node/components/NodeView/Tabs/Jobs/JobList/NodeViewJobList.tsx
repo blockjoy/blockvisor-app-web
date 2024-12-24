@@ -1,42 +1,65 @@
 import { useRouter } from 'next/router';
-import { NodeJobStatus } from '@modules/grpc/library/blockjoy/common/v1/node';
+import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import {
+  NodeJob,
+  NodeJobStatus,
+} from '@modules/grpc/library/blockjoy/common/v1/node';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
-import { styles } from './NodeViewJobList.styles';
-import { useNodeView } from '@modules/node/hooks/useNodeView';
-import { EmptyColumn, sort, Table } from '@shared/components';
+import { EmptyColumn, sort as sortItems, Table } from '@shared/components';
 import { ROUTES } from '@shared/constants/routes';
+import { Sort } from '@shared/common/common';
+import { nodeAtoms } from '@modules/node';
 import { convertNodeJobStatusToName } from '@modules/node/utils/convertNodeJobStatusToName';
 import { spacing } from 'styles/utils.spacing.styles';
+import { styles } from './NodeViewJobList.styles';
+
+const headers: TableHeader<keyof NodeJob>[] = [
+  {
+    key: 'name',
+    name: 'Name',
+    dataField: 'name',
+  },
+  {
+    key: 'status',
+    name: 'Status',
+    dataField: 'status',
+  },
+  {
+    key: 'progress',
+    name: 'Progress',
+    dataField: 'progress',
+  },
+];
 
 export const NodeViewJobList = () => {
-  const { node } = useNodeView();
-
   const router = useRouter();
 
-  const headers: TableHeader[] = [
-    {
-      key: '1',
-      name: 'Name',
-    },
-    {
-      key: '2',
-      name: 'Status',
-    },
-    {
-      key: '3',
-      name: 'Progress',
-    },
-  ];
+  const node = useRecoilValue(nodeAtoms.activeNode);
 
-  const rows = node?.jobs.map((job) => ({
+  const [jobs, setJobs] = useState<NodeJob[]>(node?.jobs ?? []);
+  const [sort, setSort] = useState<Sort<keyof NodeJob>[]>([
+    {
+      field: 'name',
+      order: SortOrder.SORT_ORDER_ASCENDING,
+    },
+  ]);
+
+  useEffect(() => {
+    const sortedJobs = sortItems(jobs, sort?.[0]);
+
+    setJobs(sortedJobs);
+  }, [sort[0].field, sort[0].order]);
+
+  const rows: TableRow<string, keyof NodeJob>[] = jobs.map((job) => ({
     key: job.name,
     cells: [
       {
-        key: '1',
+        key: 'name',
         component: <p>{job.name}</p>,
       },
       {
-        key: '2',
+        key: 'status',
         component: (
           <p
             css={[
@@ -53,7 +76,7 @@ export const NodeViewJobList = () => {
         ),
       },
       {
-        key: '3',
+        key: 'progress',
         component: (
           <p css={styles.progress}>
             {job.status === NodeJobStatus.NODE_JOB_STATUS_FINISHED ||
@@ -71,26 +94,37 @@ export const NodeViewJobList = () => {
     ],
   }));
 
-  const sortedRows = sort(rows, {
-    field: 'key',
-    order: SortOrder.SORT_ORDER_ASCENDING,
-  });
-
   const handleRowClicked = (name: string) => {
     router.push({
       pathname: ROUTES.NODE_JOB(node?.nodeId!, name),
     });
   };
 
-  return sortedRows.length ? (
+  const handleHeaderClicked = (field: string) => {
+    const order =
+      sort?.[0]?.order === SortOrder.SORT_ORDER_ASCENDING
+        ? SortOrder.SORT_ORDER_DESCENDING
+        : SortOrder.SORT_ORDER_ASCENDING;
+
+    setSort([
+      {
+        field: field as keyof NodeJob,
+        order,
+      },
+    ]);
+  };
+
+  return rows.length ? (
     <section css={[styles.wrapper, spacing.top.small]}>
       <Table
         isLoading="finished"
         headers={headers}
-        rows={sortedRows}
+        rows={rows}
         verticalAlign="middle"
         fixedRowHeight="72px"
         onRowClick={handleRowClicked}
+        sort={sort}
+        handleSort={handleHeaderClicked}
       />
     </section>
   ) : (

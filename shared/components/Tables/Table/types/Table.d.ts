@@ -1,5 +1,5 @@
-type Cell = {
-  key: string;
+type TableCell<K = string> = {
+  key: K;
   data?: string | number;
   component?: EmotionJSX.Element;
 };
@@ -20,11 +20,12 @@ type TableHeader<K = string> = {
   hideLabel?: boolean;
   alwaysVisible?: boolean;
   actions?: TableHeaderAction[];
+  handleClick?: (id: string) => void;
 };
 
-type Row = {
-  key: string;
-  cells: Cell[];
+type TableRow<K = string, C = string> = {
+  key: K;
+  cells: TableCell<C>[];
   isDanger?: boolean;
   isClickable?: boolean;
 };
@@ -33,7 +34,7 @@ type TableProps<T> = {
   hideHeader?: boolean;
   headers?: TableHeader[];
   columns?: TableHeader[];
-  rows?: Row[];
+  rows?: TableRow[];
   onRowClick?: (id: string) => void;
   isLoading?: LoadingState;
   preload?: number;
@@ -42,6 +43,7 @@ type TableProps<T> = {
   fixedRowHeight?: string;
   queryParams?: T;
   setQueryParams?: (nextQueryParams: T) => void;
+  sort?: Sort[];
   handleSort?: (key: any) => void;
   handleUpdateColumns?: (columns: TableColumn[]) => void;
   additionalStyles?: SerializedStyles[];

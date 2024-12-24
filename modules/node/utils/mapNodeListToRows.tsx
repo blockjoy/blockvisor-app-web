@@ -4,7 +4,7 @@ import { NodeListItem } from '../types/common';
 export const mapNodeListToRows = (
   nodeList: Node[],
   headers: NodeListItem[],
-): Row[] =>
+): TableRow[] =>
   nodeList?.map((node) => ({
     key: node.nodeId!,
     cells: headers.map(({ key, component }) => ({

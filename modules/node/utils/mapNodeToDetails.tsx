@@ -1,4 +1,5 @@
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
+import { formatters } from '@shared/index';
 import { Copy } from '@shared/components';
 import { styles } from '@shared/components/Buttons/NextLink/NextLink.styles';
 
@@ -18,6 +19,12 @@ export const mapNodeToDetails = (node: Node) => {
     {
       label: 'Network',
       data: node.hostNetworkName || '-',
+    },
+    {
+      label: 'Cost per month',
+      data: node.cost?.amount?.amountMinorUnits
+        ? formatters.formatCurrency(node.cost?.amount?.amountMinorUnits!)
+        : '-',
     },
   ];
 

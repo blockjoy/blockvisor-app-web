@@ -16,6 +16,7 @@ export const Table = <T extends BaseQueryParams>({
   verticalAlign,
   fixedRowHeight,
   queryParams,
+  sort,
   handleSort,
   additionalStyles,
   isHover = true,
@@ -71,11 +72,13 @@ export const Table = <T extends BaseQueryParams>({
                     })}
                     header={col}
                     index={colIndex}
-                    context={context}
-                    sort={queryParams?.sort?.[0]}
+                    sort={
+                      Boolean(sort?.length) ? sort?.[0] : queryParams?.sort?.[0]
+                    }
                     handleSort={handleSort}
                     isFirst={colIndex === 0}
                     isLast={colIndex === tableColumns.length - 1}
+                    {...(context && { context })}
                     {...(isResizable && {
                       resize,
                     })}

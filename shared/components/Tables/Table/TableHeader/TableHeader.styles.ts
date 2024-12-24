@@ -40,45 +40,48 @@ export const styles = {
   headerWrapper: css`
     width: 100%;
   `,
-  button: (theme: ITheme) => css`
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 0;
-    border: 0;
-    background: transparent;
-    letter-spacing: inherit;
-    text-transform: inherit;
-    color: inherit;
-    cursor: pointer;
-    position: relative;
-    padding: 7px;
-    border-radius: 6px;
-    margin-left: 5px;
-    opacity: 0;
+  button: (isContext?: boolean) => (theme: ITheme) =>
+    css`
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      letter-spacing: inherit;
+      text-transform: inherit;
+      color: inherit;
+      cursor: pointer;
+      position: relative;
+      padding: 7px;
+      border-radius: 6px;
+      margin-left: 5px;
+      opacity: 0;
 
-    &,
-    svg path {
-      transition: 0.3s;
-    }
-
-    & svg path {
-      fill: ${theme.colorLabel};
-    }
-
-    &:hover {
-      background-color: ${theme.colorBackground};
-
-      path {
-        fill: ${theme.colorText};
+      &,
+      svg path {
+        transition: 0.3s;
       }
-    }
-  `,
+
+      & svg path {
+        fill: ${theme.colorLabel};
+      }
+
+      &:hover {
+        background-color: ${isContext
+          ? theme.colorBackground
+          : theme.colorBorder};
+
+        path {
+          fill: ${theme.colorText};
+        }
+      }
+    `,
   buttonActive: (theme: ITheme) => css`
     color: ${theme.colorText};
     opacity: 1;
   `,
-  text: (isSortable?: boolean) => (theme: ITheme) =>
+  text: (isSortable?: boolean, isContext?: boolean) => (theme: ITheme) =>
     css`
       position: relative;
       letter-spacing: inherit;
@@ -87,7 +90,8 @@ export const styles = {
       line-height: 1;
       ${isSortable && 'cursor: pointer;'}
 
-      :hover {
+      ${!isContext &&
+      `:hover {
         + button {
           background-color: ${theme.colorBorder};
 
@@ -95,7 +99,7 @@ export const styles = {
             fill: ${theme.colorText};
           }
         }
-      }
+      }`}
     `,
   icon: (isAscending: boolean) => (theme: ITheme) =>
     css`

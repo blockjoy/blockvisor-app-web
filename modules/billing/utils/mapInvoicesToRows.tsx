@@ -38,7 +38,7 @@ export const mapInvoicesToRows = (invoices: Invoice[]) => {
     },
   ];
 
-  const rows: Row[] =
+  const rows: TableRow[] =
     invoices?.map((invoice) => ({
       key: invoice?.number!,
       cells: [
