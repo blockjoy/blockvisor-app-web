@@ -71,7 +71,8 @@ export type InitialNodeQueryParams = {
 export type NodeListColumnKey =
   | keyof Node
   | 'customNodeInfo'
-  | 'customNodeHealth';
+  | 'customNodeHealth'
+  | 'customProtocolStatus';
 
 export type NodeListLayoutGroupItem = {
   key: NodeListColumnKey;
