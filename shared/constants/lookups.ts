@@ -22,6 +22,7 @@ export const NODE_FILTERS_DEFAULT: UINodeFilterCriteria = {
   nodeType: [],
   networks: [],
   keyword: '',
+  semanticVersions: [],
 };
 
 export const NODE_SORT_DEFAULT: NodeSort[] = [

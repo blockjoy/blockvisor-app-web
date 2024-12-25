@@ -34,6 +34,9 @@ export const useNodeFilters = (): UseNodeFiltersHook => {
   const filtersStatusAll = useRecoilValue(
     nodeSelectors.filtersStatusAll(tempFilters.nodeStatus!),
   );
+  const filtersVersionsAll = useRecoilValue(
+    nodeSelectors.filtersVersionAll(tempFilters.semanticVersions!),
+  );
   const setSearchQuery = useSetRecoilState(nodeAtoms.filtersSearchQuery);
   const resetPagination = useResetRecoilState(nodeAtoms.nodeListPagination);
   const setAppLoadingState = useSetRecoilState(settingsAtoms.appLoadingState);
@@ -98,6 +101,13 @@ export const useNodeFilters = (): UseNodeFiltersHook => {
       disabled: false,
       count: tempFilters.nodeStatus?.length,
       list: filtersStatusAll,
+    },
+    {
+      id: 'semanticVersions',
+      name: 'Version',
+      disabled: false,
+      count: tempFilters.semanticVersions?.length,
+      list: filtersVersionsAll,
     },
   ];
 
