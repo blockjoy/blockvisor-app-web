@@ -39,7 +39,11 @@ const filters = selector<UINodeFilterCriteria>({
     const searchQuery = get(nodeAtoms.filtersSearchQuery);
 
     return nodeSettings?.filters
-      ? { ...nodeSettings.filters, keyword: searchQuery ?? '' }
+      ? {
+          ...NODE_FILTERS_DEFAULT,
+          ...nodeSettings.filters,
+          keyword: searchQuery ?? '',
+        }
       : NODE_FILTERS_DEFAULT;
   },
 });
@@ -109,9 +113,9 @@ const filtersProtocolAll = selectorFamily<FilterListItem[], string[]>({
       const allFilters = allProtocols.map((protocol) => ({
         id: protocol.protocolId,
         name: capitalize(protocol.key),
-        isChecked: tempFilters?.some(
-          (filter) => protocol.protocolId === filter,
-        ),
+        isChecked:
+          tempFilters?.some((filter) => protocol.protocolId === filter) ??
+          false,
       }));
 
       return allFilters;
@@ -137,11 +141,40 @@ const filtersStatusAll = selectorFamily<FilterListItem[], string[]>({
 
     const allFilters = allStatuses.map((status) => ({
       ...status,
-      isChecked: tempFilters?.some((filter) => status.id === filter),
+      isChecked: tempFilters?.some((filter) => status.id === filter) ?? false,
     }));
 
     return allFilters;
   },
+});
+
+const filtersVersionAll = selectorFamily<FilterListItem[], string[]>({
+  key: 'node.filters.semanticVersions.all',
+  get:
+    (tempFilters) =>
+    ({ get }) => {
+      const allProtocols = get(protocolAtoms.protocols);
+      if (!allProtocols.length) return [];
+
+      const allVersions = allProtocols.flatMap((protocol) =>
+        protocol.versions.map((version) => version.semanticVersion),
+      );
+      if (!allVersions.length) return [];
+
+      const semanticVersions = allVersions
+        .filter((version, index, self) => self.indexOf(version) === index)
+        .sort();
+
+      if (!semanticVersions) return [];
+
+      const allFilters = semanticVersions.map((sv) => ({
+        id: sv,
+        name: sv,
+        isChecked: tempFilters?.some((filter) => sv === filter) ?? false,
+      }));
+
+      return allFilters;
+    },
 });
 
 const inactiveTags = selectorFamily<Tag[], any[]>({
@@ -208,6 +241,7 @@ export const nodeSelectors = {
 
   filtersProtocolAll,
   filtersStatusAll,
+  filtersVersionAll,
 
   inactiveTags,
 
