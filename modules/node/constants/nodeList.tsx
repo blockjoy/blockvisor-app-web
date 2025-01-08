@@ -46,8 +46,23 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
     actions: LAYOUT_ACTIONS,
   },
   {
+    key: 'customProtocolStatus',
+    label: 'Protocol Status',
+    width: '200px',
+    dataField: NodeSortField.NODE_SORT_FIELD_PROTOCOL_STATE,
+    isVisible: false,
+    component: (node: Node) => (
+      <NodeStatus
+        protocolStatus={node.nodeStatus?.protocol?.state}
+        hasBorder={false}
+        view="simple"
+      />
+    ),
+    actions: ALL_ACTIONS,
+  },
+  {
     key: 'displayName',
-    label: 'Display Name',
+    label: 'Name',
     minWidth: '140px',
     width: '300px',
     dataField: NodeSortField.NODE_SORT_FIELD_DISPLAY_NAME,
@@ -101,8 +116,9 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
   {
     key: 'customNodeHealth',
     label: 'Protocol Health',
-    minWidth: '150px',
-    width: '150px',
+    minWidth: '170px',
+    width: '170px',
+    dataField: NodeSortField.NODE_SORT_FIELD_PROTOCOL_HEALTH,
     isVisible: true,
     component: (node: Node) => (
       <NodeStatus
@@ -183,6 +199,15 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
     width: '160px',
     isVisible: true,
     component: (node: Node) => <NodeItems.Cost cost={node.cost} />,
+    actions: LAYOUT_ACTIONS,
+  },
+  {
+    key: 'dnsUrl',
+    label: 'RPC Url',
+    minWidth: '130px',
+    width: '160px',
+    isVisible: true,
+    component: (node: Node) => <NodeItems.RPCUrl dnsUrl={node.dnsUrl} />,
     actions: LAYOUT_ACTIONS,
   },
 ];

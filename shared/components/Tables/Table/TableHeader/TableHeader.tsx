@@ -81,11 +81,22 @@ export const TableHeader = ({
     onDrag?.(e, index!);
   };
 
-  const handleContext = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (isResizing) return;
+  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
 
-    context?.onClick?.(header.key === context.key ? null : header.key, index);
+    if (context?.onClick) {
+      if (isResizing) return;
+
+      context?.onClick?.(header.key === context.key ? null : header.key, index);
+
+      return;
+    }
+
+    if (handleSort) {
+      handleSort(header.key);
+
+      return;
+    }
   };
 
   const headerClasses = [];
@@ -110,20 +121,20 @@ export const TableHeader = ({
         onMouseDown: handleDrag,
       })}
     >
-      <div
-        css={styles.headerWrapper}
-        {...(context?.onClick && {
-          onClick: handleContext,
-        })}
-      >
-        <span css={[styles.text(!!isSortable)]}>{children}</span>
+      <div css={styles.headerWrapper} onClick={handleClick}>
+        <span css={[styles.text(!!isSortable, Boolean(context))]}>
+          {children}
+        </span>
         {isSortable && (
           <button
             onClick={(e) => {
               e.stopPropagation();
               handleSort(dataField || '');
             }}
-            css={[styles.button, isActive && styles.buttonActive]}
+            css={[
+              styles.button(Boolean(context)),
+              isActive && styles.buttonActive,
+            ]}
             className="table-sort"
           >
             <SvgIcon size="10px" additionalStyles={[styles.icon(isAscending)]}>

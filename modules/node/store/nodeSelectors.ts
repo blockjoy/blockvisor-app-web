@@ -39,7 +39,11 @@ const filters = selector<UINodeFilterCriteria>({
     const searchQuery = get(nodeAtoms.filtersSearchQuery);
 
     return nodeSettings?.filters
-      ? { ...nodeSettings.filters, keyword: searchQuery ?? '' }
+      ? {
+          ...NODE_FILTERS_DEFAULT,
+          ...nodeSettings.filters,
+          keyword: searchQuery ?? '',
+        }
       : NODE_FILTERS_DEFAULT;
   },
 });
@@ -98,29 +102,32 @@ const filtersProtocolSelectedIds = selector<string[]>({
   get: ({ get }) => get(filters)?.protocol ?? [],
 });
 
-const filtersProtocolAll = selectorFamily<FilterListItem[], string[]>({
+const filtersProtocolAll = selector<FilterListItem[]>({
   key: 'node.filters.protocol.all',
-  get:
-    (tempFilters: string[]) =>
-    ({ get }) => {
-      const allProtocols = get(protocolAtoms.protocols);
-      if (!allProtocols.length) return [];
+  get: ({ get }) => {
+    const tempFilters = get(nodeAtoms.tempFilters);
+    const { protocol: tempProtocol } = tempFilters;
 
-      const allFilters = allProtocols.map((protocol) => ({
-        id: protocol.protocolId,
-        name: capitalize(protocol.key),
-        isChecked: tempFilters?.some(
-          (filter) => protocol.protocolId === filter,
-        ),
-      }));
+    const allProtocols = get(protocolAtoms.protocols);
+    if (!allProtocols.length) return [];
 
-      return allFilters;
-    },
+    const allFilters = allProtocols.map((protocol) => ({
+      id: protocol.protocolId,
+      name: capitalize(protocol.key),
+      isChecked:
+        tempProtocol?.some((filter) => protocol.protocolId === filter) ?? false,
+    }));
+
+    return allFilters;
+  },
 });
 
-const filtersStatusAll = selectorFamily<FilterListItem[], string[]>({
+const filtersStatusAll = selector<FilterListItem[]>({
   key: 'node.filters.nodeStatus.all',
-  get: (tempFilters) => () => {
+  get: ({ get }) => {
+    const tempFilters = get(nodeAtoms.tempFilters);
+    const { nodeStatus: tempNodeStatus } = tempFilters;
+
     const allStatuses: (NodeStatusListItem & FilterListItem)[] = sort(
       createDropdownValuesFromEnum(NodeState, 'NODE_STATE_').map((item) => ({
         ...item,
@@ -137,7 +144,44 @@ const filtersStatusAll = selectorFamily<FilterListItem[], string[]>({
 
     const allFilters = allStatuses.map((status) => ({
       ...status,
-      isChecked: tempFilters?.some((filter) => status.id === filter),
+      isChecked:
+        tempNodeStatus?.some((filter) => status.id === filter) ?? false,
+    }));
+
+    return allFilters;
+  },
+});
+
+const filtersVersionAll = selector<FilterListItem[]>({
+  key: 'node.filters.semanticVersions.all',
+  get: ({ get }) => {
+    const tempFilters = get(nodeAtoms.tempFilters);
+    const { protocol: tempProtocol, semanticVersions: tempSemanticVersions } =
+      tempFilters;
+
+    const allProtocols = get(protocolAtoms.protocols);
+    if (!allProtocols.length) return [];
+
+    const protocols = !tempProtocol?.length
+      ? allProtocols
+      : allProtocols.filter((protocol) =>
+          tempProtocol?.includes(protocol.protocolId),
+        );
+    if (!protocols.length) return [];
+
+    const allVersions = protocols.flatMap((protocol) =>
+      protocol.versions.map((version) => version.semanticVersion),
+    );
+    if (!allVersions.length) return [];
+
+    const semanticVersions = allVersions
+      .filter((version, index, self) => self.indexOf(version) === index)
+      .sort();
+
+    const allFilters = semanticVersions.map((sv) => ({
+      id: sv,
+      name: sv,
+      isChecked: tempSemanticVersions?.some((filter) => sv === filter) ?? false,
     }));
 
     return allFilters;
@@ -208,6 +252,7 @@ export const nodeSelectors = {
 
   filtersProtocolAll,
   filtersStatusAll,
+  filtersVersionAll,
 
   inactiveTags,
 

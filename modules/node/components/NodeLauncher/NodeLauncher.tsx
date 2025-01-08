@@ -16,6 +16,7 @@ import IconRocket from '@public/assets/icons/app/Rocket.svg';
 
 export const NodeLauncher = ({
   fulfilReqs,
+  resetFulfilReqs,
   onCreateClick,
   hasPermissionsToCreate,
 }: LauncherWithGuardProps) => {
@@ -28,7 +29,7 @@ export const NodeLauncher = ({
     handleNodeConfigPropertyChanged,
     handleVersionChanged,
     handleVariantChanged,
-  } = useNodeLauncherHandlers({ fulfilReqs });
+  } = useNodeLauncherHandlers({ fulfilReqs, resetFulfilReqs });
 
   const hasProtocol = useRecoilValue(nodeLauncherSelectors.hasProtocol);
   const hasSummary = useRecoilValue(nodeLauncherSelectors.hasSummary);

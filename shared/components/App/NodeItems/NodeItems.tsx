@@ -7,6 +7,7 @@ import { IpAddress } from './Items/IpAddress';
 import { IpGetaway } from './Items/IpGetaway';
 import { ProtocolName } from './Items/ProtocolName';
 import { Region } from './Items/Region';
+import { RPCUrl } from './Items/RPCUrl';
 import { Version } from './Items/Version';
 
 import { Info } from './Groups/Info';
@@ -21,6 +22,7 @@ export const NodeItems = {
   IpGetaway,
   ProtocolName,
   Region,
+  RPCUrl,
   Version,
 };
 

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import {
   useRecoilState,
   useRecoilValue,
@@ -6,7 +6,7 @@ import {
   useSetRecoilState,
 } from 'recoil';
 import isEqual from 'lodash/isEqual';
-import { UINodeFilterCriteria } from '@modules/grpc/clients/nodeClient';
+import isEmpty from 'lodash/isEmpty';
 import { nodeSelectors, nodeAtoms } from '@modules/node';
 import { NODE_FILTERS_DEFAULT } from '@shared/constants/lookups';
 import { settingsAtoms, useSettings } from '@modules/settings';
@@ -24,21 +24,25 @@ type UseNodeFiltersHook = {
 export const useNodeFilters = (): UseNodeFiltersHook => {
   const filters = useRecoilValue(nodeSelectors.filters);
   const isFiltersEmpty = useRecoilValue(nodeSelectors.isFiltersEmpty);
-  const [tempFilters, setTempFilters] = useState<UINodeFilterCriteria>(filters);
+
+  const [tempFilters, setTempFilters] = useRecoilState(nodeAtoms.tempFilters);
   const [tempFiltersTotal, setTempFiltersTotal] = useRecoilState(
     nodeAtoms.filtersTempTotal,
   );
-  const filtersProtocolAll = useRecoilValue(
-    nodeSelectors.filtersProtocolAll(tempFilters.protocol!),
-  );
-  const filtersStatusAll = useRecoilValue(
-    nodeSelectors.filtersStatusAll(tempFilters.nodeStatus!),
-  );
+
   const setSearchQuery = useSetRecoilState(nodeAtoms.filtersSearchQuery);
   const resetPagination = useResetRecoilState(nodeAtoms.nodeListPagination);
   const setAppLoadingState = useSetRecoilState(settingsAtoms.appLoadingState);
 
+  const filtersProtocolAll = useRecoilValue(nodeSelectors.filtersProtocolAll);
+  const filtersStatusAll = useRecoilValue(nodeSelectors.filtersStatusAll);
+  const filtersVersionsAll = useRecoilValue(nodeSelectors.filtersVersionAll);
+
   const { updateSettings } = useSettings();
+
+  useEffect(() => {
+    if (isEmpty(tempFilters)) setTempFilters(filters);
+  }, [filters]);
 
   useEffect(() => {
     const total = Object.values(tempFilters).reduce(
@@ -98,6 +102,13 @@ export const useNodeFilters = (): UseNodeFiltersHook => {
       disabled: false,
       count: tempFilters.nodeStatus?.length,
       list: filtersStatusAll,
+    },
+    {
+      id: 'semanticVersions',
+      name: 'Version',
+      disabled: false,
+      count: tempFilters.semanticVersions?.length,
+      list: filtersVersionsAll,
     },
   ];
 

@@ -1,6 +1,7 @@
 import { atom } from 'recoil';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { Region } from '@modules/grpc/library/blockjoy/v1/host';
+import { UINodeFilterCriteria } from '@modules/grpc';
 import { localStorageEffect } from 'utils/store/persist';
 import { NODE_PAGINATION_DEFAULT } from '@shared/index';
 import { Image } from '@modules/grpc/library/blockjoy/v1/image';
@@ -81,6 +82,11 @@ const selectedSKU = atom<string>({
   default: '',
 });
 
+const tempFilters = atom<UINodeFilterCriteria>({
+  key: 'node.filters.temp',
+  default: {},
+});
+
 const filtersTempTotal = atom<number>({
   key: 'node.filters.temp.total',
   default: 0,
@@ -105,6 +111,7 @@ export const nodeAtoms = {
   selectedSKU,
   nodeConfig,
 
+  tempFilters,
   filtersTempTotal,
   filtersSearchQuery,
 

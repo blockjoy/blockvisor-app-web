@@ -77,7 +77,7 @@ export const mapInvoiceLineItemsToRows = (items?: LineItem[]) => {
     },
   ];
 
-  const rows: Row[] =
+  const rows: TableRow[] =
     items?.map((item, i) => ({
       key: `${i}`,
       cells: [

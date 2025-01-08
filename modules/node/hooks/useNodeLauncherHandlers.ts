@@ -33,6 +33,7 @@ import { authSelectors } from '@modules/auth';
 
 type IUseNodeLauncherHandlersParams = {
   fulfilReqs: boolean;
+  resetFulfilReqs: VoidFunction;
 };
 
 interface IUseNodeLauncherHandlersHook {
@@ -56,6 +57,7 @@ interface IUseNodeLauncherHandlersHook {
 
 export const useNodeLauncherHandlers = ({
   fulfilReqs,
+  resetFulfilReqs,
 }: IUseNodeLauncherHandlersParams): IUseNodeLauncherHandlersHook => {
   const searchParams = useSearchParams();
   const { navigate } = useNavigate();
@@ -82,7 +84,7 @@ export const useNodeLauncherHandlers = ({
   const resetNodeLauncherState = useResetRecoilState(
     nodeLauncherAtoms.nodeLauncher,
   );
-  const setError = useSetRecoilState(nodeLauncherAtoms.error);
+  const [error, setError] = useRecoilState(nodeLauncherAtoms.error);
   const setIsLaunchError = useSetRecoilState(nodeLauncherAtoms.isLaunchError);
   const setIsLaunching = useSetRecoilState(nodeLauncherAtoms.isLaunching);
   const [selectedHosts, setSelectedHosts] = useRecoilState(
@@ -112,6 +114,17 @@ export const useNodeLauncherHandlers = ({
   const resetSelectedImage = useResetRecoilState(
     nodeLauncherAtoms.selectedImage,
   );
+
+  useEffect(() => {
+    if (error) resetError();
+  }, [
+    selectedProtocol,
+    selectedRegion,
+    selectedHosts,
+    selectedVariant,
+    selectedVersion,
+    selectedImage,
+  ]);
 
   useEffect(() => {
     setSelectedHosts(null);
@@ -294,9 +307,6 @@ export const useNodeLauncherHandlers = ({
   };
 
   const handleProtocolSelected = (protocol: Protocol) => {
-    setError(null);
-    setIsLaunchError(false);
-    setIsLaunching(false);
     setSelectedProtocol(protocol);
 
     Mixpanel.track('Launch Node - Protocol Selected', {
@@ -420,6 +430,13 @@ export const useNodeLauncherHandlers = ({
       },
       (error: string) => setError(error!),
     );
+  };
+
+  const resetError = () => {
+    resetFulfilReqs();
+    setError(null);
+    setIsLaunchError(false);
+    setIsLaunching(false);
   };
 
   return {
