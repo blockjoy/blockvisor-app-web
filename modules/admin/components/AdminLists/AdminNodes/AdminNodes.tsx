@@ -249,7 +249,7 @@ export const AdminNodes = () => {
         ) : (
           '-'
         ),
-        region: node.placement?.scheduler?.region,
+        region: node.regionName,
         createdAt: <DateTime date={node.createdAt!} />,
         cost: (
           <AdminListEditCost

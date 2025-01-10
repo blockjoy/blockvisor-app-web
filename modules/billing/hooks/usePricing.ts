@@ -20,11 +20,11 @@ export const usePricing = (): UsePricingHook => {
     try {
       setPriceLoadingState('loading');
 
-      const { region, versionKey } = params;
+      const { regionId, versionKey } = params;
       const isValidVersion =
         versionKey && Object.values(versionKey).every((val) => !!val);
 
-      if (!region || !isValidVersion) {
+      if (!regionId || !isValidVersion) {
         setPrice(null);
         return;
       }

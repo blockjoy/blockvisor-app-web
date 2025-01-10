@@ -1,6 +1,6 @@
 import { useRecoilState } from 'recoil';
 import {
-  HostServiceListResponse,
+  HostServiceListHostsResponse,
   HostSortField,
 } from '@modules/grpc/library/blockjoy/v1/host';
 import { hostClient } from '@modules/grpc';
@@ -14,7 +14,7 @@ export const useHostSelect = () => {
   const getHosts = async (orgId?: string) => {
     try {
       setIsLoading('loading');
-      const response: HostServiceListResponse = await hostClient.listHosts(
+      const response: HostServiceListHostsResponse = await hostClient.listHosts(
         orgId,
         undefined,
         {

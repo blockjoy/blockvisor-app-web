@@ -33,10 +33,10 @@ export const mapNodeToLaunchDetails = (node: Node, isSuperUser?: boolean) => {
     },
   ];
 
-  if (node?.placement?.scheduler?.region) {
+  if (node?.regionName) {
     details.splice(1, 0, {
       label: 'Region',
-      data: node.placement?.scheduler?.region ?? '-',
+      data: node.regionName ?? '-',
     });
   }
 

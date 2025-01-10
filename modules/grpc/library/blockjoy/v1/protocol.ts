@@ -1131,7 +1131,7 @@ export const ProtocolServiceGetPricingRequest = {
             break;
           }
 
-          message.region = reader.string();
+          message.regionId = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {

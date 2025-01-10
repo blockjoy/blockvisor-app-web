@@ -3,15 +3,14 @@ import {
   HostSearch,
   HostServiceClient,
   HostServiceDefinition,
-  HostServiceDeleteRequest,
-  HostServiceGetRequest,
-  HostServiceListRequest,
-  HostServiceListResponse,
-  HostServiceRegionsRequest,
-  HostServiceUpdateRequest,
+  HostServiceDeleteHostRequest,
+  HostServiceGetHostRequest,
+  HostServiceListHostsRequest,
+  HostServiceListHostsResponse,
+  HostServiceListRegionsRequest,
+  HostServiceUpdateHostRequest,
   HostSort,
   HostSortField,
-  // HostType,
   Region,
 } from '../library/blockjoy/v1/host';
 import {
@@ -52,8 +51,8 @@ class HostClient {
     filter?: UIHostFilterCriteria,
     pagination?: HostPagination,
     sort?: HostSort[],
-  ): Promise<HostServiceListResponse> {
-    const request: HostServiceListRequest = {
+  ): Promise<HostServiceListHostsResponse> {
+    const request: HostServiceListHostsRequest = {
       orgIds: orgId ? [orgId!] : [],
       bvVersions: [],
       offset: getPaginationOffset(pagination!),
@@ -81,7 +80,7 @@ class HostClient {
 
     try {
       const response = await callWithTokenRefresh(
-        this.client.list.bind(this.client),
+        this.client.listHosts.bind(this.client),
         request,
       );
       console.log('listHostsResponse', response);
@@ -92,11 +91,11 @@ class HostClient {
   }
 
   async getHost(hostId: string): Promise<Host> {
-    const request: HostServiceGetRequest = { hostId };
+    const request: HostServiceGetHostRequest = { hostId };
     console.log('getHostRequest', request);
     try {
       const response = await callWithTokenRefresh(
-        this.client.get.bind(this.client),
+        this.client.getHost.bind(this.client),
         request,
       );
       console.log('getHostResponse', response);
@@ -106,11 +105,11 @@ class HostClient {
     }
   }
 
-  async updateHost(request: HostServiceUpdateRequest): Promise<Host> {
+  async updateHost(request: HostServiceUpdateHostRequest): Promise<Host> {
     console.log('updateHostRequest', request);
     try {
       const response = await callWithTokenRefresh(
-        this.client.update.bind(this.client),
+        this.client.updateHost.bind(this.client),
         request,
       );
       console.log('updateHostResponse', response);
@@ -120,27 +119,17 @@ class HostClient {
     }
   }
 
-  async listRegions(
-    orgId: string,
-    imageId: string,
-    // blockchainId: string,
-    // nodeType: NodeType,
-    // version: string,
-  ): Promise<Region[]> {
-    const request: HostServiceRegionsRequest = {
-      // blockchainId,
-      // nodeType,
-      // version,
+  async listRegions(orgId: string, imageId: string): Promise<Region[]> {
+    const request: HostServiceListRegionsRequest = {
       orgId,
       imageId,
-      // hostType: HostType.HOST_TYPE_CLOUD,
     };
 
     console.log('listRegionsRequest', request);
 
     try {
       const response = await callWithTokenRefresh(
-        this.client.regions.bind(this.client),
+        this.client.listRegions.bind(this.client),
         request,
       );
       console.log('listRegionsResponse', response);
@@ -151,8 +140,11 @@ class HostClient {
   }
 
   async deleteHost(hostId: string): Promise<void> {
-    const request: HostServiceDeleteRequest = { hostId };
-    await callWithTokenRefresh(this.client.delete.bind(this.client), request);
+    const request: HostServiceDeleteHostRequest = { hostId };
+    await callWithTokenRefresh(
+      this.client.deleteHost.bind(this.client),
+      request,
+    );
   }
 }
 

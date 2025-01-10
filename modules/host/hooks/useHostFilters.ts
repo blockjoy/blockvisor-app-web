@@ -37,9 +37,6 @@ export const useHostFilters = (): UseHostFiltersHook => {
   const [tempFiltersTotal, setTempFiltersTotal] = useRecoilState(
     hostAtoms.filtersTempTotal,
   );
-  const filtersStatusAll = useRecoilValue(
-    hostSelectors.filtersStatusAll(tempFilters.hostStatus!),
-  );
 
   const { updateSettings } = useSettings();
 
@@ -126,13 +123,6 @@ export const useHostFilters = (): UseHostFiltersHook => {
   const isDirty = !isEqual(filters, tempFilters);
 
   const filtersAll: FilterItem[] = [
-    {
-      id: 'hostStatus',
-      name: 'Status',
-      disabled: false,
-      count: tempFilters.hostStatus?.length,
-      list: filtersStatusAll,
-    },
     {
       id: 'hostMemory',
       name: 'Memory',

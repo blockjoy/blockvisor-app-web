@@ -54,6 +54,8 @@ export interface Node {
   hostOrgId?: string | undefined;
   hostNetworkName: string;
   hostDisplayName?: string | undefined;
+  regionId: string;
+  regionName: string;
   protocolId: string;
   protocolName: string;
   protocolVersionId: string;
@@ -68,7 +70,6 @@ export interface Node {
   blockHeight?: number | undefined;
   blockAge?: number | undefined;
   note?: string | undefined;
-  placement: NodePlacement | undefined;
   nodeStatus: NodeStatus | undefined;
   jobs: NodeJob[];
   reports: NodeReport[];
@@ -298,7 +299,6 @@ function createBaseNode(): Node {
     blockHeight: undefined,
     blockAge: undefined,
     note: undefined,
-    placement: undefined,
     nodeStatus: undefined,
     jobs: [],
     reports: [],
@@ -374,7 +374,7 @@ export const Node = {
       writer.uint32(146).string(message.semanticVersion);
     }
     if (message.autoUpgrade === true) {
-      writer.uint32(152).bool(message.autoUpgrade);
+      writer.uint32(168).bool(message.autoUpgrade);
     }
     if (message.ipAddress !== '') {
       writer.uint32(162).string(message.ipAddress);
@@ -386,16 +386,16 @@ export const Node = {
       writer.uint32(178).string(message.dnsName);
     }
     if (message.p2pAddress !== undefined) {
-      writer.uint32(186).string(message.p2pAddress);
+      writer.uint32(202).string(message.p2pAddress);
     }
     if (message.dnsUrl !== undefined) {
-      writer.uint32(194).string(message.dnsUrl);
+      writer.uint32(210).string(message.dnsUrl);
     }
     if (message.blockHeight !== undefined) {
-      writer.uint32(200).uint64(message.blockHeight);
+      writer.uint32(216).uint64(message.blockHeight);
     }
     if (message.blockAge !== undefined) {
-      writer.uint32(208).uint64(message.blockAge);
+      writer.uint32(224).uint64(message.blockAge);
     }
     if (message.note !== undefined) {
       writer.uint32(218).string(message.note);
@@ -407,19 +407,19 @@ export const Node = {
       ).ldelim();
     }
     if (message.nodeStatus !== undefined) {
-      NodeStatus.encode(message.nodeStatus, writer.uint32(234).fork()).ldelim();
+      NodeStatus.encode(message.nodeStatus, writer.uint32(242).fork()).ldelim();
     }
     for (const v of message.jobs) {
-      NodeJob.encode(v!, writer.uint32(242).fork()).ldelim();
+      NodeJob.encode(v!, writer.uint32(250).fork()).ldelim();
     }
     for (const v of message.reports) {
-      NodeReport.encode(v!, writer.uint32(250).fork()).ldelim();
+      NodeReport.encode(v!, writer.uint32(258).fork()).ldelim();
     }
     if (message.tags !== undefined) {
-      Tags.encode(message.tags, writer.uint32(258).fork()).ldelim();
+      Tags.encode(message.tags, writer.uint32(266).fork()).ldelim();
     }
     if (message.createdBy !== undefined) {
-      Resource.encode(message.createdBy, writer.uint32(266).fork()).ldelim();
+      Resource.encode(message.createdBy, writer.uint32(274).fork()).ldelim();
     }
     if (message.createdAt !== undefined) {
       Timestamp.encode(
@@ -434,7 +434,7 @@ export const Node = {
       ).ldelim();
     }
     if (message.cost !== undefined) {
-      BillingAmount.encode(message.cost, writer.uint32(290).fork()).ldelim();
+      BillingAmount.encode(message.cost, writer.uint32(298).fork()).ldelim();
     }
     return writer;
   },
@@ -543,21 +543,21 @@ export const Node = {
             break;
           }
 
-          message.protocolId = reader.string();
+          message.regionId = reader.string();
           continue;
         case 15:
           if (tag !== 122) {
             break;
           }
 
-          message.protocolName = reader.string();
+          message.regionName = reader.string();
           continue;
         case 16:
           if (tag !== 130) {
             break;
           }
 
-          message.protocolVersionId = reader.string();
+          message.protocolId = reader.string();
           continue;
         case 17:
           if (tag !== 138) {
@@ -574,112 +574,115 @@ export const Node = {
             break;
           }
 
-          message.semanticVersion = reader.string();
+          message.protocolVersionId = reader.string();
           continue;
         case 19:
-          if (tag !== 152) {
+          if (tag !== 154) {
             break;
           }
 
-          message.autoUpgrade = reader.bool();
+          message.versionKey = ProtocolVersionKey.decode(
+            reader,
+            reader.uint32(),
+          );
           continue;
         case 20:
           if (tag !== 162) {
             break;
           }
 
-          message.ipAddress = reader.string();
+          message.semanticVersion = reader.string();
           continue;
         case 21:
-          if (tag !== 170) {
+          if (tag !== 168) {
             break;
           }
 
-          message.ipGateway = reader.string();
+          message.autoUpgrade = reader.bool();
           continue;
         case 22:
           if (tag !== 178) {
             break;
           }
 
-          message.dnsName = reader.string();
+          message.ipAddress = reader.string();
           continue;
         case 23:
           if (tag !== 186) {
             break;
           }
 
-          message.p2pAddress = reader.string();
+          message.ipGateway = reader.string();
           continue;
         case 24:
           if (tag !== 194) {
             break;
           }
 
-          message.dnsUrl = reader.string();
+          message.dnsName = reader.string();
           continue;
         case 25:
-          if (tag !== 200) {
+          if (tag !== 202) {
+            break;
+          }
+
+          message.p2pAddress = reader.string();
+          continue;
+        case 26:
+          if (tag !== 210) {
+            break;
+          }
+
+          message.dnsUrl = reader.string();
+          continue;
+        case 27:
+          if (tag !== 216) {
             break;
           }
 
           message.blockHeight = longToNumber(reader.uint64() as Long);
           continue;
-        case 26:
-          if (tag !== 208) {
+        case 28:
+          if (tag !== 224) {
             break;
           }
 
           message.blockAge = longToNumber(reader.uint64() as Long);
-          continue;
-        case 27:
-          if (tag !== 218) {
-            break;
-          }
-
-          message.note = reader.string();
-          continue;
-        case 28:
-          if (tag !== 226) {
-            break;
-          }
-
-          message.placement = NodePlacement.decode(reader, reader.uint32());
           continue;
         case 29:
           if (tag !== 234) {
             break;
           }
 
-          message.nodeStatus = NodeStatus.decode(reader, reader.uint32());
+          message.note = reader.string();
           continue;
         case 30:
           if (tag !== 242) {
             break;
           }
 
-          message.jobs.push(NodeJob.decode(reader, reader.uint32()));
+          message.nodeStatus = NodeStatus.decode(reader, reader.uint32());
           continue;
         case 31:
           if (tag !== 250) {
             break;
           }
 
-          message.reports.push(NodeReport.decode(reader, reader.uint32()));
+          message.jobs.push(NodeJob.decode(reader, reader.uint32()));
           continue;
         case 32:
           if (tag !== 258) {
             break;
           }
 
-          message.tags = Tags.decode(reader, reader.uint32());
+          message.reports.push(NodeReport.decode(reader, reader.uint32()));
           continue;
         case 33:
           if (tag !== 266) {
             break;
           }
 
-          message.createdBy = Resource.decode(reader, reader.uint32());
+          message.tags = Tags.decode(reader, reader.uint32());
           continue;
         case 34:
           if (tag !== 274) {
@@ -701,6 +704,15 @@ export const Node = {
           continue;
         case 36:
           if (tag !== 290) {
+            break;
+          }
+
+          message.updatedAt = fromTimestamp(
+            Timestamp.decode(reader, reader.uint32()),
+          );
+          continue;
+        case 37:
+          if (tag !== 298) {
             break;
           }
 
@@ -788,7 +800,7 @@ function createBaseNodeServiceCreateRequest(): NodeServiceCreateRequest {
     orgId: '',
     imageId: '',
     oldNodeId: undefined,
-    placement: undefined,
+    launcher: undefined,
     newValues: [],
     addRules: [],
     tags: undefined,
@@ -864,7 +876,7 @@ export const NodeServiceCreateRequest = {
             break;
           }
 
-          message.placement = NodePlacement.decode(reader, reader.uint32());
+          message.launcher = NodeLauncher.decode(reader, reader.uint32());
           continue;
         case 5:
           if (tag !== 42) {

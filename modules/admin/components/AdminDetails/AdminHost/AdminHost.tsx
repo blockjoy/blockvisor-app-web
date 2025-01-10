@@ -6,20 +6,11 @@ import { useRouter } from 'next/router';
 import { AdminDetail } from '../AdminDetail/AdminDetail';
 import {
   Host,
-  HostServiceUpdateRequest,
+  HostServiceUpdateHostRequest,
 } from '@modules/grpc/library/blockjoy/v1/host';
 import { formatters } from '@shared/utils/formatters';
-import {
-  createAdminUpdateRequest,
-  createDropdownValuesFromEnum,
-} from '@modules/admin/utils';
-import {
-  HostIps,
-  HostIpStatus,
-  HostManagedBy,
-  NextLink,
-  TagList,
-} from '@shared/components';
+import { createAdminUpdateRequest } from '@modules/admin/utils';
+import { HostIps, HostIpStatus, NextLink, TagList } from '@shared/components';
 import { Currency } from '../../AdminFinancesByHost/Currency/Currency';
 
 export const AdminHost = () => {
@@ -35,8 +26,10 @@ export const AdminHost = () => {
     onSuccess: VoidFunction,
     onError: VoidFunction,
   ) => {
-    const defaultRequest: HostServiceUpdateRequest = { hostId: id as string };
-    const request: HostServiceUpdateRequest = createAdminUpdateRequest(
+    const defaultRequest: HostServiceUpdateHostRequest = {
+      hostId: id as string,
+    };
+    const request: HostServiceUpdateHostRequest = createAdminUpdateRequest(
       defaultRequest,
       properties,
     );

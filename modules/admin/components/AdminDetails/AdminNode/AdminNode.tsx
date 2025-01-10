@@ -256,7 +256,7 @@ export const AdminNode = () => {
       {
         id: 'region',
         label: 'Region',
-        data: <p>{node.placement?.scheduler?.region || '-'}</p>,
+        data: <p>{node.regionName || '-'}</p>,
       },
       {
         id: 'createdByName',

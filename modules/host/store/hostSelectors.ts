@@ -1,10 +1,6 @@
 import { selector, selectorFamily } from 'recoil';
 import isEqual from 'lodash/isEqual';
-import {
-  Host,
-  HostSort,
-  HostStatus,
-} from '@modules/grpc/library/blockjoy/v1/host';
+import { Host, HostSort } from '@modules/grpc/library/blockjoy/v1/host';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { hostClient, UIHostFilterCriteria } from '@modules/grpc';
 import { authAtoms, authSelectors } from '@modules/auth';
@@ -184,8 +180,6 @@ export const hostSelectors = {
   isFiltersEmpty,
   hostSort,
   queryParams,
-
-  filtersStatusAll,
 
   hostById,
 
