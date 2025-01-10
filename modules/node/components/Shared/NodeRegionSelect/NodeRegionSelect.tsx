@@ -37,8 +37,10 @@ export const NodeRegionSelect = ({
   );
 
   useEffect(() => {
-    const activeRegion = regions?.[0] ?? null;
-    onLoad(activeRegion);
+    if (regions?.length) {
+      const activeRegion = regions?.[0] ?? null;
+      onLoad(activeRegion);
+    }
   }, [regions]);
 
   const mappedRegions = regions.map((regionInfo) => ({
