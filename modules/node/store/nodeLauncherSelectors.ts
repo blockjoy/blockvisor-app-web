@@ -31,10 +31,10 @@ const isNodeValid = selector<boolean>({
   key: 'nodeLauncher.isNodeValid',
   get: ({ get }) => {
     const selectedHosts = get(nodeLauncherAtoms.selectedHosts);
-    const selectedRegion = get(nodeLauncherAtoms.selectedRegion);
+    const selectedRegions = get(nodeLauncherAtoms.selectedRegions);
     const selectedProtocol = get(nodeLauncherAtoms.selectedProtocol);
 
-    return Boolean(selectedProtocol && (selectedHosts || selectedRegion));
+    return Boolean(selectedProtocol && (selectedHosts || selectedRegions));
   },
 });
 
@@ -61,11 +61,12 @@ const totalNodesToLaunch = selector<number>({
   key: 'nodeLauncher.totalNodesToLaunch',
   get: ({ get }) => {
     const selectedHosts = get(nodeLauncherAtoms.selectedHosts);
+    const selectedRegions = get(nodeLauncherAtoms.selectedRegions);
+    const selectedList = selectedHosts || selectedRegions;
 
-    return selectedHosts?.reduce(
-      (partialSum, host) => partialSum + host.nodesToLaunch,
-      0,
-    )!;
+    return selectedList
+      ?.map((n) => n.nodesToLaunch)
+      ?.reduce((partialSum, nodesToLaunch) => partialSum + nodesToLaunch, 0)!;
   },
 });
 
@@ -104,7 +105,7 @@ const nodeLauncherStatus = selectorFamily<
     (hasPermissionsToCreate) =>
     ({ get }) => {
       const selectedHosts = get(nodeLauncherAtoms.selectedHosts);
-      const selectedRegion = get(nodeLauncherAtoms.selectedRegion);
+      const selectedRegions = get(nodeLauncherAtoms.selectedRegions);
       const selectedProtocol = get(nodeLauncherAtoms.selectedProtocol);
       const isConfigValidVal = get(isConfigValid);
       const error = get(nodeLauncherAtoms.error);
@@ -115,7 +116,7 @@ const nodeLauncherStatus = selectorFamily<
       const disablingConditions: Record<string, boolean> = {
         NoPermission: !hasPermissionsToCreate,
         NoProtocol: !selectedProtocol,
-        NoRegion: !(selectedHosts?.length || selectedRegion),
+        NoRegion: !(selectedHosts?.length || selectedRegions?.length),
         InvalidConfig: !isConfigValidVal,
         ErrorExists: Boolean(error),
         NoPrice: !price && !billingExempt,

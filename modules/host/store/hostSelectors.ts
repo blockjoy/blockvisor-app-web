@@ -1,10 +1,6 @@
 import { selector, selectorFamily } from 'recoil';
 import isEqual from 'lodash/isEqual';
-import {
-  Host,
-  HostSort,
-  HostStatus,
-} from '@modules/grpc/library/blockjoy/v1/host';
+import { Host, HostSort } from '@modules/grpc/library/blockjoy/v1/host';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { hostClient, UIHostFilterCriteria } from '@modules/grpc';
 import { authAtoms, authSelectors } from '@modules/auth';
@@ -129,45 +125,12 @@ const hostListSorted = selector<Host[]>({
   },
 });
 
-const filtersStatusAll = selectorFamily<
-  (HostStatus & FilterListItem)[],
-  string[]
->({
-  key: 'host.filters.hostStatus.all',
-  get: (tempFilters: string[]) => () => {
-    const allStatuses = sort(
-      nodeStatusList
-        .filter((item) => item.id !== 0 && !item.type)
-        .map((item) => ({
-          ...item,
-          name: item.name?.toLowerCase(),
-          id: item.id?.toString(),
-        })),
-      {
-        field: 'name',
-        order: SortOrder.SORT_ORDER_ASCENDING,
-      },
-    );
-
-    if (!allStatuses.length) return [];
-
-    const allFilters = allStatuses.map((status) => ({
-      ...status,
-      isChecked: tempFilters?.some((filter) => status.id === filter),
-    }));
-
-    return allFilters;
-  },
-});
-
 export const hostSelectors = {
   settings,
   filters,
   isFiltersEmpty,
   hostSort,
   queryParams,
-
-  filtersStatusAll,
 
   hostById,
 

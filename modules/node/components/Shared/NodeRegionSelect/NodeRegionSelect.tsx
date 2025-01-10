@@ -16,7 +16,7 @@ export const NodeRegionSelect = ({
 }: NodeRegionSelectProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const version = useRecoilValue(nodeLauncherAtoms.selectedVersion);
-  const region = useRecoilValue(nodeLauncherAtoms.selectedRegion);
+  const selectedRegions = useRecoilValue(nodeLauncherAtoms.selectedRegions);
   const regions = useRecoilValue(nodeAtoms.regions);
   const regionsLoadingState = useRecoilValue(nodeAtoms.regionsLoadingState);
   const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
@@ -24,8 +24,10 @@ export const NodeRegionSelect = ({
   const handleOpen = (open: boolean = true) => setIsOpen(open);
 
   useEffect(() => {
-    const activeRegion = regions?.[0] ?? null;
-    onLoad(activeRegion);
+    if (regions?.length) {
+      const activeRegion = regions?.[0] ?? null;
+      onLoad(activeRegion);
+    }
   }, [regions]);
 
   const error = !version || !regions.length ? 'No Hosts Available' : null;
@@ -35,10 +37,10 @@ export const NodeRegionSelect = ({
       idKey="regionId"
       items={regions}
       handleSelected={onChange}
-      selectedItem={region}
+      selectedItem={selectedRegions?.[0].region!}
       isLoading={regionsLoadingState !== 'finished'}
       disabled={!!error}
-      {...(!region
+      {...(!selectedRegions?.[0]
         ? isSuperUser
           ? error && { error }
           : { defaultText: <>Auto select</> }

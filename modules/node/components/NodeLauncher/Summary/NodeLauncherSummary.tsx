@@ -20,6 +20,8 @@ import {
   NodeLauncherPanel,
   NodeLauncherSummaryDetails,
   NodeLauncherNotification,
+  NodeRegionSelectMultiple,
+  NodeLauncherRegion,
 } from '@modules/node';
 import { authSelectors } from '@modules/auth';
 import { billingAtoms } from '@modules/billing';
@@ -34,7 +36,10 @@ type NodeLauncherSummaryProps = {
     hosts: NodeLauncherHost[] | null,
     nodesToLaunch?: number,
   ) => void;
-  onRegionChanged: (region: Region | null) => void;
+  onRegionsChanged: (
+    regions: NodeLauncherRegion[] | null,
+    nodesToLaunch?: number,
+  ) => void;
   onRegionsLoaded: (region: Region | null) => void;
 };
 
@@ -42,7 +47,7 @@ export const NodeLauncherSummary = ({
   hasPermissionsToCreate,
   onCreateNodeClicked,
   onHostsChanged,
-  onRegionChanged,
+  onRegionsChanged,
   onRegionsLoaded,
 }: NodeLauncherSummaryProps) => {
   const [isLaunching, setIsLaunching] = useRecoilState(
@@ -54,6 +59,7 @@ export const NodeLauncherSummary = ({
   );
   const error = useRecoilValue(nodeLauncherAtoms.error);
   const selectedHosts = useRecoilValue(nodeLauncherAtoms.selectedHosts);
+  const selectedRegions = useRecoilValue(nodeLauncherAtoms.selectedRegions);
   const totalNodesToLaunch = useRecoilValue(
     nodeLauncherSelectors.totalNodesToLaunch,
   );
@@ -116,6 +122,15 @@ export const NodeLauncherSummary = ({
     ]);
   };
 
+  const handleRegionChanged = (region: Region | null) => {
+    onRegionsChanged([
+      {
+        nodesToLaunch: 1,
+        region: region!,
+      },
+    ]);
+  };
+
   return (
     <>
       <NodeLauncherPanel additionalStyles={styles.nodeLauncherPanel}>
@@ -146,11 +161,25 @@ export const NodeLauncherSummary = ({
 
           {!selectedHosts && (
             <>
-              <FormLabel>Region</FormLabel>
-              <NodeRegionSelect
-                onChange={onRegionChanged}
-                onLoad={onRegionsLoaded}
-              />
+              <FormLabel>
+                <span>Region{isSuperUser ? 's' : ''}</span>
+                {isSuperUser && selectedRegions !== null ? (
+                  <a
+                    onClick={() => onRegionsChanged(null)}
+                    css={styles.autoSelect}
+                  >
+                    Auto select
+                  </a>
+                ) : null}
+              </FormLabel>
+              {isSuperUser ? (
+                <NodeRegionSelectMultiple onChange={onRegionsChanged} />
+              ) : (
+                <NodeRegionSelect
+                  onChange={handleRegionChanged}
+                  onLoad={onRegionsLoaded}
+                />
+              )}
             </>
           )}
 

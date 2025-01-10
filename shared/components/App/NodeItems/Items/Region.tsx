@@ -1,7 +1,7 @@
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 
-type Props = Partial<Pick<Node, 'placement'>>;
+type Props = Partial<Pick<Node, 'regionName'>>;
 
-export const Region = ({ placement }: Props) => (
-  <span>{placement?.scheduler?.region || '-'}</span>
+export const Region = ({ regionName }: Props) => (
+  <span>{regionName || '-'}</span>
 );

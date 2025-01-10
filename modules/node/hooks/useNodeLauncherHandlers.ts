@@ -22,6 +22,8 @@ import {
   NodeLauncherState,
   NodePropertyGroup,
   sortVersions,
+  NodeLauncherRegion,
+  nodeLauncherSelectors,
 } from '@modules/node';
 import { organizationSelectors } from '@modules/organization';
 import { ROUTES, useNavigate } from '@shared/index';
@@ -38,7 +40,7 @@ type IUseNodeLauncherHandlersParams = {
 
 interface IUseNodeLauncherHandlersHook {
   handleHostsChanged: (hosts: NodeLauncherHost[] | null) => void;
-  handleRegionChanged: (region: Region | null) => void;
+  handleRegionsChanged: (regions: NodeLauncherRegion[] | null) => void;
   handleRegionsLoaded: (region: Region | null) => void;
   handleProtocolSelected: (protocol: Protocol) => void;
   handleNodePropertyChanged: <K extends keyof NodeLauncherState>(
@@ -75,6 +77,10 @@ export const useNodeLauncherHandlers = ({
 
   const allHosts = useRecoilValue(hostAtoms.allHosts);
 
+  const totalNodesToLaunch = useRecoilValue(
+    nodeLauncherSelectors.totalNodesToLaunch,
+  );
+
   const [selectedProtocol, setSelectedProtocol] = useRecoilState(
     nodeLauncherAtoms.selectedProtocol,
   );
@@ -96,8 +102,8 @@ export const useNodeLauncherHandlers = ({
   const resetSelectedVersion = useResetRecoilState(
     nodeLauncherAtoms.selectedVersion,
   );
-  const [selectedRegion, setSelectedRegion] = useRecoilState(
-    nodeLauncherAtoms.selectedRegion,
+  const [selectedRegions, setSelectedRegions] = useRecoilState(
+    nodeLauncherAtoms.selectedRegions,
   );
 
   const [selectedImage, setSelectedImage] = useRecoilState(
@@ -119,7 +125,7 @@ export const useNodeLauncherHandlers = ({
     if (error) resetError();
   }, [
     selectedProtocol,
-    selectedRegion,
+    selectedRegions,
     selectedHosts,
     selectedVariant,
     selectedVersion,
@@ -246,13 +252,13 @@ export const useNodeLauncherHandlers = ({
   }, [selectedProtocol, defaultOrganization]);
 
   useEffect(() => {
-    if (selectedVersion && selectedRegion && defaultOrganization)
+    if (selectedVersion && selectedRegions && defaultOrganization)
       getPrice({
-        region: selectedRegion?.name!,
+        regionId: isSuperUser ? '' : selectedRegions?.[0]?.region.regionId!,
         versionKey: selectedVersion.versionKey,
         orgId: defaultOrganization?.orgId,
       });
-  }, [selectedProtocol, selectedVersion, selectedRegion]);
+  }, [selectedProtocol, selectedVersion, selectedRegions]);
 
   useEffect(() => {
     if (fulfilReqs) handleCreateNodeClicked();
@@ -294,16 +300,22 @@ export const useNodeLauncherHandlers = ({
   const handleHostsChanged = (hosts: NodeLauncherHost[] | null) => {
     Mixpanel.track('Launch Node - Host Changed');
     setSelectedHosts(hosts);
-    setSelectedRegion(null);
+    setSelectedRegions(null);
   };
 
-  const handleRegionChanged = (region: Region | null) => {
+  const handleRegionsChanged = (regions: NodeLauncherRegion[] | null) => {
     Mixpanel.track('Launch Node - Region Changed');
-    setSelectedRegion(region);
+    setSelectedRegions(regions);
   };
 
   const handleRegionsLoaded = (region: Region | null) => {
-    setSelectedRegion(region);
+    console.log('handleRegionsLoaded', region);
+    setSelectedRegions([
+      {
+        nodesToLaunch: 1,
+        region: region!,
+      },
+    ]);
   };
 
   const handleProtocolSelected = (protocol: Protocol) => {
@@ -378,9 +390,7 @@ export const useNodeLauncherHandlers = ({
   const handleCreateNodeClicked = async () => {
     setIsLaunching(true);
 
-    const isSingleNode =
-      !selectedHosts ||
-      (selectedHosts?.length === 1 && selectedHosts[0].nodesToLaunch === 1);
+    const isSingleNode = totalNodesToLaunch > 1;
 
     const params: NodeServiceCreateRequest = {
       orgId: defaultOrganization!.orgId,
@@ -389,16 +399,16 @@ export const useNodeLauncherHandlers = ({
         key: property.key,
         value: property.value,
       }))!,
-      placement: {},
+      launcher: {},
       addRules: nodeLauncherState.firewall,
     };
 
     console.log('createNodeParams', params);
 
     if (selectedHosts?.length!) {
-      params.placement = {
-        multiple: {
-          nodeCounts: selectedHosts.map(
+      params.launcher = {
+        byHost: {
+          hostCounts: selectedHosts.map(
             ({ host: { hostId }, nodesToLaunch: nodeCount }) => ({
               hostId,
               nodeCount,
@@ -407,10 +417,15 @@ export const useNodeLauncherHandlers = ({
         },
       };
     } else {
-      params.placement = {
-        scheduler: {
-          region: selectedRegion?.name!,
-          resource: ResourceAffinity.RESOURCE_AFFINITY_LEAST_RESOURCES,
+      params.launcher = {
+        byRegion: {
+          regionCounts: selectedRegions?.map(
+            ({ region, nodesToLaunch: nodeCount }) => ({
+              regionId: region.regionId,
+              nodeCount,
+              resource: ResourceAffinity.RESOURCE_AFFINITY_LEAST_RESOURCES,
+            }),
+          )!,
         },
       };
     }
@@ -441,7 +456,7 @@ export const useNodeLauncherHandlers = ({
 
   return {
     handleHostsChanged,
-    handleRegionChanged,
+    handleRegionsChanged,
     handleRegionsLoaded,
     handleProtocolSelected,
     handleNodePropertyChanged,
