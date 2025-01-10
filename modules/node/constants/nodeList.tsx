@@ -174,11 +174,13 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
     actions: ALL_ACTIONS,
   },
   {
-    key: 'placement',
+    key: 'regionName',
     label: 'Region',
     width: '160px',
     isVisible: true,
-    component: (node: Node) => <NodeItems.Region placement={node.placement} />,
+    component: (node: Node) => (
+      <NodeItems.Region regionName={node.regionName} />
+    ),
     actions: LAYOUT_ACTIONS,
   },
   {

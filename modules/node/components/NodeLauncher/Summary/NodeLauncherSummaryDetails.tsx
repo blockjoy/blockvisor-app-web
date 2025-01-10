@@ -21,7 +21,7 @@ export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
   const error = useRecoilValue(nodeLauncherAtoms.error);
   const selectedHosts = useRecoilValue(nodeLauncherAtoms.selectedHosts);
   const allHosts = useRecoilValue(hostAtoms.allHosts);
-  const selectedRegion = useRecoilValue(nodeLauncherAtoms.selectedRegion);
+  const selectedRegions = useRecoilValue(nodeLauncherAtoms.selectedRegions);
   const selectedVersion = useRecoilValue(nodeLauncherAtoms.selectedVersion);
   const selectedProtocol = useRecoilValue(nodeLauncherAtoms.selectedProtocol);
 
@@ -41,7 +41,7 @@ export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
             </span>
           </div>
         </li>
-        {isSuperUser && selectedHosts && (
+        {isSuperUser && (selectedHosts || selectedRegions) && (
           <li>
             <span css={styles.summaryIcon}>
               <IconCheckCircle />
@@ -93,7 +93,7 @@ export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
                 {!selectedHosts && allHosts?.length ? (
                   <div>Host or Region</div>
                 ) : null}
-                {!selectedRegion && !allHosts?.length ? (
+                {!selectedRegions && !allHosts?.length ? (
                   <div>Region</div>
                 ) : null}
                 {!hasSummary ? <div>Blockchain</div> : null}

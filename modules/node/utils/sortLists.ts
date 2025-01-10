@@ -1,7 +1,7 @@
 // import { NetworkConfig } from '@modules/grpc/library/blockjoy/common/v1/blockchain';
+import { HostIpAddress } from '@modules/grpc/library/blockjoy/common/v1/host';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { ProtocolVersion } from '@modules/grpc/library/blockjoy/v1/protocol';
-import { HostIpAddress } from '@modules/grpc/library/blockjoy/v1/host';
 import { sort } from '@shared/components';
 
 export const sortVersions = (list: ProtocolVersion[] | undefined) => {

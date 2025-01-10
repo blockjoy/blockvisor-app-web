@@ -107,8 +107,8 @@ export interface ProtocolServiceGetPricingRequest {
   orgId?:
     | string
     | undefined;
-  /** The region to request an instance for. */
-  region: string;
+  /** The region id to request an instance for. */
+  regionId: string;
 }
 
 export interface ProtocolServiceGetPricingResponse {
@@ -971,7 +971,7 @@ export const ProtocolServiceGetLatestResponse = {
 };
 
 function createBaseProtocolServiceGetPricingRequest(): ProtocolServiceGetPricingRequest {
-  return { versionKey: undefined, orgId: undefined, region: "" };
+  return { versionKey: undefined, orgId: undefined, regionId: "" };
 }
 
 export const ProtocolServiceGetPricingRequest = {
@@ -982,8 +982,8 @@ export const ProtocolServiceGetPricingRequest = {
     if (message.orgId !== undefined) {
       writer.uint32(18).string(message.orgId);
     }
-    if (message.region !== "") {
-      writer.uint32(26).string(message.region);
+    if (message.regionId !== "") {
+      writer.uint32(26).string(message.regionId);
     }
     return writer;
   },
@@ -1014,7 +1014,7 @@ export const ProtocolServiceGetPricingRequest = {
             break;
           }
 
-          message.region = reader.string();
+          message.regionId = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -1035,7 +1035,7 @@ export const ProtocolServiceGetPricingRequest = {
       ? ProtocolVersionKey.fromPartial(object.versionKey)
       : undefined;
     message.orgId = object.orgId ?? undefined;
-    message.region = object.region ?? "";
+    message.regionId = object.regionId ?? "";
     return message;
   },
 };

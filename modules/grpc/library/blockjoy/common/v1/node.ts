@@ -96,39 +96,38 @@ export interface ProtocolStatus {
   health: NodeHealth;
 }
 
-/** Determines the placement of a new node. */
-export interface NodePlacement {
-  /** Find a suitable host. */
-  scheduler?:
-    | NodeScheduler
+/** Determines how and where nodes are created. */
+export interface NodeLauncher {
+  /** Create nodes on these hosts. */
+  byHost?:
+    | ByHost
     | undefined;
-  /** Create a node on this host. */
-  hostId?:
-    | string
-    | undefined;
-  /** Create multiple nodes on these hosts. */
-  multiple?: MultipleNodes | undefined;
+  /** Create nodes in these regions. */
+  byRegion?: ByRegion | undefined;
 }
 
-/** Controls how a suitable host is found for a node. */
-export interface NodeScheduler {
-  /** Affinity to scheduling on the most or least heavily utilized hosts. */
-  resource: ResourceAffinity;
-  /** Affinity to similar nodes on a host. This takes precedence over `resource`. */
-  similarity?:
-    | SimilarNodeAffinity
-    | undefined;
-  /** The region for the node. This takes precedence over `similarity`. */
-  region?: string | undefined;
+/** Create nodes across multiple hosts. */
+export interface ByHost {
+  hostCounts: HostCount[];
 }
 
-export interface MultipleNodes {
-  nodeCounts: NodeCount[];
-}
-
-export interface NodeCount {
+/** Create nodes on this host. */
+export interface HostCount {
   hostId: string;
   nodeCount: number;
+}
+
+/** Create nodes across multiple regions. */
+export interface ByRegion {
+  regionCounts: RegionCount[];
+}
+
+/** Create nodes in this region. */
+export interface RegionCount {
+  regionId: string;
+  nodeCount: number;
+  resource?: ResourceAffinity | undefined;
+  similarity?: SimilarNodeAffinity | undefined;
 }
 
 /** A job is an auxiliary process for a running node. */
@@ -306,28 +305,25 @@ export const ProtocolStatus = {
   },
 };
 
-function createBaseNodePlacement(): NodePlacement {
-  return { scheduler: undefined, hostId: undefined, multiple: undefined };
+function createBaseNodeLauncher(): NodeLauncher {
+  return { byHost: undefined, byRegion: undefined };
 }
 
-export const NodePlacement = {
-  encode(message: NodePlacement, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.scheduler !== undefined) {
-      NodeScheduler.encode(message.scheduler, writer.uint32(10).fork()).ldelim();
+export const NodeLauncher = {
+  encode(message: NodeLauncher, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.byHost !== undefined) {
+      ByHost.encode(message.byHost, writer.uint32(10).fork()).ldelim();
     }
-    if (message.hostId !== undefined) {
-      writer.uint32(18).string(message.hostId);
-    }
-    if (message.multiple !== undefined) {
-      MultipleNodes.encode(message.multiple, writer.uint32(26).fork()).ldelim();
+    if (message.byRegion !== undefined) {
+      ByRegion.encode(message.byRegion, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): NodePlacement {
+  decode(input: _m0.Reader | Uint8Array, length?: number): NodeLauncher {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseNodePlacement();
+    const message = createBaseNodeLauncher();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -336,21 +332,14 @@ export const NodePlacement = {
             break;
           }
 
-          message.scheduler = NodeScheduler.decode(reader, reader.uint32());
+          message.byHost = ByHost.decode(reader, reader.uint32());
           continue;
         case 2:
           if (tag !== 18) {
             break;
           }
 
-          message.hostId = reader.string();
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.multiple = MultipleNodes.decode(reader, reader.uint32());
+          message.byRegion = ByRegion.decode(reader, reader.uint32());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -361,107 +350,38 @@ export const NodePlacement = {
     return message;
   },
 
-  create(base?: DeepPartial<NodePlacement>): NodePlacement {
-    return NodePlacement.fromPartial(base ?? {});
+  create(base?: DeepPartial<NodeLauncher>): NodeLauncher {
+    return NodeLauncher.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<NodePlacement>): NodePlacement {
-    const message = createBaseNodePlacement();
-    message.scheduler = (object.scheduler !== undefined && object.scheduler !== null)
-      ? NodeScheduler.fromPartial(object.scheduler)
+  fromPartial(object: DeepPartial<NodeLauncher>): NodeLauncher {
+    const message = createBaseNodeLauncher();
+    message.byHost = (object.byHost !== undefined && object.byHost !== null)
+      ? ByHost.fromPartial(object.byHost)
       : undefined;
-    message.hostId = object.hostId ?? undefined;
-    message.multiple = (object.multiple !== undefined && object.multiple !== null)
-      ? MultipleNodes.fromPartial(object.multiple)
+    message.byRegion = (object.byRegion !== undefined && object.byRegion !== null)
+      ? ByRegion.fromPartial(object.byRegion)
       : undefined;
     return message;
   },
 };
 
-function createBaseNodeScheduler(): NodeScheduler {
-  return { resource: 0, similarity: undefined, region: undefined };
+function createBaseByHost(): ByHost {
+  return { hostCounts: [] };
 }
 
-export const NodeScheduler = {
-  encode(message: NodeScheduler, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.resource !== 0) {
-      writer.uint32(8).int32(message.resource);
-    }
-    if (message.similarity !== undefined) {
-      writer.uint32(16).int32(message.similarity);
-    }
-    if (message.region !== undefined) {
-      writer.uint32(26).string(message.region);
+export const ByHost = {
+  encode(message: ByHost, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.hostCounts) {
+      HostCount.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): NodeScheduler {
+  decode(input: _m0.Reader | Uint8Array, length?: number): ByHost {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseNodeScheduler();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 8) {
-            break;
-          }
-
-          message.resource = reader.int32() as any;
-          continue;
-        case 2:
-          if (tag !== 16) {
-            break;
-          }
-
-          message.similarity = reader.int32() as any;
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.region = reader.string();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<NodeScheduler>): NodeScheduler {
-    return NodeScheduler.fromPartial(base ?? {});
-  },
-
-  fromPartial(object: DeepPartial<NodeScheduler>): NodeScheduler {
-    const message = createBaseNodeScheduler();
-    message.resource = object.resource ?? 0;
-    message.similarity = object.similarity ?? undefined;
-    message.region = object.region ?? undefined;
-    return message;
-  },
-};
-
-function createBaseMultipleNodes(): MultipleNodes {
-  return { nodeCounts: [] };
-}
-
-export const MultipleNodes = {
-  encode(message: MultipleNodes, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.nodeCounts) {
-      NodeCount.encode(v!, writer.uint32(10).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): MultipleNodes {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMultipleNodes();
+    const message = createBaseByHost();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -470,7 +390,7 @@ export const MultipleNodes = {
             break;
           }
 
-          message.nodeCounts.push(NodeCount.decode(reader, reader.uint32()));
+          message.hostCounts.push(HostCount.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -481,23 +401,23 @@ export const MultipleNodes = {
     return message;
   },
 
-  create(base?: DeepPartial<MultipleNodes>): MultipleNodes {
-    return MultipleNodes.fromPartial(base ?? {});
+  create(base?: DeepPartial<ByHost>): ByHost {
+    return ByHost.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<MultipleNodes>): MultipleNodes {
-    const message = createBaseMultipleNodes();
-    message.nodeCounts = object.nodeCounts?.map((e) => NodeCount.fromPartial(e)) || [];
+  fromPartial(object: DeepPartial<ByHost>): ByHost {
+    const message = createBaseByHost();
+    message.hostCounts = object.hostCounts?.map((e) => HostCount.fromPartial(e)) || [];
     return message;
   },
 };
 
-function createBaseNodeCount(): NodeCount {
+function createBaseHostCount(): HostCount {
   return { hostId: "", nodeCount: 0 };
 }
 
-export const NodeCount = {
-  encode(message: NodeCount, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const HostCount = {
+  encode(message: HostCount, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.hostId !== "") {
       writer.uint32(10).string(message.hostId);
     }
@@ -507,10 +427,10 @@ export const NodeCount = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): NodeCount {
+  decode(input: _m0.Reader | Uint8Array, length?: number): HostCount {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseNodeCount();
+    const message = createBaseHostCount();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -537,14 +457,139 @@ export const NodeCount = {
     return message;
   },
 
-  create(base?: DeepPartial<NodeCount>): NodeCount {
-    return NodeCount.fromPartial(base ?? {});
+  create(base?: DeepPartial<HostCount>): HostCount {
+    return HostCount.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<NodeCount>): NodeCount {
-    const message = createBaseNodeCount();
+  fromPartial(object: DeepPartial<HostCount>): HostCount {
+    const message = createBaseHostCount();
     message.hostId = object.hostId ?? "";
     message.nodeCount = object.nodeCount ?? 0;
+    return message;
+  },
+};
+
+function createBaseByRegion(): ByRegion {
+  return { regionCounts: [] };
+}
+
+export const ByRegion = {
+  encode(message: ByRegion, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.regionCounts) {
+      RegionCount.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ByRegion {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseByRegion();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.regionCounts.push(RegionCount.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ByRegion>): ByRegion {
+    return ByRegion.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<ByRegion>): ByRegion {
+    const message = createBaseByRegion();
+    message.regionCounts = object.regionCounts?.map((e) => RegionCount.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseRegionCount(): RegionCount {
+  return { regionId: "", nodeCount: 0, resource: undefined, similarity: undefined };
+}
+
+export const RegionCount = {
+  encode(message: RegionCount, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.regionId !== "") {
+      writer.uint32(10).string(message.regionId);
+    }
+    if (message.nodeCount !== 0) {
+      writer.uint32(16).uint32(message.nodeCount);
+    }
+    if (message.resource !== undefined) {
+      writer.uint32(24).int32(message.resource);
+    }
+    if (message.similarity !== undefined) {
+      writer.uint32(32).int32(message.similarity);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): RegionCount {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseRegionCount();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.regionId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.nodeCount = reader.uint32();
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.resource = reader.int32() as any;
+          continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.similarity = reader.int32() as any;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<RegionCount>): RegionCount {
+    return RegionCount.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<RegionCount>): RegionCount {
+    const message = createBaseRegionCount();
+    message.regionId = object.regionId ?? "";
+    message.nodeCount = object.nodeCount ?? 0;
+    message.resource = object.resource ?? undefined;
+    message.similarity = object.similarity ?? undefined;
     return message;
   },
 };

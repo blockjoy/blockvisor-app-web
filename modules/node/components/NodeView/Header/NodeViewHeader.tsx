@@ -87,7 +87,7 @@ export const NodeViewHeader = () => {
     const params: NodeServiceCreateRequest = {
       oldNodeId: node.nodeId,
       orgId: node.orgId,
-      placement: node.placement,
+      launcher: undefined,
       imageId: node.protocolId,
       addRules: [],
       newValues: [],

@@ -3,8 +3,11 @@ import {
   Protocol,
   ProtocolVersion,
 } from '@modules/grpc/library/blockjoy/v1/protocol';
-import { Region } from '@modules/grpc/library/blockjoy/v1/host';
-import { NodeLauncherHost, NodeLauncherState } from '@modules/node';
+import {
+  NodeLauncherHost,
+  NodeLauncherRegion,
+  NodeLauncherState,
+} from '@modules/node';
 import { Image } from '@modules/grpc/library/blockjoy/v1/image';
 
 const nodeLauncher = atom<NodeLauncherState>({
@@ -12,7 +15,6 @@ const nodeLauncher = atom<NodeLauncherState>({
   default: {
     defaultFirewall: [],
     firewall: [],
-    placement: {},
     properties: [],
   },
 });
@@ -27,7 +29,7 @@ const selectedVersion = atom<ProtocolVersion | null>({
   default: null,
 });
 
-const selectedRegion = atom<Region | null>({
+const selectedRegions = atom<NodeLauncherRegion[] | null>({
   key: 'nodeLauncher.region',
   default: null,
 });
@@ -78,7 +80,7 @@ export const nodeLauncherAtoms = {
   versions,
 
   selectedProtocol,
-  selectedRegion,
+  selectedRegions,
   selectedVersion,
   selectedHosts,
   selectedImage,
