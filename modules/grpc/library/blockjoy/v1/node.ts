@@ -629,7 +629,7 @@ export const Node = {
           );
           continue;
         case 21:
-          if (tag !== 170) {
+          if (tag !== 168) {
             break;
           }
 
@@ -654,7 +654,7 @@ export const Node = {
             break;
           }
 
-          message.dnsUrl = reader.string();
+          message.dnsName = reader.string();
           continue;
         case 25:
           if (tag !== 202) {
@@ -663,8 +663,8 @@ export const Node = {
 
           message.dnsName = reader.string();
           continue;
-        case 26:
-          if (tag !== 208) {
+        case 28:
+          if (tag !== 224) {
             break;
           }
 
@@ -760,6 +760,15 @@ export const Node = {
           continue;
         case 39:
           if (tag !== 314) {
+            break;
+          }
+
+          message.updatedAt = fromTimestamp(
+            Timestamp.decode(reader, reader.uint32()),
+          );
+          continue;
+        case 37:
+          if (tag !== 298) {
             break;
           }
 
