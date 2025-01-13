@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { isMobile } from 'react-device-detect';
-import { Host, Region } from '@modules/grpc/library/blockjoy/v1/host';
+import { Host, RegionInfo } from '@modules/grpc/library/blockjoy/v1/host';
 import {
   FormHeader,
   FormLabel,
@@ -40,7 +40,7 @@ type NodeLauncherSummaryProps = {
     regions: NodeLauncherRegion[] | null,
     nodesToLaunch?: number,
   ) => void;
-  onRegionsLoaded: (region: Region | null) => void;
+  onRegionsLoaded: (regionInfo: RegionInfo | null) => void;
 };
 
 export const NodeLauncherSummary = ({
@@ -122,11 +122,11 @@ export const NodeLauncherSummary = ({
     ]);
   };
 
-  const handleRegionChanged = (region: Region | null) => {
+  const handleRegionChanged = (regionInfo: RegionInfo | null) => {
     onRegionsChanged([
       {
         nodesToLaunch: 1,
-        region: region!,
+        regionInfo: regionInfo!,
       },
     ]);
   };

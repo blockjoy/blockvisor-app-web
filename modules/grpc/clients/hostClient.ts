@@ -8,10 +8,12 @@ import {
   HostServiceListHostsRequest,
   HostServiceListHostsResponse,
   HostServiceListRegionsRequest,
+  HostServiceListRegionsResponse,
   HostServiceUpdateHostRequest,
   HostSort,
   HostSortField,
   Region,
+  RegionInfo,
 } from '../library/blockjoy/v1/host';
 import {
   callWithTokenRefresh,
@@ -119,7 +121,7 @@ class HostClient {
     }
   }
 
-  async listRegions(orgId: string, imageId: string): Promise<Region[]> {
+  async listRegions(orgId: string, imageId: string): Promise<RegionInfo[]> {
     const request: HostServiceListRegionsRequest = {
       orgId,
       imageId,
@@ -128,12 +130,13 @@ class HostClient {
     console.log('listRegionsRequest', request);
 
     try {
-      const response = await callWithTokenRefresh(
-        this.client.listRegions.bind(this.client),
-        request,
-      );
+      const response: HostServiceListRegionsResponse =
+        await callWithTokenRefresh(
+          this.client.listRegions.bind(this.client),
+          request,
+        );
       console.log('listRegionsResponse', response);
-      return response.regions!;
+      return response.regions;
     } catch (err) {
       return handleError(err);
     }
