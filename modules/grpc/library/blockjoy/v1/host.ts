@@ -2427,6 +2427,145 @@ export const HostServiceUpdateRegionResponse = {
   },
 };
 
+function createBaseHostServiceUpdateRegionRequest(): HostServiceUpdateRegionRequest {
+  return { regionId: '', displayName: undefined, skuCode: undefined };
+}
+
+export const HostServiceUpdateRegionRequest = {
+  encode(
+    message: HostServiceUpdateRegionRequest,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    if (message.regionId !== '') {
+      writer.uint32(10).string(message.regionId);
+    }
+    if (message.displayName !== undefined) {
+      writer.uint32(18).string(message.displayName);
+    }
+    if (message.skuCode !== undefined) {
+      writer.uint32(26).string(message.skuCode);
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): HostServiceUpdateRegionRequest {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseHostServiceUpdateRegionRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.regionId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.displayName = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.skuCode = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<HostServiceUpdateRegionRequest>,
+  ): HostServiceUpdateRegionRequest {
+    return HostServiceUpdateRegionRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(
+    object: DeepPartial<HostServiceUpdateRegionRequest>,
+  ): HostServiceUpdateRegionRequest {
+    const message = createBaseHostServiceUpdateRegionRequest();
+    message.regionId = object.regionId ?? '';
+    message.displayName = object.displayName ?? undefined;
+    message.skuCode = object.skuCode ?? undefined;
+    return message;
+  },
+};
+
+function createBaseHostServiceUpdateRegionResponse(): HostServiceUpdateRegionResponse {
+  return { region: undefined };
+}
+
+export const HostServiceUpdateRegionResponse = {
+  encode(
+    message: HostServiceUpdateRegionResponse,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    if (message.region !== undefined) {
+      Region.encode(message.region, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): HostServiceUpdateRegionResponse {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseHostServiceUpdateRegionResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.region = Region.decode(reader, reader.uint32());
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(
+    base?: DeepPartial<HostServiceUpdateRegionResponse>,
+  ): HostServiceUpdateRegionResponse {
+    return HostServiceUpdateRegionResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(
+    object: DeepPartial<HostServiceUpdateRegionResponse>,
+  ): HostServiceUpdateRegionResponse {
+    const message = createBaseHostServiceUpdateRegionResponse();
+    message.region =
+      object.region !== undefined && object.region !== null
+        ? Region.fromPartial(object.region)
+        : undefined;
+    return message;
+  },
+};
+
 function createBaseHostServiceDeleteHostRequest(): HostServiceDeleteHostRequest {
   return { hostId: '' };
 }
