@@ -32,6 +32,13 @@ export const styles = {
       opacity: 1;
     }
   `,
+  rowDisabled: css`
+    cursor: not-allowed;
+
+    p {
+      opacity: 0.5;
+    }
+  `,
   scrollbar: css`
     position: relative;
     max-height: 200px;
@@ -69,6 +76,22 @@ export const styles = {
 
     :is(:focus, :hover)::placeholder {
       color: rgb(255 255 255 / 40%);
+    }
+  `,
+  ipStatus: css`
+    opacity: 0;
+  `,
+  alert: css`
+    position: relative;
+    padding: 4px 12px 4px 24px;
+    margin: 0;
+    display: inline-flex;
+    align-items: center;
+    font-size: 11px;
+    white-space: nowrap;
+
+    &::after {
+      left: 10px;
     }
   `,
 };

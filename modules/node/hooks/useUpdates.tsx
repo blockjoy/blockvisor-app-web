@@ -6,7 +6,7 @@ import {
   NodeDeleted,
   NodeMessage,
   NodeUpdated,
-} from '@modules/grpc/library/blockjoy/v1/mqtt';
+} from '@modules/grpc/library/blockjoy/v1/event';
 import { useNodeList, useNodeView } from '@modules/node';
 import { showNotification } from '@modules/mqtt';
 import { authAtoms, authSelectors } from '@modules/auth';

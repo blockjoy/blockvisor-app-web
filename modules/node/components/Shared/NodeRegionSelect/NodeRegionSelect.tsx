@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
-import { Region } from '@modules/grpc/library/blockjoy/v1/host';
+import { useRecoilCallback, useRecoilValue } from 'recoil';
+import { RegionInfo } from '@modules/grpc/library/blockjoy/v1/host';
 import { nodeAtoms, nodeLauncherAtoms } from '@modules/node';
 import { Dropdown } from '@shared/components';
 import { authSelectors } from '@modules/auth';
 
 type NodeRegionSelectProps = {
-  onChange: (region: Region | null) => void;
-  onLoad: (firstRegion: Region | null) => void;
+  onChange: (regionInfo: RegionInfo) => void;
+  onLoad: (firstRegion: RegionInfo | null) => void;
 };
 
 export const NodeRegionSelect = ({
@@ -23,6 +23,19 @@ export const NodeRegionSelect = ({
 
   const handleOpen = (open: boolean = true) => setIsOpen(open);
 
+  const handleSelected = useRecoilCallback(
+    ({ snapshot }) =>
+      async (item: { id?: string; name?: string }) => {
+        const regionsRecoilState = await snapshot.getPromise(nodeAtoms.regions);
+        onChange(
+          regionsRecoilState?.find(
+            (regionInfo) => regionInfo.region?.regionId === item.id,
+          )!,
+        );
+      },
+    [regions],
+  );
+
   useEffect(() => {
     if (regions?.length) {
       const activeRegion = regions?.[0] ?? null;
@@ -30,14 +43,25 @@ export const NodeRegionSelect = ({
     }
   }, [regions]);
 
+  const mappedRegions = regions.map((regionInfo) => ({
+    ...regionInfo,
+    id: regionInfo.region?.regionId,
+    name: regionInfo.region?.displayName,
+  }));
+
+  const selectedRegion = selectedRegions?.map((nodeLauncherRegion) => ({
+    id: nodeLauncherRegion?.regionInfo?.region?.regionId,
+    name: nodeLauncherRegion?.regionInfo?.region?.displayName,
+  }))[0]!;
+
   const error = !version || !regions.length ? 'No Hosts Available' : null;
 
   return (
     <Dropdown
       idKey="regionId"
-      items={regions}
-      handleSelected={onChange}
-      selectedItem={selectedRegions?.[0].region!}
+      items={mappedRegions}
+      handleSelected={handleSelected}
+      selectedItem={selectedRegion}
       isLoading={regionsLoadingState !== 'finished'}
       disabled={!!error}
       {...(!selectedRegions?.[0]

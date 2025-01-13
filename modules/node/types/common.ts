@@ -1,11 +1,14 @@
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import { UINodeFilterCriteria } from '@modules/grpc';
-import { Host, Region } from '@modules/grpc/library/blockjoy/v1/host';
+import {
+  Host,
+  Region,
+  RegionInfo,
+} from '@modules/grpc/library/blockjoy/v1/host';
 import { Node, NodeSort } from '@modules/grpc/library/blockjoy/v1/node';
 import { ImageProperty } from '@modules/grpc/library/blockjoy/v1/image';
 import { UiType } from '@modules/grpc/library/blockjoy/common/v1/protocol';
 import { FirewallRule } from '@modules/grpc/library/blockjoy/common/v1/config';
-import { NodeLauncher } from '@modules/grpc/library/blockjoy/common/v1/node';
 
 export type NodePropertyGroup = {
   key: string;
@@ -38,7 +41,8 @@ export type NodeLauncherHost = {
 
 export type NodeLauncherRegion = {
   nodesToLaunch: number;
-  region: Region;
+  regionInfo: RegionInfo;
+  isValid?: boolean;
 };
 
 export type CreateNodeParams = {

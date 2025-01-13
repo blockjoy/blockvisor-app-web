@@ -55,7 +55,7 @@ export interface Node {
   hostNetworkName: string;
   hostDisplayName?: string | undefined;
   regionId: string;
-  regionName: string;
+  regionKey: string;
   protocolId: string;
   protocolName: string;
   protocolVersionId: string;
@@ -550,7 +550,7 @@ export const Node = {
             break;
           }
 
-          message.regionName = reader.string();
+          message.regionKey = reader.string();
           continue;
         case 16:
           if (tag !== 130) {

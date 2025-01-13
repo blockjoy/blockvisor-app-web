@@ -1,6 +1,6 @@
 import { atom } from 'recoil';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
-import { Region } from '@modules/grpc/library/blockjoy/v1/host';
+import { RegionInfo } from '@modules/grpc/library/blockjoy/v1/host';
 import { UINodeFilterCriteria } from '@modules/grpc';
 import { localStorageEffect } from 'utils/store/persist';
 import { NODE_PAGINATION_DEFAULT } from '@shared/index';
@@ -67,7 +67,7 @@ const isLoadingActiveNode = atom<LoadingState>({
   default: 'initializing',
 });
 
-const regions = atom<Region[]>({
+const regions = atom<RegionInfo[]>({
   key: 'node.regions',
   default: [],
 });

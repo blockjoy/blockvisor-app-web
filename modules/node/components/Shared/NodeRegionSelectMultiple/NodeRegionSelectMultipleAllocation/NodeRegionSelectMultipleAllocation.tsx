@@ -1,14 +1,20 @@
 import { useRecoilValue } from 'recoil';
 import { nodeLauncherAtoms } from '@modules/node';
-import { FormLabel, SvgIcon } from '@shared/components';
+import { Alert, FormLabel, SvgIcon } from '@shared/components';
 import { styles } from './NodeRegionSelectMultipleAllocation.styles';
 import { ChangeEvent } from 'react';
-import { Region } from '@modules/grpc/library/blockjoy/v1/host';
+import { RegionInfo } from '@modules/grpc/library/blockjoy/v1/host';
 import IconClose from '@public/assets/icons/common/Close.svg';
+import { isValid } from 'date-fns';
 
 type Props = {
-  onChange: (region: Region) => void;
-  onRegionAllocationChanged: (region: Region, nodesToLaunch: number) => void;
+  onChange: (regionInfo: RegionInfo) => void;
+  onRegionAllocationChanged: (
+    regionInfo: RegionInfo,
+    nodesToLaunch: number,
+    isValid?: boolean,
+  ) => void;
+  isValid?: boolean;
 };
 
 export const NodeRegionSelectMultipleAllocation = ({
@@ -27,14 +33,26 @@ export const NodeRegionSelectMultipleAllocation = ({
           <span css={styles.allocationHeader}>Region</span>
           <span css={styles.allocationHeader}>Nodes</span>
         </div>
-        {selectedRegions?.map((r) => (
-          <div css={styles.allocationRow} key={r.region.name}>
-            <p css={styles.name}>{r.region.name}</p>
+        {selectedRegions?.map((nodeLauncherRegion) => (
+          <div
+            css={styles.allocationRow}
+            key={nodeLauncherRegion.regionInfo.region?.regionId}
+          >
+            <p css={styles.name}>
+              {nodeLauncherRegion.regionInfo.region?.displayName ||
+                nodeLauncherRegion.regionInfo.region?.regionKey}
+            </p>
+            <Alert
+              additionalStyles={[styles.alert]}
+              isSuccess={nodeLauncherRegion.regionInfo.freeIps > 0}
+            >{`${nodeLauncherRegion.regionInfo.freeIps} IP${
+              nodeLauncherRegion.regionInfo.freeIps !== 1 ? `s` : ''
+            }`}</Alert>
             <button
               className="remove-button"
               css={styles.removeButton}
               type="button"
-              onClick={() => onChange(r.region)}
+              onClick={() => onChange(nodeLauncherRegion.regionInfo)}
             >
               <SvgIcon size="12px" tooltip="Remove" tooltipMinWidth="80px">
                 <IconClose />
@@ -45,11 +63,22 @@ export const NodeRegionSelectMultipleAllocation = ({
               onChange={(e: ChangeEvent<HTMLInputElement>) => {
                 if (e.target.validity.valid) {
                   const nodesToLaunch = +e.target.value;
-                  onRegionAllocationChanged(r.region, nodesToLaunch);
+
+                  const isValid =
+                    nodesToLaunch <= nodeLauncherRegion.regionInfo.freeIps;
+
+                  onRegionAllocationChanged(
+                    nodeLauncherRegion.regionInfo,
+                    nodesToLaunch,
+                    isValid,
+                  );
                 }
               }}
-              value={r.nodesToLaunch}
-              css={[styles.allocationInput]}
+              value={nodeLauncherRegion.nodesToLaunch}
+              css={[
+                styles.allocationInput,
+                !nodeLauncherRegion.isValid && styles.allocationInputError,
+              ]}
               type="tel"
             />
           </div>
