@@ -3,7 +3,7 @@ import {
   OrgDeleted,
   OrgMessage,
   OrgUpdated,
-} from '@modules/grpc/library/blockjoy/v1/mqtt';
+} from '@modules/grpc/library/blockjoy/v1/event';
 import {
   useUpdateOrganization,
   useDeleteOrganization,

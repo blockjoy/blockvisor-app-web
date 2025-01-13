@@ -249,7 +249,7 @@ export const AdminNodes = () => {
         ) : (
           '-'
         ),
-        region: node.regionName,
+        region: node.regionKey,
         createdAt: <DateTime date={node.createdAt!} />,
         createdBy,
         host: node.hostDisplayName || node.hostNetworkName,

@@ -1,4 +1,4 @@
-import { Region } from '@modules/grpc/library/blockjoy/v1/host';
+import { RegionInfo } from '@modules/grpc/library/blockjoy/v1/host';
 import {
   nodeAtoms,
   nodeLauncherAtoms,
@@ -10,6 +10,7 @@ import {
   DropdownMenu,
   Checkbox,
   Scrollbar,
+  Alert,
 } from '@shared/components';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { NodeRegionSelectMultipleAllocation } from './NodeRegionSelectMultipleAllocation/NodeRegionSelectMultipleAllocation';
@@ -36,34 +37,50 @@ export const NodeRegionSelectMultiple = ({ onChange }: Props) => {
     setSearchText(e.target.value);
   };
 
-  const handleChange = (region: Region) => {
+  const handleChange = (regionInfo: RegionInfo) => {
     let regionsCopy = selectedRegions ? [...selectedRegions!] : [];
-    const foundRegion = regionsCopy.find((r) => r.region.name === region.name);
+    const foundRegion = regionsCopy.find(
+      (nodeLauncherRegion) =>
+        nodeLauncherRegion.regionInfo.region?.regionId ===
+        regionInfo.region?.regionId,
+    );
 
     if (foundRegion) {
-      regionsCopy = regionsCopy.filter((r) => r.region.name !== region.name);
+      regionsCopy = regionsCopy.filter(
+        (nodeLauncherRegion) =>
+          nodeLauncherRegion.regionInfo.region?.regionId !==
+          regionInfo.region?.regionId,
+      );
     } else {
       regionsCopy.push({
-        region,
+        regionInfo,
         nodesToLaunch: 1,
+        isValid: true,
       });
     }
 
     onChange(regionsCopy.length === 0 ? null : regionsCopy);
   };
 
-  const handleAllocationChange = (region: Region, nodesToLaunch: number) => {
+  const handleAllocationChange = (
+    regionInfo: RegionInfo,
+    nodesToLaunch: number,
+    isValid?: boolean,
+  ) => {
     let regionsCopy = [...selectedRegions!];
 
     let foundHostIndex = regionsCopy.findIndex(
-      (r) => r.region.name === region.name,
+      (nodeLauncherRegion) =>
+        nodeLauncherRegion.regionInfo.region?.regionId ===
+        regionInfo.region?.regionId,
     );
 
     if (foundHostIndex < 0) return;
 
     regionsCopy[foundHostIndex] = {
-      region,
+      regionInfo,
       nodesToLaunch,
+      isValid,
     };
 
     onChange(regionsCopy);
@@ -79,8 +96,14 @@ export const NodeRegionSelectMultiple = ({ onChange }: Props) => {
     return () => clearTimeout(timer);
   }, [isOpen]);
 
-  const filteredRegions = regions.filter((r) =>
-    r.name?.toLowerCase().includes(debouncedSearchTerm?.toLowerCase()),
+  const filteredRegions = regions.filter(
+    (regionInfo) =>
+      regionInfo.region?.regionKey
+        ?.toLowerCase()
+        .includes(debouncedSearchTerm?.toLowerCase()) ||
+      regionInfo.region?.displayName
+        ?.toLowerCase()
+        .includes(debouncedSearchTerm?.toLowerCase()),
   );
 
   return (
@@ -93,7 +116,8 @@ export const NodeRegionSelectMultiple = ({ onChange }: Props) => {
               {!selectedRegions?.length
                 ? 'Auto select'
                 : selectedRegions?.length === 1
-                ? selectedRegions[0].region.name
+                ? selectedRegions[0].regionInfo.region?.displayName ||
+                  selectedRegions[0].regionInfo.region?.regionKey
                 : `${selectedRegions?.length} regions selected`}
             </p>
           }
@@ -115,19 +139,35 @@ export const NodeRegionSelectMultiple = ({ onChange }: Props) => {
               <p css={styles.dropdownEmpty}>No hosts found</p>
             )}
             <ul>
-              {filteredRegions?.map((region) => {
+              {filteredRegions?.map((regionInfo) => {
+                const isDisabled = regionInfo.freeIps < 1;
+
                 return (
-                  <li key={region.name}>
-                    <label css={styles.row}>
+                  <li key={regionInfo.region?.regionId}>
+                    <label css={[styles.row, isDisabled && styles.rowDisabled]}>
                       <Checkbox
-                        id={region.name}
-                        name={region.name!}
-                        onChange={() => handleChange(region)}
+                        disabled={isDisabled}
+                        id={`nodeRegion_${regionInfo?.region?.regionId}`}
+                        name={regionInfo?.region?.regionKey!}
+                        onChange={() => handleChange(regionInfo)}
                         checked={selectedRegions?.some(
-                          (r) => r.region.name === region.name,
+                          (nodeLauncherRegion) =>
+                            nodeLauncherRegion.regionInfo.region?.regionId ===
+                            regionInfo?.region?.regionId,
                         )}
                       />
-                      <p>{region.name}</p>
+                      <p>
+                        {regionInfo?.region?.displayName ||
+                          regionInfo?.region?.regionKey}
+                      </p>
+                      <span css={styles.ipStatus} className="ip-status">
+                        <Alert
+                          additionalStyles={[styles.alert]}
+                          isSuccess={regionInfo.freeIps > 0}
+                        >{`${regionInfo.freeIps} IP${
+                          regionInfo.freeIps !== 1 ? `s` : ''
+                        }`}</Alert>
+                      </span>
                     </label>
                   </li>
                 );

@@ -43,7 +43,7 @@ export interface Node {
   hostNetworkName: string;
   hostDisplayName?: string | undefined;
   regionId: string;
-  regionName: string;
+  regionKey: string;
   protocolId: string;
   protocolName: string;
   protocolVersionId: string;
@@ -318,7 +318,7 @@ function createBaseNode(): Node {
     hostNetworkName: "",
     hostDisplayName: undefined,
     regionId: "",
-    regionName: "",
+    regionKey: "",
     protocolId: "",
     protocolName: "",
     protocolVersionId: "",
@@ -388,8 +388,8 @@ export const Node = {
     if (message.regionId !== "") {
       writer.uint32(114).string(message.regionId);
     }
-    if (message.regionName !== "") {
-      writer.uint32(122).string(message.regionName);
+    if (message.regionKey !== "") {
+      writer.uint32(122).string(message.regionKey);
     }
     if (message.protocolId !== "") {
       writer.uint32(130).string(message.protocolId);
@@ -570,7 +570,7 @@ export const Node = {
             break;
           }
 
-          message.regionName = reader.string();
+          message.regionKey = reader.string();
           continue;
         case 16:
           if (tag !== 130) {
@@ -757,7 +757,7 @@ export const Node = {
     message.hostNetworkName = object.hostNetworkName ?? "";
     message.hostDisplayName = object.hostDisplayName ?? undefined;
     message.regionId = object.regionId ?? "";
-    message.regionName = object.regionName ?? "";
+    message.regionKey = object.regionKey ?? "";
     message.protocolId = object.protocolId ?? "";
     message.protocolName = object.protocolName ?? "";
     message.protocolVersionId = object.protocolVersionId ?? "";

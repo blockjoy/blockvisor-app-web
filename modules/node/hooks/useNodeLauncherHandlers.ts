@@ -11,7 +11,7 @@ import {
   Protocol,
   ProtocolVersion,
 } from '@modules/grpc/library/blockjoy/v1/protocol';
-import { Host, Region } from '@modules/grpc/library/blockjoy/v1/host';
+import { Host, RegionInfo } from '@modules/grpc/library/blockjoy/v1/host';
 import { NodeServiceCreateRequest } from '@modules/grpc/library/blockjoy/v1/node';
 import { hostAtoms, useHostSelect } from '@modules/host';
 import {
@@ -41,7 +41,7 @@ type IUseNodeLauncherHandlersParams = {
 interface IUseNodeLauncherHandlersHook {
   handleHostsChanged: (hosts: NodeLauncherHost[] | null) => void;
   handleRegionsChanged: (regions: NodeLauncherRegion[] | null) => void;
-  handleRegionsLoaded: (region: Region | null) => void;
+  handleRegionsLoaded: (regionInfo: RegionInfo | null) => void;
   handleProtocolSelected: (protocol: Protocol) => void;
   handleNodePropertyChanged: <K extends keyof NodeLauncherState>(
     name: K,
@@ -254,7 +254,9 @@ export const useNodeLauncherHandlers = ({
   useEffect(() => {
     if (selectedVersion && selectedRegions && defaultOrganization)
       getPrice({
-        regionId: isSuperUser ? '' : selectedRegions?.[0]?.region.regionId!,
+        regionId: isSuperUser
+          ? ''
+          : selectedRegions[0]?.regionInfo?.region?.regionId!,
         versionKey: selectedVersion.versionKey,
         orgId: defaultOrganization?.orgId,
       });
@@ -308,12 +310,11 @@ export const useNodeLauncherHandlers = ({
     setSelectedRegions(regions);
   };
 
-  const handleRegionsLoaded = (region: Region | null) => {
-    console.log('handleRegionsLoaded', region);
+  const handleRegionsLoaded = (regionInfo: RegionInfo | null) => {
     setSelectedRegions([
       {
         nodesToLaunch: 1,
-        region: region!,
+        regionInfo: regionInfo!,
       },
     ]);
   };
@@ -390,7 +391,7 @@ export const useNodeLauncherHandlers = ({
   const handleCreateNodeClicked = async () => {
     setIsLaunching(true);
 
-    const isSingleNode = totalNodesToLaunch > 1;
+    const isSingleNode = totalNodesToLaunch === 1;
 
     const params: NodeServiceCreateRequest = {
       orgId: defaultOrganization!.orgId,
@@ -420,8 +421,8 @@ export const useNodeLauncherHandlers = ({
       params.launcher = {
         byRegion: {
           regionCounts: selectedRegions?.map(
-            ({ region, nodesToLaunch: nodeCount }) => ({
-              regionId: region.regionId,
+            ({ regionInfo, nodesToLaunch: nodeCount }) => ({
+              regionId: regionInfo.region?.regionId!,
               nodeCount,
               resource: ResourceAffinity.RESOURCE_AFFINITY_LEAST_RESOURCES,
             }),

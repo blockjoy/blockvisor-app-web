@@ -86,13 +86,20 @@ const nodeLauncherInfo = selector<NodeLauncherBasicInfo>({
 const isNodeAllocationValid = selector({
   key: 'nodeLauncher.nodeAllocation.isValid',
   get: ({ get }) => {
-    const selectedHosts = get(nodeLauncherAtoms.selectedHosts);
     const totalNodesToLaunchVal = get(totalNodesToLaunch);
+    const selectedHosts = get(nodeLauncherAtoms.selectedHosts);
 
-    return (
-      !selectedHosts ||
-      (selectedHosts?.every((h) => h.isValid) && totalNodesToLaunchVal > 0)
-    );
+    if (selectedHosts?.length) {
+      return (
+        selectedHosts?.every((h) => h.isValid) && totalNodesToLaunchVal > 0
+      );
+    } else {
+      const selectedRegions = get(nodeLauncherAtoms.selectedRegions);
+      return (
+        !selectedRegions ||
+        (selectedRegions?.every((r) => r.isValid) && totalNodesToLaunchVal > 0)
+      );
+    }
   },
 });
 
