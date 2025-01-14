@@ -62,7 +62,7 @@ export interface ImageProperty {
 export interface Archive {
   archiveId: string;
   imageId: string;
-  storeId: string;
+  storeKey: string;
   imagePropertyIds: string[];
 }
 
@@ -156,7 +156,7 @@ export interface ImageServiceListArchivesResponse {
 
 export interface ImageServiceUpdateArchiveRequest {
   archiveId: string;
-  storeId?: string | undefined;
+  storeKey?: string | undefined;
 }
 
 export interface ImageServiceUpdateArchiveResponse {
@@ -680,7 +680,7 @@ export const Archive = {
             break;
           }
 
-          message.storeId = reader.string();
+          message.storeKey = reader.string();
           continue;
         case 4:
           if (tag !== 34) {
@@ -1101,7 +1101,7 @@ export const AddImageProperty = {
 };
 
 function createBaseArchivePointer(): ArchivePointer {
-  return { newArchiveKeys: [], storeId: undefined, disallowed: undefined };
+  return { newArchiveKeys: [], storeKey: undefined, disallowed: undefined };
 }
 
 export const ArchivePointer = {
@@ -1112,8 +1112,8 @@ export const ArchivePointer = {
     for (const v of message.newArchiveKeys) {
       writer.uint32(10).string(v!);
     }
-    if (message.storeId !== undefined) {
-      writer.uint32(26).string(message.storeId);
+    if (message.storeKey !== undefined) {
+      writer.uint32(26).string(message.storeKey);
     }
     if (message.disallowed !== undefined) {
       Empty.encode(message.disallowed, writer.uint32(34).fork()).ldelim();
@@ -1141,7 +1141,7 @@ export const ArchivePointer = {
             break;
           }
 
-          message.storeId = reader.string();
+          message.storeKey = reader.string();
           continue;
         case 4:
           if (tag !== 34) {
@@ -1549,8 +1549,8 @@ export const ImageServiceUpdateArchiveRequest = {
     if (message.archiveId !== '') {
       writer.uint32(10).string(message.archiveId);
     }
-    if (message.storeId !== undefined) {
-      writer.uint32(18).string(message.storeId);
+    if (message.storeKey !== undefined) {
+      writer.uint32(18).string(message.storeKey);
     }
     return writer;
   },
@@ -1578,7 +1578,7 @@ export const ImageServiceUpdateArchiveRequest = {
             break;
           }
 
-          message.storeId = reader.string();
+          message.storeKey = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {

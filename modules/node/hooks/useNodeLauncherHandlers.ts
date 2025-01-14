@@ -311,12 +311,16 @@ export const useNodeLauncherHandlers = ({
   };
 
   const handleRegionsLoaded = (regionInfo: RegionInfo | null) => {
-    setSelectedRegions([
-      {
-        nodesToLaunch: 1,
-        regionInfo: regionInfo!,
-      },
-    ]);
+    if (!isSuperUser) {
+      setSelectedRegions([
+        {
+          nodesToLaunch: 1,
+          regionInfo: regionInfo!,
+        },
+      ]);
+    }
+
+    console.log('handleRegionsLoaded', selectedHosts, selectedRegions);
   };
 
   const handleProtocolSelected = (protocol: Protocol) => {
