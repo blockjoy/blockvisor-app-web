@@ -319,8 +319,6 @@ export const useNodeLauncherHandlers = ({
         },
       ]);
     }
-
-    console.log('handleRegionsLoaded', selectedHosts, selectedRegions);
   };
 
   const handleProtocolSelected = (protocol: Protocol) => {
