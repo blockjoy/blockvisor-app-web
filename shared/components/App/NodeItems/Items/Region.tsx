@@ -1,5 +1,7 @@
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 
-type Props = Partial<Pick<Node, 'regionKey'>>;
+type Props = Partial<Pick<Node, 'regionName'>>;
 
-export const Region = ({ regionKey }: Props) => <span>{regionKey || '-'}</span>;
+export const Region = ({ regionName }: Props) => (
+  <span>{regionName || '-'}</span>
+);

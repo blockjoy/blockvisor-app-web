@@ -444,7 +444,7 @@ export const Node = {
       BillingAmount.encode(message.cost, writer.uint32(314).fork()).ldelim();
     }
     if (message.cost !== undefined) {
-      BillingAmount.encode(message.cost, writer.uint32(298).fork()).ldelim();
+      BillingAmount.encode(message.cost, writer.uint32(306).fork()).ldelim();
     }
     return writer;
   },
@@ -601,7 +601,14 @@ export const Node = {
           );
           continue;
         case 21:
-          if (tag !== 168) {
+          if (tag !== 170) {
+            break;
+          }
+
+          message.semanticVersion = reader.string();
+          continue;
+        case 22:
+          if (tag !== 176) {
             break;
           }
 
@@ -626,7 +633,7 @@ export const Node = {
             break;
           }
 
-          message.dnsName = reader.string();
+          message.ipGateway = reader.string();
           continue;
         case 25:
           if (tag !== 202) {
@@ -748,6 +755,15 @@ export const Node = {
           continue;
         case 37:
           if (tag !== 298) {
+            break;
+          }
+
+          message.updatedAt = fromTimestamp(
+            Timestamp.decode(reader, reader.uint32()),
+          );
+          continue;
+        case 38:
+          if (tag !== 306) {
             break;
           }
 
