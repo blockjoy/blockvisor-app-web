@@ -44,6 +44,7 @@ export interface Node {
   hostDisplayName?: string | undefined;
   regionId: string;
   regionKey: string;
+  regionName: string;
   protocolId: string;
   protocolName: string;
   protocolVersionId: string;
@@ -319,6 +320,7 @@ function createBaseNode(): Node {
     hostDisplayName: undefined,
     regionId: "",
     regionKey: "",
+    regionName: "",
     protocolId: "",
     protocolName: "",
     protocolVersionId: "",
@@ -391,71 +393,74 @@ export const Node = {
     if (message.regionKey !== "") {
       writer.uint32(122).string(message.regionKey);
     }
+    if (message.regionName !== "") {
+      writer.uint32(130).string(message.regionName);
+    }
     if (message.protocolId !== "") {
-      writer.uint32(130).string(message.protocolId);
+      writer.uint32(138).string(message.protocolId);
     }
     if (message.protocolName !== "") {
-      writer.uint32(138).string(message.protocolName);
+      writer.uint32(146).string(message.protocolName);
     }
     if (message.protocolVersionId !== "") {
-      writer.uint32(146).string(message.protocolVersionId);
+      writer.uint32(154).string(message.protocolVersionId);
     }
     if (message.versionKey !== undefined) {
-      ProtocolVersionKey.encode(message.versionKey, writer.uint32(154).fork()).ldelim();
+      ProtocolVersionKey.encode(message.versionKey, writer.uint32(162).fork()).ldelim();
     }
     if (message.semanticVersion !== "") {
-      writer.uint32(162).string(message.semanticVersion);
+      writer.uint32(170).string(message.semanticVersion);
     }
     if (message.autoUpgrade === true) {
-      writer.uint32(168).bool(message.autoUpgrade);
+      writer.uint32(176).bool(message.autoUpgrade);
     }
     if (message.ipAddress !== "") {
-      writer.uint32(178).string(message.ipAddress);
+      writer.uint32(186).string(message.ipAddress);
     }
     if (message.ipGateway !== "") {
-      writer.uint32(186).string(message.ipGateway);
+      writer.uint32(194).string(message.ipGateway);
     }
     if (message.dnsName !== "") {
-      writer.uint32(194).string(message.dnsName);
+      writer.uint32(202).string(message.dnsName);
     }
     if (message.p2pAddress !== undefined) {
-      writer.uint32(202).string(message.p2pAddress);
+      writer.uint32(210).string(message.p2pAddress);
     }
     if (message.dnsUrl !== undefined) {
-      writer.uint32(210).string(message.dnsUrl);
+      writer.uint32(218).string(message.dnsUrl);
     }
     if (message.blockHeight !== undefined) {
-      writer.uint32(216).uint64(message.blockHeight);
+      writer.uint32(224).uint64(message.blockHeight);
     }
     if (message.blockAge !== undefined) {
-      writer.uint32(224).uint64(message.blockAge);
+      writer.uint32(232).uint64(message.blockAge);
     }
     if (message.note !== undefined) {
-      writer.uint32(234).string(message.note);
+      writer.uint32(242).string(message.note);
     }
     if (message.nodeStatus !== undefined) {
-      NodeStatus.encode(message.nodeStatus, writer.uint32(242).fork()).ldelim();
+      NodeStatus.encode(message.nodeStatus, writer.uint32(250).fork()).ldelim();
     }
     for (const v of message.jobs) {
-      NodeJob.encode(v!, writer.uint32(250).fork()).ldelim();
+      NodeJob.encode(v!, writer.uint32(258).fork()).ldelim();
     }
     for (const v of message.reports) {
-      NodeReport.encode(v!, writer.uint32(258).fork()).ldelim();
+      NodeReport.encode(v!, writer.uint32(266).fork()).ldelim();
     }
     if (message.tags !== undefined) {
-      Tags.encode(message.tags, writer.uint32(266).fork()).ldelim();
+      Tags.encode(message.tags, writer.uint32(274).fork()).ldelim();
     }
     if (message.createdBy !== undefined) {
-      Resource.encode(message.createdBy, writer.uint32(274).fork()).ldelim();
+      Resource.encode(message.createdBy, writer.uint32(282).fork()).ldelim();
     }
     if (message.createdAt !== undefined) {
-      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(282).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(290).fork()).ldelim();
     }
     if (message.updatedAt !== undefined) {
-      Timestamp.encode(toTimestamp(message.updatedAt), writer.uint32(290).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.updatedAt), writer.uint32(298).fork()).ldelim();
     }
     if (message.cost !== undefined) {
-      BillingAmount.encode(message.cost, writer.uint32(298).fork()).ldelim();
+      BillingAmount.encode(message.cost, writer.uint32(306).fork()).ldelim();
     }
     return writer;
   },
@@ -577,150 +582,157 @@ export const Node = {
             break;
           }
 
-          message.protocolId = reader.string();
+          message.regionName = reader.string();
           continue;
         case 17:
           if (tag !== 138) {
             break;
           }
 
-          message.protocolName = reader.string();
+          message.protocolId = reader.string();
           continue;
         case 18:
           if (tag !== 146) {
             break;
           }
 
-          message.protocolVersionId = reader.string();
+          message.protocolName = reader.string();
           continue;
         case 19:
           if (tag !== 154) {
             break;
           }
 
-          message.versionKey = ProtocolVersionKey.decode(reader, reader.uint32());
+          message.protocolVersionId = reader.string();
           continue;
         case 20:
           if (tag !== 162) {
             break;
           }
 
-          message.semanticVersion = reader.string();
+          message.versionKey = ProtocolVersionKey.decode(reader, reader.uint32());
           continue;
         case 21:
-          if (tag !== 168) {
+          if (tag !== 170) {
+            break;
+          }
+
+          message.semanticVersion = reader.string();
+          continue;
+        case 22:
+          if (tag !== 176) {
             break;
           }
 
           message.autoUpgrade = reader.bool();
-          continue;
-        case 22:
-          if (tag !== 178) {
-            break;
-          }
-
-          message.ipAddress = reader.string();
           continue;
         case 23:
           if (tag !== 186) {
             break;
           }
 
-          message.ipGateway = reader.string();
+          message.ipAddress = reader.string();
           continue;
         case 24:
           if (tag !== 194) {
             break;
           }
 
-          message.dnsName = reader.string();
+          message.ipGateway = reader.string();
           continue;
         case 25:
           if (tag !== 202) {
             break;
           }
 
-          message.p2pAddress = reader.string();
+          message.dnsName = reader.string();
           continue;
         case 26:
           if (tag !== 210) {
             break;
           }
 
-          message.dnsUrl = reader.string();
+          message.p2pAddress = reader.string();
           continue;
         case 27:
-          if (tag !== 216) {
+          if (tag !== 218) {
             break;
           }
 
-          message.blockHeight = longToNumber(reader.uint64() as Long);
+          message.dnsUrl = reader.string();
           continue;
         case 28:
           if (tag !== 224) {
             break;
           }
 
-          message.blockAge = longToNumber(reader.uint64() as Long);
+          message.blockHeight = longToNumber(reader.uint64() as Long);
           continue;
         case 29:
-          if (tag !== 234) {
+          if (tag !== 232) {
             break;
           }
 
-          message.note = reader.string();
+          message.blockAge = longToNumber(reader.uint64() as Long);
           continue;
         case 30:
           if (tag !== 242) {
             break;
           }
 
-          message.nodeStatus = NodeStatus.decode(reader, reader.uint32());
+          message.note = reader.string();
           continue;
         case 31:
           if (tag !== 250) {
             break;
           }
 
-          message.jobs.push(NodeJob.decode(reader, reader.uint32()));
+          message.nodeStatus = NodeStatus.decode(reader, reader.uint32());
           continue;
         case 32:
           if (tag !== 258) {
             break;
           }
 
-          message.reports.push(NodeReport.decode(reader, reader.uint32()));
+          message.jobs.push(NodeJob.decode(reader, reader.uint32()));
           continue;
         case 33:
           if (tag !== 266) {
             break;
           }
 
-          message.tags = Tags.decode(reader, reader.uint32());
+          message.reports.push(NodeReport.decode(reader, reader.uint32()));
           continue;
         case 34:
           if (tag !== 274) {
             break;
           }
 
-          message.createdBy = Resource.decode(reader, reader.uint32());
+          message.tags = Tags.decode(reader, reader.uint32());
           continue;
         case 35:
           if (tag !== 282) {
             break;
           }
 
-          message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.createdBy = Resource.decode(reader, reader.uint32());
           continue;
         case 36:
           if (tag !== 290) {
             break;
           }
 
-          message.updatedAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
         case 37:
           if (tag !== 298) {
+            break;
+          }
+
+          message.updatedAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          continue;
+        case 38:
+          if (tag !== 306) {
             break;
           }
 
@@ -758,6 +770,7 @@ export const Node = {
     message.hostDisplayName = object.hostDisplayName ?? undefined;
     message.regionId = object.regionId ?? "";
     message.regionKey = object.regionKey ?? "";
+    message.regionName = object.regionName ?? "";
     message.protocolId = object.protocolId ?? "";
     message.protocolName = object.protocolName ?? "";
     message.protocolVersionId = object.protocolVersionId ?? "";

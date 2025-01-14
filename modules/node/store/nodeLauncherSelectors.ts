@@ -27,14 +27,45 @@ const hasSummary = selector<boolean>({
   },
 });
 
+const isNodeAllocationValid = selector({
+  key: 'nodeLauncher.nodeAllocation.isValid',
+  get: ({ get }) => {
+    const isSuperUser = get(authSelectors.isSuperUser);
+
+    if (!isSuperUser) return true;
+
+    const totalNodesToLaunchVal = get(totalNodesToLaunch);
+    const selectedHosts = get(nodeLauncherAtoms.selectedHosts);
+    const selectedRegions = get(nodeLauncherAtoms.selectedRegions);
+
+    let isValid = false;
+
+    if (!selectedHosts && !selectedRegions) return false;
+
+    if (selectedHosts?.length) {
+      isValid =
+        selectedHosts.length > 0 &&
+        selectedHosts?.every((h) => h.isValid)! &&
+        totalNodesToLaunchVal > 0;
+    } else {
+      isValid =
+        selectedRegions?.length! > 0 &&
+        selectedRegions?.every((r) => r.isValid)! &&
+        totalNodesToLaunchVal > 0;
+    }
+
+    console.log('isNodeAllocationValid', isValid);
+
+    return isValid;
+  },
+});
+
 const isNodeValid = selector<boolean>({
   key: 'nodeLauncher.isNodeValid',
   get: ({ get }) => {
-    const selectedHosts = get(nodeLauncherAtoms.selectedHosts);
-    const selectedRegions = get(nodeLauncherAtoms.selectedRegions);
     const selectedProtocol = get(nodeLauncherAtoms.selectedProtocol);
 
-    return Boolean(selectedProtocol && (selectedHosts || selectedRegions));
+    return Boolean(selectedProtocol);
   },
 });
 
@@ -80,26 +111,6 @@ const nodeLauncherInfo = selector<NodeLauncherBasicInfo>({
       protocolName: selectedProtocol?.name ?? '',
       versionName: selectedVersion?.semanticVersion ?? '',
     };
-  },
-});
-
-const isNodeAllocationValid = selector({
-  key: 'nodeLauncher.nodeAllocation.isValid',
-  get: ({ get }) => {
-    const totalNodesToLaunchVal = get(totalNodesToLaunch);
-    const selectedHosts = get(nodeLauncherAtoms.selectedHosts);
-
-    if (selectedHosts?.length) {
-      return (
-        selectedHosts?.every((h) => h.isValid) && totalNodesToLaunchVal > 0
-      );
-    } else {
-      const selectedRegions = get(nodeLauncherAtoms.selectedRegions);
-      return (
-        !selectedRegions ||
-        (selectedRegions?.every((r) => r.isValid) && totalNodesToLaunchVal > 0)
-      );
-    }
   },
 });
 

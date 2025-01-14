@@ -112,7 +112,7 @@ export const HostSelectMultiple = ({ onChange }: Props) => {
           text={
             <p>
               {!selectedHosts?.length
-                ? 'Auto select'
+                ? 'Select Hosts'
                 : selectedHosts?.length === 1
                 ? selectedHosts[0].host.displayName ||
                   selectedHosts[0].host.networkName
