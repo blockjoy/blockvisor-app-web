@@ -4,12 +4,7 @@ import { hostClient } from '@modules/grpc/clients/hostClient';
 import { pageSize } from '@modules/admin/constants/constants';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { Host, HostSortField } from '@modules/grpc/library/blockjoy/v1/host';
-import {
-  DateTime,
-  HostIpStatus,
-  // HostManagedBy,
-  TagList,
-} from '@shared/components';
+import { DateTime, HostIpStatus, TagList } from '@shared/components';
 import { AdminListColumn } from '@modules/admin/types/AdminListColumn';
 import { AdminHostsTag } from './AdminHostsTag/AdminHostsTag';
 import { useState } from 'react';
@@ -217,7 +212,7 @@ export const AdminHosts = () => {
         ...host,
         diskBytes: formatters.formatSize(host.diskBytes, 'bytes'),
         availableIps: <HostIpStatus ipAddresses={host.ipAddresses} />,
-        // managedBy: <HostManagedBy managedBy={host.managedBy} />,
+        region: host.region?.displayName,
         createdAt: <DateTime date={host.createdAt!} />,
         cost: (
           <AdminListEditCost
