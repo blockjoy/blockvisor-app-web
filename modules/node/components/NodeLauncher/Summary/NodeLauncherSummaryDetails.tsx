@@ -97,7 +97,7 @@ export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
                     </div>
                   ))
               : null}
-            {!isNodeValid ? (
+            {!isNodeValid || !isNodeAllocationValid ? (
               <>
                 {!selectedHosts && !selectedRegions && allHosts?.length ? (
                   <div>Host or Region</div>
