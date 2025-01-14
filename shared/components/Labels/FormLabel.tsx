@@ -7,6 +7,7 @@ import IconInfo from '@public/assets/icons/common/Info.svg';
 type Props = {
   isRequired?: boolean;
   isCompact?: boolean;
+  isCapitalized?: boolean;
   hint?: string;
 } & PropsWithChildren;
 
@@ -17,8 +18,10 @@ const styles = {
     display: flex;
     align-items: center;
     gap: 8px;
-    text-transform: capitalize;
     color: ${theme.colorLabel};
+  `,
+  labelCapitalized: css`
+    text-transform: capitalize;
   `,
   labelCompact: css`
     font-size: 12px;
@@ -34,8 +37,20 @@ const styles = {
   `,
 };
 
-export const FormLabel = ({ isRequired, isCompact, hint, children }: Props) => (
-  <label css={[styles.label, isCompact && styles.labelCompact]}>
+export const FormLabel = ({
+  isRequired,
+  isCapitalized,
+  isCompact,
+  hint,
+  children,
+}: Props) => (
+  <label
+    css={[
+      styles.label,
+      isCompact && styles.labelCompact,
+      isCapitalized && styles.labelCapitalized,
+    ]}
+  >
     {children}
     {isRequired && <span css={styles.requiredAsterix}>*</span>}
     {hint && (

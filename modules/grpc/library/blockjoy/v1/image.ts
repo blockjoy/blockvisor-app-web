@@ -80,7 +80,7 @@ export interface ImageProperty {
 export interface Archive {
   archiveId: string;
   imageId: string;
-  storeId: string;
+  storeKey: string;
   imagePropertyIds: string[];
 }
 
@@ -161,8 +161,8 @@ export interface AddImageProperty {
 export interface ArchivePointer {
   /** The combination of new_archive property keys to lookup an archive. */
   newArchiveKeys: string[];
-  /** Use this store id. */
-  storeId?:
+  /** Use this store key. */
+  storeKey?:
     | string
     | undefined;
   /** This combination of new_archive properties is disallowed. */
@@ -206,7 +206,7 @@ export interface ImageServiceListArchivesResponse {
 
 export interface ImageServiceUpdateArchiveRequest {
   archiveId: string;
-  storeId?: string | undefined;
+  storeKey?: string | undefined;
 }
 
 export interface ImageServiceUpdateArchiveResponse {
@@ -657,7 +657,7 @@ export const ImageProperty = {
 };
 
 function createBaseArchive(): Archive {
-  return { archiveId: "", imageId: "", storeId: "", imagePropertyIds: [] };
+  return { archiveId: "", imageId: "", storeKey: "", imagePropertyIds: [] };
 }
 
 export const Archive = {
@@ -668,8 +668,8 @@ export const Archive = {
     if (message.imageId !== "") {
       writer.uint32(18).string(message.imageId);
     }
-    if (message.storeId !== "") {
-      writer.uint32(26).string(message.storeId);
+    if (message.storeKey !== "") {
+      writer.uint32(26).string(message.storeKey);
     }
     for (const v of message.imagePropertyIds) {
       writer.uint32(34).string(v!);
@@ -703,7 +703,7 @@ export const Archive = {
             break;
           }
 
-          message.storeId = reader.string();
+          message.storeKey = reader.string();
           continue;
         case 4:
           if (tag !== 34) {
@@ -729,7 +729,7 @@ export const Archive = {
     const message = createBaseArchive();
     message.archiveId = object.archiveId ?? "";
     message.imageId = object.imageId ?? "";
-    message.storeId = object.storeId ?? "";
+    message.storeKey = object.storeKey ?? "";
     message.imagePropertyIds = object.imagePropertyIds?.map((e) => e) || [];
     return message;
   },
@@ -1098,7 +1098,7 @@ export const AddImageProperty = {
 };
 
 function createBaseArchivePointer(): ArchivePointer {
-  return { newArchiveKeys: [], storeId: undefined, disallowed: undefined };
+  return { newArchiveKeys: [], storeKey: undefined, disallowed: undefined };
 }
 
 export const ArchivePointer = {
@@ -1106,8 +1106,8 @@ export const ArchivePointer = {
     for (const v of message.newArchiveKeys) {
       writer.uint32(10).string(v!);
     }
-    if (message.storeId !== undefined) {
-      writer.uint32(26).string(message.storeId);
+    if (message.storeKey !== undefined) {
+      writer.uint32(26).string(message.storeKey);
     }
     if (message.disallowed !== undefined) {
       Empty.encode(message.disallowed, writer.uint32(34).fork()).ldelim();
@@ -1134,7 +1134,7 @@ export const ArchivePointer = {
             break;
           }
 
-          message.storeId = reader.string();
+          message.storeKey = reader.string();
           continue;
         case 4:
           if (tag !== 34) {
@@ -1159,7 +1159,7 @@ export const ArchivePointer = {
   fromPartial(object: DeepPartial<ArchivePointer>): ArchivePointer {
     const message = createBaseArchivePointer();
     message.newArchiveKeys = object.newArchiveKeys?.map((e) => e) || [];
-    message.storeId = object.storeId ?? undefined;
+    message.storeKey = object.storeKey ?? undefined;
     message.disallowed = (object.disallowed !== undefined && object.disallowed !== null)
       ? Empty.fromPartial(object.disallowed)
       : undefined;
@@ -1455,7 +1455,7 @@ export const ImageServiceListArchivesResponse = {
 };
 
 function createBaseImageServiceUpdateArchiveRequest(): ImageServiceUpdateArchiveRequest {
-  return { archiveId: "", storeId: undefined };
+  return { archiveId: "", storeKey: undefined };
 }
 
 export const ImageServiceUpdateArchiveRequest = {
@@ -1463,8 +1463,8 @@ export const ImageServiceUpdateArchiveRequest = {
     if (message.archiveId !== "") {
       writer.uint32(10).string(message.archiveId);
     }
-    if (message.storeId !== undefined) {
-      writer.uint32(18).string(message.storeId);
+    if (message.storeKey !== undefined) {
+      writer.uint32(18).string(message.storeKey);
     }
     return writer;
   },
@@ -1488,7 +1488,7 @@ export const ImageServiceUpdateArchiveRequest = {
             break;
           }
 
-          message.storeId = reader.string();
+          message.storeKey = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -1506,7 +1506,7 @@ export const ImageServiceUpdateArchiveRequest = {
   fromPartial(object: DeepPartial<ImageServiceUpdateArchiveRequest>): ImageServiceUpdateArchiveRequest {
     const message = createBaseImageServiceUpdateArchiveRequest();
     message.archiveId = object.archiveId ?? "";
-    message.storeId = object.storeId ?? undefined;
+    message.storeKey = object.storeKey ?? undefined;
     return message;
   },
 };

@@ -18,6 +18,9 @@ export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
   const nodeLauncher = useRecoilValue(nodeLauncherAtoms.nodeLauncher);
   const isNodeValid = useRecoilValue(nodeLauncherSelectors.isNodeValid);
   const isConfigValid = useRecoilValue(nodeLauncherSelectors.isConfigValid);
+  const isNodeAllocationValid = useRecoilValue(
+    nodeLauncherSelectors.isNodeAllocationValid,
+  );
   const error = useRecoilValue(nodeLauncherAtoms.error);
   const selectedHosts = useRecoilValue(nodeLauncherAtoms.selectedHosts);
   const allHosts = useRecoilValue(hostAtoms.allHosts);
@@ -43,9 +46,15 @@ export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
         </li>
         {isSuperUser && (selectedHosts || selectedRegions) && (
           <li>
-            <span css={styles.summaryIcon}>
-              <IconCheckCircle />
-            </span>
+            {isConfigValid && isNodeValid && isNodeAllocationValid ? (
+              <span css={styles.summaryIcon}>
+                <IconCheckCircle />
+              </span>
+            ) : (
+              <span css={styles.summaryIcon}>
+                <IconUncheckCircle />
+              </span>
+            )}
             <div>
               <label>Quantity</label>
               <span>{totalNodesToLaunch}</span>
@@ -53,7 +62,7 @@ export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
           </li>
         )}
         <li>
-          {isConfigValid && isNodeValid ? (
+          {isConfigValid && isNodeValid && isNodeAllocationValid ? (
             <span css={styles.summaryIcon}>
               <IconCheckCircle />
             </span>
@@ -66,14 +75,14 @@ export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
           <div>
             <label>Config</label>
             <span>
-              {isConfigValid && isNodeValid
+              {isConfigValid && isNodeValid && isNodeAllocationValid
                 ? 'Ready For Liftoff'
                 : 'Needs Work'}
             </span>
           </div>
         </li>
       </ul>
-      {(!isConfigValid || !isNodeValid) && (
+      {(!isConfigValid || !isNodeValid || !isNodeAllocationValid) && (
         <>
           <h2 css={styles.missingFieldsTitle}>
             The following needs to be added:
@@ -88,18 +97,25 @@ export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
                     </div>
                   ))
               : null}
-            {!isNodeValid ? (
+            {!isNodeValid || !isNodeAllocationValid ? (
               <>
-                {!selectedHosts && allHosts?.length ? (
+                {!selectedHosts && !selectedRegions && allHosts?.length ? (
                   <div>Host or Region</div>
                 ) : null}
                 {!selectedRegions && !allHosts?.length ? (
                   <div>Region</div>
                 ) : null}
-                {!hasSummary ? <div>Blockchain</div> : null}
+                {!hasSummary ? <div>Protocol</div> : null}
               </>
             ) : null}
             {!selectedVersion && <div>Version</div>}
+            {(selectedHosts && !selectedHosts?.every((host) => host.isValid)) ||
+            (selectedRegions &&
+              !selectedRegions?.every((region) => region.isValid) && (
+                <div>Valid Node Allocation</div>
+              )) ? (
+              <div>Valid Node Allocation</div>
+            ) : null}
           </div>
         </>
       )}

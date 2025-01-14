@@ -68,8 +68,8 @@ export interface ImageConfig {
   imageUri: string;
   /** The archive id for this image config. */
   archiveId: string;
-  /** The store id pointing to external archive data. */
-  storeId: string;
+  /** The store key pointing to external archive data. */
+  storeKey: string;
   /** The configured image property values. */
   values: PropertyValueConfig[];
 }
@@ -341,7 +341,7 @@ export const RamdiskConfig = {
 };
 
 function createBaseImageConfig(): ImageConfig {
-  return { imageId: "", imageUri: "", archiveId: "", storeId: "", values: [] };
+  return { imageId: "", imageUri: "", archiveId: "", storeKey: "", values: [] };
 }
 
 export const ImageConfig = {
@@ -355,8 +355,8 @@ export const ImageConfig = {
     if (message.archiveId !== "") {
       writer.uint32(26).string(message.archiveId);
     }
-    if (message.storeId !== "") {
-      writer.uint32(34).string(message.storeId);
+    if (message.storeKey !== "") {
+      writer.uint32(34).string(message.storeKey);
     }
     for (const v of message.values) {
       PropertyValueConfig.encode(v!, writer.uint32(42).fork()).ldelim();
@@ -397,7 +397,7 @@ export const ImageConfig = {
             break;
           }
 
-          message.storeId = reader.string();
+          message.storeKey = reader.string();
           continue;
         case 5:
           if (tag !== 42) {
@@ -424,7 +424,7 @@ export const ImageConfig = {
     message.imageId = object.imageId ?? "";
     message.imageUri = object.imageUri ?? "";
     message.archiveId = object.archiveId ?? "";
-    message.storeId = object.storeId ?? "";
+    message.storeKey = object.storeKey ?? "";
     message.values = object.values?.map((e) => PropertyValueConfig.fromPartial(e)) || [];
     return message;
   },

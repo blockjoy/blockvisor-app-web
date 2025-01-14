@@ -114,7 +114,7 @@ export const NodeRegionSelectMultiple = ({ onChange }: Props) => {
           text={
             <p>
               {!selectedRegions?.length
-                ? 'Auto select'
+                ? 'Select Regions'
                 : selectedRegions?.length === 1
                 ? selectedRegions[0].regionInfo.region?.displayName ||
                   selectedRegions[0].regionInfo.region?.regionKey

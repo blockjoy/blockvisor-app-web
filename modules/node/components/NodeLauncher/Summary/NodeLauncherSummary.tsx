@@ -141,7 +141,7 @@ export const NodeLauncherSummary = ({
               <span>Host{isSuperUser ? 's' : ''}</span>
               {selectedHosts !== null ? (
                 <a onClick={() => onHostsChanged(null)} css={styles.autoSelect}>
-                  Auto select
+                  Reset
                 </a>
               ) : null}
             </FormLabel>
@@ -168,7 +168,7 @@ export const NodeLauncherSummary = ({
                     onClick={() => onRegionsChanged(null)}
                     css={styles.autoSelect}
                   >
-                    Auto select
+                    Reset
                   </a>
                 ) : null}
               </FormLabel>
