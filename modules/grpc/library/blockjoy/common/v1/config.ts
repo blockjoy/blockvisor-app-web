@@ -1,8 +1,8 @@
 /* eslint-disable */
-import Long from 'long';
-import _m0 from 'protobufjs/minimal';
+import Long from "long";
+import _m0 from "protobufjs/minimal";
 
-export const protobufPackage = 'blockjoy.common.v1';
+export const protobufPackage = "blockjoy.common.v1";
 
 /** The packet protocol type for firewall rules. */
 export enum FirewallProtocol {
@@ -79,7 +79,9 @@ export interface PropertyValueConfig {
   /** The key of the image property. */
   key: string;
   /** The group key for switches and enums. */
-  keyGroup?: string | undefined;
+  keyGroup?:
+    | string
+    | undefined;
   /** The configured value of the image property. */
   value: string;
 }
@@ -99,7 +101,9 @@ export interface FirewallRule {
   /** The lookup key of this firewall rule. */
   key: string;
   /** A user-readable description of this rule. */
-  description?: string | undefined;
+  description?:
+    | string
+    | undefined;
   /** The protocol type of packets. */
   protocol: FirewallProtocol;
   /** The direction of traffic for which this rule applies. */
@@ -133,10 +137,7 @@ function createBaseNodeConfig(): NodeConfig {
 }
 
 export const NodeConfig = {
-  encode(
-    message: NodeConfig,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: NodeConfig, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.vm !== undefined) {
       VmConfig.encode(message.vm, writer.uint32(10).fork()).ldelim();
     }
@@ -144,17 +145,13 @@ export const NodeConfig = {
       ImageConfig.encode(message.image, writer.uint32(18).fork()).ldelim();
     }
     if (message.firewall !== undefined) {
-      FirewallConfig.encode(
-        message.firewall,
-        writer.uint32(26).fork(),
-      ).ldelim();
+      FirewallConfig.encode(message.firewall, writer.uint32(26).fork()).ldelim();
     }
     return writer;
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): NodeConfig {
-    const reader =
-      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNodeConfig();
     while (reader.pos < end) {
@@ -196,18 +193,13 @@ export const NodeConfig = {
 
   fromPartial(object: DeepPartial<NodeConfig>): NodeConfig {
     const message = createBaseNodeConfig();
-    message.vm =
-      object.vm !== undefined && object.vm !== null
-        ? VmConfig.fromPartial(object.vm)
-        : undefined;
-    message.image =
-      object.image !== undefined && object.image !== null
-        ? ImageConfig.fromPartial(object.image)
-        : undefined;
-    message.firewall =
-      object.firewall !== undefined && object.firewall !== null
-        ? FirewallConfig.fromPartial(object.firewall)
-        : undefined;
+    message.vm = (object.vm !== undefined && object.vm !== null) ? VmConfig.fromPartial(object.vm) : undefined;
+    message.image = (object.image !== undefined && object.image !== null)
+      ? ImageConfig.fromPartial(object.image)
+      : undefined;
+    message.firewall = (object.firewall !== undefined && object.firewall !== null)
+      ? FirewallConfig.fromPartial(object.firewall)
+      : undefined;
     return message;
   },
 };
@@ -217,10 +209,7 @@ function createBaseVmConfig(): VmConfig {
 }
 
 export const VmConfig = {
-  encode(
-    message: VmConfig,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: VmConfig, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.cpuCores !== 0) {
       writer.uint32(8).uint64(message.cpuCores);
     }
@@ -237,8 +226,7 @@ export const VmConfig = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): VmConfig {
-    const reader =
-      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseVmConfig();
     while (reader.pos < end) {
@@ -290,22 +278,18 @@ export const VmConfig = {
     message.cpuCores = object.cpuCores ?? 0;
     message.memoryBytes = object.memoryBytes ?? 0;
     message.diskBytes = object.diskBytes ?? 0;
-    message.ramdisks =
-      object.ramdisks?.map((e) => RamdiskConfig.fromPartial(e)) || [];
+    message.ramdisks = object.ramdisks?.map((e) => RamdiskConfig.fromPartial(e)) || [];
     return message;
   },
 };
 
 function createBaseRamdiskConfig(): RamdiskConfig {
-  return { mount: '', sizeBytes: 0 };
+  return { mount: "", sizeBytes: 0 };
 }
 
 export const RamdiskConfig = {
-  encode(
-    message: RamdiskConfig,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
-    if (message.mount !== '') {
+  encode(message: RamdiskConfig, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.mount !== "") {
       writer.uint32(10).string(message.mount);
     }
     if (message.sizeBytes !== 0) {
@@ -315,8 +299,7 @@ export const RamdiskConfig = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): RamdiskConfig {
-    const reader =
-      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseRamdiskConfig();
     while (reader.pos < end) {
@@ -351,31 +334,28 @@ export const RamdiskConfig = {
 
   fromPartial(object: DeepPartial<RamdiskConfig>): RamdiskConfig {
     const message = createBaseRamdiskConfig();
-    message.mount = object.mount ?? '';
+    message.mount = object.mount ?? "";
     message.sizeBytes = object.sizeBytes ?? 0;
     return message;
   },
 };
 
 function createBaseImageConfig(): ImageConfig {
-  return { imageId: '', imageUri: '', archiveId: '', storeKey: '', values: [] };
+  return { imageId: "", imageUri: "", archiveId: "", storeKey: "", values: [] };
 }
 
 export const ImageConfig = {
-  encode(
-    message: ImageConfig,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
-    if (message.imageId !== '') {
+  encode(message: ImageConfig, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.imageId !== "") {
       writer.uint32(10).string(message.imageId);
     }
-    if (message.imageUri !== '') {
+    if (message.imageUri !== "") {
       writer.uint32(18).string(message.imageUri);
     }
-    if (message.archiveId !== '') {
+    if (message.archiveId !== "") {
       writer.uint32(26).string(message.archiveId);
     }
-    if (message.storeKey !== '') {
+    if (message.storeKey !== "") {
       writer.uint32(34).string(message.storeKey);
     }
     for (const v of message.values) {
@@ -385,8 +365,7 @@ export const ImageConfig = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ImageConfig {
-    const reader =
-      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseImageConfig();
     while (reader.pos < end) {
@@ -425,9 +404,7 @@ export const ImageConfig = {
             break;
           }
 
-          message.values.push(
-            PropertyValueConfig.decode(reader, reader.uint32()),
-          );
+          message.values.push(PropertyValueConfig.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -444,40 +421,35 @@ export const ImageConfig = {
 
   fromPartial(object: DeepPartial<ImageConfig>): ImageConfig {
     const message = createBaseImageConfig();
-    message.imageId = object.imageId ?? '';
-    message.imageUri = object.imageUri ?? '';
-    message.archiveId = object.archiveId ?? '';
-    message.storeKey = object.storeKey ?? '';
-    message.values =
-      object.values?.map((e) => PropertyValueConfig.fromPartial(e)) || [];
+    message.imageId = object.imageId ?? "";
+    message.imageUri = object.imageUri ?? "";
+    message.archiveId = object.archiveId ?? "";
+    message.storeKey = object.storeKey ?? "";
+    message.values = object.values?.map((e) => PropertyValueConfig.fromPartial(e)) || [];
     return message;
   },
 };
 
 function createBasePropertyValueConfig(): PropertyValueConfig {
-  return { key: '', keyGroup: undefined, value: '' };
+  return { key: "", keyGroup: undefined, value: "" };
 }
 
 export const PropertyValueConfig = {
-  encode(
-    message: PropertyValueConfig,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
-    if (message.key !== '') {
+  encode(message: PropertyValueConfig, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.key !== "") {
       writer.uint32(10).string(message.key);
     }
     if (message.keyGroup !== undefined) {
       writer.uint32(18).string(message.keyGroup);
     }
-    if (message.value !== '') {
+    if (message.value !== "") {
       writer.uint32(26).string(message.value);
     }
     return writer;
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): PropertyValueConfig {
-    const reader =
-      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePropertyValueConfig();
     while (reader.pos < end) {
@@ -519,9 +491,9 @@ export const PropertyValueConfig = {
 
   fromPartial(object: DeepPartial<PropertyValueConfig>): PropertyValueConfig {
     const message = createBasePropertyValueConfig();
-    message.key = object.key ?? '';
+    message.key = object.key ?? "";
     message.keyGroup = object.keyGroup ?? undefined;
-    message.value = object.value ?? '';
+    message.value = object.value ?? "";
     return message;
   },
 };
@@ -531,10 +503,7 @@ function createBaseFirewallConfig(): FirewallConfig {
 }
 
 export const FirewallConfig = {
-  encode(
-    message: FirewallConfig,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: FirewallConfig, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.defaultIn !== 0) {
       writer.uint32(8).int32(message.defaultIn);
     }
@@ -548,8 +517,7 @@ export const FirewallConfig = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): FirewallConfig {
-    const reader =
-      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFirewallConfig();
     while (reader.pos < end) {
@@ -599,23 +567,12 @@ export const FirewallConfig = {
 };
 
 function createBaseFirewallRule(): FirewallRule {
-  return {
-    key: '',
-    description: undefined,
-    protocol: 0,
-    direction: 0,
-    action: 0,
-    ips: [],
-    ports: [],
-  };
+  return { key: "", description: undefined, protocol: 0, direction: 0, action: 0, ips: [], ports: [] };
 }
 
 export const FirewallRule = {
-  encode(
-    message: FirewallRule,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
-    if (message.key !== '') {
+  encode(message: FirewallRule, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.key !== "") {
       writer.uint32(10).string(message.key);
     }
     if (message.description !== undefined) {
@@ -640,8 +597,7 @@ export const FirewallRule = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): FirewallRule {
-    const reader =
-      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFirewallRule();
     while (reader.pos < end) {
@@ -711,7 +667,7 @@ export const FirewallRule = {
 
   fromPartial(object: DeepPartial<FirewallRule>): FirewallRule {
     const message = createBaseFirewallRule();
-    message.key = object.key ?? '';
+    message.key = object.key ?? "";
     message.description = object.description ?? undefined;
     message.protocol = object.protocol ?? 0;
     message.direction = object.direction ?? 0;
@@ -723,15 +679,12 @@ export const FirewallRule = {
 };
 
 function createBaseIpName(): IpName {
-  return { ip: '', name: undefined };
+  return { ip: "", name: undefined };
 }
 
 export const IpName = {
-  encode(
-    message: IpName,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
-    if (message.ip !== '') {
+  encode(message: IpName, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.ip !== "") {
       writer.uint32(10).string(message.ip);
     }
     if (message.name !== undefined) {
@@ -741,8 +694,7 @@ export const IpName = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): IpName {
-    const reader =
-      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseIpName();
     while (reader.pos < end) {
@@ -777,7 +729,7 @@ export const IpName = {
 
   fromPartial(object: DeepPartial<IpName>): IpName {
     const message = createBaseIpName();
-    message.ip = object.ip ?? '';
+    message.ip = object.ip ?? "";
     message.name = object.name ?? undefined;
     return message;
   },
@@ -788,10 +740,7 @@ function createBasePortName(): PortName {
 }
 
 export const PortName = {
-  encode(
-    message: PortName,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: PortName, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.port !== 0) {
       writer.uint32(8).uint32(message.port);
     }
@@ -802,8 +751,7 @@ export const PortName = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): PortName {
-    const reader =
-      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePortName();
     while (reader.pos < end) {
@@ -848,45 +796,31 @@ declare const self: any | undefined;
 declare const window: any | undefined;
 declare const global: any | undefined;
 const tsProtoGlobalThis: any = (() => {
-  if (typeof globalThis !== 'undefined') {
+  if (typeof globalThis !== "undefined") {
     return globalThis;
   }
-  if (typeof self !== 'undefined') {
+  if (typeof self !== "undefined") {
     return self;
   }
-  if (typeof window !== 'undefined') {
+  if (typeof window !== "undefined") {
     return window;
   }
-  if (typeof global !== 'undefined') {
+  if (typeof global !== "undefined") {
     return global;
   }
-  throw 'Unable to locate global object';
+  throw "Unable to locate global object";
 })();
 
-type Builtin =
-  | Date
-  | Function
-  | Uint8Array
-  | string
-  | number
-  | boolean
-  | undefined;
+type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends {}
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin ? T
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 function longToNumber(long: Long): number {
   if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new tsProtoGlobalThis.Error(
-      'Value is larger than Number.MAX_SAFE_INTEGER',
-    );
+    throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
   return long.toNumber();
 }
