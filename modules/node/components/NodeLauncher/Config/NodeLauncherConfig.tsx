@@ -1,92 +1,92 @@
 import { Fragment } from 'react';
 import { useRecoilValue } from 'recoil';
-import { NodeProperty } from '@modules/grpc/library/blockjoy/v1/node';
-import { renderControls } from '@modules/node/utils/renderNodeLauncherConfigControls';
-import { BlockchainVersion } from '@modules/grpc/library/blockjoy/v1/blockchain';
-import { NetworkConfig } from '@modules/grpc/library/blockjoy/common/v1/blockchain';
-import { FormLabel, FormHeader } from '@shared/components';
+import { renderNodeConfigControl } from '@modules/node/utils/renderNodeConfigControl';
+import { ProtocolVersion } from '@modules/grpc/library/blockjoy/v1/protocol';
+import { FormLabel, FormHeader, sort } from '@shared/components';
 import {
   NodeLauncherPanel,
   NodeVersionSelect,
   nodeLauncherAtoms,
-  nodeLauncherSelectors,
-  NodeTypeSelect,
-  NodeNetworkSelect,
-  FirewallDropdown,
   NodeLauncherState,
+  NodeVariantSelect,
+  NodePropertyGroup,
+  NodeFirewallRules,
 } from '@modules/node';
-import { authSelectors } from '@modules/auth';
 import { styles } from './NodeLauncherConfig.styles';
+import { UiType } from '@modules/grpc/library/blockjoy/common/v1/protocol';
+import { kebabToCapitalized } from 'utils';
+import { FirewallRule } from '@modules/grpc/library/blockjoy/common/v1/config';
 
 type NodeLauncherConfigProps = {
-  onFileUploaded: (e: any) => void;
-  onNodeConfigPropertyChanged: (name: string, value: string | boolean) => void;
+  onNodeConfigPropertyChanged: (
+    key: string,
+    keyGroup: string,
+    value: string | boolean,
+  ) => void;
   onNodePropertyChanged: <K extends keyof NodeLauncherState>(
     name: K,
     value: NodeLauncherState[K],
   ) => void;
-  onVersionChanged: (version: BlockchainVersion | null) => void;
-  onNetworkChanged: (network: NetworkConfig) => void;
+  onVersionChanged: (version: ProtocolVersion) => void;
+  onVariantChanged: (variant: string) => void;
 };
 
 export const NodeLauncherConfig = ({
-  onFileUploaded,
   onNodeConfigPropertyChanged,
   onNodePropertyChanged,
   onVersionChanged,
-  onNetworkChanged,
+  onVariantChanged,
 }: NodeLauncherConfigProps) => {
   const nodeLauncher = useRecoilValue(nodeLauncherAtoms.nodeLauncher);
-  const networks = useRecoilValue(nodeLauncherSelectors.networks);
-  const selectedVersion = useRecoilValue(nodeLauncherAtoms.selectedVersion);
-  const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
 
-  const { properties, keyFiles } = nodeLauncher;
+  const { properties } = nodeLauncher;
+
+  const sortedProperties = sort(properties, { field: 'key' });
+
+  const handleFirewallChanged = (nextFirewall: FirewallRule[]) =>
+    onNodePropertyChanged('firewall', nextFirewall);
 
   return (
     <NodeLauncherPanel>
       <div css={styles.wrapper}>
-        <FormHeader>Configure</FormHeader>
+        <FormHeader>Config</FormHeader>
 
-        <FormLabel>Node Type</FormLabel>
-        <NodeTypeSelect />
+        <FormLabel>Variant</FormLabel>
+        <NodeVariantSelect onChange={onVariantChanged} />
 
         <FormLabel>Version</FormLabel>
         <NodeVersionSelect onVersionChanged={onVersionChanged} />
 
-        {(networks.length || isSuperUser) && selectedVersion && (
-          <>
-            <FormLabel>Network</FormLabel>
-            <NodeNetworkSelect onNetworkChanged={onNetworkChanged} />
-          </>
-        )}
-
         <FormLabel hint="Add IP addresses that are allowed/denied">
           Firewall Rules
         </FormLabel>
-        <FirewallDropdown
-          isDisabled={!isSuperUser}
-          onPropertyChanged={onNodePropertyChanged}
-          allowedIps={nodeLauncher?.allowIps}
-          deniedIps={nodeLauncher?.denyIps}
+        <NodeFirewallRules
+          wrapperStyles={styles.firewall}
+          rules={nodeLauncher.firewall}
+          onFirewallChanged={handleFirewallChanged}
         />
 
-        {Boolean(networks?.length) &&
-          properties?.map((property: NodeProperty) => {
-            return (
-              <Fragment key={property.name}>
-                <FormLabel isRequired={property.required}>
-                  {property.displayName}
-                </FormLabel>
-                {renderControls(
-                  property,
-                  keyFiles!,
-                  onFileUploaded,
-                  onNodeConfigPropertyChanged,
-                )}
-              </Fragment>
-            );
-          })}
+        {sortedProperties?.map((propertyGroup: NodePropertyGroup, index) => {
+          const isRequired =
+            (propertyGroup.uiType === UiType.UI_TYPE_TEXT ||
+              propertyGroup.uiType === UiType.UI_TYPE_PASSWORD) &&
+            propertyGroup.value === '';
+
+          return (
+            <Fragment key={propertyGroup.keyGroup! + index!}>
+              <FormLabel isCapitalized isRequired={isRequired}>
+                {propertyGroup.displayGroup ||
+                  kebabToCapitalized(
+                    propertyGroup.keyGroup || propertyGroup.key,
+                  )}
+              </FormLabel>
+              {renderNodeConfigControl(
+                propertyGroup,
+                onNodeConfigPropertyChanged,
+              )}
+            </Fragment>
+          );
+        })}
       </div>
     </NodeLauncherPanel>
   );

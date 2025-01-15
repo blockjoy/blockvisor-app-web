@@ -33,7 +33,7 @@ export const styles = {
     }
 
     @media ${breakpoints.fromLrg} {
-      max-width: 600px;
+      max-width: 800px;
     }
   `,
   content: css`

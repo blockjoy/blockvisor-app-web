@@ -1,5 +1,5 @@
 import { toast } from 'react-toastify';
-import { nodeClient } from '@modules/grpc';
+import { imageClient, nodeClient } from '@modules/grpc';
 import { SetterOrUpdater, useRecoilState, useRecoilValue } from 'recoil';
 import { nodeAtoms } from '../store/nodeAtoms';
 import { useNodeList } from './useNodeList';
@@ -12,6 +12,7 @@ import {
   useSwitchOrganization,
 } from '@modules/organization';
 import { authSelectors } from '@modules/auth';
+import { Image } from '@modules/grpc/library/blockjoy/v1/image';
 
 type Args = string | string[] | undefined;
 
@@ -20,10 +21,14 @@ type Hook = {
   stopNode: (nodeId: Args) => void;
   startNode: (nodeId: Args) => void;
   modifyNode: (node: Node) => void;
-  updateNode: (node: NodeServiceUpdateConfigRequest) => Promise<void>;
+  updateNode: (
+    node: NodeServiceUpdateConfigRequest,
+    showSuccessToast?: boolean,
+  ) => Promise<void>;
   isLoading: boolean;
   unloadNode: any;
   node: Node | null;
+  nodeImage: Image | null;
   setIsLoading: SetterOrUpdater<LoadingState>;
 };
 
@@ -40,6 +45,7 @@ export const useNodeView = (): Hook => {
     nodeAtoms.isLoadingActiveNode,
   );
   const [node, setNode] = useRecoilState(nodeAtoms.activeNode);
+  const [nodeImage, setNodeImage] = useRecoilState(nodeAtoms.nodeImage);
   const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
   const defaultOrganization = useRecoilValue(
     organizationSelectors.defaultOrganization,
@@ -64,42 +70,58 @@ export const useNodeView = (): Hook => {
   };
 
   const loadNode = async (id: Args) => {
-    const foundNode = nodeList?.find((n) => n.id === id);
+    let nextNode = nodeList?.find((n) => n.nodeId === id);
 
-    if (foundNode) {
+    if (nextNode) {
       setIsLoading('finished');
       if (!isSuperUser) {
-        setNode(foundNode);
-        if (foundNode.orgId !== defaultOrganization?.id)
-          switchOrganization(foundNode.orgId, foundNode.orgName);
+        setNode(nextNode);
       } else {
-        setNode(foundNode);
-        const node = await nodeClient.getNode(id as string);
-        setNode(node);
-        if (node.orgId !== defaultOrganization?.id)
-          switchOrganization(node.orgId, node.orgName);
+        setNode(nextNode);
+        nextNode = await nodeClient.getNode(id as string);
+        setNode(nextNode);
       }
+
+      if (nextNode.orgId !== defaultOrganization?.orgId)
+        switchOrganization(nextNode.orgId, nextNode.orgName);
+
+      const imageResponse = await imageClient.getImage({
+        versionKey: nextNode.versionKey!,
+        semanticVersion: nextNode.semanticVersion,
+      });
+      setNodeImage(imageResponse?.image!);
 
       return;
     }
 
     try {
       const nodeId = convertRouteParamToString(id);
-      const node = await nodeClient.getNode(nodeId);
-      setNode(node);
+      nextNode = await nodeClient.getNode(nodeId);
+
+      const { orgId, orgName, versionKey } = nextNode;
+
+      setNode(nextNode);
+
+      if (orgId !== defaultOrganization?.orgId)
+        switchOrganization(orgId, orgName);
+
+      const imageResponse = await imageClient.getImage({
+        versionKey,
+      });
+      setNodeImage(imageResponse?.image!);
+
       setIsLoading('finished');
-      if (node.orgId !== defaultOrganization?.id)
-        switchOrganization(node.orgId, node.orgName);
     } catch (err) {
       setNode(null);
-    } finally {
-      setIsLoading('finished');
     }
   };
 
   const unloadNode = () => setNode(null);
 
-  const updateNode = async (nodeRequest: NodeServiceUpdateConfigRequest) => {
+  const updateNode = async (
+    nodeRequest: NodeServiceUpdateConfigRequest,
+    showSuccessToast?: boolean,
+  ) => {
     try {
       await nodeClient.updateNode(nodeRequest);
 
@@ -110,6 +132,8 @@ export const useNodeView = (): Hook => {
 
       setNode(newNode);
       modifyNodeInNodeList(newNode);
+
+      if (showSuccessToast) toast.success('Node Updated');
 
       return;
     } catch (err) {
@@ -132,6 +156,7 @@ export const useNodeView = (): Hook => {
     updateNode,
     modifyNode,
     node,
+    nodeImage,
     isLoading: isLoading !== 'finished',
     setIsLoading,
   };

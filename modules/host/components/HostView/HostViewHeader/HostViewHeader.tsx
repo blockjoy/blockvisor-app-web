@@ -16,13 +16,13 @@ export const HostViewHeader = () => {
   const [isDeleteMode, setIsDeleteMode] = useState(false);
 
   const handleDeleteHost = () =>
-    deleteHost(host?.id!, () => {
+    deleteHost(host?.hostId!, () => {
       setIsDeleteMode(false);
       toast.success('Host Deleted');
       router.push(ROUTES.HOSTS);
     });
 
-  if (!host?.id) return null;
+  if (!host?.hostId) return null;
 
   const handleDeleteToggled = () => setIsDeleteMode(!isDeleteMode);
 
@@ -31,21 +31,23 @@ export const HostViewHeader = () => {
       {isDeleteMode && (
         <DeleteModal
           portalId="delete-host-modal"
-          elementName={host?.name!}
+          elementName={host?.displayName! || host?.networkName}
           entityName="Host"
           onHide={handleDeleteToggled}
           onSubmit={handleDeleteHost}
         />
       )}
       <header css={[styles.header]}>
-        {isLoading !== 'finished' && !host?.id ? (
+        {isLoading !== 'finished' && !host?.hostId ? (
           <SkeletonGrid>
             <Skeleton width="400px" />
           </SkeletonGrid>
         ) : (
-          host?.id && (
+          host?.hostId && (
             <div>
-              <h2 css={styles.detailsHeader}>{host!.name}</h2>
+              <h2 css={styles.detailsHeader}>
+                {host!.displayName || host.networkName}
+              </h2>
               <div css={styles.detailsFooter}>
                 {host!.createdAt && (
                   <small css={[typo.small, colors.text2]}>

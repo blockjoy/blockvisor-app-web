@@ -28,13 +28,14 @@ export function useGetOrganization() {
 
   const getOrganization = async (id: string, shouldSetDefault?: boolean) => {
     let organization: Org | null | undefined = organizations?.find(
-      (o) => o.id === id,
+      (o) => o.orgId === id,
     )!;
 
     const shouldUpdateDefault =
       shouldSetDefault &&
       (!organization ||
-        (organization?.id && organization?.id !== defaultOrganization?.id));
+        (organization?.orgId &&
+          organization?.orgId !== defaultOrganization?.orgId));
 
     console.log('shouldUpdateDefault', {
       shouldUpdateDefault,
@@ -46,7 +47,7 @@ export function useGetOrganization() {
     if (organization) {
       setOrganization(organization);
       if (shouldUpdateDefault)
-        switchOrganization(organization.id, organization.name);
+        switchOrganization(organization.orgId, organization.name);
     } else {
       try {
         organization = await organizationClient.getOrganization(id);
@@ -54,7 +55,7 @@ export function useGetOrganization() {
         checkForApiError('organization', organization);
         setOrganization(organization);
         if (shouldUpdateDefault)
-          switchOrganization(organization.id, organization.name);
+          switchOrganization(organization.orgId, organization.name);
       } catch (err) {
         await getDefaultOrganization(organizations);
         setIsLoading('finished');

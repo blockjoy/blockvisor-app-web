@@ -1,4 +1,4 @@
-import { HostIpAddress } from '@modules/grpc/library/blockjoy/v1/host';
+import { HostIpAddress } from '@modules/grpc/library/blockjoy/common/v1/host';
 import { Alert } from '@shared/components';
 import { styles } from './HostIpStatus.styles';
 

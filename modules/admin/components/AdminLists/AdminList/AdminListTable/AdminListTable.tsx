@@ -17,10 +17,12 @@ import {
 } from 'react';
 import { AdminListTableHeader } from './AdminListTableHeader/AdminListTableHeader';
 import { AdminListColumn } from '@modules/admin/types/AdminListColumn';
-import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
+import { Protocol } from '@modules/grpc/library/blockjoy/v1/protocol';
+import { User } from '@modules/grpc/library/blockjoy/v1/user';
 
 type Props = {
   name: string;
+  idPropertyName: string;
   isLoading: boolean;
   columns: AdminListColumn[];
   hidePagination?: boolean;
@@ -31,7 +33,8 @@ type Props = {
   activeSortField: number;
   activeSortOrder: SortOrder;
   selectedIds?: string[];
-  blockchains?: Blockchain[];
+  protocols?: Protocol[];
+  users?: User[];
   onIdSelected?: (id: string, isSelected: boolean) => void;
   onIdAllSelected?: (ids: string[]) => void;
   onPageChanged: (page: number) => void;
@@ -42,6 +45,7 @@ type Props = {
 
 export const AdminListTable = ({
   name,
+  idPropertyName,
   columns,
   hidePagination,
   isLoading,
@@ -52,7 +56,8 @@ export const AdminListTable = ({
   activeSortField,
   activeSortOrder,
   selectedIds,
-  blockchains,
+  protocols,
+  users,
   onIdSelected,
   onIdAllSelected,
   onPageChanged,
@@ -205,7 +210,7 @@ export const AdminListTable = ({
     if (selectedIds?.length === list.length) {
       onIdAllSelected?.([]);
     } else {
-      onIdAllSelected?.(list.map((item) => item.id));
+      onIdAllSelected?.(list.map((item) => item[idPropertyName]));
     }
   };
 
@@ -305,10 +310,12 @@ export const AdminListTable = ({
                 >
                   <AdminListTableHeader
                     index={index}
+                    canResize={index !== columnsVisible.length - 1}
                     isLastColumn={index === columnsVisible.length - 1}
                     initResize={initResize}
                     listAll={listAll}
-                    blockchains={blockchains}
+                    protocols={protocols}
+                    users={users}
                     activeSortField={activeSortField}
                     activeSortOrder={activeSortOrder}
                     column={column}
@@ -326,11 +333,13 @@ export const AdminListTable = ({
           <tbody>
             {list.map((item) => (
               <tr
-                key={item['id']}
-                className={selectedIds?.includes(item.id) ? 'selected' : ''}
+                key={item[idPropertyName]}
+                className={
+                  selectedIds?.includes(item[idPropertyName]) ? 'selected' : ''
+                }
                 onMouseEnter={() =>
                   isSelectingCheckboxes
-                    ? onIdSelected?.(item.id, isChecking)
+                    ? onIdSelected?.(item[idPropertyName], isChecking)
                     : null
                 }
                 onMouseUp={() => setIsSelectingCheckboxes(false)}
@@ -342,15 +351,15 @@ export const AdminListTable = ({
                       type="button"
                       onMouseDown={() =>
                         handleCheckboxClick(
-                          item.id,
-                          !selectedIds?.includes(item.id),
+                          item[idPropertyName],
+                          !selectedIds?.includes(item[idPropertyName]),
                         )
                       }
                       onMouseUp={() => setIsSelectingCheckboxes(false)}
                     >
                       <Checkbox
-                        name={item.id}
-                        checked={selectedIds?.includes(item.id)}
+                        name={item[idPropertyName]}
+                        checked={selectedIds?.includes(item[idPropertyName])}
                       />
                     </button>
                   </td>
@@ -365,7 +374,9 @@ export const AdminListTable = ({
                       column.isOverflowHidden !== false,
                     )}
                     onClick={() =>
-                      column.isRowClickDisabled ? null : gotoDetails(item.id)
+                      column.isRowClickDisabled
+                        ? null
+                        : gotoDetails(item[idPropertyName])
                     }
                     onMouseUp={() => {
                       if (isSelectingCheckboxes) {

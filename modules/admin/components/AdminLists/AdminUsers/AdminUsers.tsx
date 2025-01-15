@@ -50,7 +50,7 @@ export const AdminUsers = () => {
     );
     return {
       list: response.users,
-      total: response.userCount,
+      total: response.total,
     };
   };
 
@@ -66,6 +66,7 @@ export const AdminUsers = () => {
   return (
     <AdminList
       name="users"
+      idPropertyName="userId"
       columns={columns}
       defaultSortField={UserSortField.USER_SORT_FIELD_FIRST_NAME}
       defaultSortOrder={SortOrder.SORT_ORDER_ASCENDING}

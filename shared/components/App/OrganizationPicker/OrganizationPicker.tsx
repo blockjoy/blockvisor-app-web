@@ -46,10 +46,10 @@ export const OrganizationPicker = ({
 
   const handleChange = async (nextOrg: Org | null) => {
     if (!nextOrg) return;
-    await switchOrganization(nextOrg.id, nextOrg.name);
+    await switchOrganization(nextOrg.orgId, nextOrg.name);
 
     selectedOrg.current = allOrganizations.find(
-      (org) => org.id === nextOrg?.id,
+      (org) => org.orgId === nextOrg?.orgId,
     )!;
 
     setIsOpen(false);
@@ -69,12 +69,12 @@ export const OrganizationPicker = ({
   const handleOpen = (open: boolean = true) => setIsOpen(open);
 
   useEffect(() => {
-    if (defaultOrganization?.id && allOrganizations?.length) {
+    if (defaultOrganization?.orgId && allOrganizations?.length) {
       selectedOrg.current = allOrganizations.find(
-        (org) => org.id === defaultOrganization?.id,
+        (org) => org.orgId === defaultOrganization?.orgId,
       )!;
     }
-  }, [defaultOrganization?.id, allOrganizations]);
+  }, [defaultOrganization?.orgId, allOrganizations]);
 
   const OrgSelectDropdown = useMemo(
     () => withSearchDropdown<Org>(Dropdown),
@@ -84,6 +84,7 @@ export const OrganizationPicker = ({
   return (
     <OrgSelectDropdown
       items={allOrganizations}
+      idKey="orgId"
       selectedItem={selectedOrg.current!}
       handleSelected={handleChange}
       isOpen={isOpen}
@@ -95,9 +96,11 @@ export const OrganizationPicker = ({
       hideDropdownIcon
       noBottomMargin
       hideSearch={allOrganizations.length < 25}
-      checkDisabledItem={(org?: Org) => org?.id === selectedOrg.current?.id}
+      checkDisabledItem={(org?: Org) =>
+        org?.orgId === selectedOrg.current?.orgId
+      }
       renderItem={(org: Org) =>
-        org.id === selectedOrg.current?.id ? (
+        org.orgId === selectedOrg.current?.orgId ? (
           <div css={styles.activeOrg}>
             <p css={styles.orgText}>{escapeHtml(defaultOrganization?.name!)}</p>
             <Badge color="primary" style="outline">

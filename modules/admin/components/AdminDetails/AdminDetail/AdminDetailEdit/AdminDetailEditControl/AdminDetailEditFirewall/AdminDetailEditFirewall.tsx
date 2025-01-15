@@ -12,11 +12,12 @@ export const AdminDetailEditFirewall = ({
   };
 
   return (
-    <FirewallDropdown
-      noBottomMargin
-      onPropertyChanged={handleChange}
-      type={editSettings.field === 'allowIps' ? 'allow' : 'deny'}
-      ips={JSON.parse(editSettings.defaultValue!)}
-    />
+    <div>TODO: Firewall</div>
+    // <FirewallDropdown
+    //   noBottomMargin
+    //   onPropertyChanged={handleChange}
+    //   type={editSettings.field === 'allowIps' ? 'allow' : 'deny'}
+    //   ips={JSON.parse(editSettings.defaultValue!)}
+    // />
   );
 };

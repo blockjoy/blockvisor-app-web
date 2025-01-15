@@ -6,13 +6,14 @@ import { organizationAtoms } from '@modules/organization';
 import { authAtoms, authSelectors } from '@modules/auth';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 
-const settings = selector<OrganizationSettings>({
+const settings = selector<OrganizationSettings | undefined>({
   key: 'organization.settings',
   get: ({ get }) => {
     const userSettings = get(authAtoms.userSettings);
+
     if (!userSettings?.hasOwnProperty('organization')) return {};
 
-    return JSON.parse(userSettings?.organization ?? '{}');
+    return JSON.parse(userSettings?.organization!);
   },
 });
 
@@ -20,23 +21,54 @@ const defaultOrganization = selector<DefaultOrganization | null>({
   key: 'organization.settings.default',
   get: ({ get }) => {
     const orgSettings = get(settings);
+    const orgSettingsLoadingState = get(authAtoms.userSettingsLoadingState);
     const organizations = get(organizationAtoms.allOrganizations);
-    const isSuperUser = get(authSelectors.isSuperUser);
-
     const defOrg = orgSettings?.default ?? null;
 
-    if (organizations?.length && defOrg && !isSuperUser) {
-      const org = organizations.find((org) => org?.id === defOrg?.id);
+    if (!orgSettings && orgSettingsLoadingState === 'finished') {
+      return null;
+    }
 
-      if (!org)
-        return {
-          id: organizations[0].id,
-          name: organizations[0].name,
-        };
+    if (
+      !defOrg &&
+      organizations.length &&
+      orgSettingsLoadingState === 'finished'
+    ) {
+      return {
+        orgId: organizations[0].orgId,
+        name: organizations[0].name,
+      };
     }
 
     return defOrg;
   },
+});
+
+const currentOrganization = selector<Org | null>({
+  key: 'organization.current',
+  get: ({ get }) => {
+    const defOrg = get(defaultOrganization);
+    const allOrgs = get(organizationAtoms.allOrganizations);
+
+    const currentOrg = allOrgs.find((org) => org.orgId === defOrg?.orgId);
+
+    return currentOrg || null;
+  },
+});
+
+const organizationMembersByIds = selectorFamily<OrgUser[], string[]>({
+  key: 'organization.members.query',
+  get:
+    (userIds) =>
+    ({ get }) => {
+      const currentOrg = get(currentOrganization);
+
+      const orgMembersSelected = currentOrg?.members.filter((member) =>
+        userIds.includes(member.userId),
+      );
+
+      return orgMembersSelected ?? [];
+    },
 });
 
 const allOrganizationsSorted = selector<Org[]>({
@@ -80,12 +112,10 @@ const organizationRoles = selector<OrgRole[]>({
   key: 'organization.roles',
   get: ({ get }) => {
     const user = get(authAtoms.user);
-    const defOrg = get(defaultOrganization);
-    const allOrgs = get(organizationAtoms.allOrganizations);
+    const currentOrg = get(currentOrganization);
 
-    const currentOrg = allOrgs.find((org) => org.id === defOrg?.id);
     const currentMember = currentOrg?.members?.find(
-      (member) => member.userId === user?.id,
+      (member) => member.userId === user?.userId,
     );
 
     return currentMember?.roles ?? [];
@@ -120,4 +150,5 @@ export const organizationSelectors = {
 
   organizationRoles,
   organizationRole,
+  organizationMembersByIds,
 };

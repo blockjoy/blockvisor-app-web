@@ -163,7 +163,7 @@ export const AdminFinancesByHost = () => {
 
       for (let host of hosts) {
         const revenue = nodes
-          .filter((node) => node.hostId === host.id && node.cost)
+          .filter((node) => node.hostId === host.hostId && node.cost)
           .map((node) => node.cost?.amount?.amountMinorUnits ?? 0)
           .reduce((prevValue, currentValue) => prevValue + currentValue, 0);
 
@@ -172,9 +172,9 @@ export const AdminFinancesByHost = () => {
           : revenue - (host.cost?.amount?.amountMinorUnits! ?? 0);
 
         hostsProfitArray.push({
-          hostId: host.id,
-          hostName: host.name,
-          orgName: host.orgName,
+          hostId: host.hostId,
+          hostName: host.displayName || host.networkName,
+          orgName: host.orgName ?? '-',
           profit,
           revenue,
           cost: host.cost?.amount?.amountMinorUnits ?? 0,
@@ -212,7 +212,7 @@ export const AdminFinancesByHost = () => {
     }
 
     await hostClient.updateHost({
-      id: hostId,
+      hostId,
       cost: {
         period: 1,
         amount: {

@@ -1,16 +1,13 @@
 import { createAdminFilterList } from './createAdminFilterList';
 
 export const createAdminNodeFilters = (filters: AdminListColumn[]) => ({
-  blockchain: createAdminFilterList(filters!, 'blockchainName'),
-  nodeStatus: createAdminFilterList(filters!, 'status'),
-  containerStatus: createAdminFilterList(filters!, 'containerStatus'),
-  syncStatus: createAdminFilterList(filters!, 'syncStatus'),
-  nodeType: createAdminFilterList(filters!, 'nodeType'),
+  protocol: createAdminFilterList(filters!, 'protocolName'),
+  nodeStatus: createAdminFilterList(filters!, 'nodeState'),
   orgIds: createAdminFilterList(filters!, 'orgName'),
   userIds: createAdminFilterList(filters!, 'createdBy'),
   hostIds: createAdminFilterList(filters!, 'host'),
   regions: createAdminFilterList(filters!, 'region'),
-  ips: createAdminFilterList(filters!, 'ip'),
+  ips: createAdminFilterList(filters!, 'ipAddress'),
   networks: createAdminFilterList(filters!, 'network'),
-  versions: createAdminFilterList(filters!, 'version'),
+  semanticVersions: createAdminFilterList(filters!, 'semanticVersion'),
 });

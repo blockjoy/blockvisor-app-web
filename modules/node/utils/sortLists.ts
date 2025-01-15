@@ -1,13 +1,10 @@
-import { NetworkConfig } from '@modules/grpc/library/blockjoy/common/v1/blockchain';
+// import { NetworkConfig } from '@modules/grpc/library/blockjoy/common/v1/blockchain';
+import { HostIpAddress } from '@modules/grpc/library/blockjoy/common/v1/host';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
-import {
-  BlockchainNodeType,
-  BlockchainVersion,
-} from '@modules/grpc/library/blockjoy/v1/blockchain';
-import { HostIpAddress } from '@modules/grpc/library/blockjoy/v1/host';
+import { ProtocolVersion } from '@modules/grpc/library/blockjoy/v1/protocol';
 import { sort } from '@shared/components';
 
-export const sortVersions = (list: BlockchainVersion[] | undefined) => {
+export const sortVersions = (list: ProtocolVersion[] | undefined) => {
   if (!list) return [];
 
   const toVersion = (raw: string) =>
@@ -26,14 +23,17 @@ export const sortVersions = (list: BlockchainVersion[] | undefined) => {
   };
 
   return [...list].sort((v1, v2) =>
-    compareVersions(toVersion(v1.version), toVersion(v2.version)),
+    compareVersions(
+      toVersion(v1.semanticVersion),
+      toVersion(v2.semanticVersion),
+    ),
   );
 };
 
-export const sortNetworks = (list: NetworkConfig[] | undefined) => {
+export const sortNetworks = (list: any[] | undefined) => {
   if (!list) return [];
 
-  const result: NetworkConfig[] = sort(list, {
+  const result: any[] = sort(list, {
     order: SortOrder.SORT_ORDER_ASCENDING,
     field: 'name',
   });
@@ -41,16 +41,16 @@ export const sortNetworks = (list: NetworkConfig[] | undefined) => {
   return result;
 };
 
-export const sortNodeTypes = (list: BlockchainNodeType[] | undefined) => {
-  if (!list) return [];
+// export const sortNodeTypes = (list: any[] | undefined) => {
+//   if (!list) return [];
 
-  const result: BlockchainNodeType[] = sort(list, {
-    order: SortOrder.SORT_ORDER_ASCENDING,
-    field: 'name',
-  });
+//   const result: BlockchainNodeType[] = sort(list, {
+//     order: SortOrder.SORT_ORDER_ASCENDING,
+//     field: 'name',
+//   });
 
-  return result;
-};
+//   return result;
+// };
 
 export const sortIps = (ips: HostIpAddress[]) => {
   const ipsCopy = [...ips];

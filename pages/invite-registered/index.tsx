@@ -34,7 +34,7 @@ const AcceptInvite: NextPage = () => {
             await invitationClient.receivedInvitations(user?.email!);
 
           const activeInvitation = receivedInvitations.find(
-            (i) => i.id === invitation_id,
+            (i) => i.invitationId === invitation_id,
           );
 
           await acceptInvitation(invitation_id as string);
@@ -42,7 +42,7 @@ const AcceptInvite: NextPage = () => {
           await getOrganizations();
 
           await setDefaultOrganization({
-            id: activeInvitation?.orgId!,
+            orgId: activeInvitation?.orgId!,
             name: activeInvitation?.orgName!,
           });
 

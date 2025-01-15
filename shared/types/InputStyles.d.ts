@@ -22,3 +22,7 @@ type UtilPosition = 'left' | 'right';
 type AvatarSizes = 'small' | 'medium-small' | 'medium';
 
 type IconButtonSize = 'tiny' | 'small' | 'medium';
+
+type SwitchSize = 'small' | 'large';
+
+type SortingSize = 'small' | 'large';

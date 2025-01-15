@@ -4,7 +4,7 @@ import { TableGridLoader } from './TableGridLoader';
 import { layoutSelectors } from '@modules/layout';
 
 type Props = {
-  cells: Cell[] | null;
+  cells: TableCell[] | null;
   entityName?: 'hosts' | 'nodes';
   preload?: number;
   isLoading?: LoadingState;

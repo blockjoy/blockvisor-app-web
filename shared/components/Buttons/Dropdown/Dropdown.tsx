@@ -1,4 +1,4 @@
-import { ReactNode, RefObject, useEffect, useRef } from 'react';
+import React, { ReactNode, RefObject, useEffect, useRef } from 'react';
 import isEqual from 'lodash/isEqual';
 import { SerializedStyles } from '@emotion/react';
 import { ITheme } from 'types/theme';
@@ -18,9 +18,10 @@ import { styles } from './Dropdown.styles';
 
 export type DropdownProps<T = any> = {
   items: T[];
+  idKey?: string;
   itemKey?: string;
   selectedItem: T | null;
-  handleSelected: (item: T | null) => void;
+  handleSelected: (item: T) => void;
   defaultText?: string | ReactNode;
   searchQuery?: string;
   isTouchedQuery?: boolean;
@@ -56,6 +57,7 @@ export type DropdownProps<T = any> = {
 
 export const Dropdown = <T extends { id?: string; name?: string }>({
   items,
+  idKey = 'id',
   itemKey = 'name',
   selectedItem,
   handleSelected,
@@ -103,7 +105,7 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
   };
 
   let filteredItems = items.filter(
-    (item) => !excludeSelectedItem || item.id !== selectedItem?.id,
+    (item) => !excludeSelectedItem || item[idKey] !== selectedItem?.[idKey],
   );
 
   const {
@@ -171,10 +173,12 @@ export const Dropdown = <T extends { id?: string; name?: string }>({
 
             return (
               <li
-                key={item.id || item.name}
+                key={item?.[idKey!] || item.id || item.name}
                 ref={(el: HTMLLIElement) => handleItemRef(el, index)}
                 css={[
-                  selectedItem?.id === item.id ? styles.active : null,
+                  selectedItem?.id === (item?.[idKey!] || item.id)
+                    ? styles.active
+                    : null,
                   activeIndex === index ? styles.focus : null,
                 ]}
               >

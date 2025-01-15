@@ -7,61 +7,59 @@ import {
   useSetRecoilState,
 } from 'recoil';
 import { toast } from 'react-toastify';
-import isEqual from 'lodash/isEqual';
-import { BlockchainVersion } from '@modules/grpc/library/blockjoy/v1/blockchain';
-import { Host, Region } from '@modules/grpc/library/blockjoy/v1/host';
 import {
-  NodeType,
-  UiType,
-} from '@modules/grpc/library/blockjoy/common/v1/node';
-import {
-  NodeProperty,
-  NodeScheduler_ResourceAffinity,
-  NodeServiceCreateRequest,
-} from '@modules/grpc/library/blockjoy/v1/node';
-import { NetworkConfig } from '@modules/grpc/library/blockjoy/common/v1/blockchain';
+  Protocol,
+  ProtocolVersion,
+} from '@modules/grpc/library/blockjoy/v1/protocol';
+import { Host, RegionInfo } from '@modules/grpc/library/blockjoy/v1/host';
+import { NodeServiceCreateRequest } from '@modules/grpc/library/blockjoy/v1/node';
 import { hostAtoms, useHostSelect } from '@modules/host';
 import {
   useNodeAdd,
   nodeLauncherAtoms,
-  blockchainAtoms,
   useGetRegions,
-  sortNetworks,
-  sortVersions,
   NodeLauncherHost,
   NodeLauncherState,
+  NodePropertyGroup,
+  sortVersions,
+  NodeLauncherRegion,
+  nodeLauncherSelectors,
 } from '@modules/node';
 import { organizationSelectors } from '@modules/organization';
 import { ROUTES, useNavigate } from '@shared/index';
 import { Mixpanel } from '@shared/services/mixpanel';
-import { authSelectors } from '@modules/auth';
 import { usePricing } from '@modules/billing';
+import { ResourceAffinity } from '@modules/grpc/library/blockjoy/common/v1/node';
+import { imageClient, protocolClient } from '@modules/grpc';
+import { authSelectors } from '@modules/auth';
 
 type IUseNodeLauncherHandlersParams = {
   fulfilReqs: boolean;
+  resetFulfilReqs: VoidFunction;
 };
 
 interface IUseNodeLauncherHandlersHook {
   handleHostsChanged: (hosts: NodeLauncherHost[] | null) => void;
-  handleRegionChanged: (region: Region | null) => void;
-  handleRegionsLoaded: (region: Region | null) => void;
-  handleProtocolSelected: (blockchainId: string, nodeType: NodeType) => void;
+  handleRegionsChanged: (regions: NodeLauncherRegion[] | null) => void;
+  handleRegionsLoaded: (regionInfo: RegionInfo | null) => void;
+  handleProtocolSelected: (protocol: Protocol) => void;
   handleNodePropertyChanged: <K extends keyof NodeLauncherState>(
     name: K,
     value: NodeLauncherState[K],
   ) => void;
   handleNodeConfigPropertyChanged: (
-    name: string,
+    key: string,
+    keyGroup: string,
     value: string | boolean,
   ) => void;
-  handleVersionChanged: (version: BlockchainVersion | null) => void;
-  handleNetworkChanged: (network: NetworkConfig) => void;
-  handleFileUploaded: (e: any) => void;
+  handleVersionChanged: (version: ProtocolVersion) => void;
+  handleVariantChanged: (variant: string) => void;
   handleCreateNodeClicked: () => void;
 }
 
 export const useNodeLauncherHandlers = ({
   fulfilReqs,
+  resetFulfilReqs,
 }: IUseNodeLauncherHandlersParams): IUseNodeLauncherHandlersHook => {
   const searchParams = useSearchParams();
   const { navigate } = useNavigate();
@@ -76,10 +74,15 @@ export const useNodeLauncherHandlers = ({
   const defaultOrganization = useRecoilValue(
     organizationSelectors.defaultOrganization,
   );
+
   const allHosts = useRecoilValue(hostAtoms.allHosts);
-  const blockchains = useRecoilValue(blockchainAtoms.blockchains);
-  const [selectedNodeType, setSelectedNodeType] = useRecoilState(
-    nodeLauncherAtoms.selectedNodeType,
+
+  const totalNodesToLaunch = useRecoilValue(
+    nodeLauncherSelectors.totalNodesToLaunch,
+  );
+
+  const [selectedProtocol, setSelectedProtocol] = useRecoilState(
+    nodeLauncherAtoms.selectedProtocol,
   );
   const [nodeLauncherState, setNodeLauncherState] = useRecoilState(
     nodeLauncherAtoms.nodeLauncher,
@@ -87,7 +90,7 @@ export const useNodeLauncherHandlers = ({
   const resetNodeLauncherState = useResetRecoilState(
     nodeLauncherAtoms.nodeLauncher,
   );
-  const setError = useSetRecoilState(nodeLauncherAtoms.error);
+  const [error, setError] = useRecoilState(nodeLauncherAtoms.error);
   const setIsLaunchError = useSetRecoilState(nodeLauncherAtoms.isLaunchError);
   const setIsLaunching = useSetRecoilState(nodeLauncherAtoms.isLaunching);
   const [selectedHosts, setSelectedHosts] = useRecoilState(
@@ -99,15 +102,35 @@ export const useNodeLauncherHandlers = ({
   const resetSelectedVersion = useResetRecoilState(
     nodeLauncherAtoms.selectedVersion,
   );
-  const [selectedRegion, setSelectedRegion] = useRecoilState(
-    nodeLauncherAtoms.selectedRegion,
+  const [selectedRegions, setSelectedRegions] = useRecoilState(
+    nodeLauncherAtoms.selectedRegions,
   );
-  const resetSelectedNetwork = useResetRecoilState(
-    nodeLauncherAtoms.selectedNetwork,
+
+  const [selectedImage, setSelectedImage] = useRecoilState(
+    nodeLauncherAtoms.selectedImage,
   );
-  const [selectedNetwork, setSelectedNetwork] = useRecoilState(
-    nodeLauncherAtoms.selectedNetwork,
+
+  const setVariants = useSetRecoilState(nodeLauncherAtoms.variants);
+  const [versions, setVersions] = useRecoilState(nodeLauncherAtoms.versions);
+
+  const [selectedVariant, setSelectedVariant] = useRecoilState(
+    nodeLauncherAtoms.selectedVariant,
   );
+
+  const resetSelectedImage = useResetRecoilState(
+    nodeLauncherAtoms.selectedImage,
+  );
+
+  useEffect(() => {
+    if (error) resetError();
+  }, [
+    selectedProtocol,
+    selectedRegions,
+    selectedHosts,
+    selectedVariant,
+    selectedVersion,
+    selectedImage,
+  ]);
 
   useEffect(() => {
     setSelectedHosts(null);
@@ -118,7 +141,8 @@ export const useNodeLauncherHandlers = ({
     const hostId = searchParams.get('hostId');
 
     if (hostId) {
-      queriedHost = allHosts.find((host: Host) => host.id === hostId) ?? null;
+      queriedHost =
+        allHosts.find((host: Host) => host.hostId === hostId) ?? null;
 
       if (queriedHost) {
         const isValid = queriedHost.ipAddresses.some((host) => !host.assigned);
@@ -135,125 +159,108 @@ export const useNodeLauncherHandlers = ({
   }, [allHosts]);
 
   useEffect(() => {
-    if (!isSuperUser || !blockchains.length) return;
-
-    setNodeLauncherState((nodeLauncherOldState) => ({
-      ...nodeLauncherOldState,
-      blockchainId: blockchains[0]?.id,
-      nodeType: blockchains[0]?.nodeTypes[0].nodeType,
-    }));
-  }, [isSuperUser, blockchains]);
+    if (!selectedProtocol) return;
+    setSelectedVersion(sortVersions(versions)[0]);
+  }, [selectedProtocol]);
 
   useEffect(() => {
-    if (!selectedNodeType) return;
+    if (!selectedImage) return;
 
-    handleNodePropertyChanged('nodeType', selectedNodeType.nodeType);
-  }, [selectedNodeType]);
+    const properties: NodePropertyGroup[] = [];
 
-  useEffect(() => {
-    const activeBlockchain = blockchains.find(
-      (b) => b.id === nodeLauncherState.blockchainId,
+    const keyGroups = Array.from(
+      new Set(
+        selectedImage?.properties
+          ?.filter((property) => property.keyGroup)
+          ?.map((property) => property.keyGroup),
+      ),
     );
 
-    if (!activeBlockchain) return;
+    const propertiesWithoutKeyGroup: NodePropertyGroup[] =
+      selectedImage?.properties
+        .filter((property) => !property.keyGroup)
+        .map((property) => ({
+          key: property.key,
+          uiType: property.uiType,
+          value: property.defaultValue || '',
+          properties: [property],
+          displayName: property.displayName!,
+          displayGroup: property.displayGroup,
+        })) ?? [];
 
-    const activeNodeType =
-      activeBlockchain.nodeTypes.find(
-        (nt) => nt.nodeType === nodeLauncherState.nodeType,
-      ) || activeBlockchain.nodeTypes[0];
+    properties.push(...propertiesWithoutKeyGroup!);
 
-    if (!activeNodeType) return;
-
-    setSelectedNodeType(activeNodeType);
-
-    const selectedVersionExists = activeNodeType.versions.some(
-      (version) => version.id === selectedVersion?.id,
-    );
-
-    if (!selectedVersionExists) {
-      const sortedVersions = sortVersions(activeNodeType.versions);
-      setSelectedVersion(sortedVersions[0]);
-    }
-  }, [nodeLauncherState.blockchainId, nodeLauncherState.nodeType]);
-
-  useEffect(() => {
-    let properties: NodeProperty[] | undefined, keyFiles: any;
-
-    const propertyMap = (property: any) => ({
-      name: property.name,
-      default: property.default,
-    });
-
-    const nodeLauncherProperties =
-      nodeLauncherState.properties?.map(propertyMap);
-
-    const selectedVersionProperties =
-      selectedVersion?.properties.map(propertyMap);
-
-    if (
-      selectedVersionProperties &&
-      !isEqual(nodeLauncherProperties, selectedVersionProperties)
-    ) {
-      const nodeTypePropertiesCopy = [...selectedVersion?.properties!];
-
-      properties = nodeTypePropertiesCopy.map((property) => ({
-        ...property,
-        value: property.default ?? '',
-        disabled: false,
-      }));
-
-      keyFiles = properties
-        .filter((p) => p.uiType === UiType.UI_TYPE_FILE_UPLOAD)
-        .map((p) => ({
-          name: p.name,
-          files: [],
-        }));
-    } else {
-      properties = nodeLauncherState.properties;
-    }
-
-    setNodeLauncherState((nodeLauncherOldState) => ({
-      ...nodeLauncherOldState,
-      keyFiles,
-      properties,
-    }));
-
-    const selectedNetworkExists = selectedVersion?.networks
-      .map((network) => network.name)
-      .some((network) => network === selectedNetwork?.name);
-
-    if (!selectedNetworkExists)
-      setSelectedNetwork(
-        sortNetworks(selectedVersion?.networks)?.find(
-          (network) => network.name.includes('main')!,
-        ) || sortNetworks(selectedVersion?.networks)[0],
+    for (let keyGroup of keyGroups) {
+      const keyGroupProperties = selectedImage?.properties.filter(
+        (property) => property.keyGroup === keyGroup,
       );
-  }, [selectedVersion?.id]);
+
+      const firstProperty = keyGroupProperties?.[0];
+
+      if (!firstProperty) return;
+
+      const defaultProperty = selectedImage?.properties.find(
+        (property) => property.keyGroup === keyGroup && property.isGroupDefault,
+      );
+
+      properties.push({
+        key: defaultProperty?.key!,
+        keyGroup: keyGroup!,
+        uiType: firstProperty.uiType,
+        value: defaultProperty?.key!,
+        properties: keyGroupProperties!,
+        displayName: firstProperty.displayName!,
+        displayGroup: defaultProperty?.displayGroup,
+      });
+    }
+
+    const firewall = selectedImage?.firewall?.rules! ?? [];
+
+    setNodeLauncherState((nodeLauncherOldState) => ({
+      ...nodeLauncherOldState,
+      properties,
+      firewall,
+    }));
+  }, [selectedImage]);
 
   useEffect(() => {
-    const activeBlockchain = blockchains.find(
-      (b) => b.id === nodeLauncherState.blockchainId,
-    );
+    (async () => {
+      if (!selectedVersion) return;
 
-    const isVersionUpdated = activeBlockchain?.nodeTypes.some((nt) =>
-      nt.versions?.some((v) => v.id === selectedVersion?.id),
-    );
-
-    if (isVersionUpdated)
-      getPrice({
-        blockchainId: nodeLauncherState.blockchainId,
-        version: selectedVersion?.version!,
-        nodeType: nodeLauncherState.nodeType,
-        network: selectedNetwork?.name!,
-        region: selectedHosts?.[0].host?.region ?? selectedRegion?.name!,
+      const imageResponse = await imageClient.getImage({
+        versionKey: selectedVersion.versionKey,
+        semanticVersion: selectedVersion.semanticVersion,
+        orgId: defaultOrganization?.orgId,
       });
-  }, [
-    nodeLauncherState.blockchainId,
-    selectedVersion?.version,
-    nodeLauncherState.nodeType,
-    selectedNetwork,
-    selectedRegion?.name,
-  ]);
+
+      setSelectedImage(imageResponse.image!);
+    })();
+  }, [selectedVersion]);
+
+  useEffect(() => {
+    (async () => {
+      if (!defaultOrganization || !selectedProtocol) return;
+
+      const variantsResponse = await protocolClient.listVariants({
+        protocolId: selectedProtocol?.protocolId!,
+        orgId: defaultOrganization?.orgId,
+      });
+
+      setVariants(variantsResponse);
+      setSelectedVariant(variantsResponse[0]);
+    })();
+  }, [selectedProtocol, defaultOrganization]);
+
+  useEffect(() => {
+    if (selectedVersion && selectedRegions && defaultOrganization)
+      getPrice({
+        regionId: isSuperUser
+          ? ''
+          : selectedRegions[0]?.regionInfo?.region?.regionId!,
+        versionKey: selectedVersion.versionKey,
+        orgId: defaultOrganization?.orgId,
+      });
+  }, [selectedProtocol, selectedVersion, selectedRegions]);
 
   useEffect(() => {
     if (fulfilReqs) handleCreateNodeClicked();
@@ -264,42 +271,65 @@ export const useNodeLauncherHandlers = ({
   }, []);
 
   useEffect(() => {
-    getHosts();
-  }, [defaultOrganization?.id]);
+    if (!isSuperUser && !defaultOrganization?.orgId) {
+      return;
+    }
+
+    getHosts(isSuperUser ? undefined : defaultOrganization?.orgId);
+  }, [defaultOrganization?.orgId, isSuperUser]);
 
   useEffect(() => {
-    getRegions();
-  }, [defaultOrganization?.id, selectedVersion?.id]);
+    if (defaultOrganization?.orgId && selectedImage) getRegions();
+  }, [defaultOrganization?.orgId, selectedImage]);
+
+  useEffect(() => {
+    if (selectedVariant && selectedProtocol) {
+      (async () => {
+        const versionsResponse = await protocolClient.listVersions({
+          versionKey: {
+            protocolKey: selectedProtocol?.key,
+            variantKey: selectedVariant,
+          },
+          orgId: defaultOrganization?.orgId,
+        });
+
+        setVersions(versionsResponse);
+        setSelectedVersion(sortVersions(versionsResponse)[0]);
+      })();
+    }
+  }, [selectedVariant]);
 
   const handleHostsChanged = (hosts: NodeLauncherHost[] | null) => {
     Mixpanel.track('Launch Node - Host Changed');
     setSelectedHosts(hosts);
-    setSelectedRegion(null);
+    setSelectedRegions(null);
   };
 
-  const handleRegionChanged = (region: Region | null) => {
+  const handleRegionsChanged = (regions: NodeLauncherRegion[] | null) => {
     Mixpanel.track('Launch Node - Region Changed');
-    setSelectedRegion(region);
+    setSelectedRegions(regions);
   };
 
-  const handleRegionsLoaded = (region: Region | null) => {
-    setSelectedRegion(region);
+  const handleRegionsLoaded = (regionInfo: RegionInfo | null) => {
+    if (!isSuperUser) {
+      setSelectedRegions(
+        regionInfo
+          ? [
+              {
+                nodesToLaunch: 1,
+                regionInfo: regionInfo!,
+              },
+            ]
+          : regionInfo,
+      );
+    }
   };
 
-  const handleProtocolSelected = (blockchainId: string, nodeType: NodeType) => {
-    setError(null);
-    setIsLaunchError(false);
-    setIsLaunching(false);
-
-    setNodeLauncherState((nodeLauncherOldState) => ({
-      ...nodeLauncherOldState,
-      blockchainId,
-      nodeType,
-    }));
+  const handleProtocolSelected = (protocol: Protocol) => {
+    setSelectedProtocol(protocol);
 
     Mixpanel.track('Launch Node - Protocol Selected', {
-      blockchain: blockchains?.find((b) => b.id === blockchainId)?.name,
-      nodeType: NodeType[nodeType],
+      protocol: protocol.name,
     });
   };
 
@@ -319,23 +349,28 @@ export const useNodeLauncherHandlers = ({
   };
 
   const handleNodeConfigPropertyChanged = (
-    name: string,
+    key: string,
+    keyGroup: string,
     value: boolean | string,
   ) => {
     setError('');
     setIsLaunchError(false);
+
+    console.log('handleNodeConfigPropertyChanged', { key, keyGroup, value });
+
     if (!nodeLauncherState.properties) return;
 
     const propertiesCopy = [...nodeLauncherState.properties!];
 
     const propertyIndex = propertiesCopy.findIndex(
-      (property) => property.name === name,
+      (property) => property.keyGroup === keyGroup,
     );
 
     if (propertyIndex === -1) return;
 
     const updatedProperty = {
       ...propertiesCopy[propertyIndex],
+      key,
       value: value?.toString(),
     };
 
@@ -347,66 +382,41 @@ export const useNodeLauncherHandlers = ({
     }));
 
     Mixpanel.track('Launch Node - Node Config Property Changed', {
-      propertyName: updatedProperty.name,
+      propertyName: updatedProperty.keyGroup,
       propertyValue: value?.toString(),
     });
   };
 
-  const handleVersionChanged = (version: BlockchainVersion | null) => {
+  const handleVersionChanged = (version: ProtocolVersion) => {
     Mixpanel.track('Launch Node - Version Changed');
     setSelectedVersion(version);
   };
 
-  const handleNetworkChanged = (network: NetworkConfig) =>
-    setSelectedNetwork(network);
-
-  const handleFileUploaded = (e: any) => {
-    setError(null);
-    setIsLaunchError(false);
-    const keyFilesCopy = [...nodeLauncherState.keyFiles!];
-
-    let foundNodeFiles = keyFilesCopy.find(
-      (files) => files.name === e.target.name,
-    );
-
-    if (!foundNodeFiles) return;
-
-    for (let file of e?.target?.files) {
-      foundNodeFiles?.files.push(file);
-    }
-
-    setNodeLauncherState((nodeLauncherOldState) => ({
-      ...nodeLauncherOldState,
-      keyFiles: keyFilesCopy,
-    }));
-
-    Mixpanel.track('Launch Node - Key File Uploaded');
-  };
+  const handleVariantChanged = (variant: string) => setSelectedVariant(variant);
 
   const handleCreateNodeClicked = async () => {
     setIsLaunching(true);
 
-    const isSingleNode =
-      !selectedHosts ||
-      (selectedHosts?.length === 1 && selectedHosts[0].nodesToLaunch === 1);
+    const isSingleNode = totalNodesToLaunch === 1;
 
     const params: NodeServiceCreateRequest = {
-      orgId: defaultOrganization!.id,
-      version: selectedVersion?.version!,
-      nodeType: +nodeLauncherState.nodeType ?? 0,
-      blockchainId: nodeLauncherState.blockchainId ?? '',
-      properties: nodeLauncherState.properties!,
-      network: selectedNetwork?.name!,
-      allowIps: nodeLauncherState.allowIps,
-      denyIps: nodeLauncherState.denyIps,
-      placement: {},
+      orgId: defaultOrganization!.orgId,
+      imageId: selectedImage?.imageId!,
+      newValues: nodeLauncherState.properties?.map((property) => ({
+        key: property.key,
+        value: property.value,
+      }))!,
+      launcher: {},
+      addRules: nodeLauncherState.firewall,
     };
 
+    console.log('createNodeParams', params);
+
     if (selectedHosts?.length!) {
-      params.placement = {
-        multiple: {
-          nodeCounts: selectedHosts.map(
-            ({ host: { id: hostId }, nodesToLaunch: nodeCount }) => ({
+      params.launcher = {
+        byHost: {
+          hostCounts: selectedHosts.map(
+            ({ host: { hostId }, nodesToLaunch: nodeCount }) => ({
               hostId,
               nodeCount,
             }),
@@ -414,11 +424,15 @@ export const useNodeLauncherHandlers = ({
         },
       };
     } else {
-      params.placement = {
-        scheduler: {
-          region: selectedRegion?.name!,
-          resource:
-            NodeScheduler_ResourceAffinity.RESOURCE_AFFINITY_LEAST_RESOURCES,
+      params.launcher = {
+        byRegion: {
+          regionCounts: selectedRegions?.map(
+            ({ regionInfo, nodesToLaunch: nodeCount }) => ({
+              regionId: regionInfo.region?.regionId!,
+              nodeCount,
+              resource: ResourceAffinity.RESOURCE_AFFINITY_LEAST_RESOURCES,
+            }),
+          )!,
         },
       };
     }
@@ -433,23 +447,29 @@ export const useNodeLauncherHandlers = ({
         navigate(isSingleNode ? ROUTES.NODE(nodeId) : ROUTES.NODES, () => {
           resetNodeLauncherState();
           resetSelectedVersion();
-          resetSelectedNetwork();
+          resetSelectedImage();
         });
       },
       (error: string) => setError(error!),
     );
   };
 
+  const resetError = () => {
+    resetFulfilReqs();
+    setError(null);
+    setIsLaunchError(false);
+    setIsLaunching(false);
+  };
+
   return {
     handleHostsChanged,
-    handleRegionChanged,
+    handleRegionsChanged,
     handleRegionsLoaded,
     handleProtocolSelected,
     handleNodePropertyChanged,
     handleNodeConfigPropertyChanged,
     handleVersionChanged,
-    handleNetworkChanged,
-    handleFileUploaded,
+    handleVariantChanged,
     handleCreateNodeClicked,
   };
 };

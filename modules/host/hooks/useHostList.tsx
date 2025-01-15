@@ -1,7 +1,7 @@
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { useRouter } from 'next/router';
 import { ROUTES } from '@shared/constants/routes';
-import { HostServiceListResponse } from '@modules/grpc/library/blockjoy/v1/host';
+import { HostServiceListHostsResponse } from '@modules/grpc/library/blockjoy/v1/host';
 import { hostClient } from '@modules/grpc/clients/hostClient';
 import { hostAtoms, hostSelectors } from 'modules/host';
 import { organizationSelectors } from '@modules/organization';
@@ -24,18 +24,18 @@ export const useHostList = () => {
       setHostListLoadingState('loading');
 
     try {
-      const response: HostServiceListResponse = await hostClient.listHosts(
-        defaultOrganization?.id!,
+      const response: HostServiceListHostsResponse = await hostClient.listHosts(
+        defaultOrganization?.orgId!,
         queryParams.filter,
         queryParams.pagination,
         queryParams.sort,
       );
 
-      const { hostCount } = response;
+      const { total } = response;
 
       let hosts = response.hosts;
 
-      setHostCount(hostCount);
+      setHostCount(total);
 
       if (queryParams.pagination.currentPage !== 0) {
         hosts = [...hostList!, ...hosts];
@@ -60,7 +60,7 @@ export const useHostList = () => {
   };
 
   const removeFromHostList = (id: string) => {
-    const newList = hostList.filter((h) => h.id !== id);
+    const newList = hostList.filter((h) => h.hostId !== id);
 
     if (newList.length !== hostList.length) {
       setHostList(newList);

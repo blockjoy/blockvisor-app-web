@@ -21,9 +21,10 @@ export const CommandView = ({ command }: CommandViewProps) => {
     <Log date={ackedAt || createdAt!}>
       <CommandIcon exitCode={exitCode} />
       <span css={styles.message(exitCode)}>
-        {node?.hostName &&
+        {/* TODO: node networkName missing
+        {node?.networkName &&
           !pathname?.startsWith('/hosts') &&
-          `${node.hostName}: `}
+          `${node.networkName}: `} */}
         [{commandType}] {commandInfo}
         {exitMessage ? `: ${exitMessage}` : ''}
       </span>

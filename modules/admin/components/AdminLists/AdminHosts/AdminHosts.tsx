@@ -4,12 +4,7 @@ import { hostClient } from '@modules/grpc/clients/hostClient';
 import { pageSize } from '@modules/admin/constants/constants';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { Host, HostSortField } from '@modules/grpc/library/blockjoy/v1/host';
-import {
-  DateTime,
-  HostIpStatus,
-  HostManagedBy,
-  TagList,
-} from '@shared/components';
+import { DateTime, HostIpStatus, TagList } from '@shared/components';
 import { AdminListColumn } from '@modules/admin/types/AdminListColumn';
 import { AdminHostsTag } from './AdminHostsTag/AdminHostsTag';
 import { useState } from 'react';
@@ -18,9 +13,15 @@ import { AdminListEditCost } from '../AdminListEditCost/AdminListEditCost';
 
 const columns: AdminListColumn[] = [
   {
-    name: 'name',
+    name: 'displayName',
     width: '200px',
-    sortField: HostSortField.HOST_SORT_FIELD_HOST_NAME,
+    sortField: HostSortField.HOST_SORT_FIELD_DISPLAY_NAME,
+    isVisible: true,
+  },
+  {
+    name: 'networkName',
+    width: '200px',
+    sortField: HostSortField.HOST_SORT_FIELD_NETWORK_NAME,
     isVisible: true,
   },
   {
@@ -37,7 +38,7 @@ const columns: AdminListColumn[] = [
     isRowClickDisabled: true,
   },
   {
-    name: 'ip',
+    name: 'ipAddress',
     width: '100px',
     isVisible: true,
   },
@@ -49,17 +50,17 @@ const columns: AdminListColumn[] = [
     isVisible: true,
   },
   {
-    name: 'diskSizeBytes',
-    displayName: 'Disk Size',
-    width: '100px',
-    sortField: HostSortField.HOST_SORT_FIELD_DISK_SIZE_BYTES,
+    name: 'diskBytes',
+    displayName: 'Disk Bytes',
+    width: '120px',
+    sortField: HostSortField.HOST_SORT_FIELD_DISK_BYTES,
     isVisible: true,
   },
   {
-    name: 'cpuCount',
-    displayName: 'Cpu Count',
-    width: '100px',
-    sortField: HostSortField.HOST_SORT_FIELD_CPU_COUNT,
+    name: 'cpuCores',
+    displayName: 'Cpu Cores',
+    width: '140px',
+    sortField: HostSortField.HOST_SORT_FIELD_CPU_CORES,
     isVisible: true,
   },
   {
@@ -73,9 +74,9 @@ const columns: AdminListColumn[] = [
     isVisible: true,
   },
   {
-    name: 'version',
+    name: 'bvVersion',
     width: '100px',
-    sortField: HostSortField.HOST_SORT_FIELD_VERSION,
+    sortField: HostSortField.HOST_SORT_FIELD_BV_VERSION,
     isVisible: true,
   },
   {
@@ -144,13 +145,13 @@ export const AdminHosts = () => {
     );
     return {
       list: response.hosts,
-      total: response.hostCount,
+      total: response.total,
     };
   };
 
   const handleRemoveTag = async (newTags: string[], hostId?: string) => {
     hostClient.updateHost({
-      id: hostId!,
+      hostId: hostId!,
       updateTags: {
         overwriteTags: { tags: newTags.map((tag) => ({ name: tag })) },
       },
@@ -179,7 +180,7 @@ export const AdminHosts = () => {
 
   const handleAddTag = async (newTag: string, hostId?: string) => {
     hostClient.updateHost({
-      id: hostId!,
+      hostId: hostId!,
       updateTags: { addTag: { name: newTag } },
     });
     const tagsAddedCopy = [...tagsAdded];
@@ -198,9 +199,9 @@ export const AdminHosts = () => {
     setTagsAdded(tagsAddedCopy);
   };
 
-  const handleUpdate = async (id: string, cost: BillingAmount) => {
+  const handleUpdate = async (hostId: string, cost: BillingAmount) => {
     hostClient.updateHost({
-      id,
+      hostId,
       cost,
     });
   };
@@ -209,13 +210,13 @@ export const AdminHosts = () => {
     list.map((host) => {
       return {
         ...host,
-        diskSizeBytes: formatters.formatSize(host.diskSizeBytes, 'bytes'),
+        diskBytes: formatters.formatSize(host.diskBytes, 'bytes'),
         availableIps: <HostIpStatus ipAddresses={host.ipAddresses} />,
-        managedBy: <HostManagedBy managedBy={host.managedBy} />,
+        region: host.region?.displayName,
         createdAt: <DateTime date={host.createdAt!} />,
         cost: (
           <AdminListEditCost
-            id={host.id}
+            id={host.hostId}
             defaultValue={host.cost?.amount?.amountMinorUnits}
             onUpdate={handleUpdate}
           />
@@ -223,7 +224,7 @@ export const AdminHosts = () => {
         tags: (
           <TagList
             isInTable
-            id={host.id}
+            id={host.hostId}
             tags={host?.tags?.tags?.map((tag) => tag.name)!}
             onRemove={handleRemoveTag}
             onAdd={handleAddTag}
@@ -235,7 +236,8 @@ export const AdminHosts = () => {
   return (
     <AdminList
       name="hosts"
-      defaultSortField={HostSortField.HOST_SORT_FIELD_HOST_NAME}
+      idPropertyName="hostId"
+      defaultSortField={HostSortField.HOST_SORT_FIELD_DISPLAY_NAME}
       defaultSortOrder={SortOrder.SORT_ORDER_ASCENDING}
       columns={columns}
       getList={getList}

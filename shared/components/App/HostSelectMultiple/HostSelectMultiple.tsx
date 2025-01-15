@@ -39,10 +39,10 @@ export const HostSelectMultiple = ({ onChange }: Props) => {
   const handleChange = (host: Host) => {
     let hostsCopy = selectedHosts ? [...selectedHosts!] : [];
 
-    const foundHost = hostsCopy.find((h) => h.host?.id === host.id);
+    const foundHost = hostsCopy.find((h) => h.host?.hostId === host.hostId);
 
     if (foundHost) {
-      hostsCopy = hostsCopy.filter((h) => h.host?.id !== host.id);
+      hostsCopy = hostsCopy.filter((h) => h.host?.hostId !== host.hostId);
     } else {
       hostsCopy.push({
         host,
@@ -61,7 +61,9 @@ export const HostSelectMultiple = ({ onChange }: Props) => {
   ) => {
     let hostsCopy = [...selectedHosts!];
 
-    let foundHostIndex = hostsCopy.findIndex((h) => h.host?.id === host.id);
+    let foundHostIndex = hostsCopy.findIndex(
+      (h) => h.host?.hostId === host.hostId,
+    );
 
     if (foundHostIndex < 0) return;
 
@@ -92,8 +94,14 @@ export const HostSelectMultiple = ({ onChange }: Props) => {
         !hideFullHosts ||
         h.ipAddresses.filter((ip) => !ip.assigned).length !== 0,
     )
-    .filter((h) =>
-      h.name?.toLowerCase().includes(debouncedSearchTerm?.toLowerCase()),
+    .filter(
+      (h) =>
+        h.displayName
+          ?.toLowerCase()
+          .includes(debouncedSearchTerm?.toLowerCase()) ||
+        h.networkName
+          ?.toLowerCase()
+          .includes(debouncedSearchTerm?.toLowerCase()),
     );
 
   return (
@@ -104,9 +112,10 @@ export const HostSelectMultiple = ({ onChange }: Props) => {
           text={
             <p>
               {!selectedHosts?.length
-                ? 'Auto select'
+                ? 'Select Hosts'
                 : selectedHosts?.length === 1
-                ? selectedHosts[0].host.name
+                ? selectedHosts[0].host.displayName ||
+                  selectedHosts[0].host.networkName
                 : `${selectedHosts?.length} hosts selected`}
             </p>
           }
@@ -144,18 +153,18 @@ export const HostSelectMultiple = ({ onChange }: Props) => {
                 const isDisabled =
                   host?.ipAddresses?.every((ip) => ip.assigned) ?? false;
                 return (
-                  <li key={host.id}>
+                  <li key={host.hostId}>
                     <label css={[styles.row, isDisabled && styles.rowDisabled]}>
                       <Checkbox
                         disabled={isDisabled}
-                        id={host.id}
-                        name={host.id}
+                        id={host.hostId}
+                        name={host.hostId}
                         onChange={() => handleChange(host)}
                         checked={selectedHosts?.some(
-                          (h) => h.host.id === host.id,
+                          (h) => h.host.hostId === host.hostId,
                         )}
                       />
-                      <p>{host.name}</p>
+                      <p>{host.displayName || host.networkName}</p>
                       <span css={styles.ipStatus} className="ip-status">
                         <HostIpStatus ipAddresses={host.ipAddresses} />
                       </span>

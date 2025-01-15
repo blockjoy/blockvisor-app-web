@@ -6,10 +6,14 @@ import {
   NodeDeleted,
   NodeMessage,
   NodeUpdated,
-} from '@modules/grpc/library/blockjoy/v1/mqtt';
+} from '@modules/grpc/library/blockjoy/v1/event';
 import { useNodeList, useNodeView } from '@modules/node';
 import { showNotification } from '@modules/mqtt';
 import { authAtoms, authSelectors } from '@modules/auth';
+import {
+  useDefaultOrganization,
+  useGetOrganizations,
+} from '@modules/organization';
 
 const styles = {
   linkToHost: css`
@@ -24,11 +28,27 @@ const styles = {
 export const useUpdates = () => {
   const router = useRouter();
   const user = useRecoilValue(authAtoms.user);
+
+  const { organizations } = useGetOrganizations();
+  const { defaultOrganization } = useDefaultOrganization();
+  const selectedOrg = organizations.find(
+    (org) => org.orgId === defaultOrganization?.orgId,
+  );
+
   const { addToNodeList, removeFromNodeList, modifyNodeInNodeList } =
     useNodeList();
   const { unloadNode, modifyNode, node: activeNode } = useNodeView();
   const canGetHost = useRecoilValue(authSelectors.hasPermission('host-get'));
   const canGetNode = useRecoilValue(authSelectors.hasPermission('node-get'));
+
+  const getUserName = (userId?: string) => {
+    try {
+      const user = selectedOrg?.members.find((m) => m.userId === userId);
+      return user?.name;
+    } catch (err) {
+      return '-';
+    }
+  };
 
   const handleNodeUpdate = (message: Message) => {
     const { type, payload }: Message = message;
@@ -42,14 +62,16 @@ export const useUpdates = () => {
           payloadDeserialized.created,
         );
 
-        const { node }: NodeCreated = payloadDeserialized.created!;
+        const { node, createdBy }: NodeCreated = payloadDeserialized.created!;
 
         addToNodeList(node!);
 
-        if (node?.createdBy?.resourceId === user?.id) break;
+        if (createdBy?.resourceId === user?.userId) break;
 
-        const message = node?.createdBy?.name ? (
-          `${node?.createdBy?.name} launched a node `
+        const userName = getUserName(createdBy?.resourceId);
+
+        const message = createdBy?.resourceId ? (
+          `${userName} launched a node `
         ) : (
           <>
             Node launched from CLI for Host{' '}
@@ -58,7 +80,7 @@ export const useUpdates = () => {
                 css={styles.linkToHost}
                 onClick={() => router.push(`/hosts/${node?.hostId}`)}
               >
-                {node?.hostName}
+                {node?.hostDisplayName || node?.hostNetworkName}
               </a>
             ) : (
               ''
@@ -67,7 +89,7 @@ export const useUpdates = () => {
         );
 
         const content = canGetNode ? (
-          <a onClick={() => router.push(`/nodes/${node?.id}`)}>View Node</a>
+          <a onClick={() => router.push(`/nodes/${node?.nodeId}`)}>View Node</a>
         ) : (
           ''
         );
@@ -84,7 +106,7 @@ export const useUpdates = () => {
 
         const { node: mqttNode }: NodeUpdated = payloadDeserialized.updated!;
 
-        if (mqttNode?.id === activeNode?.id) {
+        if (mqttNode?.nodeId === activeNode?.nodeId) {
           modifyNode(mqttNode!);
         }
 
@@ -102,14 +124,16 @@ export const useUpdates = () => {
 
         removeFromNodeList(nodeId);
 
-        if (activeNode?.id === nodeId) {
+        if (activeNode?.nodeId === nodeId) {
           unloadNode();
         }
 
-        if (deletedBy?.resourceId === user?.id) break;
+        if (deletedBy?.resourceId === user?.userId) break;
 
-        const message = deletedBy?.name
-          ? `${deletedBy?.name} just deleted a node`
+        const userName = getUserName(deletedBy?.resourceId);
+
+        const message = deletedBy?.resourceId
+          ? `${userName} just deleted a node`
           : 'Node deleted from CLI';
 
         showNotification(type, message);

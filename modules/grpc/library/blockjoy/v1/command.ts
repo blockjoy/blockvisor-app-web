@@ -3,9 +3,8 @@ import Long from "long";
 import type { CallContext, CallOptions } from "nice-grpc-common";
 import _m0 from "protobufjs/minimal";
 import { Timestamp } from "../../google/protobuf/timestamp";
-import { FirewallRule } from "../common/v1/firewall";
-import { ImageIdentifier } from "../common/v1/image";
-import { NodeType } from "../common/v1/node";
+import { FirewallConfig, PropertyValueConfig } from "../common/v1/config";
+import { Node } from "./node";
 
 export const protobufPackage = "blockjoy.v1";
 
@@ -19,12 +18,14 @@ export enum CommandExitCode {
   COMMAND_EXIT_CODE_SERVICE_NOT_READY = 5,
   COMMAND_EXIT_CODE_SERVICE_BROKEN = 6,
   COMMAND_EXIT_CODE_NOT_SUPPORTED = 7,
+  COMMAND_EXIT_CODE_NODE_UPGRADE_ROLLBACK = 8,
+  COMMAND_EXIT_CODE_NODE_UPGRADE_FAILURE = 9,
   UNRECOGNIZED = -1,
 }
 
 export interface Command {
   /** A unique command identifier. */
-  id: string;
+  commandId: string;
   /** A command may have an exit code. */
   exitCode?:
     | CommandExitCode
@@ -47,6 +48,13 @@ export interface Command {
   host?: HostCommand | undefined;
 }
 
+export interface CommandServiceAckRequest {
+  commandId: string;
+}
+
+export interface CommandServiceAckResponse {
+}
+
 export interface CommandServiceListRequest {
   nodeId?: string | undefined;
   hostId?: string | undefined;
@@ -55,24 +63,6 @@ export interface CommandServiceListRequest {
 
 export interface CommandServiceListResponse {
   commands: Command[];
-}
-
-export interface CommandServiceUpdateRequest {
-  id: string;
-  exitCode?: CommandExitCode | undefined;
-  exitMessage?: string | undefined;
-  retryHintSeconds?: number | undefined;
-}
-
-export interface CommandServiceUpdateResponse {
-  command: Command | undefined;
-}
-
-export interface CommandServiceAckRequest {
-  id: string;
-}
-
-export interface CommandServiceAckResponse {
 }
 
 export interface CommandServicePendingRequest {
@@ -84,9 +74,19 @@ export interface CommandServicePendingResponse {
   commands: Command[];
 }
 
+export interface CommandServiceUpdateRequest {
+  commandId: string;
+  exitCode?: CommandExitCode | undefined;
+  exitMessage?: string | undefined;
+  retryHintSeconds?: number | undefined;
+}
+
+export interface CommandServiceUpdateResponse {
+  command: Command | undefined;
+}
+
 export interface HostCommand {
   hostId: string;
-  hostName: string;
   start?: HostStart | undefined;
   stop?: HostStop | undefined;
   restart?: HostRestart | undefined;
@@ -106,17 +106,20 @@ export interface HostPending {
 }
 
 export interface NodeCommand {
+  hostId: string;
   nodeId: string;
   nodeName: string;
-  hostId: string;
-  hostName: string;
   create?: NodeCreate | undefined;
   start?: NodeStart | undefined;
   stop?: NodeStop | undefined;
   restart?: NodeRestart | undefined;
-  upgrade?: NodeUpgrade | undefined;
   update?: NodeUpdate | undefined;
+  upgrade?: NodeUpgrade | undefined;
   delete?: NodeDelete | undefined;
+}
+
+export interface NodeCreate {
+  node: Node | undefined;
 }
 
 export interface NodeStart {
@@ -128,33 +131,20 @@ export interface NodeStop {
 export interface NodeRestart {
 }
 
-/** Upgrade a node to a new image. */
-export interface NodeUpgrade {
-  image: ImageIdentifier | undefined;
-}
-
 export interface NodeUpdate {
-  rules: FirewallRule[];
-  orgId: string;
+  nodeId: string;
+  configId: string;
+  autoUpgrade?: boolean | undefined;
+  newOrgId?: string | undefined;
+  newOrgName?: string | undefined;
+  newDisplayName?: string | undefined;
+  newNote?: string | undefined;
+  newValues: PropertyValueConfig[];
+  newFirewall?: FirewallConfig | undefined;
 }
 
-export interface NodeCreate {
-  nodeName: string;
-  dnsName: string;
-  orgId: string;
-  blockchain: string;
-  image: ImageIdentifier | undefined;
-  nodeType: NodeType;
-  ip: string;
-  gateway: string;
-  properties: Parameter[];
-  rules: FirewallRule[];
-  network: string;
-}
-
-export interface Parameter {
-  name: string;
-  value: string;
+export interface NodeUpgrade {
+  node: Node | undefined;
 }
 
 export interface NodeDelete {
@@ -162,7 +152,7 @@ export interface NodeDelete {
 
 function createBaseCommand(): Command {
   return {
-    id: "",
+    commandId: "",
     exitCode: undefined,
     exitMessage: undefined,
     retryHintSeconds: undefined,
@@ -175,8 +165,8 @@ function createBaseCommand(): Command {
 
 export const Command = {
   encode(message: Command, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.commandId !== "") {
+      writer.uint32(10).string(message.commandId);
     }
     if (message.exitCode !== undefined) {
       writer.uint32(16).int32(message.exitCode);
@@ -214,7 +204,7 @@ export const Command = {
             break;
           }
 
-          message.id = reader.string();
+          message.commandId = reader.string();
           continue;
         case 2:
           if (tag !== 16) {
@@ -280,7 +270,7 @@ export const Command = {
 
   fromPartial(object: DeepPartial<Command>): Command {
     const message = createBaseCommand();
-    message.id = object.id ?? "";
+    message.commandId = object.commandId ?? "";
     message.exitCode = object.exitCode ?? undefined;
     message.exitMessage = object.exitMessage ?? undefined;
     message.retryHintSeconds = object.retryHintSeconds ?? undefined;
@@ -292,6 +282,87 @@ export const Command = {
     message.host = (object.host !== undefined && object.host !== null)
       ? HostCommand.fromPartial(object.host)
       : undefined;
+    return message;
+  },
+};
+
+function createBaseCommandServiceAckRequest(): CommandServiceAckRequest {
+  return { commandId: "" };
+}
+
+export const CommandServiceAckRequest = {
+  encode(message: CommandServiceAckRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.commandId !== "") {
+      writer.uint32(10).string(message.commandId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): CommandServiceAckRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCommandServiceAckRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.commandId = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<CommandServiceAckRequest>): CommandServiceAckRequest {
+    return CommandServiceAckRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<CommandServiceAckRequest>): CommandServiceAckRequest {
+    const message = createBaseCommandServiceAckRequest();
+    message.commandId = object.commandId ?? "";
+    return message;
+  },
+};
+
+function createBaseCommandServiceAckResponse(): CommandServiceAckResponse {
+  return {};
+}
+
+export const CommandServiceAckResponse = {
+  encode(_: CommandServiceAckResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): CommandServiceAckResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCommandServiceAckResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<CommandServiceAckResponse>): CommandServiceAckResponse {
+    return CommandServiceAckResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(_: DeepPartial<CommandServiceAckResponse>): CommandServiceAckResponse {
+    const message = createBaseCommandServiceAckResponse();
     return message;
   },
 };
@@ -410,214 +481,6 @@ export const CommandServiceListResponse = {
   },
 };
 
-function createBaseCommandServiceUpdateRequest(): CommandServiceUpdateRequest {
-  return { id: "", exitCode: undefined, exitMessage: undefined, retryHintSeconds: undefined };
-}
-
-export const CommandServiceUpdateRequest = {
-  encode(message: CommandServiceUpdateRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
-    }
-    if (message.exitCode !== undefined) {
-      writer.uint32(16).int32(message.exitCode);
-    }
-    if (message.exitMessage !== undefined) {
-      writer.uint32(26).string(message.exitMessage);
-    }
-    if (message.retryHintSeconds !== undefined) {
-      writer.uint32(32).uint64(message.retryHintSeconds);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): CommandServiceUpdateRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseCommandServiceUpdateRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.id = reader.string();
-          continue;
-        case 2:
-          if (tag !== 16) {
-            break;
-          }
-
-          message.exitCode = reader.int32() as any;
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.exitMessage = reader.string();
-          continue;
-        case 4:
-          if (tag !== 32) {
-            break;
-          }
-
-          message.retryHintSeconds = longToNumber(reader.uint64() as Long);
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<CommandServiceUpdateRequest>): CommandServiceUpdateRequest {
-    return CommandServiceUpdateRequest.fromPartial(base ?? {});
-  },
-
-  fromPartial(object: DeepPartial<CommandServiceUpdateRequest>): CommandServiceUpdateRequest {
-    const message = createBaseCommandServiceUpdateRequest();
-    message.id = object.id ?? "";
-    message.exitCode = object.exitCode ?? undefined;
-    message.exitMessage = object.exitMessage ?? undefined;
-    message.retryHintSeconds = object.retryHintSeconds ?? undefined;
-    return message;
-  },
-};
-
-function createBaseCommandServiceUpdateResponse(): CommandServiceUpdateResponse {
-  return { command: undefined };
-}
-
-export const CommandServiceUpdateResponse = {
-  encode(message: CommandServiceUpdateResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.command !== undefined) {
-      Command.encode(message.command, writer.uint32(10).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): CommandServiceUpdateResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseCommandServiceUpdateResponse();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.command = Command.decode(reader, reader.uint32());
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<CommandServiceUpdateResponse>): CommandServiceUpdateResponse {
-    return CommandServiceUpdateResponse.fromPartial(base ?? {});
-  },
-
-  fromPartial(object: DeepPartial<CommandServiceUpdateResponse>): CommandServiceUpdateResponse {
-    const message = createBaseCommandServiceUpdateResponse();
-    message.command = (object.command !== undefined && object.command !== null)
-      ? Command.fromPartial(object.command)
-      : undefined;
-    return message;
-  },
-};
-
-function createBaseCommandServiceAckRequest(): CommandServiceAckRequest {
-  return { id: "" };
-}
-
-export const CommandServiceAckRequest = {
-  encode(message: CommandServiceAckRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): CommandServiceAckRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseCommandServiceAckRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.id = reader.string();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<CommandServiceAckRequest>): CommandServiceAckRequest {
-    return CommandServiceAckRequest.fromPartial(base ?? {});
-  },
-
-  fromPartial(object: DeepPartial<CommandServiceAckRequest>): CommandServiceAckRequest {
-    const message = createBaseCommandServiceAckRequest();
-    message.id = object.id ?? "";
-    return message;
-  },
-};
-
-function createBaseCommandServiceAckResponse(): CommandServiceAckResponse {
-  return {};
-}
-
-export const CommandServiceAckResponse = {
-  encode(_: CommandServiceAckResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): CommandServiceAckResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseCommandServiceAckResponse();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<CommandServiceAckResponse>): CommandServiceAckResponse {
-    return CommandServiceAckResponse.fromPartial(base ?? {});
-  },
-
-  fromPartial(_: DeepPartial<CommandServiceAckResponse>): CommandServiceAckResponse {
-    const message = createBaseCommandServiceAckResponse();
-    return message;
-  },
-};
-
 function createBaseCommandServicePendingRequest(): CommandServicePendingRequest {
   return { hostId: "", filterType: undefined };
 }
@@ -721,8 +584,135 @@ export const CommandServicePendingResponse = {
   },
 };
 
+function createBaseCommandServiceUpdateRequest(): CommandServiceUpdateRequest {
+  return { commandId: "", exitCode: undefined, exitMessage: undefined, retryHintSeconds: undefined };
+}
+
+export const CommandServiceUpdateRequest = {
+  encode(message: CommandServiceUpdateRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.commandId !== "") {
+      writer.uint32(10).string(message.commandId);
+    }
+    if (message.exitCode !== undefined) {
+      writer.uint32(16).int32(message.exitCode);
+    }
+    if (message.exitMessage !== undefined) {
+      writer.uint32(26).string(message.exitMessage);
+    }
+    if (message.retryHintSeconds !== undefined) {
+      writer.uint32(32).uint64(message.retryHintSeconds);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): CommandServiceUpdateRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCommandServiceUpdateRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.commandId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.exitCode = reader.int32() as any;
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.exitMessage = reader.string();
+          continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.retryHintSeconds = longToNumber(reader.uint64() as Long);
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<CommandServiceUpdateRequest>): CommandServiceUpdateRequest {
+    return CommandServiceUpdateRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<CommandServiceUpdateRequest>): CommandServiceUpdateRequest {
+    const message = createBaseCommandServiceUpdateRequest();
+    message.commandId = object.commandId ?? "";
+    message.exitCode = object.exitCode ?? undefined;
+    message.exitMessage = object.exitMessage ?? undefined;
+    message.retryHintSeconds = object.retryHintSeconds ?? undefined;
+    return message;
+  },
+};
+
+function createBaseCommandServiceUpdateResponse(): CommandServiceUpdateResponse {
+  return { command: undefined };
+}
+
+export const CommandServiceUpdateResponse = {
+  encode(message: CommandServiceUpdateResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.command !== undefined) {
+      Command.encode(message.command, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): CommandServiceUpdateResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCommandServiceUpdateResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.command = Command.decode(reader, reader.uint32());
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<CommandServiceUpdateResponse>): CommandServiceUpdateResponse {
+    return CommandServiceUpdateResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<CommandServiceUpdateResponse>): CommandServiceUpdateResponse {
+    const message = createBaseCommandServiceUpdateResponse();
+    message.command = (object.command !== undefined && object.command !== null)
+      ? Command.fromPartial(object.command)
+      : undefined;
+    return message;
+  },
+};
+
 function createBaseHostCommand(): HostCommand {
-  return { hostId: "", hostName: "", start: undefined, stop: undefined, restart: undefined, pending: undefined };
+  return { hostId: "", start: undefined, stop: undefined, restart: undefined, pending: undefined };
 }
 
 export const HostCommand = {
@@ -730,20 +720,17 @@ export const HostCommand = {
     if (message.hostId !== "") {
       writer.uint32(10).string(message.hostId);
     }
-    if (message.hostName !== "") {
-      writer.uint32(58).string(message.hostName);
-    }
     if (message.start !== undefined) {
-      HostStart.encode(message.start, writer.uint32(26).fork()).ldelim();
+      HostStart.encode(message.start, writer.uint32(18).fork()).ldelim();
     }
     if (message.stop !== undefined) {
-      HostStop.encode(message.stop, writer.uint32(34).fork()).ldelim();
+      HostStop.encode(message.stop, writer.uint32(26).fork()).ldelim();
     }
     if (message.restart !== undefined) {
-      HostRestart.encode(message.restart, writer.uint32(42).fork()).ldelim();
+      HostRestart.encode(message.restart, writer.uint32(34).fork()).ldelim();
     }
     if (message.pending !== undefined) {
-      HostPending.encode(message.pending, writer.uint32(50).fork()).ldelim();
+      HostPending.encode(message.pending, writer.uint32(42).fork()).ldelim();
     }
     return writer;
   },
@@ -762,36 +749,29 @@ export const HostCommand = {
 
           message.hostId = reader.string();
           continue;
-        case 7:
-          if (tag !== 58) {
+        case 2:
+          if (tag !== 18) {
             break;
           }
 
-          message.hostName = reader.string();
+          message.start = HostStart.decode(reader, reader.uint32());
           continue;
         case 3:
           if (tag !== 26) {
             break;
           }
 
-          message.start = HostStart.decode(reader, reader.uint32());
+          message.stop = HostStop.decode(reader, reader.uint32());
           continue;
         case 4:
           if (tag !== 34) {
             break;
           }
 
-          message.stop = HostStop.decode(reader, reader.uint32());
+          message.restart = HostRestart.decode(reader, reader.uint32());
           continue;
         case 5:
           if (tag !== 42) {
-            break;
-          }
-
-          message.restart = HostRestart.decode(reader, reader.uint32());
-          continue;
-        case 6:
-          if (tag !== 50) {
             break;
           }
 
@@ -813,7 +793,6 @@ export const HostCommand = {
   fromPartial(object: DeepPartial<HostCommand>): HostCommand {
     const message = createBaseHostCommand();
     message.hostId = object.hostId ?? "";
-    message.hostName = object.hostName ?? "";
     message.start = (object.start !== undefined && object.start !== null)
       ? HostStart.fromPartial(object.start)
       : undefined;
@@ -970,54 +949,50 @@ export const HostPending = {
 
 function createBaseNodeCommand(): NodeCommand {
   return {
+    hostId: "",
     nodeId: "",
     nodeName: "",
-    hostId: "",
-    hostName: "",
     create: undefined,
     start: undefined,
     stop: undefined,
     restart: undefined,
-    upgrade: undefined,
     update: undefined,
+    upgrade: undefined,
     delete: undefined,
   };
 }
 
 export const NodeCommand = {
   encode(message: NodeCommand, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.hostId !== "") {
+      writer.uint32(10).string(message.hostId);
+    }
     if (message.nodeId !== "") {
-      writer.uint32(10).string(message.nodeId);
+      writer.uint32(18).string(message.nodeId);
     }
     if (message.nodeName !== "") {
-      writer.uint32(82).string(message.nodeName);
-    }
-    if (message.hostId !== "") {
-      writer.uint32(18).string(message.hostId);
-    }
-    if (message.hostName !== "") {
-      writer.uint32(90).string(message.hostName);
+      writer.uint32(26).string(message.nodeName);
     }
     if (message.create !== undefined) {
-      NodeCreate.encode(message.create, writer.uint32(26).fork()).ldelim();
+      NodeCreate.encode(message.create, writer.uint32(34).fork()).ldelim();
     }
     if (message.start !== undefined) {
-      NodeStart.encode(message.start, writer.uint32(34).fork()).ldelim();
+      NodeStart.encode(message.start, writer.uint32(42).fork()).ldelim();
     }
     if (message.stop !== undefined) {
-      NodeStop.encode(message.stop, writer.uint32(42).fork()).ldelim();
+      NodeStop.encode(message.stop, writer.uint32(50).fork()).ldelim();
     }
     if (message.restart !== undefined) {
-      NodeRestart.encode(message.restart, writer.uint32(50).fork()).ldelim();
-    }
-    if (message.upgrade !== undefined) {
-      NodeUpgrade.encode(message.upgrade, writer.uint32(58).fork()).ldelim();
+      NodeRestart.encode(message.restart, writer.uint32(58).fork()).ldelim();
     }
     if (message.update !== undefined) {
       NodeUpdate.encode(message.update, writer.uint32(66).fork()).ldelim();
     }
+    if (message.upgrade !== undefined) {
+      NodeUpgrade.encode(message.upgrade, writer.uint32(74).fork()).ldelim();
+    }
     if (message.delete !== undefined) {
-      NodeDelete.encode(message.delete, writer.uint32(74).fork()).ldelim();
+      NodeDelete.encode(message.delete, writer.uint32(82).fork()).ldelim();
     }
     return writer;
   },
@@ -1034,63 +1009,49 @@ export const NodeCommand = {
             break;
           }
 
-          message.nodeId = reader.string();
-          continue;
-        case 10:
-          if (tag !== 82) {
-            break;
-          }
-
-          message.nodeName = reader.string();
+          message.hostId = reader.string();
           continue;
         case 2:
           if (tag !== 18) {
             break;
           }
 
-          message.hostId = reader.string();
-          continue;
-        case 11:
-          if (tag !== 90) {
-            break;
-          }
-
-          message.hostName = reader.string();
+          message.nodeId = reader.string();
           continue;
         case 3:
           if (tag !== 26) {
             break;
           }
 
-          message.create = NodeCreate.decode(reader, reader.uint32());
+          message.nodeName = reader.string();
           continue;
         case 4:
           if (tag !== 34) {
             break;
           }
 
-          message.start = NodeStart.decode(reader, reader.uint32());
+          message.create = NodeCreate.decode(reader, reader.uint32());
           continue;
         case 5:
           if (tag !== 42) {
             break;
           }
 
-          message.stop = NodeStop.decode(reader, reader.uint32());
+          message.start = NodeStart.decode(reader, reader.uint32());
           continue;
         case 6:
           if (tag !== 50) {
             break;
           }
 
-          message.restart = NodeRestart.decode(reader, reader.uint32());
+          message.stop = NodeStop.decode(reader, reader.uint32());
           continue;
         case 7:
           if (tag !== 58) {
             break;
           }
 
-          message.upgrade = NodeUpgrade.decode(reader, reader.uint32());
+          message.restart = NodeRestart.decode(reader, reader.uint32());
           continue;
         case 8:
           if (tag !== 66) {
@@ -1101,6 +1062,13 @@ export const NodeCommand = {
           continue;
         case 9:
           if (tag !== 74) {
+            break;
+          }
+
+          message.upgrade = NodeUpgrade.decode(reader, reader.uint32());
+          continue;
+        case 10:
+          if (tag !== 82) {
             break;
           }
 
@@ -1121,10 +1089,9 @@ export const NodeCommand = {
 
   fromPartial(object: DeepPartial<NodeCommand>): NodeCommand {
     const message = createBaseNodeCommand();
+    message.hostId = object.hostId ?? "";
     message.nodeId = object.nodeId ?? "";
     message.nodeName = object.nodeName ?? "";
-    message.hostId = object.hostId ?? "";
-    message.hostName = object.hostName ?? "";
     message.create = (object.create !== undefined && object.create !== null)
       ? NodeCreate.fromPartial(object.create)
       : undefined;
@@ -1135,15 +1102,61 @@ export const NodeCommand = {
     message.restart = (object.restart !== undefined && object.restart !== null)
       ? NodeRestart.fromPartial(object.restart)
       : undefined;
-    message.upgrade = (object.upgrade !== undefined && object.upgrade !== null)
-      ? NodeUpgrade.fromPartial(object.upgrade)
-      : undefined;
     message.update = (object.update !== undefined && object.update !== null)
       ? NodeUpdate.fromPartial(object.update)
+      : undefined;
+    message.upgrade = (object.upgrade !== undefined && object.upgrade !== null)
+      ? NodeUpgrade.fromPartial(object.upgrade)
       : undefined;
     message.delete = (object.delete !== undefined && object.delete !== null)
       ? NodeDelete.fromPartial(object.delete)
       : undefined;
+    return message;
+  },
+};
+
+function createBaseNodeCreate(): NodeCreate {
+  return { node: undefined };
+}
+
+export const NodeCreate = {
+  encode(message: NodeCreate, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.node !== undefined) {
+      Node.encode(message.node, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): NodeCreate {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNodeCreate();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.node = Node.decode(reader, reader.uint32());
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<NodeCreate>): NodeCreate {
+    return NodeCreate.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<NodeCreate>): NodeCreate {
+    const message = createBaseNodeCreate();
+    message.node = (object.node !== undefined && object.node !== null) ? Node.fromPartial(object.node) : undefined;
     return message;
   },
 };
@@ -1253,65 +1266,48 @@ export const NodeRestart = {
   },
 };
 
-function createBaseNodeUpgrade(): NodeUpgrade {
-  return { image: undefined };
-}
-
-export const NodeUpgrade = {
-  encode(message: NodeUpgrade, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.image !== undefined) {
-      ImageIdentifier.encode(message.image, writer.uint32(10).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): NodeUpgrade {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseNodeUpgrade();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.image = ImageIdentifier.decode(reader, reader.uint32());
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<NodeUpgrade>): NodeUpgrade {
-    return NodeUpgrade.fromPartial(base ?? {});
-  },
-
-  fromPartial(object: DeepPartial<NodeUpgrade>): NodeUpgrade {
-    const message = createBaseNodeUpgrade();
-    message.image = (object.image !== undefined && object.image !== null)
-      ? ImageIdentifier.fromPartial(object.image)
-      : undefined;
-    return message;
-  },
-};
-
 function createBaseNodeUpdate(): NodeUpdate {
-  return { rules: [], orgId: "" };
+  return {
+    nodeId: "",
+    configId: "",
+    autoUpgrade: undefined,
+    newOrgId: undefined,
+    newOrgName: undefined,
+    newDisplayName: undefined,
+    newNote: undefined,
+    newValues: [],
+    newFirewall: undefined,
+  };
 }
 
 export const NodeUpdate = {
   encode(message: NodeUpdate, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.rules) {
-      FirewallRule.encode(v!, writer.uint32(10).fork()).ldelim();
+    if (message.nodeId !== "") {
+      writer.uint32(10).string(message.nodeId);
     }
-    if (message.orgId !== "") {
-      writer.uint32(18).string(message.orgId);
+    if (message.configId !== "") {
+      writer.uint32(18).string(message.configId);
+    }
+    if (message.autoUpgrade !== undefined) {
+      writer.uint32(24).bool(message.autoUpgrade);
+    }
+    if (message.newOrgId !== undefined) {
+      writer.uint32(34).string(message.newOrgId);
+    }
+    if (message.newOrgName !== undefined) {
+      writer.uint32(42).string(message.newOrgName);
+    }
+    if (message.newDisplayName !== undefined) {
+      writer.uint32(50).string(message.newDisplayName);
+    }
+    if (message.newNote !== undefined) {
+      writer.uint32(58).string(message.newNote);
+    }
+    for (const v of message.newValues) {
+      PropertyValueConfig.encode(v!, writer.uint32(66).fork()).ldelim();
+    }
+    if (message.newFirewall !== undefined) {
+      FirewallConfig.encode(message.newFirewall, writer.uint32(74).fork()).ldelim();
     }
     return writer;
   },
@@ -1328,14 +1324,63 @@ export const NodeUpdate = {
             break;
           }
 
-          message.rules.push(FirewallRule.decode(reader, reader.uint32()));
+          message.nodeId = reader.string();
           continue;
         case 2:
           if (tag !== 18) {
             break;
           }
 
-          message.orgId = reader.string();
+          message.configId = reader.string();
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.autoUpgrade = reader.bool();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.newOrgId = reader.string();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.newOrgName = reader.string();
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.newDisplayName = reader.string();
+          continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.newNote = reader.string();
+          continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.newValues.push(PropertyValueConfig.decode(reader, reader.uint32()));
+          continue;
+        case 9:
+          if (tag !== 74) {
+            break;
+          }
+
+          message.newFirewall = FirewallConfig.decode(reader, reader.uint32());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -1352,201 +1397,37 @@ export const NodeUpdate = {
 
   fromPartial(object: DeepPartial<NodeUpdate>): NodeUpdate {
     const message = createBaseNodeUpdate();
-    message.rules = object.rules?.map((e) => FirewallRule.fromPartial(e)) || [];
-    message.orgId = object.orgId ?? "";
-    return message;
-  },
-};
-
-function createBaseNodeCreate(): NodeCreate {
-  return {
-    nodeName: "",
-    dnsName: "",
-    orgId: "",
-    blockchain: "",
-    image: undefined,
-    nodeType: 0,
-    ip: "",
-    gateway: "",
-    properties: [],
-    rules: [],
-    network: "",
-  };
-}
-
-export const NodeCreate = {
-  encode(message: NodeCreate, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.nodeName !== "") {
-      writer.uint32(10).string(message.nodeName);
-    }
-    if (message.dnsName !== "") {
-      writer.uint32(18).string(message.dnsName);
-    }
-    if (message.orgId !== "") {
-      writer.uint32(26).string(message.orgId);
-    }
-    if (message.blockchain !== "") {
-      writer.uint32(34).string(message.blockchain);
-    }
-    if (message.image !== undefined) {
-      ImageIdentifier.encode(message.image, writer.uint32(42).fork()).ldelim();
-    }
-    if (message.nodeType !== 0) {
-      writer.uint32(48).int32(message.nodeType);
-    }
-    if (message.ip !== "") {
-      writer.uint32(58).string(message.ip);
-    }
-    if (message.gateway !== "") {
-      writer.uint32(66).string(message.gateway);
-    }
-    for (const v of message.properties) {
-      Parameter.encode(v!, writer.uint32(74).fork()).ldelim();
-    }
-    for (const v of message.rules) {
-      FirewallRule.encode(v!, writer.uint32(82).fork()).ldelim();
-    }
-    if (message.network !== "") {
-      writer.uint32(90).string(message.network);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): NodeCreate {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseNodeCreate();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.nodeName = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.dnsName = reader.string();
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.orgId = reader.string();
-          continue;
-        case 4:
-          if (tag !== 34) {
-            break;
-          }
-
-          message.blockchain = reader.string();
-          continue;
-        case 5:
-          if (tag !== 42) {
-            break;
-          }
-
-          message.image = ImageIdentifier.decode(reader, reader.uint32());
-          continue;
-        case 6:
-          if (tag !== 48) {
-            break;
-          }
-
-          message.nodeType = reader.int32() as any;
-          continue;
-        case 7:
-          if (tag !== 58) {
-            break;
-          }
-
-          message.ip = reader.string();
-          continue;
-        case 8:
-          if (tag !== 66) {
-            break;
-          }
-
-          message.gateway = reader.string();
-          continue;
-        case 9:
-          if (tag !== 74) {
-            break;
-          }
-
-          message.properties.push(Parameter.decode(reader, reader.uint32()));
-          continue;
-        case 10:
-          if (tag !== 82) {
-            break;
-          }
-
-          message.rules.push(FirewallRule.decode(reader, reader.uint32()));
-          continue;
-        case 11:
-          if (tag !== 90) {
-            break;
-          }
-
-          message.network = reader.string();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<NodeCreate>): NodeCreate {
-    return NodeCreate.fromPartial(base ?? {});
-  },
-
-  fromPartial(object: DeepPartial<NodeCreate>): NodeCreate {
-    const message = createBaseNodeCreate();
-    message.nodeName = object.nodeName ?? "";
-    message.dnsName = object.dnsName ?? "";
-    message.orgId = object.orgId ?? "";
-    message.blockchain = object.blockchain ?? "";
-    message.image = (object.image !== undefined && object.image !== null)
-      ? ImageIdentifier.fromPartial(object.image)
+    message.nodeId = object.nodeId ?? "";
+    message.configId = object.configId ?? "";
+    message.autoUpgrade = object.autoUpgrade ?? undefined;
+    message.newOrgId = object.newOrgId ?? undefined;
+    message.newOrgName = object.newOrgName ?? undefined;
+    message.newDisplayName = object.newDisplayName ?? undefined;
+    message.newNote = object.newNote ?? undefined;
+    message.newValues = object.newValues?.map((e) => PropertyValueConfig.fromPartial(e)) || [];
+    message.newFirewall = (object.newFirewall !== undefined && object.newFirewall !== null)
+      ? FirewallConfig.fromPartial(object.newFirewall)
       : undefined;
-    message.nodeType = object.nodeType ?? 0;
-    message.ip = object.ip ?? "";
-    message.gateway = object.gateway ?? "";
-    message.properties = object.properties?.map((e) => Parameter.fromPartial(e)) || [];
-    message.rules = object.rules?.map((e) => FirewallRule.fromPartial(e)) || [];
-    message.network = object.network ?? "";
     return message;
   },
 };
 
-function createBaseParameter(): Parameter {
-  return { name: "", value: "" };
+function createBaseNodeUpgrade(): NodeUpgrade {
+  return { node: undefined };
 }
 
-export const Parameter = {
-  encode(message: Parameter, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== "") {
-      writer.uint32(10).string(message.name);
-    }
-    if (message.value !== "") {
-      writer.uint32(18).string(message.value);
+export const NodeUpgrade = {
+  encode(message: NodeUpgrade, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.node !== undefined) {
+      Node.encode(message.node, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Parameter {
+  decode(input: _m0.Reader | Uint8Array, length?: number): NodeUpgrade {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseParameter();
+    const message = createBaseNodeUpgrade();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -1555,14 +1436,7 @@ export const Parameter = {
             break;
           }
 
-          message.name = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.value = reader.string();
+          message.node = Node.decode(reader, reader.uint32());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -1573,14 +1447,13 @@ export const Parameter = {
     return message;
   },
 
-  create(base?: DeepPartial<Parameter>): Parameter {
-    return Parameter.fromPartial(base ?? {});
+  create(base?: DeepPartial<NodeUpgrade>): NodeUpgrade {
+    return NodeUpgrade.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<Parameter>): Parameter {
-    const message = createBaseParameter();
-    message.name = object.name ?? "";
-    message.value = object.value ?? "";
+  fromPartial(object: DeepPartial<NodeUpgrade>): NodeUpgrade {
+    const message = createBaseNodeUpgrade();
+    message.node = (object.node !== undefined && object.node !== null) ? Node.fromPartial(object.node) : undefined;
     return message;
   },
 };
@@ -1626,30 +1499,21 @@ export const CommandServiceDefinition = {
   name: "CommandService",
   fullName: "blockjoy.v1.CommandService",
   methods: {
-    /** Allows a user to retrieve a list of commands using a set of filter params. */
-    list: {
-      name: "List",
-      requestType: CommandServiceListRequest,
-      requestStream: false,
-      responseType: CommandServiceListResponse,
-      responseStream: false,
-      options: {},
-    },
-    /** Update the status of a command (only used by the host). */
-    update: {
-      name: "Update",
-      requestType: CommandServiceUpdateRequest,
-      requestStream: false,
-      responseType: CommandServiceUpdateResponse,
-      responseStream: false,
-      options: {},
-    },
     /** Acknowledge the reciept of a command. */
     ack: {
       name: "Ack",
       requestType: CommandServiceAckRequest,
       requestStream: false,
       responseType: CommandServiceAckResponse,
+      responseStream: false,
+      options: {},
+    },
+    /** Allows a user to retrieve a list of commands using a set of filter params. */
+    list: {
+      name: "List",
+      requestType: CommandServiceListRequest,
+      requestStream: false,
+      responseType: CommandServiceListResponse,
       responseStream: false,
       options: {},
     },
@@ -1662,53 +1526,62 @@ export const CommandServiceDefinition = {
       responseStream: false,
       options: {},
     },
+    /** Update the status of a command (only used by the host). */
+    update: {
+      name: "Update",
+      requestType: CommandServiceUpdateRequest,
+      requestStream: false,
+      responseType: CommandServiceUpdateResponse,
+      responseStream: false,
+      options: {},
+    },
   },
 } as const;
 
 export interface CommandServiceImplementation<CallContextExt = {}> {
-  /** Allows a user to retrieve a list of commands using a set of filter params. */
-  list(
-    request: CommandServiceListRequest,
-    context: CallContext & CallContextExt,
-  ): Promise<DeepPartial<CommandServiceListResponse>>;
-  /** Update the status of a command (only used by the host). */
-  update(
-    request: CommandServiceUpdateRequest,
-    context: CallContext & CallContextExt,
-  ): Promise<DeepPartial<CommandServiceUpdateResponse>>;
   /** Acknowledge the reciept of a command. */
   ack(
     request: CommandServiceAckRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<CommandServiceAckResponse>>;
+  /** Allows a user to retrieve a list of commands using a set of filter params. */
+  list(
+    request: CommandServiceListRequest,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<CommandServiceListResponse>>;
   /** Get a list of unacknowledged commands. */
   pending(
     request: CommandServicePendingRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<CommandServicePendingResponse>>;
+  /** Update the status of a command (only used by the host). */
+  update(
+    request: CommandServiceUpdateRequest,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<CommandServiceUpdateResponse>>;
 }
 
 export interface CommandServiceClient<CallOptionsExt = {}> {
-  /** Allows a user to retrieve a list of commands using a set of filter params. */
-  list(
-    request: DeepPartial<CommandServiceListRequest>,
-    options?: CallOptions & CallOptionsExt,
-  ): Promise<CommandServiceListResponse>;
-  /** Update the status of a command (only used by the host). */
-  update(
-    request: DeepPartial<CommandServiceUpdateRequest>,
-    options?: CallOptions & CallOptionsExt,
-  ): Promise<CommandServiceUpdateResponse>;
   /** Acknowledge the reciept of a command. */
   ack(
     request: DeepPartial<CommandServiceAckRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<CommandServiceAckResponse>;
+  /** Allows a user to retrieve a list of commands using a set of filter params. */
+  list(
+    request: DeepPartial<CommandServiceListRequest>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<CommandServiceListResponse>;
   /** Get a list of unacknowledged commands. */
   pending(
     request: DeepPartial<CommandServicePendingRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<CommandServicePendingResponse>;
+  /** Update the status of a command (only used by the host). */
+  update(
+    request: DeepPartial<CommandServiceUpdateRequest>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<CommandServiceUpdateResponse>;
 }
 
 declare const self: any | undefined;

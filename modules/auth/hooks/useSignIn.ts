@@ -65,7 +65,7 @@ export function useSignIn() {
         );
 
         const activeInvitation = receivedInvitations.find(
-          (i) => i.id === invitationId,
+          (i) => i.invitationId === invitationId,
         );
 
         await acceptInvitation(invitationId);
@@ -73,7 +73,7 @@ export function useSignIn() {
         await getOrganizations();
 
         await setDefaultOrganization(
-          { id: activeInvitation?.orgId!, name: activeInvitation?.orgName! },
+          { orgId: activeInvitation?.orgId!, name: activeInvitation?.orgName! },
           userId,
         );
 

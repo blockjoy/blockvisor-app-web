@@ -25,7 +25,6 @@ export function useUpdateMembers(): IUpdateMembersHook {
   const updateMembersList = async (organization: Org) => {
     const { members, ...org }: Org = organization;
 
-    // TODO: add deep checks
     const isUpdated: boolean = organizationMembers?.length !== members?.length;
 
     if (!isUpdated) return;
@@ -34,15 +33,14 @@ export function useUpdateMembers(): IUpdateMembersHook {
 
     if (!isAdded) {
       const isRemovedCurrentUser: boolean = !members?.some(
-        (member: OrgUser) => member.userId === user?.id,
+        (member: OrgUser) => member.userId === user?.userId,
       );
 
       if (isRemovedCurrentUser) {
-        removeFromOrganizations(org?.id!);
+        removeFromOrganizations(org?.orgId!);
       }
     }
 
-    // TODO: check if it needs to be modified
     const newMembers = [...members!];
 
     const newInvitations: Invitation[] = sentInvitations.filter(

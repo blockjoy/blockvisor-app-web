@@ -75,7 +75,7 @@ export function LoginForm() {
   });
 
   useEffect(() => {
-    if (user?.id)
+    if (user?.userId)
       (async () => {
         await getOrganizations();
 
@@ -86,7 +86,7 @@ export function LoginForm() {
   useEffect(() => {
     if (user && organizations?.length && userSettings && !defaultOrganization)
       setDefaultOrganization({
-        id: organizations[0]?.id,
+        orgId: organizations[0]?.orgId,
         name: organizations[0]?.name,
       });
   }, [user, userSettings, organizations]);

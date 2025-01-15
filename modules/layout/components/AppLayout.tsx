@@ -11,7 +11,7 @@ import {
   useInvitations,
   useProvisionToken,
 } from '@modules/organization';
-import { useGetBlockchains, useNodeList } from '@modules/node';
+import { useGetProtocols, useNodeList } from '@modules/node';
 import { useMqtt } from '@modules/mqtt';
 import { useHostList } from '@modules/host';
 import { useBilling, useStripeSetup } from '@modules/billing';
@@ -46,7 +46,7 @@ const Layout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   const { getProvisionToken, provisionToken } = useProvisionToken();
 
   useBilling();
-  useGetBlockchains();
+  useGetProtocols();
 
   useEffect(() => {
     (async () => {
@@ -60,19 +60,19 @@ const Layout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   }, [user?.accessToken]);
 
   useEffect(() => {
-    if (!provisionToken && defaultOrganization?.id) {
-      getProvisionToken(defaultOrganization?.id);
+    if (!provisionToken && defaultOrganization?.orgId) {
+      getProvisionToken(defaultOrganization?.orgId);
     }
     if (
-      defaultOrganization?.id !== currentOrg.current &&
-      defaultOrganization?.id
+      defaultOrganization?.orgId !== currentOrg.current &&
+      defaultOrganization?.orgId
     ) {
-      currentOrg.current = defaultOrganization!.id;
+      currentOrg.current = defaultOrganization!.orgId;
       loadNodes();
       loadHosts();
       if (mqttClient?.connected) updateMqttSubscription();
     }
-  }, [defaultOrganization?.id]);
+  }, [defaultOrganization?.orgId]);
 
   return (
     <>

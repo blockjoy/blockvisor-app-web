@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
-import { Region } from '@modules/grpc/library/blockjoy/v1/host';
+import { useRecoilCallback, useRecoilValue } from 'recoil';
+import { RegionInfo } from '@modules/grpc/library/blockjoy/v1/host';
 import { nodeAtoms, nodeLauncherAtoms } from '@modules/node';
 import { Dropdown } from '@shared/components';
 import { authSelectors } from '@modules/auth';
 
 type NodeRegionSelectProps = {
-  onChange: (region: Region | null) => void;
-  onLoad: (firstRegion: Region | null) => void;
+  onChange: (regionInfo: RegionInfo) => void;
+  onLoad: (firstRegion: RegionInfo | null) => void;
 };
 
 export const NodeRegionSelect = ({
@@ -16,31 +16,56 @@ export const NodeRegionSelect = ({
 }: NodeRegionSelectProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const version = useRecoilValue(nodeLauncherAtoms.selectedVersion);
-  const region = useRecoilValue(nodeLauncherAtoms.selectedRegion);
+  const selectedRegions = useRecoilValue(nodeLauncherAtoms.selectedRegions);
   const regions = useRecoilValue(nodeAtoms.regions);
   const regionsLoadingState = useRecoilValue(nodeAtoms.regionsLoadingState);
   const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
 
   const handleOpen = (open: boolean = true) => setIsOpen(open);
 
+  const handleSelected = useRecoilCallback(
+    ({ snapshot }) =>
+      async (item: { id?: string; name?: string }) => {
+        const regionsRecoilState = await snapshot.getPromise(nodeAtoms.regions);
+        onChange(
+          regionsRecoilState?.find(
+            (regionInfo) => regionInfo.region?.regionId === item.id,
+          )!,
+        );
+      },
+    [regions],
+  );
+
   useEffect(() => {
     const activeRegion = regions?.[0] ?? null;
     onLoad(activeRegion);
   }, [regions]);
 
-  const error = !version?.id || !regions.length ? 'No Hosts Available' : null;
+  const mappedRegions = regions.map((regionInfo) => ({
+    ...regionInfo,
+    id: regionInfo.region?.regionId,
+    name: regionInfo.region?.displayName,
+  }));
+
+  const selectedRegion = selectedRegions?.map((nodeLauncherRegion) => ({
+    id: nodeLauncherRegion?.regionInfo?.region?.regionId,
+    name: nodeLauncherRegion?.regionInfo?.region?.displayName,
+  }))[0]!;
+
+  const error = !version || !regions.length ? 'No Hosts Available' : null;
 
   return (
     <Dropdown
-      items={regions}
-      handleSelected={onChange}
-      selectedItem={region}
+      idKey="regionId"
+      items={mappedRegions}
+      handleSelected={handleSelected}
+      selectedItem={selectedRegion}
       isLoading={regionsLoadingState !== 'finished'}
       disabled={!!error}
-      {...(!region
+      {...(!selectedRegions?.[0]
         ? isSuperUser
           ? error && { error }
-          : { defaultText: <p>Auto select</p> }
+          : { defaultText: <>Auto select</> }
         : null)}
       isOpen={isOpen}
       handleOpen={handleOpen}

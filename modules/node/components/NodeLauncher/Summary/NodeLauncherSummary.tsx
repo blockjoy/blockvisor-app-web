@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { isMobile } from 'react-device-detect';
-import { Host, Region } from '@modules/grpc/library/blockjoy/v1/host';
+import { Host, RegionInfo } from '@modules/grpc/library/blockjoy/v1/host';
 import {
   FormHeader,
   FormLabel,
@@ -20,6 +20,8 @@ import {
   NodeLauncherPanel,
   NodeLauncherSummaryDetails,
   NodeLauncherNotification,
+  NodeRegionSelectMultiple,
+  NodeLauncherRegion,
 } from '@modules/node';
 import { authSelectors } from '@modules/auth';
 import { billingAtoms } from '@modules/billing';
@@ -34,15 +36,18 @@ type NodeLauncherSummaryProps = {
     hosts: NodeLauncherHost[] | null,
     nodesToLaunch?: number,
   ) => void;
-  onRegionChanged: (region: Region | null) => void;
-  onRegionsLoaded: (region: Region | null) => void;
+  onRegionsChanged: (
+    regions: NodeLauncherRegion[] | null,
+    nodesToLaunch?: number,
+  ) => void;
+  onRegionsLoaded: (regionInfo: RegionInfo | null) => void;
 };
 
 export const NodeLauncherSummary = ({
   hasPermissionsToCreate,
   onCreateNodeClicked,
   onHostsChanged,
-  onRegionChanged,
+  onRegionsChanged,
   onRegionsLoaded,
 }: NodeLauncherSummaryProps) => {
   const [isLaunching, setIsLaunching] = useRecoilState(
@@ -54,6 +59,7 @@ export const NodeLauncherSummary = ({
   );
   const error = useRecoilValue(nodeLauncherAtoms.error);
   const selectedHosts = useRecoilValue(nodeLauncherAtoms.selectedHosts);
+  const selectedRegions = useRecoilValue(nodeLauncherAtoms.selectedRegions);
   const totalNodesToLaunch = useRecoilValue(
     nodeLauncherSelectors.totalNodesToLaunch,
   );
@@ -116,6 +122,15 @@ export const NodeLauncherSummary = ({
     ]);
   };
 
+  const handleRegionChanged = (regionInfo: RegionInfo | null) => {
+    onRegionsChanged([
+      {
+        nodesToLaunch: 1,
+        regionInfo: regionInfo!,
+      },
+    ]);
+  };
+
   return (
     <>
       <NodeLauncherPanel additionalStyles={styles.nodeLauncherPanel}>
@@ -126,7 +141,7 @@ export const NodeLauncherSummary = ({
               <span>Host{isSuperUser ? 's' : ''}</span>
               {selectedHosts !== null ? (
                 <a onClick={() => onHostsChanged(null)} css={styles.autoSelect}>
-                  Auto select
+                  Reset
                 </a>
               ) : null}
             </FormLabel>
@@ -146,11 +161,25 @@ export const NodeLauncherSummary = ({
 
           {!selectedHosts && (
             <>
-              <FormLabel>Region</FormLabel>
-              <NodeRegionSelect
-                onChange={onRegionChanged}
-                onLoad={onRegionsLoaded}
-              />
+              <FormLabel>
+                <span>Region{isSuperUser ? 's' : ''}</span>
+                {isSuperUser && selectedRegions !== null ? (
+                  <a
+                    onClick={() => onRegionsChanged(null)}
+                    css={styles.autoSelect}
+                  >
+                    Reset
+                  </a>
+                ) : null}
+              </FormLabel>
+              {isSuperUser ? (
+                <NodeRegionSelectMultiple onChange={onRegionsChanged} />
+              ) : (
+                <NodeRegionSelect
+                  onChange={handleRegionChanged}
+                  onLoad={onRegionsLoaded}
+                />
+              )}
             </>
           )}
 
@@ -174,7 +203,11 @@ export const NodeLauncherSummary = ({
           <div css={styles.buttons}>
             <button
               onClick={handleNodeClicked}
-              disabled={isLaunching || isPropertiesValid}
+              disabled={
+                isLaunching ||
+                (isSuperUser && nodeLauncherStatus.isDisabled) ||
+                !isPropertiesValid
+              }
               css={[
                 styles.createButton,
                 isLaunching && !Boolean(error) && styles.createButtonLoading,

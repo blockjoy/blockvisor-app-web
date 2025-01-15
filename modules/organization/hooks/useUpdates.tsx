@@ -3,7 +3,7 @@ import {
   OrgDeleted,
   OrgMessage,
   OrgUpdated,
-} from '@modules/grpc/library/blockjoy/v1/mqtt';
+} from '@modules/grpc/library/blockjoy/v1/event';
 import {
   useUpdateOrganization,
   useDeleteOrganization,
@@ -32,12 +32,12 @@ export const useUpdates = () => {
     const newOrg = organizations[0];
 
     setDefaultOrganization({
-      id: newOrg.id,
+      orgId: newOrg.orgId,
       name: newOrg.name,
     });
 
     if (router.pathname.includes('/organizations/')) {
-      router.push(ROUTES.ORGANIZATION(newOrg.id));
+      router.push(ROUTES.ORGANIZATION(newOrg.orgId));
     }
   };
 
@@ -57,11 +57,11 @@ export const useUpdates = () => {
 
         addToOrganizations(org!);
 
-        if (createdBy === user?.id) break;
+        if (createdBy === user?.userId) break;
 
         showNotification(
           type,
-          `${createdBy?.name} just created an organization`,
+          `${createdBy?.resourceId} just created an organization`,
         );
         break;
       }
@@ -78,9 +78,9 @@ export const useUpdates = () => {
 
         updateMembersList(org!);
 
-        if (updatedBy?.resourceId === user?.id) break;
+        if (updatedBy?.resourceId === user?.userId) break;
 
-        const isKicked = !org?.members.find((m) => m.userId === user?.id);
+        const isKicked = !org?.members.find((m) => m.userId === user?.userId);
 
         if (isKicked) {
           showNotification(
@@ -103,12 +103,12 @@ export const useUpdates = () => {
 
         removeFromOrganizations(orgId);
 
-        if (deletedBy?.resourceId === user?.id) break;
+        if (deletedBy?.resourceId === user?.userId) break;
 
-        if (orgId === defaultOrganization?.id) {
+        if (orgId === defaultOrganization?.orgId) {
           showNotification(
             type,
-            `${deletedBy?.name} just deleted your default organization`,
+            `${deletedBy?.resourceId} just deleted your default organization`,
           );
           kickFromOrganization();
         }

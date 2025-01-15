@@ -36,11 +36,16 @@ export const styles = {
   gridWrapper: css`
     width: 100%;
   `,
-  nodeListWrapper: css`
+  nodeListWrapper: (isFiltersOpen?: boolean) => css`
     flex: 1 1 auto;
+
     @media ${breakpoints.fromLrg} {
       position: static;
       margin-left: 0;
+    }
+
+    @media ${breakpoints.fromXLrg} {
+      max-width: ${isFiltersOpen ? 'calc(100% - 200px)' : '100%'};
     }
   `,
 };

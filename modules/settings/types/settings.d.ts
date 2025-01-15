@@ -38,6 +38,8 @@ type LayoutBasicSettings = {
   'sidebar.isOpen': boolean;
   'nodes.view': View;
   'nodes.filters.isOpen': boolean;
+  'nodes.table.tagsPerView': number;
+  'nodes.table.columns': TableColumn[];
   'hosts.view': View;
   'hosts.filters.isOpen': boolean;
   'admin.fullWidth': boolean;
@@ -52,7 +54,7 @@ type LayoutMobileSettings = {
 type LayoutSettings = LayoutBasicSettings & LayoutMobileSettings;
 
 type DefaultOrganization = {
-  id: string;
+  orgId: string;
   name: string;
 };
 
@@ -73,7 +75,7 @@ type AdminSettingsItem = {
 type AdminSettings = {
   nodes?: AdminSettingsItem;
   hosts?: AdminSettingsItem;
-  blockchains?: AdminSettingsItem;
+  protocols?: AdminSettingsItem;
   orgs?: AdminSettingsItem;
   users?: AdminSettingsItem;
 };

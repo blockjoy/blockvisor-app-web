@@ -68,7 +68,7 @@ export const mapOrganizationInvitationsToRows = (
   ];
 
   const rows = invitations?.map((invitation: Invitation, idx: number) => ({
-    key: invitation.id ?? `${idx}`,
+    key: invitation.invitationId ?? `${idx}`,
     cells: [
       {
         key: '1',
@@ -89,7 +89,10 @@ export const mapOrganizationInvitationsToRows = (
             style="icon"
             size="medium"
             onClick={() =>
-              handleRevokeInvitation(invitation?.id!, invitation?.inviteeEmail!)
+              handleRevokeInvitation(
+                invitation?.invitationId!,
+                invitation?.inviteeEmail!,
+              )
             }
           >
             <SvgIcon size="20px">

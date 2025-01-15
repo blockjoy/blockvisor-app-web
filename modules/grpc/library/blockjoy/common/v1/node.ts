@@ -1,131 +1,908 @@
 /* eslint-disable */
+import Long from "long";
+import _m0 from "protobufjs/minimal";
+import { Timestamp } from "../../../google/protobuf/timestamp";
+import { Resource } from "./resource";
 
 export const protobufPackage = "blockjoy.common.v1";
 
-/** All possible node types. */
-export enum NodeType {
-  NODE_TYPE_UNSPECIFIED = 0,
-  NODE_TYPE_MINER = 1,
-  NODE_TYPE_ETL = 2,
-  NODE_TYPE_VALIDATOR = 3,
-  NODE_TYPE_API = 4,
-  NODE_TYPE_ORACLE = 5,
-  NODE_TYPE_RELAY = 6,
-  NODE_TYPE_EXECUTION = 7,
-  NODE_TYPE_BEACON = 8,
-  NODE_TYPE_MEVBOOST = 9,
-  NODE_TYPE_NODE = 10,
-  NODE_TYPE_FULLNODE = 11,
-  NODE_TYPE_LIGHTNODE = 12,
-  NODE_TYPE_ARCHIVE = 13,
+/** The reported state of a node. */
+export enum NodeState {
+  NODE_STATE_UNSPECIFIED = 0,
+  /** NODE_STATE_STARTING - The node is in the process of starting. */
+  NODE_STATE_STARTING = 1,
+  /** NODE_STATE_RUNNING - All processes are running on the node. */
+  NODE_STATE_RUNNING = 2,
+  /** NODE_STATE_STOPPED - The node has stopped cleanly. */
+  NODE_STATE_STOPPED = 3,
+  /** NODE_STATE_FAILED - The node has stopped with an error. */
+  NODE_STATE_FAILED = 4,
+  /** NODE_STATE_UPGRADING - The node is currently being upgraded. */
+  NODE_STATE_UPGRADING = 5,
+  /** NODE_STATE_DELETING - The node is currently being deleted. */
+  NODE_STATE_DELETING = 6,
+  /** NODE_STATE_DELETED - The node was deleted. */
+  NODE_STATE_DELETED = 7,
   UNRECOGNIZED = -1,
 }
 
-/** Non-chain specific node states. */
-export enum NodeStatus {
-  NODE_STATUS_UNSPECIFIED = 0,
-  /** NODE_STATUS_PROVISIONING - The node is currently being created on the host. */
-  NODE_STATUS_PROVISIONING = 1,
-  NODE_STATUS_BROADCASTING = 2,
-  NODE_STATUS_CANCELLED = 3,
-  NODE_STATUS_DELEGATING = 4,
-  NODE_STATUS_DELINQUENT = 5,
-  NODE_STATUS_DISABLED = 6,
-  NODE_STATUS_EARNING = 7,
-  NODE_STATUS_ELECTING = 8,
-  NODE_STATUS_ELECTED = 9,
-  NODE_STATUS_EXPORTED = 10,
-  NODE_STATUS_INGESTING = 11,
-  NODE_STATUS_MINING = 12,
-  NODE_STATUS_MINTING = 13,
-  NODE_STATUS_PROCESSING = 14,
-  NODE_STATUS_RELAYING = 15,
-  /**
-   * NODE_STATUS_DELETE_PENDING - A message to delete has been sent, and as soon as the process is kicked off
-   * the node will move to the deleting status.
-   */
-  NODE_STATUS_DELETE_PENDING = 16,
-  /** NODE_STATUS_DELETING - The node is currently in the process of being removed. */
-  NODE_STATUS_DELETING = 17,
-  /** NODE_STATUS_DELETED - This node is deleted. */
-  NODE_STATUS_DELETED = 18,
-  /**
-   * NODE_STATUS_PROVISIONING_PENDING - The node has been created, and it will move to pending as soon as the host
-   * that it will run on has acked the messages sent to it.
-   */
-  NODE_STATUS_PROVISIONING_PENDING = 19,
-  NODE_STATUS_UPDATE_PENDING = 20,
-  NODE_STATUS_UPDATING = 21,
-  /**
-   * NODE_STATUS_INITIALIZING - The node has been provisioned, and the corresponding processes are starting
-   * inside the container.
-   */
-  NODE_STATUS_INITIALIZING = 22,
-  /** NODE_STATUS_DOWNLOADING - The node is downloading the chain data. */
-  NODE_STATUS_DOWNLOADING = 23,
-  /** NODE_STATUS_UPLOADING - The node is uploading an archive of its chain data. */
-  NODE_STATUS_UPLOADING = 24,
-  NODE_STATUS_STARTING = 25,
-  NODE_STATUS_ACTIVE = 26,
-  NODE_STATUS_JAILED = 27,
+/** The requested state for a node to transition to. */
+export enum NextState {
+  NEXT_STATE_UNSPECIFIED = 0,
+  /** NEXT_STATE_STOPPING - A message was sent to stop the node. */
+  NEXT_STATE_STOPPING = 1,
+  /** NEXT_STATE_DELETING - A message was sent to delete the node. */
+  NEXT_STATE_DELETING = 2,
+  /** NEXT_STATE_UPGRADING - A message was sent to upgrade the node. */
+  NEXT_STATE_UPGRADING = 3,
   UNRECOGNIZED = -1,
 }
 
-/** The container status of a node. */
-export enum ContainerStatus {
-  CONTAINER_STATUS_UNSPECIFIED = 0,
-  CONTAINER_STATUS_CREATING = 1,
-  CONTAINER_STATUS_RUNNING = 2,
-  CONTAINER_STATUS_STARTING = 3,
-  CONTAINER_STATUS_STOPPING = 4,
-  CONTAINER_STATUS_STOPPED = 5,
-  CONTAINER_STATUS_UPGRADING = 6,
-  CONTAINER_STATUS_UPGRADED = 7,
-  CONTAINER_STATUS_DELETING = 8,
-  CONTAINER_STATUS_DELETED = 9,
-  CONTAINER_STATUS_INSTALLING = 10,
-  CONTAINER_STATUS_SNAPSHOTTING = 11,
-  CONTAINER_STATUS_FAILED = 12,
-  CONTAINER_STATUS_BUSY = 13,
+/** The current health of a node. */
+export enum NodeHealth {
+  NODE_HEALTH_UNSPECIFIED = 0,
+  NODE_HEALTH_HEALTHY = 1,
+  NODE_HEALTH_NEUTRAL = 2,
+  NODE_HEALTH_UNHEALTHY = 3,
   UNRECOGNIZED = -1,
 }
 
-/** The sync status of a node. */
-export enum SyncStatus {
-  SYNC_STATUS_UNSPECIFIED = 0,
-  SYNC_STATUS_SYNCING = 1,
-  SYNC_STATUS_SYNCED = 2,
+/** Whether nodes will be scheduled on the most or least heavily utilized hosts. */
+export enum ResourceAffinity {
+  RESOURCE_AFFINITY_UNSPECIFIED = 0,
+  /** RESOURCE_AFFINITY_MOST_RESOURCES - Prefer to utilize full hosts first. */
+  RESOURCE_AFFINITY_MOST_RESOURCES = 1,
+  /** RESOURCE_AFFINITY_LEAST_RESOURCES - Prefer to utilize empty hosts first. */
+  RESOURCE_AFFINITY_LEAST_RESOURCES = 2,
   UNRECOGNIZED = -1,
 }
 
-/** The staking status of a node. */
-export enum StakingStatus {
-  STAKING_STATUS_UNSPECIFIED = 0,
-  STAKING_STATUS_FOLLOWER = 1,
-  STAKING_STATUS_STAKED = 2,
-  STAKING_STATUS_STAKING = 3,
-  STAKING_STATUS_VALIDATING = 4,
-  STAKING_STATUS_CONSENSUS = 5,
-  STAKING_STATUS_UNSTAKED = 6,
+/** Whether similar nodes will be placed on the same host or spread over many. */
+export enum SimilarNodeAffinity {
+  SIMILAR_NODE_AFFINITY_UNSPECIFIED = 0,
+  /** SIMILAR_NODE_AFFINITY_CLUSTER - Schedule similar nodes on the same cluster (e.g. for low latency). */
+  SIMILAR_NODE_AFFINITY_CLUSTER = 1,
+  /** SIMILAR_NODE_AFFINITY_SPREAD - Avoid scheduling on hosts running similar nodes (e.g. for redundancy). */
+  SIMILAR_NODE_AFFINITY_SPREAD = 2,
   UNRECOGNIZED = -1,
 }
 
-/** Field properties for displaying in the UI. */
-export enum UiType {
-  UI_TYPE_UNSPECIFIED = 0,
-  /**
-   * UI_TYPE_SWITCH - Either "true" or "false" must be returned. The property should be rendered
-   * as a checkbox.
-   */
-  UI_TYPE_SWITCH = 1,
-  /**
-   * UI_TYPE_PASSWORD - This field should be treated as a password field, i.e. a text field whose
-   * content is hidden.
-   */
-  UI_TYPE_PASSWORD = 2,
-  /** UI_TYPE_TEXT - This field should be treated as a text field. */
-  UI_TYPE_TEXT = 3,
-  /** UI_TYPE_FILE_UPLOAD - This field should let the user upload string from a file. */
-  UI_TYPE_FILE_UPLOAD = 4,
+/** Flags describing a job possible states. */
+export enum NodeJobStatus {
+  NODE_JOB_STATUS_UNSPECIFIED = 0,
+  /** NODE_JOB_STATUS_PENDING - The job has not started yet. */
+  NODE_JOB_STATUS_PENDING = 1,
+  /** NODE_JOB_STATUS_RUNNING - The job is current being executed. */
+  NODE_JOB_STATUS_RUNNING = 2,
+  /** NODE_JOB_STATUS_FINISHED - The job has successfully finished. */
+  NODE_JOB_STATUS_FINISHED = 3,
+  /** NODE_JOB_STATUS_FAILED - The job has unsuccessfully finished. */
+  NODE_JOB_STATUS_FAILED = 4,
+  /** NODE_JOB_STATUS_STOPPED - The job was interrupted. */
+  NODE_JOB_STATUS_STOPPED = 5,
   UNRECOGNIZED = -1,
+}
+
+/** The current status of a node. */
+export interface NodeStatus {
+  state: NodeState;
+  next?: NextState | undefined;
+  protocol?: ProtocolStatus | undefined;
+}
+
+/** A protocol-specific status. */
+export interface ProtocolStatus {
+  state: string;
+  health: NodeHealth;
+}
+
+/** Determines how and where nodes are created. */
+export interface NodeLauncher {
+  /** Create nodes on these hosts. */
+  byHost?:
+    | ByHost
+    | undefined;
+  /** Create nodes in these regions. */
+  byRegion?: ByRegion | undefined;
+}
+
+/** Create nodes across multiple hosts. */
+export interface ByHost {
+  hostCounts: HostCount[];
+}
+
+/** Create nodes on this host. */
+export interface HostCount {
+  hostId: string;
+  nodeCount: number;
+}
+
+/** Create nodes across multiple regions. */
+export interface ByRegion {
+  regionCounts: RegionCount[];
+}
+
+/** Create nodes in this region. */
+export interface RegionCount {
+  regionId: string;
+  nodeCount: number;
+  resource?: ResourceAffinity | undefined;
+  similarity?: SimilarNodeAffinity | undefined;
+}
+
+/** A job is an auxiliary process for a running node. */
+export interface NodeJob {
+  /** A name to identify this job by. */
+  name: string;
+  /** The current status of this job. */
+  status: NodeJobStatus;
+  /** The exit code of a stopped process. */
+  exitCode?:
+    | number
+    | undefined;
+  /** A readable message to manually inspect the state of the job. */
+  message?:
+    | string
+    | undefined;
+  /** A list of log lines with information about the current job. */
+  logs: string[];
+  /** The number of job restarts since the last reset. */
+  restarts: number;
+  /** Additional info around the completion progress of this job. */
+  progress?: NodeJobProgress | undefined;
+}
+
+/** The progress a job has made towards completion. */
+export interface NodeJobProgress {
+  /** The total units of progress to complete. */
+  total?:
+    | number
+    | undefined;
+  /** The units of progress currently completed. */
+  current?:
+    | number
+    | undefined;
+  /** Additional info on the job progress. */
+  message?: string | undefined;
+}
+
+export interface NodeReport {
+  reportId: string;
+  /** The problem description. */
+  message: string;
+  /** The entity that created the report. */
+  createdBy:
+    | Resource
+    | undefined;
+  /** The moment the issue was raised. */
+  createdAt: Date | undefined;
+}
+
+function createBaseNodeStatus(): NodeStatus {
+  return { state: 0, next: undefined, protocol: undefined };
+}
+
+export const NodeStatus = {
+  encode(message: NodeStatus, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.state !== 0) {
+      writer.uint32(8).int32(message.state);
+    }
+    if (message.next !== undefined) {
+      writer.uint32(16).int32(message.next);
+    }
+    if (message.protocol !== undefined) {
+      ProtocolStatus.encode(message.protocol, writer.uint32(26).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): NodeStatus {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNodeStatus();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.state = reader.int32() as any;
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.next = reader.int32() as any;
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.protocol = ProtocolStatus.decode(reader, reader.uint32());
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<NodeStatus>): NodeStatus {
+    return NodeStatus.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<NodeStatus>): NodeStatus {
+    const message = createBaseNodeStatus();
+    message.state = object.state ?? 0;
+    message.next = object.next ?? undefined;
+    message.protocol = (object.protocol !== undefined && object.protocol !== null)
+      ? ProtocolStatus.fromPartial(object.protocol)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseProtocolStatus(): ProtocolStatus {
+  return { state: "", health: 0 };
+}
+
+export const ProtocolStatus = {
+  encode(message: ProtocolStatus, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.state !== "") {
+      writer.uint32(10).string(message.state);
+    }
+    if (message.health !== 0) {
+      writer.uint32(16).int32(message.health);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ProtocolStatus {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseProtocolStatus();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.state = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.health = reader.int32() as any;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ProtocolStatus>): ProtocolStatus {
+    return ProtocolStatus.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<ProtocolStatus>): ProtocolStatus {
+    const message = createBaseProtocolStatus();
+    message.state = object.state ?? "";
+    message.health = object.health ?? 0;
+    return message;
+  },
+};
+
+function createBaseNodeLauncher(): NodeLauncher {
+  return { byHost: undefined, byRegion: undefined };
+}
+
+export const NodeLauncher = {
+  encode(message: NodeLauncher, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.byHost !== undefined) {
+      ByHost.encode(message.byHost, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.byRegion !== undefined) {
+      ByRegion.encode(message.byRegion, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): NodeLauncher {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNodeLauncher();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.byHost = ByHost.decode(reader, reader.uint32());
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.byRegion = ByRegion.decode(reader, reader.uint32());
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<NodeLauncher>): NodeLauncher {
+    return NodeLauncher.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<NodeLauncher>): NodeLauncher {
+    const message = createBaseNodeLauncher();
+    message.byHost = (object.byHost !== undefined && object.byHost !== null)
+      ? ByHost.fromPartial(object.byHost)
+      : undefined;
+    message.byRegion = (object.byRegion !== undefined && object.byRegion !== null)
+      ? ByRegion.fromPartial(object.byRegion)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseByHost(): ByHost {
+  return { hostCounts: [] };
+}
+
+export const ByHost = {
+  encode(message: ByHost, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.hostCounts) {
+      HostCount.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ByHost {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseByHost();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.hostCounts.push(HostCount.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ByHost>): ByHost {
+    return ByHost.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<ByHost>): ByHost {
+    const message = createBaseByHost();
+    message.hostCounts = object.hostCounts?.map((e) => HostCount.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseHostCount(): HostCount {
+  return { hostId: "", nodeCount: 0 };
+}
+
+export const HostCount = {
+  encode(message: HostCount, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.hostId !== "") {
+      writer.uint32(10).string(message.hostId);
+    }
+    if (message.nodeCount !== 0) {
+      writer.uint32(16).uint32(message.nodeCount);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): HostCount {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseHostCount();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.hostId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.nodeCount = reader.uint32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<HostCount>): HostCount {
+    return HostCount.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<HostCount>): HostCount {
+    const message = createBaseHostCount();
+    message.hostId = object.hostId ?? "";
+    message.nodeCount = object.nodeCount ?? 0;
+    return message;
+  },
+};
+
+function createBaseByRegion(): ByRegion {
+  return { regionCounts: [] };
+}
+
+export const ByRegion = {
+  encode(message: ByRegion, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.regionCounts) {
+      RegionCount.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ByRegion {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseByRegion();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.regionCounts.push(RegionCount.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<ByRegion>): ByRegion {
+    return ByRegion.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<ByRegion>): ByRegion {
+    const message = createBaseByRegion();
+    message.regionCounts = object.regionCounts?.map((e) => RegionCount.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseRegionCount(): RegionCount {
+  return { regionId: "", nodeCount: 0, resource: undefined, similarity: undefined };
+}
+
+export const RegionCount = {
+  encode(message: RegionCount, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.regionId !== "") {
+      writer.uint32(10).string(message.regionId);
+    }
+    if (message.nodeCount !== 0) {
+      writer.uint32(16).uint32(message.nodeCount);
+    }
+    if (message.resource !== undefined) {
+      writer.uint32(24).int32(message.resource);
+    }
+    if (message.similarity !== undefined) {
+      writer.uint32(32).int32(message.similarity);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): RegionCount {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseRegionCount();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.regionId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.nodeCount = reader.uint32();
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.resource = reader.int32() as any;
+          continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.similarity = reader.int32() as any;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<RegionCount>): RegionCount {
+    return RegionCount.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<RegionCount>): RegionCount {
+    const message = createBaseRegionCount();
+    message.regionId = object.regionId ?? "";
+    message.nodeCount = object.nodeCount ?? 0;
+    message.resource = object.resource ?? undefined;
+    message.similarity = object.similarity ?? undefined;
+    return message;
+  },
+};
+
+function createBaseNodeJob(): NodeJob {
+  return { name: "", status: 0, exitCode: undefined, message: undefined, logs: [], restarts: 0, progress: undefined };
+}
+
+export const NodeJob = {
+  encode(message: NodeJob, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.name !== "") {
+      writer.uint32(10).string(message.name);
+    }
+    if (message.status !== 0) {
+      writer.uint32(16).int32(message.status);
+    }
+    if (message.exitCode !== undefined) {
+      writer.uint32(24).int32(message.exitCode);
+    }
+    if (message.message !== undefined) {
+      writer.uint32(34).string(message.message);
+    }
+    for (const v of message.logs) {
+      writer.uint32(42).string(v!);
+    }
+    if (message.restarts !== 0) {
+      writer.uint32(48).uint64(message.restarts);
+    }
+    if (message.progress !== undefined) {
+      NodeJobProgress.encode(message.progress, writer.uint32(58).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): NodeJob {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNodeJob();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.name = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.status = reader.int32() as any;
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.exitCode = reader.int32();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.message = reader.string();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.logs.push(reader.string());
+          continue;
+        case 6:
+          if (tag !== 48) {
+            break;
+          }
+
+          message.restarts = longToNumber(reader.uint64() as Long);
+          continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.progress = NodeJobProgress.decode(reader, reader.uint32());
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<NodeJob>): NodeJob {
+    return NodeJob.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<NodeJob>): NodeJob {
+    const message = createBaseNodeJob();
+    message.name = object.name ?? "";
+    message.status = object.status ?? 0;
+    message.exitCode = object.exitCode ?? undefined;
+    message.message = object.message ?? undefined;
+    message.logs = object.logs?.map((e) => e) || [];
+    message.restarts = object.restarts ?? 0;
+    message.progress = (object.progress !== undefined && object.progress !== null)
+      ? NodeJobProgress.fromPartial(object.progress)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseNodeJobProgress(): NodeJobProgress {
+  return { total: undefined, current: undefined, message: undefined };
+}
+
+export const NodeJobProgress = {
+  encode(message: NodeJobProgress, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.total !== undefined) {
+      writer.uint32(8).uint32(message.total);
+    }
+    if (message.current !== undefined) {
+      writer.uint32(16).uint32(message.current);
+    }
+    if (message.message !== undefined) {
+      writer.uint32(26).string(message.message);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): NodeJobProgress {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNodeJobProgress();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.total = reader.uint32();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.current = reader.uint32();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.message = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<NodeJobProgress>): NodeJobProgress {
+    return NodeJobProgress.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<NodeJobProgress>): NodeJobProgress {
+    const message = createBaseNodeJobProgress();
+    message.total = object.total ?? undefined;
+    message.current = object.current ?? undefined;
+    message.message = object.message ?? undefined;
+    return message;
+  },
+};
+
+function createBaseNodeReport(): NodeReport {
+  return { reportId: "", message: "", createdBy: undefined, createdAt: undefined };
+}
+
+export const NodeReport = {
+  encode(message: NodeReport, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.reportId !== "") {
+      writer.uint32(10).string(message.reportId);
+    }
+    if (message.message !== "") {
+      writer.uint32(18).string(message.message);
+    }
+    if (message.createdBy !== undefined) {
+      Resource.encode(message.createdBy, writer.uint32(26).fork()).ldelim();
+    }
+    if (message.createdAt !== undefined) {
+      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(34).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): NodeReport {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNodeReport();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.reportId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.message = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.createdBy = Resource.decode(reader, reader.uint32());
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<NodeReport>): NodeReport {
+    return NodeReport.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<NodeReport>): NodeReport {
+    const message = createBaseNodeReport();
+    message.reportId = object.reportId ?? "";
+    message.message = object.message ?? "";
+    message.createdBy = (object.createdBy !== undefined && object.createdBy !== null)
+      ? Resource.fromPartial(object.createdBy)
+      : undefined;
+    message.createdAt = object.createdAt ?? undefined;
+    return message;
+  },
+};
+
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
+  if (typeof globalThis !== "undefined") {
+    return globalThis;
+  }
+  if (typeof self !== "undefined") {
+    return self;
+  }
+  if (typeof window !== "undefined") {
+    return window;
+  }
+  if (typeof global !== "undefined") {
+    return global;
+  }
+  throw "Unable to locate global object";
+})();
+
+type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
+
+export type DeepPartial<T> = T extends Builtin ? T
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
+  : Partial<T>;
+
+function toTimestamp(date: Date): Timestamp {
+  const seconds = date.getTime() / 1_000;
+  const nanos = (date.getTime() % 1_000) * 1_000_000;
+  return { seconds, nanos };
+}
+
+function fromTimestamp(t: Timestamp): Date {
+  let millis = (t.seconds || 0) * 1_000;
+  millis += (t.nanos || 0) / 1_000_000;
+  return new Date(millis);
+}
+
+function longToNumber(long: Long): number {
+  if (long.gt(Number.MAX_SAFE_INTEGER)) {
+    throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  }
+  return long.toNumber();
+}
+
+if (_m0.util.Long !== Long) {
+  _m0.util.Long = Long as any;
+  _m0.configure();
 }

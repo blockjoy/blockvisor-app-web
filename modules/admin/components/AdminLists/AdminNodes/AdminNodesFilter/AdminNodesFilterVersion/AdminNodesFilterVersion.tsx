@@ -9,52 +9,41 @@ export const AdminNodesFilterVersion = ({
   columnName,
   values,
   listAll,
-  blockchains,
+  protocols,
   onFilterChange,
-}: AdminFilterControlProps) => {
+}: AdminFilterControlProps<Node>) => {
   const [list, setList] = useState<AdminFilterDropdownItem[]>([]);
 
   const settings = useRecoilValue(adminSelectors.settings);
   const settingsColumns = settings['nodes']?.columns ?? [];
 
-  const blockchainFilters = settingsColumns.find(
-    (column) => column.name === 'blockchainName',
+  const protocolFilters = settingsColumns.find(
+    (column) => column.name === 'protocolName',
   )?.filterSettings?.values;
 
-  const selectedBlockchains = blockchains?.filter((b) =>
-    blockchainFilters?.some((bf) => bf === b.id),
+  const selectedProtocols = protocols?.filter((b) =>
+    protocolFilters?.some((p) => p === b.protocolId),
   );
 
   const filteredVersions: AdminFilterDropdownItem[] = Array.from(
     new Set(
       sortVersionStringArray(
-        selectedBlockchains
-          ?.flatMap(({ nodeTypes }) => nodeTypes)
-          .flatMap(({ versions }) => versions)
-          .map((version) => version.version),
+        listAll
+          ?.filter((node) =>
+            selectedProtocols?.some((p) => p.protocolId === node.protocolId),
+          )
+          ?.map((n) => n.semanticVersion),
       ),
     ),
-  )
-    .filter((version) =>
-      (listAll as Node[])?.some(
-        (item) =>
-          item.version === version &&
-          selectedBlockchains?.some(
-            (blockain) => blockain.id === item.blockchainId,
-          ),
-      ),
-    )
-    .map((version) => ({
-      id: version,
-      name: version,
-    }));
+  ).map((version) => ({
+    id: version,
+    name: version,
+  }));
 
   useEffect(() => {
     const versions = Array.from(
       new Set(
-        sortVersionStringArray(
-          listAll?.filter((node) => node.version).map((node) => node.version),
-        ),
+        sortVersionStringArray(listAll?.map((node) => node.semanticVersion)),
       ),
     );
     setList(
@@ -67,6 +56,7 @@ export const AdminNodesFilterVersion = ({
 
   return (
     <AdminListFilterControl
+      protocols={protocols}
       columnName={columnName}
       items={filteredVersions?.length ? filteredVersions : list}
       values={values}

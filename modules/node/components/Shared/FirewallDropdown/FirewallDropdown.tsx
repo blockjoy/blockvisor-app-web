@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { FilteredIpAddr } from '@modules/grpc/library/blockjoy/v1/node';
+// import { FilteredIpAddr } from '@modules/grpc/library/blockjoy/v1/node';
 import IconFirewall from '@public/assets/icons/app/Firewall.svg';
 import {
   DropdownMenu,
@@ -12,12 +12,13 @@ import { FirewallDropdownHeader } from './FirewallDropdownHeader';
 import { FirewallDropdownForm } from './FirewallDropdownForm';
 import { FirewallDropdownItems } from './FirewallDropdownItems';
 import { NodeLauncherState } from '@modules/node';
+import {
+  FirewallAction,
+  FirewallRule,
+} from '@modules/grpc/library/blockjoy/common/v1/config';
 
 type FirewallDropdownProps = {
-  type?: 'allow' | 'deny' | undefined;
-  ips?: FilteredIpAddr[];
-  deniedIps?: FilteredIpAddr[];
-  allowedIps?: FilteredIpAddr[];
+  rules: FirewallRule[];
   isDisabled?: boolean;
   onPropertyChanged: <K extends keyof NodeLauncherState>(
     name: K,
@@ -27,10 +28,7 @@ type FirewallDropdownProps = {
 };
 
 export const FirewallDropdown = ({
-  type,
-  ips,
-  allowedIps,
-  deniedIps,
+  rules,
   isDisabled,
   onPropertyChanged,
   noBottomMargin,
@@ -38,7 +36,6 @@ export const FirewallDropdown = ({
   const [isOpen, setIsOpen] = useState(false);
   const [activeTabIndex, setActiveTabIndex] = useState(0);
   const dropdownButtonRef = useRef<HTMLButtonElement>(null);
-  const isAllowedIp = type ? type === 'allow' : activeTabIndex === 0;
 
   const handleClick = () => {
     if (activeTabIndex === -1) setActiveTabIndex(0);
@@ -50,45 +47,45 @@ export const FirewallDropdown = ({
     if (isOpen) handleClick();
   });
 
-  const handleRuleAdded = (rule: FilteredIpAddr) => {
-    const list = type ? ips! : isAllowedIp ? allowedIps! : deniedIps!;
-    const listCopy = [...list];
-    listCopy.push(rule);
-    onPropertyChanged(isAllowedIp ? 'allowIps' : 'denyIps', listCopy);
+  const handleRuleAdded = (rule: FirewallRule) => {
+    const rulesCopy = [...rules];
+    rulesCopy.push(rule);
+    onPropertyChanged('firewall', rulesCopy);
   };
 
   const handleRemoveFromList = (index: number) => {
-    const list = type ? ips! : isAllowedIp ? allowedIps! : deniedIps!;
-    const listCopy = [...list];
+    const rulesCopy = [...rules];
     onPropertyChanged(
-      isAllowedIp ? 'allowIps' : 'denyIps',
-      listCopy.filter((item, i) => i !== index),
+      'firewall',
+      rulesCopy.filter((_, i) => i !== index),
     );
   };
 
-  const isEmpty =
-    (!type && !allowedIps?.length && !deniedIps?.length) ||
-    (type && !ips?.length);
+  const isEmpty = !rules.length;
+
+  const allowIps = rules
+    .filter((rule) => rule.action === FirewallAction.FIREWALL_ACTION_ALLOW)
+    .flatMap((rule) => rule.ips);
+
+  const denyIps = rules
+    .filter((rule) => rule.action === FirewallAction.FIREWALL_ACTION_REJECT)
+    .flatMap((rule) => rule.ips);
+
+  const activeListToShow = activeTabIndex === 0 ? allowIps : denyIps;
 
   const selectText = isEmpty ? (
     <p>Add Rules</p>
-  ) : type ? (
+  ) : rules.length ? (
     <span css={styles.dropdownlabel}>
-      {ips?.length} IP{ips?.length !== 1 && `'s`}
+      {rules?.length} IP{rules?.length !== 1 && `'s`}
     </span>
   ) : (
     <>
-      <span css={styles.dropdownlabel}>Allow</span> <p>{allowedIps?.length}</p>
+      <span css={styles.dropdownlabel}>Inbound</span> <p>{allowIps.length}</p>
       <span css={styles.separator}>/</span>
-      <span css={styles.dropdownlabel}>Deny</span> <p>{deniedIps?.length}</p>
+      <span css={styles.dropdownlabel}>Outbound</span> <p>{denyIps.length}</p>
     </>
   );
-
-  const activeListToShow = type
-    ? ips
-    : activeTabIndex === 0
-    ? allowedIps
-    : deniedIps;
 
   return (
     <DropdownWrapper
@@ -106,21 +103,18 @@ export const FirewallDropdown = ({
         onClick={handleClick}
       />
       <DropdownMenu isOpen={isOpen} additionalStyles={styles.dropdown}>
-        {!type && (
-          <FirewallDropdownHeader
-            activeTabIndex={activeTabIndex}
-            setActiveTabIndex={setActiveTabIndex}
-          />
-        )}
-
+        <FirewallDropdownHeader
+          activeTabIndex={activeTabIndex}
+          setActiveTabIndex={setActiveTabIndex}
+        />
         <FirewallDropdownForm
           isOpen={isOpen}
           activeTabIndex={activeTabIndex}
           onRuleAdded={handleRuleAdded}
-          fullIpList={type ? ips! : [...allowedIps!, ...deniedIps!]}
+          fullIpList={[...allowIps, ...denyIps]}
         />
         <FirewallDropdownItems
-          listType={isAllowedIp ? 'allow' : 'deny'}
+          listType={activeTabIndex === 0 ? 'allow' : 'deny'}
           items={activeListToShow!}
           onRemoveClicked={handleRemoveFromList}
         />

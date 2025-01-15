@@ -1,9 +1,7 @@
-import { nodeClient } from '@modules/grpc';
+import { nodeClient, userClient } from '@modules/grpc';
 import { useRouter } from 'next/router';
 import { AdminDetail } from '../AdminDetail/AdminDetail';
-import { NextLink, NodeFirewall, NodeStatus } from '@shared/components';
-import { convertNodeTypeToName } from '@modules/node/utils/convertNodeTypeToName';
-import { capitalized } from '@modules/admin/utils/capitalized';
+import { NextLink, NodeStatus } from '@shared/components';
 import {
   Node,
   NodeServiceUpdateConfigRequest,
@@ -14,7 +12,7 @@ import { escapeHtml } from '@shared/utils/escapeHtml';
 import { Currency } from '../../AdminFinancesByHost/Currency/Currency';
 
 const ignoreItems = [
-  'id',
+  'nodeId',
   'nodeName',
   'displayName',
   'dnsName',
@@ -26,20 +24,17 @@ const ignoreItems = [
   'ip',
   'ipGateway',
   'placement',
-  'blockchainId',
-  'blockchainName',
+  'protocolId',
+  'protocolName',
   'blockHeight',
-  'selfUpdate',
-  'status',
-  'containerStatus',
-  'syncStatus',
-  'stakingStatus',
+  'autoUpgrade',
+  'nodeStatus',
+  'reports',
+  'tags',
   'createdBy',
-  'properties',
-  'allowIps',
-  'denyIps',
-  'nodeType',
   'jobs',
+  'config',
+  'cost',
 ];
 
 export const AdminNode = () => {
@@ -54,9 +49,15 @@ export const AdminNode = () => {
     node: Node,
   ) => {
     const defaultRequest: NodeServiceUpdateConfigRequest = {
-      ids: [id as string],
+      nodeId: id as string,
+      newValues: [],
     };
     const request = createAdminUpdateRequest(defaultRequest, properties);
+
+    if (node.orgId === request.newOrgId) {
+      request.newOrgId = undefined;
+    }
+
     await nodeClient.updateNode(request);
     onSuccess();
   };
@@ -73,258 +74,232 @@ export const AdminNode = () => {
         { keyword: ip as string },
         { currentPage: 0, itemsPerPage: 1 },
       );
-      const { id } = nodeResults.nodes[0];
+      const { nodeId } = nodeResults.nodes[0];
       router.replace(`/admin?name=nodes&id=${id}`);
-      return await nodeClient.getNode(id);
+      return await nodeClient.getNode(nodeId);
     } else {
       return await nodeClient.getNode(id as string);
     }
   };
 
-  const customItems = (node: Node): AdminDetailProperty[] => [
-    {
-      id: 'nodeName',
-      label: 'Node Name',
-      data: node.nodeName,
-      copyValue: node.nodeName,
-    },
-    {
-      id: 'displayName',
-      label: 'Display Name',
-      data: escapeHtml(node.displayName),
-      copyValue: node.displayName,
-      editSettings: {
-        field: 'displayName',
-        isNumber: false,
-        controlType: 'text',
-        defaultValue: node.displayName,
+  const customItems = async (node: Node): Promise<AdminDetailProperty[]> => {
+    const usersResponse = await userClient.listUsers();
+
+    const user = usersResponse.users.find(
+      (u) => u.userId === node.createdBy?.resourceId,
+    );
+
+    const userName = `${user?.firstName} ${user?.lastName}`;
+
+    return [
+      {
+        id: 'nodeName',
+        label: 'Node Name',
+        data: node.nodeName,
+        copyValue: node.nodeName,
       },
-    },
-    {
-      id: 'dnsName',
-      label: 'Dns Name',
-      data: node.dnsName,
-      copyValue: node.dnsName,
-    },
-    {
-      id: 'id',
-      label: 'Id',
-      data: node.id,
-      copyValue: node.id,
-    },
-    {
-      id: 'cost',
-      label: 'Cost',
-      data: <Currency cents={node.cost?.amount?.amountMinorUnits} />,
-    },
-    {
-      id: 'ip',
-      label: 'Ip',
-      data: <p>{node.ip}</p>,
-      copyValue: node.ip,
-    },
-    {
-      id: 'ipGateway',
-      label: 'Ip Gateway',
-      data: <p>{node.ipGateway}</p>,
-      copyValue: node.ipGateway,
-    },
-    {
-      id: 'status',
-      label: 'Node Status',
-      data: <NodeStatus hasBorder={false} status={node.status}></NodeStatus>,
-    },
-    {
-      id: 'containerStatus',
-      label: 'Container Status',
-      data: (
-        <NodeStatus
-          hasBorder={false}
-          status={node.containerStatus}
-          type="container"
-        ></NodeStatus>
-      ),
-    },
-    {
-      id: 'syncStatus',
-      label: 'Sync Status',
-      data: (
-        <NodeStatus
-          hasBorder={false}
-          status={node.syncStatus}
-          type="sync"
-        ></NodeStatus>
-      ),
-    },
-    {
-      id: 'blockheight',
-      label: 'Block Height',
-      data: node.blockHeight?.toLocaleString('en-US'),
-    },
-    {
-      id: 'blockchainName',
-      label: 'Blockchain Name',
-      data: node.blockchainName,
-      copyValue: node.blockchainName,
-    },
-    {
-      id: 'blockchainId',
-      label: 'Blockchain Id',
-      data: node.blockchainId,
-      copyValue: node.blockchainId,
-    },
-    {
-      id: 'nodeType',
-      label: 'Node Type',
-      data: capitalized(convertNodeTypeToName(node.nodeType)),
-    },
-    {
-      id: 'orgName',
-      label: 'Org Name',
-      data: (
-        <p>
-          <NextLink href={`/admin?name=orgs&id=${node.orgId}`}>
-            {node.orgName}
-          </NextLink>
-        </p>
-      ),
-      editSettings: {
-        field: 'newOrgId',
-        displayName: 'Organization',
-        isNumber: false,
-        controlType: 'org',
-        defaultValue: node.orgId,
+      {
+        id: 'displayName',
+        label: 'Display Name',
+        data: escapeHtml(node.displayName!),
+        copyValue: node.displayName,
+        editSettings: {
+          field: 'newDisplayName',
+          isNumber: false,
+          controlType: 'text',
+          defaultValue: node.displayName,
+        },
       },
-    },
-    {
-      id: 'orgId',
-      label: 'Org Id',
-      data: (
-        <p>
-          <NextLink href={`/admin?name=orgs&id=${node.orgId}`}>
-            {node.orgId}
-          </NextLink>
-        </p>
-      ),
-      copyValue: node.orgId,
-    },
-    {
-      id: 'hostName',
-      label: 'Host Name',
-      data: (
-        <p>
-          <NextLink href={`/admin?name=hosts&id=${node.hostId}`}>
-            {node.hostName}
-          </NextLink>
-        </p>
-      ),
-      copyValue: node.hostName,
-    },
-    {
-      id: 'hostId',
-      label: 'Host Id',
-      data: (
-        <p>
-          <NextLink href={`/admin?name=hosts&id=${node.hostId}`}>
-            {node.hostId}
-          </NextLink>
-        </p>
-      ),
-      copyValue: node.hostId,
-    },
-    {
-      id: 'selfUpdate',
-      label: 'Auto Update',
-      data: node.selfUpdate?.toString(),
-      editSettings: {
-        field: 'selfUpdate',
-        displayName: 'Auto Update',
-        isBoolean: true,
-        controlType: 'switch',
-        defaultValue: node.selfUpdate?.toString(),
+      {
+        id: 'dnsName',
+        label: 'Dns Name',
+        data: node.dnsName,
+        copyValue: node.dnsName,
       },
-    },
-    {
-      id: 'firewallRules',
-      label: 'Firewall Rules',
-      data:
-        node.allowIps.length || node.denyIps.length ? (
-          <NodeFirewall allowIps={node.allowIps} denyIps={node.denyIps} />
-        ) : (
-          '-'
+      {
+        id: 'id',
+        label: 'Id',
+        data: node.nodeId,
+        copyValue: node.nodeId,
+      },
+      {
+        id: 'cost',
+        label: 'Cost',
+        data: <Currency cents={node.cost?.amount?.amountMinorUnits} />,
+      },
+      {
+        id: 'ip',
+        label: 'Ip',
+        data: <p>{node.ipAddress}</p>,
+        copyValue: node.ipAddress,
+      },
+      {
+        id: 'ipGateway',
+        label: 'Ip Gateway',
+        data: <p>{node.ipGateway}</p>,
+        copyValue: node.ipGateway,
+      },
+      {
+        id: 'status',
+        label: 'Node State',
+        data: (
+          <NodeStatus
+            hasBorder={false}
+            status={node.nodeStatus?.state!}
+          ></NodeStatus>
         ),
-    },
-    // {
-    //   id: 'allowIps',
-    //   label: 'Allow Ips',
-    //   data: node.allowIps,
-    //   isHidden: true,
-    //   editSettings: {
-    //     field: 'allowIps',
-    //     displayName: 'Allow Ips',
-    //     isArray: true,
-    //     controlType: 'firewall',
-    //     defaultValue: JSON.stringify(node.allowIps),
-    //   },
-    // },
-    // {
-    //   id: 'denyIps',
-    //   label: 'Deny Ips',
-    //   data: node.denyIps,
-    //   isHidden: false,
-    //   editSettings: {
-    //     field: 'denyIps',
-    //     displayName: 'Deny Ips',
-    //     isArray: true,
-    //     controlType: 'firewall',
-    //     defaultValue: JSON.stringify(node.denyIps),
-    //   },
-    {
-      id: 'region',
-      label: 'Region',
-      data: <p>{node.placement?.scheduler?.region || '-'}</p>,
-    },
-    {
-      id: 'createdByName',
-      label: 'Launched By Name',
-      data: (
-        <p>
-          <NextLink
-            href={`/admin?name=users&id=${node?.createdBy?.resourceId}`}
-          >
-            {node?.createdBy?.name || 'No name'}
-          </NextLink>
-        </p>
-      ),
-    },
-    {
-      id: 'createdByEmail',
-      label: 'Launched By Email',
-      data: (
-        <p>
-          <NextLink
-            href={`/admin?name=users&id=${node?.createdBy?.resourceId}`}
-          >
-            {node?.createdBy?.email || 'No email'}
-          </NextLink>
-        </p>
-      ),
-    },
-    {
-      id: 'createdById',
-      label: 'Launched By Id',
-      data: (
-        <p>
-          <NextLink
-            href={`/admin?name=users&id=${node?.createdBy?.resourceId}`}
-          >
-            {node?.createdBy?.resourceId || 'No Id'}
-          </NextLink>
-        </p>
-      ),
-      copyValue: node?.createdBy?.resourceId,
-    },
-  ];
+      },
+      {
+        id: 'health',
+        label: 'Node Health',
+        data: (
+          <NodeStatus
+            hasBorder={false}
+            status={node.nodeStatus?.protocol?.health}
+            type="protocol"
+          ></NodeStatus>
+        ),
+      },
+      {
+        id: 'protocolState',
+        label: 'Protocol State',
+        data: (
+          <NodeStatus
+            hasBorder={false}
+            protocolStatus={node.nodeStatus?.protocol?.state}
+          ></NodeStatus>
+        ),
+      },
+      {
+        id: 'blockheight',
+        label: 'Block Height',
+        data: node.blockHeight?.toLocaleString('en-US'),
+      },
+      {
+        id: 'protocolName',
+        label: 'Protocol Name',
+        data: node.protocolName,
+        copyValue: node.protocolName,
+      },
+      {
+        id: 'protocolId',
+        label: 'Protocol Id',
+        data: node.protocolId,
+        copyValue: node.protocolId,
+      },
+      {
+        id: 'orgName',
+        label: 'Org Name',
+        data: (
+          <p>
+            <NextLink href={`/admin?name=orgs&id=${node.orgId}`}>
+              {node.orgName}
+            </NextLink>
+          </p>
+        ),
+        editSettings: {
+          field: 'newOrgId',
+          displayName: 'Organization',
+          isNumber: false,
+          controlType: 'org',
+          defaultValue: node.orgId,
+        },
+      },
+      {
+        id: 'orgId',
+        label: 'Org Id',
+        data: (
+          <p>
+            <NextLink href={`/admin?name=orgs&id=${node.orgId}`}>
+              {node.orgId}
+            </NextLink>
+          </p>
+        ),
+        copyValue: node.orgId,
+      },
+      {
+        id: 'hostName',
+        label: 'Host Name',
+        data: (
+          <p>
+            <NextLink href={`/admin?name=hosts&id=${node.hostId}`}>
+              {node.hostDisplayName}
+            </NextLink>
+          </p>
+        ),
+        copyValue: node.hostDisplayName,
+      },
+      {
+        id: 'hostId',
+        label: 'Host Id',
+        data: (
+          <p>
+            <NextLink href={`/admin?name=hosts&id=${node.hostId}`}>
+              {node.hostId}
+            </NextLink>
+          </p>
+        ),
+        copyValue: node.hostId,
+      },
+      {
+        id: 'autoUpgrade',
+        label: 'Auto Update',
+        data: node.autoUpgrade?.toString(),
+        editSettings: {
+          field: 'autoUpgrade',
+          displayName: 'Auto Update',
+          isBoolean: true,
+          controlType: 'switch',
+          defaultValue: node.autoUpgrade?.toString(),
+        },
+      },
+      {
+        id: 'region',
+        label: 'Region',
+        data: <p>{node.regionName || '-'}</p>,
+      },
+      {
+        id: 'createdByName',
+        label: 'Created By Name',
+        data: (
+          <p>
+            <NextLink
+              href={`/admin?name=users&id=${node?.createdBy?.resourceId}`}
+            >
+              {userName || 'No name'}
+            </NextLink>
+          </p>
+        ),
+      },
+      {
+        id: 'createdByEmail',
+        label: 'Created By Email',
+        data: (
+          <p>
+            <NextLink
+              href={`/admin?name=users&id=${node?.createdBy?.resourceId}`}
+            >
+              {user?.email || 'No email'}
+            </NextLink>
+          </p>
+        ),
+      },
+      {
+        id: 'createdById',
+        label: 'Launched By Id',
+        data: (
+          <p>
+            <NextLink
+              href={`/admin?name=users&id=${node?.createdBy?.resourceId}`}
+            >
+              {node?.createdBy?.resourceId || 'No Id'}
+            </NextLink>
+          </p>
+        ),
+        copyValue: node?.createdBy?.resourceId,
+      },
+    ];
+  };
 
   return (
     <AdminDetail
@@ -335,7 +310,7 @@ export const AdminNode = () => {
       ignoreItems={ignoreItems}
       customItems={customItems}
       additionalHeaderButtons={<AdminNodeUpgrade />}
-      detailsName="id"
+      detailsName="nodeId"
       metricsKey="ip"
       hasMetrics
     />

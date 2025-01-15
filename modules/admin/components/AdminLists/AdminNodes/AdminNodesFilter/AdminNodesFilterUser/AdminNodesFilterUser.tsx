@@ -13,6 +13,7 @@ export const AdminNodesFilterUser = ({
   columnName,
   values,
   listAll,
+  users,
   onFilterChange,
 }: AdminFilterControlProps) => {
   const [list, setList] = useState<AdminFilterDropdownItem[]>();
@@ -20,22 +21,27 @@ export const AdminNodesFilterUser = ({
   const settings = useRecoilValue(adminSelectors.settings);
   const settingsColumns = settings['nodes']?.columns ?? [];
 
-  const blockchainFilters = settingsColumns.find(
-    (column) => column.name === 'blockchainName',
+  const protocolFilters = settingsColumns.find(
+    (column) => column.name === 'protocolName',
   )?.filterSettings?.values;
 
   useEffect(() => {
     const all: AdminFilterDropdownItem[] | undefined = (listAll as Node[])
       ?.filter(
         (node) =>
-          !!node.createdBy?.name &&
-          (!blockchainFilters?.length ||
-            blockchainFilters?.includes(node.blockchainId)),
+          !!node.createdBy?.resourceId &&
+          (!protocolFilters?.length ||
+            protocolFilters?.includes(node.protocolId)),
       )
-      ?.map(({ createdBy }) => ({
-        id: createdBy?.resourceId,
-        name: createdBy?.name,
-      }));
+      ?.map(({ createdBy }) => {
+        const user = users?.find(
+          (user) => user.userId === createdBy?.resourceId,
+        );
+        return {
+          id: createdBy?.resourceId,
+          name: `${user?.firstName} ${user?.lastName}`,
+        };
+      });
 
     setList(sort(dedupedAdminDropdownList(all!), { field: 'name' }));
   }, [listAll]);

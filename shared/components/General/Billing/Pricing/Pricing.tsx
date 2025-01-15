@@ -4,12 +4,12 @@ import { billingAtoms } from '@modules/billing';
 import { styles } from './Pricing.styles';
 import { formatters } from '@shared/index';
 import { Promo, Skeleton } from '@shared/components';
-import { blockchainAtoms, nodeAtoms } from '@modules/node';
+import { protocolAtoms, nodeAtoms } from '@modules/node';
 
 export const Pricing = () => {
   const subscription = useRecoilValue(billingAtoms.subscription);
   const blockchainsLoadingState = useRecoilValue(
-    blockchainAtoms.blockchainsLoadingState,
+    protocolAtoms.protocolsLoadingState,
   );
   const regionsLoadingState = useRecoilValue(nodeAtoms.regionsLoadingState);
   const promoCode = useRecoilValue(billingAtoms.promoCode);

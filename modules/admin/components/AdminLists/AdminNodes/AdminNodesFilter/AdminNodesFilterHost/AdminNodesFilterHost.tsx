@@ -14,24 +14,27 @@ export const AdminNodesFilterHost = ({
   values,
   listAll,
   onFilterChange,
-}: AdminFilterControlProps) => {
+}: AdminFilterControlProps<Node>) => {
   const [list, setList] = useState<AdminFilterDropdownItem[]>();
 
   const settings = useRecoilValue(adminSelectors.settings);
   const settingsColumns = settings['nodes']?.columns ?? [];
 
-  const blockchainFilters = settingsColumns.find(
-    (column) => column.name === 'blockchainName',
+  const protocolFilters = settingsColumns.find(
+    (column) => column.name === 'protocolName',
   )?.filterSettings?.values;
 
   useEffect(() => {
-    const all: AdminFilterDropdownItem[] | undefined = (listAll as Node[])
+    const all: AdminFilterDropdownItem[] | undefined = listAll
       ?.filter(
         (node) =>
-          !blockchainFilters?.length ||
-          blockchainFilters?.includes(node.blockchainId),
+          !protocolFilters?.length ||
+          protocolFilters?.includes(node.protocolId),
       )
-      ?.map(({ hostId, hostName }) => ({ id: hostId, name: hostName }));
+      ?.map(({ hostId, hostDisplayName, hostNetworkName }) => ({
+        id: hostId,
+        name: hostDisplayName || hostNetworkName,
+      }));
     setList(sort(dedupedAdminDropdownList(all!), { field: 'name' }));
   }, [listAll]);
 

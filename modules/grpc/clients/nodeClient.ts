@@ -1,6 +1,5 @@
 import {
   Node,
-  NodeProperty,
   NodeServiceCreateRequest,
   NodeServiceClient,
   NodeServiceDefinition,
@@ -10,10 +9,10 @@ import {
   NodeSearch,
   NodeSort,
   NodeSortField,
-  NodeReport,
   NodeServiceGetRequest,
+  NodeServiceDeleteRequest,
 } from '../library/blockjoy/v1/node';
-import { NodeType } from '../library/blockjoy/common/v1/node';
+import { NodeReport } from '../library/blockjoy/common/v1/node';
 import {
   SearchOperator,
   SortOrder,
@@ -31,26 +30,24 @@ import { createChannel, createClient } from 'nice-grpc-web';
 
 export type UINode = {
   orgId: string;
-  blockchainId: string;
+  protocolId: string;
   version?: string;
-  nodeType: NodeType;
-  properties: NodeProperty[];
+  // nodeType: NodeType;
+  // properties: NodeProperty[];
   network: string;
 };
 
 export type UINodeFilterCriteria = {
-  blockchain?: string[];
+  protocol?: string[];
   nodeType?: string[];
   nodeStatus?: string[];
-  containerStatus?: string[];
-  syncStatus?: string[];
   keyword?: string;
   orgIds?: string[];
   hostIds?: string[];
   userIds?: string[];
   regions?: string[];
   ips?: string[];
-  versions?: string[];
+  semanticVersions?: string[];
   networks?: string[];
 };
 
@@ -79,17 +76,15 @@ class NodeClient {
       orgIds: orgId ? [orgId!] : filter?.orgIds!,
       hostIds: filter?.hostIds!,
       ipAddresses: filter?.ips!,
-      networks: filter?.networks!,
-      regions: filter?.regions!,
+      // TODO: Filter nodes by region and variant
       userIds: filter?.userIds!,
-      versions: filter?.versions!,
+      semanticVersions: filter?.semanticVersions!,
       offset: getPaginationOffset(pagination!),
       limit: pagination?.itemsPerPage!,
-      statuses: filter?.nodeStatus?.map((f) => +f)!,
-      containerStatuses: filter?.containerStatus?.map((f) => +f)!,
-      syncStatuses: filter?.syncStatus?.map((f) => +f)!,
-      nodeTypes: filter?.nodeType?.map((f) => +f)!,
-      blockchainIds: filter?.blockchain!,
+      nodeStates: filter?.nodeStatus?.map((f) => +f)!,
+      protocolIds: filter?.protocol!,
+      nextStates: [],
+      versionKeys: [],
       sort: sort || [
         {
           field: NodeSortField.NODE_SORT_FIELD_CREATED_AT,
@@ -101,7 +96,7 @@ class NodeClient {
     if (filter?.keyword) {
       const { keyword } = filter;
       const search: NodeSearch = {
-        id: createSearch(keyword),
+        nodeId: createSearch(keyword),
         ip: createSearch(keyword),
         nodeName: createSearch(keyword),
         displayName: createSearch(keyword),
@@ -135,16 +130,13 @@ class NodeClient {
       limit: pagination?.itemsPerPage!,
       orgIds: orgId ? [orgId!] : [],
       hostIds: [hostId],
-      statuses: [],
-      containerStatuses: [],
-      syncStatuses: [],
-      nodeTypes: [],
-      blockchainIds: [],
+      nodeStates: [],
+      protocolIds: [],
       userIds: [],
       ipAddresses: [],
-      versions: [],
-      networks: [],
-      regions: [],
+      semanticVersions: [],
+      nextStates: [],
+      versionKeys: [],
       sort: [
         {
           field: NodeSortField.NODE_SORT_FIELD_CREATED_AT,
@@ -167,16 +159,17 @@ class NodeClient {
     }
   }
 
-  async getNode(id: string): Promise<Node> {
-    const request: NodeServiceGetRequest = { id };
+  async getNode(nodeId: string): Promise<Node> {
+    const request: NodeServiceGetRequest = { nodeId };
     console.log('getNodeRequest', request);
     await authClient.refreshToken();
 
     try {
       const response = await callWithTokenRefresh(
         this.client.get.bind(this.client),
-        { id },
+        { nodeId },
       );
+
       console.log('getNodeResponse', response.node);
       return response.node!;
     } catch (err) {
@@ -206,8 +199,8 @@ class NodeClient {
     }
   }
 
-  async deleteNode(id: string): Promise<void> {
-    const request = { id };
+  async deleteNode(nodeId: string): Promise<void> {
+    const request: NodeServiceDeleteRequest = { nodeId };
     console.log('deleteNodeRequest', request);
     try {
       await authClient.refreshToken();
@@ -220,7 +213,7 @@ class NodeClient {
   async stopNode(nodeId: string): Promise<void> {
     try {
       await authClient.refreshToken();
-      await this.client.stop({ id: nodeId }, getOptions());
+      await this.client.stop({ nodeId }, getOptions());
     } catch (err) {
       return handleError(err);
     }
@@ -229,16 +222,16 @@ class NodeClient {
   async startNode(nodeId: string): Promise<void> {
     try {
       await authClient.refreshToken();
-      await this.client.start({ id: nodeId }, getOptions());
+      await this.client.start({ nodeId }, getOptions());
     } catch (err) {
       return handleError(err);
     }
   }
 
-  async upgradeNode(ids: string[], version: string): Promise<void> {
+  async upgradeNode(nodeIds: string[], imageId: string): Promise<void> {
     try {
       await authClient.refreshToken();
-      await this.client.upgrade({ ids, version }, getOptions());
+      await this.client.upgradeImage({ nodeIds, imageId }, getOptions());
     } catch (err) {
       console.log('upgradeNodeError', err);
       return handleError(err);
@@ -247,7 +240,7 @@ class NodeClient {
 
   async reportProblem(nodeId: string, message: string): Promise<void> {
     try {
-      const { id: userId } = getIdentity();
+      const { nodeId: userId } = getIdentity();
 
       const request = { userId, nodeId, message };
 
@@ -255,8 +248,8 @@ class NodeClient {
 
       await authClient.refreshToken();
 
-      const response = await this.client.report(
-        { userId, nodeId, message },
+      const response = await this.client.reportError(
+        { nodeId, message },
         getOptions(),
       );
 

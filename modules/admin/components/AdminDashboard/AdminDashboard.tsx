@@ -13,7 +13,7 @@ import IconBlockchain from '@public/assets/icons/app/Blockchain.svg';
 import { NextLink } from '@shared/components';
 
 type Card = {
-  name: 'Nodes' | 'Hosts' | 'Users' | 'Orgs' | 'Blockchains';
+  name: 'Nodes' | 'Hosts' | 'Users' | 'Orgs' | 'Protocols';
   getTotal: () => Promise<number>;
   icon: React.ReactNode;
 };
@@ -26,7 +26,7 @@ export const AdminDashboard = () => {
     getTotalHosts,
     getTotalNodes,
     getTotalOrgs,
-    getTotalBlockchains,
+    getTotalProtocols,
   } = useAdminGetTotals();
 
   const cards: Card[] = [
@@ -41,8 +41,8 @@ export const AdminDashboard = () => {
       icon: <IconHost />,
     },
     {
-      name: 'Blockchains',
-      getTotal: getTotalBlockchains,
+      name: 'Protocols',
+      getTotal: getTotalProtocols,
       icon: <IconBlockchain />,
     },
     {

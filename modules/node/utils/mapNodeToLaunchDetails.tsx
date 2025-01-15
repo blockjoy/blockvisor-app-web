@@ -1,18 +1,18 @@
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { ROUTES } from '@shared/constants/routes';
-import { NextLink, DateTime } from '@shared/components';
+import { NextLink, DateTime, NodeItems } from '@shared/components';
 
-export const mapNodeToLaunchDetails = (node: Node) => {
-  if (!node?.nodeType) return [];
-
+export const mapNodeToLaunchDetails = (node: Node, isSuperUser?: boolean) => {
   const details: { label: string; data: any | undefined }[] = [
     {
       label: 'Host',
       data:
-        node.orgId === node.hostOrgId ? (
-          <NextLink href={ROUTES.HOST(node.hostId)}>{node.hostName}</NextLink>
+        node.orgId === node.hostOrgId || isSuperUser ? (
+          <NextLink href={ROUTES.HOST(node.hostId)}>
+            {node.hostDisplayName}
+          </NextLink>
         ) : (
-          node.hostName
+          node.hostDisplayName
         ),
     },
     {
@@ -23,18 +23,20 @@ export const mapNodeToLaunchDetails = (node: Node) => {
         </NextLink>
       ),
     },
-
-    { label: 'Launched By', data: node.createdBy?.name || '-' },
+    {
+      label: 'Launched By',
+      data: <NodeItems.CreatedBy createdBy={node.createdBy} />,
+    },
     {
       label: 'Launched On',
       data: !node.createdAt ? '-' : <DateTime date={node.createdAt} />,
     },
   ];
 
-  if (node?.placement?.scheduler?.region) {
+  if (node?.regionName) {
     details.splice(1, 0, {
       label: 'Region',
-      data: node.placement?.scheduler?.region ?? '-',
+      data: node.regionName ?? '-',
     });
   }
 

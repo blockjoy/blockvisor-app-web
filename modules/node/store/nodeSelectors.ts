@@ -1,27 +1,26 @@
 import { selector, selectorFamily } from 'recoil';
 import isEqual from 'lodash/isEqual';
-import { Region } from '@modules/grpc/library/blockjoy/v1/host';
-import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { NodeSort } from '@modules/grpc/library/blockjoy/v1/node';
 import { Tag } from '@modules/grpc/library/blockjoy/common/v1/tag';
 import { UINodeFilterCriteria } from '@modules/grpc';
-import { nodeStatusList } from '@shared/constants/nodeStatusList';
+import { capitalize } from 'utils/capitalize';
 import {
-  nodeTypeList,
   NODE_FILTERS_DEFAULT,
   NODE_SORT_DEFAULT,
 } from '@shared/constants/lookups';
-import { NodeStatusListItem, sort } from '@shared/components';
+import { NodeStatusListItem, sort, transformHeaders } from '@shared/components';
 import {
   nodeAtoms,
-  blockchainAtoms,
-  blockchainSelectors,
-  NetworkConfigSimple,
+  protocolAtoms,
   InitialNodeQueryParams,
-  nodeLauncherAtoms,
+  NODE_LIST_ITEMS,
 } from '@modules/node';
 import { authAtoms } from '@modules/auth';
+import { createDropdownValuesFromEnum } from '@modules/admin';
+import { NodeState } from '@modules/grpc/library/blockjoy/common/v1/node';
+import { layoutSelectors } from '@modules/layout';
+import { organizationSelectors } from '@modules/organization';
 
 const settings = selector<NodeSettings>({
   key: 'node.settings',
@@ -40,7 +39,11 @@ const filters = selector<UINodeFilterCriteria>({
     const searchQuery = get(nodeAtoms.filtersSearchQuery);
 
     return nodeSettings?.filters
-      ? { ...nodeSettings.filters, keyword: searchQuery ?? '' }
+      ? {
+          ...NODE_FILTERS_DEFAULT,
+          ...nodeSettings.filters,
+          keyword: searchQuery ?? '',
+        }
       : NODE_FILTERS_DEFAULT;
   },
 });
@@ -51,6 +54,17 @@ const isFiltersEmpty = selector({
     const filtersVal = get(filters);
 
     return isEqual(filtersVal, NODE_FILTERS_DEFAULT);
+  },
+});
+
+const nodeListHeaders = selector<TableHeader[]>({
+  key: 'node.table.headers',
+  get: ({ get }) => {
+    const tableColumnsVal = get(layoutSelectors.tableColumns);
+
+    const headers = transformHeaders(NODE_LIST_ITEMS, tableColumnsVal);
+
+    return headers;
   },
 });
 
@@ -83,43 +97,43 @@ const queryParams = selector<InitialNodeQueryParams>({
   },
 });
 
-const filtersBlockchainSelectedIds = selector<string[]>({
-  key: 'node.filters.blockchain',
-  get: ({ get }) => get(filters)?.blockchain ?? [],
+const filtersProtocolSelectedIds = selector<string[]>({
+  key: 'node.filters.protocol',
+  get: ({ get }) => get(filters)?.protocol ?? [],
 });
 
-const filtersBlockchainAll = selectorFamily<
-  (Blockchain & FilterListItem)[],
-  string[]
->({
-  key: 'node.filters.blockchain.all',
-  get:
-    (tempFilters: string[]) =>
-    ({ get }) => {
-      const allBlockchains = get(blockchainAtoms.blockchains);
-      if (!allBlockchains.length) return [];
+const filtersProtocolAll = selector<FilterListItem[]>({
+  key: 'node.filters.protocol.all',
+  get: ({ get }) => {
+    const tempFilters = get(nodeAtoms.tempFilters);
+    const { protocol: tempProtocol } = tempFilters;
 
-      const allFilters = allBlockchains.map((blockchain) => ({
-        ...blockchain,
-        name: blockchain.displayName,
-        isChecked: tempFilters?.some((filter) => blockchain.id === filter),
-      }));
+    const allProtocols = get(protocolAtoms.protocols);
+    if (!allProtocols.length) return [];
 
-      return allFilters;
-    },
+    const allFilters = allProtocols.map((protocol) => ({
+      id: protocol.protocolId,
+      name: capitalize(protocol.key),
+      isChecked:
+        tempProtocol?.some((filter) => protocol.protocolId === filter) ?? false,
+    }));
+
+    return allFilters;
+  },
 });
 
-const filtersStatusAll = selectorFamily<FilterListItem[], string[]>({
+const filtersStatusAll = selector<FilterListItem[]>({
   key: 'node.filters.nodeStatus.all',
-  get: (tempFilters) => () => {
+  get: ({ get }) => {
+    const tempFilters = get(nodeAtoms.tempFilters);
+    const { nodeStatus: tempNodeStatus } = tempFilters;
+
     const allStatuses: (NodeStatusListItem & FilterListItem)[] = sort(
-      nodeStatusList
-        .filter((item) => item.id !== 0 && !item.type)
-        .map((item) => ({
-          ...item,
-          name: item.name?.toLowerCase(),
-          id: item.id?.toString(),
-        })),
+      createDropdownValuesFromEnum(NodeState, 'NODE_STATE_').map((item) => ({
+        ...item,
+        name: item.name?.toLowerCase(),
+        id: item.id?.toString(),
+      })),
       {
         field: 'name',
         order: SortOrder.SORT_ORDER_ASCENDING,
@@ -130,53 +144,48 @@ const filtersStatusAll = selectorFamily<FilterListItem[], string[]>({
 
     const allFilters = allStatuses.map((status) => ({
       ...status,
-      isChecked: tempFilters?.some((filter) => status.id === filter),
+      isChecked:
+        tempNodeStatus?.some((filter) => status.id === filter) ?? false,
     }));
 
     return allFilters;
   },
 });
 
-const filtersTypeAll = selectorFamily<FilterListItem[], string[]>({
-  key: 'node.filters.nodeType.all',
-  get: (tempFilters: string[]) => () => {
-    const allTypes = nodeTypeList.map((item) => ({
-      name: item.name,
-      id: item.id.toString()!,
-    }));
+const filtersVersionAll = selector<FilterListItem[]>({
+  key: 'node.filters.semanticVersions.all',
+  get: ({ get }) => {
+    const tempFilters = get(nodeAtoms.tempFilters);
+    const { protocol: tempProtocol, semanticVersions: tempSemanticVersions } =
+      tempFilters;
 
-    if (!allTypes.length) return [];
+    const allProtocols = get(protocolAtoms.protocols);
+    if (!allProtocols.length) return [];
 
-    const allFilters = allTypes.map((type) => ({
-      ...type,
-      isChecked: tempFilters?.some((filter) => type.id === filter),
+    const protocols = !tempProtocol?.length
+      ? allProtocols
+      : allProtocols.filter((protocol) =>
+          tempProtocol?.includes(protocol.protocolId),
+        );
+    if (!protocols.length) return [];
+
+    const allVersions = protocols.flatMap((protocol) =>
+      protocol.versions.map((version) => version.semanticVersion),
+    );
+    if (!allVersions.length) return [];
+
+    const semanticVersions = allVersions
+      .filter((version, index, self) => self.indexOf(version) === index)
+      .sort();
+
+    const allFilters = semanticVersions.map((sv) => ({
+      id: sv,
+      name: sv,
+      isChecked: tempSemanticVersions?.some((filter) => sv === filter) ?? false,
     }));
 
     return allFilters;
   },
-});
-
-const filtersNetworksAll = selectorFamily<
-  (NetworkConfigSimple & FilterListItem)[],
-  string[]
->({
-  key: 'node.filters.networks.all',
-  get:
-    (tempFilters: string[]) =>
-    ({ get }) => {
-      const filterBlockchainsIDs = get(filtersBlockchainSelectedIds);
-
-      const allNetworks = get(
-        blockchainSelectors.blockchainNetworks(filterBlockchainsIDs),
-      );
-
-      const allFilters = allNetworks.map((network) => ({
-        ...network,
-        isChecked: tempFilters?.some((filter) => network.id === filter),
-      }));
-
-      return allFilters;
-    },
 });
 
 const inactiveTags = selectorFamily<Tag[], any[]>({
@@ -211,21 +220,43 @@ const nodesTagsAll = selector<Tag[]>({
   },
 });
 
+const nodesCreatedBy = selector({
+  key: 'nodes.list.createdBy',
+  get: ({ get }) => {
+    const nodeList = get(nodeAtoms.nodeList);
+
+    const createdByIds: string[] = nodeList.map(
+      (node) => node.createdBy?.resourceId!,
+    );
+
+    const organizationMembersByIds = get(
+      organizationSelectors.organizationMembersByIds(createdByIds),
+    );
+
+    return organizationMembersByIds;
+  },
+});
+
 export const nodeSelectors = {
   settings,
+
   filters,
   isFiltersEmpty,
+
+  nodeListHeaders,
+
   nodeSort,
   queryParams,
 
-  filtersBlockchainSelectedIds,
+  filtersProtocolSelectedIds,
 
-  filtersBlockchainAll,
+  filtersProtocolAll,
   filtersStatusAll,
-  filtersTypeAll,
-  filtersNetworksAll,
+  filtersVersionAll,
 
   inactiveTags,
 
   nodesTagsAll,
+
+  nodesCreatedBy,
 };

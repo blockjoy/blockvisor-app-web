@@ -24,7 +24,7 @@ export const mapBillingContactsToRows = (
     },
   ];
 
-  const rows: Row[] =
+  const rows: TableRow[] =
     billingContacts?.map((contact: any, idx: number) => ({
       key: contact.id ?? `${idx}`,
       cells: [

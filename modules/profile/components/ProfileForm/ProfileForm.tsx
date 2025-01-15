@@ -20,7 +20,7 @@ type EditUserForm = {
 
 export function ProfileForm() {
   const user = useRecoilValue(authAtoms.user);
-  const { firstName, lastName, id, email } = user!;
+  const { firstName, lastName, userId, email } = user!;
 
   const form = useForm<EditUserForm>({
     mode: 'all',
@@ -42,7 +42,7 @@ export function ProfileForm() {
     setIsLoading(true);
 
     try {
-      await editUser(firstName, lastName, id ?? '');
+      await editUser(firstName, lastName, userId ?? '');
       setIsLoading(false);
       form.reset();
       form.setValue('firstName', escapeHtml(firstName) ?? '');

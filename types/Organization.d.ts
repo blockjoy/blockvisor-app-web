@@ -1,7 +1,7 @@
-type DefaultOrganization = {
-  id: string;
-  name: string;
-};
+// type DefaultOrganization = {
+//   orgId: string;
+//   name: string;
+// };
 
 interface IDeleteOrganizationHook {
   deleteOrganization: (

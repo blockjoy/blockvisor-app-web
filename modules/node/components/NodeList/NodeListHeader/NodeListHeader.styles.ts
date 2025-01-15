@@ -10,17 +10,16 @@ export const styles = {
     flex: 1 1 auto;
     display: flex;
     gap: 28px;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
     height: 72px;
     margin-bottom: 20px;
     border-bottom: 1px solid ${theme.colorBorder};
     background: ${theme.colorBackground};
   `,
-  wrapperInner: css``,
   listTypePicker: css`
     display: flex;
-    justify-content: flex-end;
+    margin-left: auto;
 
     @media ${breakpoints.toXlrg} {
       display: none;
@@ -51,9 +50,6 @@ export const styles = {
         fill: rgba(255, 255, 255, 0.7);
       }
     }
-  `,
-  endBlock: css`
-    flex: 0 0 auto;
   `,
   total: (theme: ITheme) => css`
     color: ${theme.colorLabel};

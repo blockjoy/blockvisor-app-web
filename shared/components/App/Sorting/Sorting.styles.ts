@@ -12,39 +12,53 @@ export const styles = {
       justify-content: flex-end;
     }
   `,
-  dropdownButton: (theme: ITheme) => css`
-    @media ${breakpoints.fromXLrg} {
-      ${dropdownButtonStyles.button(theme)}
-    }
+  dropdownButton: (size?: SortingSize) => (theme: ITheme) =>
+    css`
+      @media ${breakpoints.fromXLrg} {
+        ${dropdownButtonStyles.button(theme)}
 
-    @media ${breakpoints.toXlrg} {
-      display: grid;
-      place-items: center;
-      background: transparent;
-      border: 0;
-      cursor: pointer;
-      padding: 0 4px;
-      height: 30px;
-      width: 30px;
-      border-radius: 6px;
-
-      path {
-        fill: ${theme.colorLabel};
+        ${size &&
+        `
+        height: auto;
+        padding: 6px 10px;
+  
+        p {
+          line-height: 1.25;
+        }
+        `}
       }
 
-      &:hover,
-      &:active,
-      &:focus {
-        background: ${theme.colorActive};
-        & path {
-          fill: ${theme.colorText};
+      @media ${breakpoints.toXlrg} {
+        display: grid;
+        place-items: center;
+        background: transparent;
+        border: 0;
+        cursor: pointer;
+        padding: 0 4px;
+        height: 30px;
+        width: 30px;
+        border-radius: 6px;
+
+        path {
+          fill: ${theme.colorLabel};
+        }
+
+        &:hover,
+        &:active,
+        &:focus {
+          background: ${theme.colorActive};
+          & path {
+            fill: ${theme.colorText};
+          }
+        }
+
+        .dropdown-caret {
+          display: none;
         }
       }
-
-      .dropdown-caret {
-        display: none;
-      }
-    }
+    `,
+  dropdownButtonExtra: css`
+    height: auto;
   `,
   dropdownMenu: css`
     top: 52px;

@@ -4,7 +4,8 @@ import type { CallContext, CallOptions } from "nice-grpc-common";
 import _m0 from "protobufjs/minimal";
 import { Timestamp } from "../../google/protobuf/timestamp";
 import { BillingAmount } from "../common/v1/currency";
-import { NodeType } from "../common/v1/node";
+import { HostIpAddress, ScheduleType } from "../common/v1/host";
+import { Resource } from "../common/v1/resource";
 import { SearchOperator, SortOrder } from "../common/v1/search";
 import { Tags, UpdateTags } from "../common/v1/tag";
 
@@ -12,225 +13,210 @@ export const protobufPackage = "blockjoy.v1";
 
 export enum HostSortField {
   HOST_SORT_FIELD_UNSPECIFIED = 0,
-  HOST_SORT_FIELD_HOST_NAME = 1,
-  HOST_SORT_FIELD_CREATED_AT = 2,
-  HOST_SORT_FIELD_VERSION = 3,
-  HOST_SORT_FIELD_OS = 4,
-  HOST_SORT_FIELD_OS_VERSION = 5,
-  HOST_SORT_FIELD_CPU_COUNT = 6,
-  HOST_SORT_FIELD_MEM_SIZE_BYTES = 7,
-  HOST_SORT_FIELD_DISK_SIZE_BYTES = 8,
+  HOST_SORT_FIELD_NETWORK_NAME = 1,
+  HOST_SORT_FIELD_DISPLAY_NAME = 2,
+  HOST_SORT_FIELD_OS = 3,
+  HOST_SORT_FIELD_OS_VERSION = 4,
+  HOST_SORT_FIELD_BV_VERSION = 5,
+  HOST_SORT_FIELD_CPU_CORES = 6,
+  HOST_SORT_FIELD_MEMORY_BYTES = 7,
+  HOST_SORT_FIELD_DISK_BYTES = 8,
   HOST_SORT_FIELD_NODE_COUNT = 9,
-  UNRECOGNIZED = -1,
-}
-
-/** The environment of host. */
-export enum HostType {
-  HOST_TYPE_UNSPECIFIED = 0,
-  /** HOST_TYPE_CLOUD - This host is a host on the blockjoy cloud platform. */
-  HOST_TYPE_CLOUD = 1,
-  /** HOST_TYPE_PRIVATE - This host is a private host that can only be used by the org that owns it. */
-  HOST_TYPE_PRIVATE = 2,
-  UNRECOGNIZED = -1,
-}
-
-/** The connection status of a host. */
-export enum HostConnectionStatus {
-  HOST_CONNECTION_STATUS_UNSPECIFIED = 0,
-  HOST_CONNECTION_STATUS_ONLINE = 1,
-  HOST_CONNECTION_STATUS_OFFLINE = 2,
-  UNRECOGNIZED = -1,
-}
-
-export enum ManagedBy {
-  MANAGED_BY_UNSPECIFIED = 0,
-  MANAGED_BY_AUTOMATIC = 1,
-  MANAGED_BY_MANUAL = 2,
+  HOST_SORT_FIELD_CREATED_AT = 10,
+  HOST_SORT_FIELD_UPDATED_AT = 11,
   UNRECOGNIZED = -1,
 }
 
 export interface Host {
-  /** This is the id of the host. */
-  id: string;
-  /** This is the randomly generated name of the host. */
-  name: string;
-  /** The version of the blockjoy control software running on the host. */
-  version: string;
-  /**
-   * The number of logical cores the machine has, _not_ the number of physical
-   * cores.
-   */
-  cpuCount: number;
-  /** The amount of physical memory the machine has. */
-  memSizeBytes: number;
-  /** The size of the physical disks the machine has. */
-  diskSizeBytes: number;
-  /** The operating system running on the machine, i.e. "BSD" or "Linux". */
-  os: string;
-  /** The version of said operating system running on the host. */
-  osVersion: string;
-  /** The ip address on which the machine is reachable. */
-  ip: string;
-  /**
-   * The moment this host was created. Corresponds to the moment that the
-   * host_provision was
-   */
-  createdAt:
-    | Date
-    | undefined;
-  /** The ip gateway of this host. */
-  ipGateway: string;
-  /** The organization that this host belongs to. */
-  orgId: string;
-  /** The number of nodes on this host. */
-  nodeCount: number;
-  /** The name of the organization that this host belongs to. */
-  orgName: string;
-  /** The region of the host. */
-  region?:
-    | string
-    | undefined;
-  /** The optional billing amount for this host. */
-  billingAmount?:
-    | BillingAmount
-    | undefined;
-  /**
-   * The root directory of the vmm, where all data related to the vmm is stored,
-   * i.e. config data, secrets, vm mountpoints. Usually this will be
-   * `/var/lib/blockvisor`.
-   */
-  vmmMountpoint?:
-    | string
-    | undefined;
-  /** A list of ip addresses available for this host. */
-  ipAddresses: HostIpAddress[];
-  /** The entity that can make decisions on whether to run nodes on this host. */
-  managedBy: ManagedBy;
-  /** A list of tags that are attached to this host. */
-  tags:
-    | Tags
-    | undefined;
-  /** Monthly cost of this host. */
-  cost?: BillingAmount | undefined;
-}
-
-export interface HostServiceCreateRequest {
-  /**
-   * Each user has a token within an organization that we use to identify which
-   * user created this organization.
-   */
-  provisionToken: string;
-  /** A name to recognise the host by. */
-  name: string;
-  /** The version of the blockvisor software running on the host. */
-  version: string;
-  /**
-   * The number of logical cores on this computer, _not_ the number of physical
-   * cores.
-   */
-  cpuCount: number;
-  /** The amount of memory that this computer has, in bytes. */
-  memSizeBytes: number;
-  /** The amount of storage that this computer has, in bytes. */
-  diskSizeBytes: number;
-  /** The operating system running on this computer. */
-  os: string;
-  /** The version of said operating system. */
-  osVersion: string;
-  ipAddr: string;
-  ipGateway: string;
-  /**
-   * A list of ip addresses that the nodes running on this host will be allowed
-   * to use.
-   */
-  ips: string[];
-  /**
-   * The organization that this host belongs to. This field _must_ be populated
-   * with the current organization id.
-   */
+  /** The id of the host. */
+  hostId: string;
+  /** The org id of a private host. */
   orgId?:
     | string
     | undefined;
-  /** The region of the host */
-  region?:
+  /** The org name of a private host. */
+  orgName?:
     | string
     | undefined;
-  /** Optionally set a billing amount for this host. */
-  billingAmount?:
-    | BillingAmount
+  /** The region of the host. */
+  region:
+    | Region
     | undefined;
-  /**
-   * The root directory of the vmm, where all data related to the vmm is stored,
-   * i.e. config data, secrets, vm mountpoints. Usually this will be
-   * `/var/lib/blockvisor`.
-   */
-  vmmMountpoint?:
+  /** The network name of the host. */
+  networkName: string;
+  /** The display name of the host. */
+  displayName?:
     | string
     | undefined;
-  /**
-   * The entity that can make decisions on whether to run nodes on this host. By
-   * default this value will be set to `Automatic`.
-   */
-  managedBy?:
-    | ManagedBy
+  /** When to schedule nodes to this host. */
+  scheduleType: ScheduleType;
+  /** The operating system running on the host. */
+  os: string;
+  /** The version of the operating system running on the host. */
+  osVersion: string;
+  /** The version of blockvisor running on the host. */
+  bvVersion: string;
+  /** The IP address of this host */
+  ipAddress: string;
+  /** The IP gateway for this host. */
+  ipGateway: string;
+  /** IP addresses available to nodes running on this host. */
+  ipAddresses: HostIpAddress[];
+  /** The number of logical cores this host has. */
+  cpuCores: number;
+  /** The amount of memory this host has (in bytes). */
+  memoryBytes: number;
+  /** The amount of disk space this host has (in bytes). */
+  diskBytes: number;
+  /** The number of nodes on this host. */
+  nodeCount: number;
+  /** A list of tags attached to this host. */
+  tags:
+    | Tags
     | undefined;
-  /** A list of tags that are attached to this host. */
+  /** Who created this host. */
+  createdBy:
+    | Resource
+    | undefined;
+  /** When this host was created. */
+  createdAt:
+    | Date
+    | undefined;
+  /** When this host was last updated. */
+  updatedAt:
+    | Date
+    | undefined;
+  /** The cost of this host. */
+  cost?: BillingAmount | undefined;
+}
+
+export interface Region {
+  /** The id of this region. */
+  regionId: string;
+  /** The lookup key of this region. */
+  regionKey: string;
+  /** The display name of this region. */
+  displayName: string;
+  /** The SKU code for this region. */
+  skuCode?: string | undefined;
+}
+
+export interface HostServiceCreateHostRequest {
+  /** An org-user's provisioning token to create this host. */
+  provisionToken: string;
+  /** Whether this host is private to the provisioning org. */
+  isPrivate: boolean;
+  /** The network name of the host. */
+  networkName: string;
+  /** The display name of the host. */
+  displayName?:
+    | string
+    | undefined;
+  /** The region id of the host. */
+  regionId: string;
+  /** When to schedule nodes to this host. */
+  scheduleType: ScheduleType;
+  /** The operating system this host is running. */
+  os: string;
+  /** The operating system version. */
+  osVersion: string;
+  /** The blockvisor version running on the host. */
+  bvVersion: string;
+  /** The ip address of this host. */
+  ipAddress: string;
+  /** The ip gateway for this host. */
+  ipGateway: string;
+  /** IP addresses available to nodes running on this host. */
+  ips: string[];
+  /** The number of logical cores on this host. */
+  cpuCores: number;
+  /** The amount of memory this host has (in bytes). */
+  memoryBytes: number;
+  /** The amount of storage this host has (in bytes). */
+  diskBytes: number;
+  /** A list of tags attached to this host. */
   tags: Tags | undefined;
 }
 
-export interface HostServiceCreateResponse {
+export interface HostServiceCreateHostResponse {
   host: Host | undefined;
   token: string;
   refresh: string;
+  provisionOrgId: string;
 }
 
-export interface HostServiceGetRequest {
-  id: string;
+export interface HostServiceCreateRegionRequest {
+  regionKey: string;
+  displayName: string;
+  skuCode?: string | undefined;
 }
 
-export interface HostServiceGetResponse {
+export interface HostServiceCreateRegionResponse {
+  region: Region | undefined;
+}
+
+export interface HostServiceGetHostRequest {
+  hostId: string;
+}
+
+export interface HostServiceGetHostResponse {
   host: Host | undefined;
 }
 
-export interface HostServiceListRequest {
+export interface HostServiceGetRegionRequest {
+  /** Get region info from an id. */
+  regionId?:
+    | string
+    | undefined;
+  /** Get region info from a key. */
+  regionKey?: string | undefined;
+}
+
+export interface HostServiceGetRegionResponse {
+  region: Region | undefined;
+}
+
+export interface HostServiceListHostsRequest {
+  /** Only list private hosts with these org ids. */
   orgIds: string[];
-  /** The version of the blockvisor software running on the host. */
-  versions: string[];
-  /** The number of items to be skipped over. */
+  /** Only list hosts running these blockvisor versions. */
+  bvVersions: string[];
+  /** The number of results to skip. */
   offset: number;
-  /**
-   * The number of items that will be returned. Together with offset, you can
-   * use this to get pagination.
-   */
+  /** Limit the number of results. */
   limit: number;
-  /** Search params. */
+  /** Search these parameters. */
   search?:
     | HostSearch
     | undefined;
-  /** The field sorting order of results. */
+  /** Sort the results in this order. */
   sort: HostSort[];
 }
 
 export interface HostSearch {
-  /** The way the search parameters should be combined. */
+  /** How to combine the parameters. */
   operator: SearchOperator;
-  /** Search for the id of the host. */
-  id?:
+  /** Search for this host id. */
+  hostId?:
     | string
     | undefined;
-  /** Search only for the name of the host. */
-  name?:
+  /** Search for this host name. */
+  networkName?:
     | string
     | undefined;
-  /** Search only for the version of the host. */
-  version?:
+  /** Search for this display name. */
+  displayName?:
     | string
     | undefined;
-  /** Search only for the operating system. */
+  /** Search for this blockvisor version. */
+  bvVersion?:
+    | string
+    | undefined;
+  /** Search for this operating system. */
   os?:
     | string
     | undefined;
-  /** Search only for the ip address. */
+  /** Search for this ip address. */
   ip?: string | undefined;
 }
 
@@ -239,40 +225,72 @@ export interface HostSort {
   order: SortOrder;
 }
 
-export interface HostServiceListResponse {
+export interface HostServiceListHostsResponse {
   hosts: Host[];
-  /** The total number of hosts matching your query. */
-  hostCount: number;
+  total: number;
 }
 
-export interface HostServiceUpdateRequest {
-  id: string;
-  name?: string | undefined;
-  version?: string | undefined;
-  os?: string | undefined;
+export interface HostServiceListRegionsRequest {
+  /** The image to list regions for. */
+  imageId: string;
+  /** The org id for private hosts, images or protocols. */
+  orgId?: string | undefined;
+}
+
+export interface HostServiceListRegionsResponse {
+  regions: RegionInfo[];
+}
+
+export interface RegionInfo {
+  region: Region | undefined;
+  validHosts: number;
+  freeIps: number;
+}
+
+export interface HostServiceUpdateHostRequest {
+  /** The host id to update. */
+  hostId: string;
+  /** Update the network name of the host. */
+  networkName?:
+    | string
+    | undefined;
+  /** Update the display name of the host. */
+  displayName?:
+    | string
+    | undefined;
+  /** Update the region of the host. */
+  regionId?:
+    | string
+    | undefined;
+  /** Update the OS running on the host. */
+  os?:
+    | string
+    | undefined;
+  /** Update the OS version running on the host. */
   osVersion?:
     | string
     | undefined;
-  /** The region of the host. */
-  region?:
+  /** Update the blockvisor version running on the host. */
+  bvVersion?:
     | string
     | undefined;
-  /** Optionally set a billing amount for this host. */
-  billingAmount?:
-    | BillingAmount
-    | undefined;
-  /** This is total disk space installed on host, given in bytes. */
-  totalDiskSpace?:
+  /** Update the number of cpu cores on the host. */
+  cpuCores?:
     | number
     | undefined;
-  /** The entity that can make decisions on whether to run nodes on this host. */
-  managedBy?:
-    | ManagedBy
+  /** Update the amount of memory on the host. */
+  memoryBytes?:
+    | number
     | undefined;
-  /**
-   * If this is provided, the tags contained in this will update the existing
-   * tags.
-   */
+  /** Update the amount of disk space on the host. */
+  diskBytes?:
+    | number
+    | undefined;
+  /** When to schedule nodes to this host. */
+  scheduleType?:
+    | ScheduleType
+    | undefined;
+  /** Update the existing host tags. */
   updateTags?:
     | UpdateTags
     | undefined;
@@ -280,133 +298,102 @@ export interface HostServiceUpdateRequest {
   cost?: BillingAmount | undefined;
 }
 
-export interface HostServiceUpdateResponse {
+export interface HostServiceUpdateHostResponse {
+  host: Host | undefined;
+}
+
+export interface HostServiceUpdateRegionRequest {
+  /** The region id to update. */
+  regionId: string;
+  /** Update the display name for this region. */
+  displayName?:
+    | string
+    | undefined;
+  /** Update the SKU code for this region. */
+  skuCode?: string | undefined;
+}
+
+export interface HostServiceUpdateRegionResponse {
+  region: Region | undefined;
+}
+
+export interface HostServiceDeleteHostRequest {
+  hostId: string;
+}
+
+export interface HostServiceDeleteHostResponse {
 }
 
 export interface HostServiceStartRequest {
-  id: string;
+  hostId: string;
 }
 
 export interface HostServiceStartResponse {
 }
 
 export interface HostServiceStopRequest {
-  id: string;
+  hostId: string;
 }
 
 export interface HostServiceStopResponse {
 }
 
 export interface HostServiceRestartRequest {
-  id: string;
+  hostId: string;
 }
 
 export interface HostServiceRestartResponse {
 }
 
-export interface HostServiceDeleteRequest {
-  id: string;
-}
-
-export interface HostServiceDeleteResponse {
-}
-
-/** Used to produce a list of regions that are available to deploy nodes to. */
-export interface HostServiceRegionsRequest {
-  /**
-   * The org for which to produce the list. This field is required for users
-   * that are not administrators of the whole system.
-   */
-  orgId?:
-    | string
-    | undefined;
-  /** The type of host to include in this list. */
-  hostType?:
-    | HostType
-    | undefined;
-  /** The id of the blockchain that should be ran inside the node. */
-  blockchainId: string;
-  /** The version of the node software that is ran. */
-  version: string;
-  /** The type of node that you want to create. */
-  nodeType: NodeType;
-}
-
-export interface HostServiceRegionsResponse {
-  regions: Region[];
-}
-
-export interface Region {
-  name?:
-    | string
-    | undefined;
-  /**
-   * We currently have regions in the following pricing tiers:
-   * NA1: North america
-   * EU1: Europe
-   * AP1: Asia-Pacific
-   */
-  pricingTier?: string | undefined;
-}
-
-export interface HostIpAddress {
-  /** The ip address as a string. */
-  ip: string;
-  /** Whether or not the ip address is currently in use by a node. */
-  assigned: boolean;
-}
-
-/** Used to indicate a change in the host status. */
-export interface HostStatus {
-  hostId: string;
-  connectionStatus?: HostConnectionStatus | undefined;
-}
-
 function createBaseHost(): Host {
   return {
-    id: "",
-    name: "",
-    version: "",
-    cpuCount: 0,
-    memSizeBytes: 0,
-    diskSizeBytes: 0,
+    hostId: "",
+    orgId: undefined,
+    orgName: undefined,
+    region: undefined,
+    networkName: "",
+    displayName: undefined,
+    scheduleType: 0,
     os: "",
     osVersion: "",
-    ip: "",
-    createdAt: undefined,
+    bvVersion: "",
+    ipAddress: "",
     ipGateway: "",
-    orgId: "",
-    nodeCount: 0,
-    orgName: "",
-    region: undefined,
-    billingAmount: undefined,
-    vmmMountpoint: undefined,
     ipAddresses: [],
-    managedBy: 0,
+    cpuCores: 0,
+    memoryBytes: 0,
+    diskBytes: 0,
+    nodeCount: 0,
     tags: undefined,
+    createdBy: undefined,
+    createdAt: undefined,
+    updatedAt: undefined,
     cost: undefined,
   };
 }
 
 export const Host = {
   encode(message: Host, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.hostId !== "") {
+      writer.uint32(10).string(message.hostId);
     }
-    if (message.name !== "") {
-      writer.uint32(18).string(message.name);
+    if (message.orgId !== undefined) {
+      writer.uint32(18).string(message.orgId);
     }
-    if (message.version !== "") {
-      writer.uint32(26).string(message.version);
+    if (message.orgName !== undefined) {
+      writer.uint32(26).string(message.orgName);
     }
-    if (message.cpuCount !== 0) {
-      writer.uint32(40).uint64(message.cpuCount);
+    if (message.region !== undefined) {
+      Region.encode(message.region, writer.uint32(34).fork()).ldelim();
     }
-    if (message.memSizeBytes !== 0) {
-      writer.uint32(48).uint64(message.memSizeBytes);
+    if (message.networkName !== "") {
+      writer.uint32(42).string(message.networkName);
     }
-    if (message.diskSizeBytes !== 0) {
-      writer.uint32(56).uint64(message.diskSizeBytes);
+    if (message.displayName !== undefined) {
+      writer.uint32(50).string(message.displayName);
+    }
+    if (message.scheduleType !== 0) {
+      writer.uint32(56).int32(message.scheduleType);
     }
     if (message.os !== "") {
       writer.uint32(66).string(message.os);
@@ -414,44 +401,44 @@ export const Host = {
     if (message.osVersion !== "") {
       writer.uint32(74).string(message.osVersion);
     }
-    if (message.ip !== "") {
-      writer.uint32(82).string(message.ip);
+    if (message.bvVersion !== "") {
+      writer.uint32(82).string(message.bvVersion);
     }
-    if (message.createdAt !== undefined) {
-      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(98).fork()).ldelim();
+    if (message.ipAddress !== "") {
+      writer.uint32(90).string(message.ipAddress);
     }
     if (message.ipGateway !== "") {
-      writer.uint32(122).string(message.ipGateway);
+      writer.uint32(98).string(message.ipGateway);
     }
-    if (message.orgId !== "") {
-      writer.uint32(130).string(message.orgId);
+    for (const v of message.ipAddresses) {
+      HostIpAddress.encode(v!, writer.uint32(106).fork()).ldelim();
+    }
+    if (message.cpuCores !== 0) {
+      writer.uint32(112).uint64(message.cpuCores);
+    }
+    if (message.memoryBytes !== 0) {
+      writer.uint32(120).uint64(message.memoryBytes);
+    }
+    if (message.diskBytes !== 0) {
+      writer.uint32(128).uint64(message.diskBytes);
     }
     if (message.nodeCount !== 0) {
       writer.uint32(136).uint64(message.nodeCount);
     }
-    if (message.orgName !== "") {
-      writer.uint32(146).string(message.orgName);
-    }
-    if (message.region !== undefined) {
-      writer.uint32(154).string(message.region);
-    }
-    if (message.billingAmount !== undefined) {
-      BillingAmount.encode(message.billingAmount, writer.uint32(162).fork()).ldelim();
-    }
-    if (message.vmmMountpoint !== undefined) {
-      writer.uint32(170).string(message.vmmMountpoint);
-    }
-    for (const v of message.ipAddresses) {
-      HostIpAddress.encode(v!, writer.uint32(178).fork()).ldelim();
-    }
-    if (message.managedBy !== 0) {
-      writer.uint32(184).int32(message.managedBy);
-    }
     if (message.tags !== undefined) {
-      Tags.encode(message.tags, writer.uint32(194).fork()).ldelim();
+      Tags.encode(message.tags, writer.uint32(146).fork()).ldelim();
+    }
+    if (message.createdBy !== undefined) {
+      Resource.encode(message.createdBy, writer.uint32(154).fork()).ldelim();
+    }
+    if (message.createdAt !== undefined) {
+      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(162).fork()).ldelim();
+    }
+    if (message.updatedAt !== undefined) {
+      Timestamp.encode(toTimestamp(message.updatedAt), writer.uint32(170).fork()).ldelim();
     }
     if (message.cost !== undefined) {
-      BillingAmount.encode(message.cost, writer.uint32(202).fork()).ldelim();
+      BillingAmount.encode(message.cost, writer.uint32(178).fork()).ldelim();
     }
     return writer;
   },
@@ -468,42 +455,49 @@ export const Host = {
             break;
           }
 
-          message.id = reader.string();
+          message.hostId = reader.string();
           continue;
         case 2:
           if (tag !== 18) {
             break;
           }
 
-          message.name = reader.string();
+          message.orgId = reader.string();
           continue;
         case 3:
           if (tag !== 26) {
             break;
           }
 
-          message.version = reader.string();
+          message.orgName = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.region = Region.decode(reader, reader.uint32());
           continue;
         case 5:
-          if (tag !== 40) {
+          if (tag !== 42) {
             break;
           }
 
-          message.cpuCount = longToNumber(reader.uint64() as Long);
+          message.networkName = reader.string();
           continue;
         case 6:
-          if (tag !== 48) {
+          if (tag !== 50) {
             break;
           }
 
-          message.memSizeBytes = longToNumber(reader.uint64() as Long);
+          message.displayName = reader.string();
           continue;
         case 7:
           if (tag !== 56) {
             break;
           }
 
-          message.diskSizeBytes = longToNumber(reader.uint64() as Long);
+          message.scheduleType = reader.int32() as any;
           continue;
         case 8:
           if (tag !== 66) {
@@ -524,28 +518,49 @@ export const Host = {
             break;
           }
 
-          message.ip = reader.string();
+          message.bvVersion = reader.string();
+          continue;
+        case 11:
+          if (tag !== 90) {
+            break;
+          }
+
+          message.ipAddress = reader.string();
           continue;
         case 12:
           if (tag !== 98) {
             break;
           }
 
-          message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          continue;
-        case 15:
-          if (tag !== 122) {
-            break;
-          }
-
           message.ipGateway = reader.string();
           continue;
-        case 16:
-          if (tag !== 130) {
+        case 13:
+          if (tag !== 106) {
             break;
           }
 
-          message.orgId = reader.string();
+          message.ipAddresses.push(HostIpAddress.decode(reader, reader.uint32()));
+          continue;
+        case 14:
+          if (tag !== 112) {
+            break;
+          }
+
+          message.cpuCores = longToNumber(reader.uint64() as Long);
+          continue;
+        case 15:
+          if (tag !== 120) {
+            break;
+          }
+
+          message.memoryBytes = longToNumber(reader.uint64() as Long);
+          continue;
+        case 16:
+          if (tag !== 128) {
+            break;
+          }
+
+          message.diskBytes = longToNumber(reader.uint64() as Long);
           continue;
         case 17:
           if (tag !== 136) {
@@ -559,52 +574,31 @@ export const Host = {
             break;
           }
 
-          message.orgName = reader.string();
+          message.tags = Tags.decode(reader, reader.uint32());
           continue;
         case 19:
           if (tag !== 154) {
             break;
           }
 
-          message.region = reader.string();
+          message.createdBy = Resource.decode(reader, reader.uint32());
           continue;
         case 20:
           if (tag !== 162) {
             break;
           }
 
-          message.billingAmount = BillingAmount.decode(reader, reader.uint32());
+          message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
         case 21:
           if (tag !== 170) {
             break;
           }
 
-          message.vmmMountpoint = reader.string();
+          message.updatedAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
         case 22:
           if (tag !== 178) {
-            break;
-          }
-
-          message.ipAddresses.push(HostIpAddress.decode(reader, reader.uint32()));
-          continue;
-        case 23:
-          if (tag !== 184) {
-            break;
-          }
-
-          message.managedBy = reader.int32() as any;
-          continue;
-        case 24:
-          if (tag !== 194) {
-            break;
-          }
-
-          message.tags = Tags.decode(reader, reader.uint32());
-          continue;
-        case 25:
-          if (tag !== 202) {
             break;
           }
 
@@ -625,28 +619,31 @@ export const Host = {
 
   fromPartial(object: DeepPartial<Host>): Host {
     const message = createBaseHost();
-    message.id = object.id ?? "";
-    message.name = object.name ?? "";
-    message.version = object.version ?? "";
-    message.cpuCount = object.cpuCount ?? 0;
-    message.memSizeBytes = object.memSizeBytes ?? 0;
-    message.diskSizeBytes = object.diskSizeBytes ?? 0;
+    message.hostId = object.hostId ?? "";
+    message.orgId = object.orgId ?? undefined;
+    message.orgName = object.orgName ?? undefined;
+    message.region = (object.region !== undefined && object.region !== null)
+      ? Region.fromPartial(object.region)
+      : undefined;
+    message.networkName = object.networkName ?? "";
+    message.displayName = object.displayName ?? undefined;
+    message.scheduleType = object.scheduleType ?? 0;
     message.os = object.os ?? "";
     message.osVersion = object.osVersion ?? "";
-    message.ip = object.ip ?? "";
-    message.createdAt = object.createdAt ?? undefined;
+    message.bvVersion = object.bvVersion ?? "";
+    message.ipAddress = object.ipAddress ?? "";
     message.ipGateway = object.ipGateway ?? "";
-    message.orgId = object.orgId ?? "";
-    message.nodeCount = object.nodeCount ?? 0;
-    message.orgName = object.orgName ?? "";
-    message.region = object.region ?? undefined;
-    message.billingAmount = (object.billingAmount !== undefined && object.billingAmount !== null)
-      ? BillingAmount.fromPartial(object.billingAmount)
-      : undefined;
-    message.vmmMountpoint = object.vmmMountpoint ?? undefined;
     message.ipAddresses = object.ipAddresses?.map((e) => HostIpAddress.fromPartial(e)) || [];
-    message.managedBy = object.managedBy ?? 0;
+    message.cpuCores = object.cpuCores ?? 0;
+    message.memoryBytes = object.memoryBytes ?? 0;
+    message.diskBytes = object.diskBytes ?? 0;
+    message.nodeCount = object.nodeCount ?? 0;
     message.tags = (object.tags !== undefined && object.tags !== null) ? Tags.fromPartial(object.tags) : undefined;
+    message.createdBy = (object.createdBy !== undefined && object.createdBy !== null)
+      ? Resource.fromPartial(object.createdBy)
+      : undefined;
+    message.createdAt = object.createdAt ?? undefined;
+    message.updatedAt = object.updatedAt ?? undefined;
     message.cost = (object.cost !== undefined && object.cost !== null)
       ? BillingAmount.fromPartial(object.cost)
       : undefined;
@@ -654,47 +651,125 @@ export const Host = {
   },
 };
 
-function createBaseHostServiceCreateRequest(): HostServiceCreateRequest {
+function createBaseRegion(): Region {
+  return { regionId: "", regionKey: "", displayName: "", skuCode: undefined };
+}
+
+export const Region = {
+  encode(message: Region, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.regionId !== "") {
+      writer.uint32(10).string(message.regionId);
+    }
+    if (message.regionKey !== "") {
+      writer.uint32(18).string(message.regionKey);
+    }
+    if (message.displayName !== "") {
+      writer.uint32(26).string(message.displayName);
+    }
+    if (message.skuCode !== undefined) {
+      writer.uint32(34).string(message.skuCode);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): Region {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseRegion();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.regionId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.regionKey = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.displayName = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.skuCode = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<Region>): Region {
+    return Region.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<Region>): Region {
+    const message = createBaseRegion();
+    message.regionId = object.regionId ?? "";
+    message.regionKey = object.regionKey ?? "";
+    message.displayName = object.displayName ?? "";
+    message.skuCode = object.skuCode ?? undefined;
+    return message;
+  },
+};
+
+function createBaseHostServiceCreateHostRequest(): HostServiceCreateHostRequest {
   return {
     provisionToken: "",
-    name: "",
-    version: "",
-    cpuCount: 0,
-    memSizeBytes: 0,
-    diskSizeBytes: 0,
+    isPrivate: false,
+    networkName: "",
+    displayName: undefined,
+    regionId: "",
+    scheduleType: 0,
     os: "",
     osVersion: "",
-    ipAddr: "",
+    bvVersion: "",
+    ipAddress: "",
     ipGateway: "",
     ips: [],
-    orgId: undefined,
-    region: undefined,
-    billingAmount: undefined,
-    vmmMountpoint: undefined,
-    managedBy: undefined,
+    cpuCores: 0,
+    memoryBytes: 0,
+    diskBytes: 0,
     tags: undefined,
   };
 }
 
-export const HostServiceCreateRequest = {
-  encode(message: HostServiceCreateRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const HostServiceCreateHostRequest = {
+  encode(message: HostServiceCreateHostRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.provisionToken !== "") {
       writer.uint32(10).string(message.provisionToken);
     }
-    if (message.name !== "") {
-      writer.uint32(18).string(message.name);
+    if (message.isPrivate === true) {
+      writer.uint32(16).bool(message.isPrivate);
     }
-    if (message.version !== "") {
-      writer.uint32(26).string(message.version);
+    if (message.networkName !== "") {
+      writer.uint32(26).string(message.networkName);
     }
-    if (message.cpuCount !== 0) {
-      writer.uint32(32).uint64(message.cpuCount);
+    if (message.displayName !== undefined) {
+      writer.uint32(34).string(message.displayName);
     }
-    if (message.memSizeBytes !== 0) {
-      writer.uint32(40).uint64(message.memSizeBytes);
+    if (message.regionId !== "") {
+      writer.uint32(42).string(message.regionId);
     }
-    if (message.diskSizeBytes !== 0) {
-      writer.uint32(48).uint64(message.diskSizeBytes);
+    if (message.scheduleType !== 0) {
+      writer.uint32(48).int32(message.scheduleType);
     }
     if (message.os !== "") {
       writer.uint32(58).string(message.os);
@@ -702,40 +777,37 @@ export const HostServiceCreateRequest = {
     if (message.osVersion !== "") {
       writer.uint32(66).string(message.osVersion);
     }
-    if (message.ipAddr !== "") {
-      writer.uint32(74).string(message.ipAddr);
+    if (message.bvVersion !== "") {
+      writer.uint32(74).string(message.bvVersion);
+    }
+    if (message.ipAddress !== "") {
+      writer.uint32(82).string(message.ipAddress);
     }
     if (message.ipGateway !== "") {
-      writer.uint32(98).string(message.ipGateway);
+      writer.uint32(90).string(message.ipGateway);
     }
     for (const v of message.ips) {
-      writer.uint32(146).string(v!);
+      writer.uint32(98).string(v!);
     }
-    if (message.orgId !== undefined) {
-      writer.uint32(106).string(message.orgId);
+    if (message.cpuCores !== 0) {
+      writer.uint32(104).uint64(message.cpuCores);
     }
-    if (message.region !== undefined) {
-      writer.uint32(114).string(message.region);
+    if (message.memoryBytes !== 0) {
+      writer.uint32(112).uint64(message.memoryBytes);
     }
-    if (message.billingAmount !== undefined) {
-      BillingAmount.encode(message.billingAmount, writer.uint32(122).fork()).ldelim();
-    }
-    if (message.vmmMountpoint !== undefined) {
-      writer.uint32(130).string(message.vmmMountpoint);
-    }
-    if (message.managedBy !== undefined) {
-      writer.uint32(136).int32(message.managedBy);
+    if (message.diskBytes !== 0) {
+      writer.uint32(120).uint64(message.diskBytes);
     }
     if (message.tags !== undefined) {
-      Tags.encode(message.tags, writer.uint32(154).fork()).ldelim();
+      Tags.encode(message.tags, writer.uint32(130).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): HostServiceCreateRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): HostServiceCreateHostRequest {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseHostServiceCreateRequest();
+    const message = createBaseHostServiceCreateHostRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -747,39 +819,39 @@ export const HostServiceCreateRequest = {
           message.provisionToken = reader.string();
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.name = reader.string();
+          message.isPrivate = reader.bool();
           continue;
         case 3:
           if (tag !== 26) {
             break;
           }
 
-          message.version = reader.string();
+          message.networkName = reader.string();
           continue;
         case 4:
-          if (tag !== 32) {
+          if (tag !== 34) {
             break;
           }
 
-          message.cpuCount = longToNumber(reader.uint64() as Long);
+          message.displayName = reader.string();
           continue;
         case 5:
-          if (tag !== 40) {
+          if (tag !== 42) {
             break;
           }
 
-          message.memSizeBytes = longToNumber(reader.uint64() as Long);
+          message.regionId = reader.string();
           continue;
         case 6:
           if (tag !== 48) {
             break;
           }
 
-          message.diskSizeBytes = longToNumber(reader.uint64() as Long);
+          message.scheduleType = reader.int32() as any;
           continue;
         case 7:
           if (tag !== 58) {
@@ -800,59 +872,52 @@ export const HostServiceCreateRequest = {
             break;
           }
 
-          message.ipAddr = reader.string();
+          message.bvVersion = reader.string();
+          continue;
+        case 10:
+          if (tag !== 82) {
+            break;
+          }
+
+          message.ipAddress = reader.string();
+          continue;
+        case 11:
+          if (tag !== 90) {
+            break;
+          }
+
+          message.ipGateway = reader.string();
           continue;
         case 12:
           if (tag !== 98) {
             break;
           }
 
-          message.ipGateway = reader.string();
-          continue;
-        case 18:
-          if (tag !== 146) {
-            break;
-          }
-
           message.ips.push(reader.string());
           continue;
         case 13:
-          if (tag !== 106) {
+          if (tag !== 104) {
             break;
           }
 
-          message.orgId = reader.string();
+          message.cpuCores = longToNumber(reader.uint64() as Long);
           continue;
         case 14:
-          if (tag !== 114) {
+          if (tag !== 112) {
             break;
           }
 
-          message.region = reader.string();
+          message.memoryBytes = longToNumber(reader.uint64() as Long);
           continue;
         case 15:
-          if (tag !== 122) {
+          if (tag !== 120) {
             break;
           }
 
-          message.billingAmount = BillingAmount.decode(reader, reader.uint32());
+          message.diskBytes = longToNumber(reader.uint64() as Long);
           continue;
         case 16:
           if (tag !== 130) {
-            break;
-          }
-
-          message.vmmMountpoint = reader.string();
-          continue;
-        case 17:
-          if (tag !== 136) {
-            break;
-          }
-
-          message.managedBy = reader.int32() as any;
-          continue;
-        case 19:
-          if (tag !== 154) {
             break;
           }
 
@@ -867,41 +932,38 @@ export const HostServiceCreateRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<HostServiceCreateRequest>): HostServiceCreateRequest {
-    return HostServiceCreateRequest.fromPartial(base ?? {});
+  create(base?: DeepPartial<HostServiceCreateHostRequest>): HostServiceCreateHostRequest {
+    return HostServiceCreateHostRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<HostServiceCreateRequest>): HostServiceCreateRequest {
-    const message = createBaseHostServiceCreateRequest();
+  fromPartial(object: DeepPartial<HostServiceCreateHostRequest>): HostServiceCreateHostRequest {
+    const message = createBaseHostServiceCreateHostRequest();
     message.provisionToken = object.provisionToken ?? "";
-    message.name = object.name ?? "";
-    message.version = object.version ?? "";
-    message.cpuCount = object.cpuCount ?? 0;
-    message.memSizeBytes = object.memSizeBytes ?? 0;
-    message.diskSizeBytes = object.diskSizeBytes ?? 0;
+    message.isPrivate = object.isPrivate ?? false;
+    message.networkName = object.networkName ?? "";
+    message.displayName = object.displayName ?? undefined;
+    message.regionId = object.regionId ?? "";
+    message.scheduleType = object.scheduleType ?? 0;
     message.os = object.os ?? "";
     message.osVersion = object.osVersion ?? "";
-    message.ipAddr = object.ipAddr ?? "";
+    message.bvVersion = object.bvVersion ?? "";
+    message.ipAddress = object.ipAddress ?? "";
     message.ipGateway = object.ipGateway ?? "";
     message.ips = object.ips?.map((e) => e) || [];
-    message.orgId = object.orgId ?? undefined;
-    message.region = object.region ?? undefined;
-    message.billingAmount = (object.billingAmount !== undefined && object.billingAmount !== null)
-      ? BillingAmount.fromPartial(object.billingAmount)
-      : undefined;
-    message.vmmMountpoint = object.vmmMountpoint ?? undefined;
-    message.managedBy = object.managedBy ?? undefined;
+    message.cpuCores = object.cpuCores ?? 0;
+    message.memoryBytes = object.memoryBytes ?? 0;
+    message.diskBytes = object.diskBytes ?? 0;
     message.tags = (object.tags !== undefined && object.tags !== null) ? Tags.fromPartial(object.tags) : undefined;
     return message;
   },
 };
 
-function createBaseHostServiceCreateResponse(): HostServiceCreateResponse {
-  return { host: undefined, token: "", refresh: "" };
+function createBaseHostServiceCreateHostResponse(): HostServiceCreateHostResponse {
+  return { host: undefined, token: "", refresh: "", provisionOrgId: "" };
 }
 
-export const HostServiceCreateResponse = {
-  encode(message: HostServiceCreateResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const HostServiceCreateHostResponse = {
+  encode(message: HostServiceCreateHostResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.host !== undefined) {
       Host.encode(message.host, writer.uint32(10).fork()).ldelim();
     }
@@ -911,13 +973,16 @@ export const HostServiceCreateResponse = {
     if (message.refresh !== "") {
       writer.uint32(26).string(message.refresh);
     }
+    if (message.provisionOrgId !== "") {
+      writer.uint32(34).string(message.provisionOrgId);
+    }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): HostServiceCreateResponse {
+  decode(input: _m0.Reader | Uint8Array, length?: number): HostServiceCreateHostResponse {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseHostServiceCreateResponse();
+    const message = createBaseHostServiceCreateHostResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -942,53 +1007,12 @@ export const HostServiceCreateResponse = {
 
           message.refresh = reader.string();
           continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<HostServiceCreateResponse>): HostServiceCreateResponse {
-    return HostServiceCreateResponse.fromPartial(base ?? {});
-  },
-
-  fromPartial(object: DeepPartial<HostServiceCreateResponse>): HostServiceCreateResponse {
-    const message = createBaseHostServiceCreateResponse();
-    message.host = (object.host !== undefined && object.host !== null) ? Host.fromPartial(object.host) : undefined;
-    message.token = object.token ?? "";
-    message.refresh = object.refresh ?? "";
-    return message;
-  },
-};
-
-function createBaseHostServiceGetRequest(): HostServiceGetRequest {
-  return { id: "" };
-}
-
-export const HostServiceGetRequest = {
-  encode(message: HostServiceGetRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): HostServiceGetRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseHostServiceGetRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
+        case 4:
+          if (tag !== 34) {
             break;
           }
 
-          message.id = reader.string();
+          message.provisionOrgId = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -999,33 +1023,198 @@ export const HostServiceGetRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<HostServiceGetRequest>): HostServiceGetRequest {
-    return HostServiceGetRequest.fromPartial(base ?? {});
+  create(base?: DeepPartial<HostServiceCreateHostResponse>): HostServiceCreateHostResponse {
+    return HostServiceCreateHostResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<HostServiceGetRequest>): HostServiceGetRequest {
-    const message = createBaseHostServiceGetRequest();
-    message.id = object.id ?? "";
+  fromPartial(object: DeepPartial<HostServiceCreateHostResponse>): HostServiceCreateHostResponse {
+    const message = createBaseHostServiceCreateHostResponse();
+    message.host = (object.host !== undefined && object.host !== null) ? Host.fromPartial(object.host) : undefined;
+    message.token = object.token ?? "";
+    message.refresh = object.refresh ?? "";
+    message.provisionOrgId = object.provisionOrgId ?? "";
     return message;
   },
 };
 
-function createBaseHostServiceGetResponse(): HostServiceGetResponse {
+function createBaseHostServiceCreateRegionRequest(): HostServiceCreateRegionRequest {
+  return { regionKey: "", displayName: "", skuCode: undefined };
+}
+
+export const HostServiceCreateRegionRequest = {
+  encode(message: HostServiceCreateRegionRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.regionKey !== "") {
+      writer.uint32(10).string(message.regionKey);
+    }
+    if (message.displayName !== "") {
+      writer.uint32(18).string(message.displayName);
+    }
+    if (message.skuCode !== undefined) {
+      writer.uint32(26).string(message.skuCode);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): HostServiceCreateRegionRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseHostServiceCreateRegionRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.regionKey = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.displayName = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.skuCode = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<HostServiceCreateRegionRequest>): HostServiceCreateRegionRequest {
+    return HostServiceCreateRegionRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<HostServiceCreateRegionRequest>): HostServiceCreateRegionRequest {
+    const message = createBaseHostServiceCreateRegionRequest();
+    message.regionKey = object.regionKey ?? "";
+    message.displayName = object.displayName ?? "";
+    message.skuCode = object.skuCode ?? undefined;
+    return message;
+  },
+};
+
+function createBaseHostServiceCreateRegionResponse(): HostServiceCreateRegionResponse {
+  return { region: undefined };
+}
+
+export const HostServiceCreateRegionResponse = {
+  encode(message: HostServiceCreateRegionResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.region !== undefined) {
+      Region.encode(message.region, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): HostServiceCreateRegionResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseHostServiceCreateRegionResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.region = Region.decode(reader, reader.uint32());
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<HostServiceCreateRegionResponse>): HostServiceCreateRegionResponse {
+    return HostServiceCreateRegionResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<HostServiceCreateRegionResponse>): HostServiceCreateRegionResponse {
+    const message = createBaseHostServiceCreateRegionResponse();
+    message.region = (object.region !== undefined && object.region !== null)
+      ? Region.fromPartial(object.region)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseHostServiceGetHostRequest(): HostServiceGetHostRequest {
+  return { hostId: "" };
+}
+
+export const HostServiceGetHostRequest = {
+  encode(message: HostServiceGetHostRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.hostId !== "") {
+      writer.uint32(10).string(message.hostId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): HostServiceGetHostRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseHostServiceGetHostRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.hostId = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<HostServiceGetHostRequest>): HostServiceGetHostRequest {
+    return HostServiceGetHostRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<HostServiceGetHostRequest>): HostServiceGetHostRequest {
+    const message = createBaseHostServiceGetHostRequest();
+    message.hostId = object.hostId ?? "";
+    return message;
+  },
+};
+
+function createBaseHostServiceGetHostResponse(): HostServiceGetHostResponse {
   return { host: undefined };
 }
 
-export const HostServiceGetResponse = {
-  encode(message: HostServiceGetResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const HostServiceGetHostResponse = {
+  encode(message: HostServiceGetHostResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.host !== undefined) {
       Host.encode(message.host, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): HostServiceGetResponse {
+  decode(input: _m0.Reader | Uint8Array, length?: number): HostServiceGetHostResponse {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseHostServiceGetResponse();
+    const message = createBaseHostServiceGetHostResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -1045,48 +1234,153 @@ export const HostServiceGetResponse = {
     return message;
   },
 
-  create(base?: DeepPartial<HostServiceGetResponse>): HostServiceGetResponse {
-    return HostServiceGetResponse.fromPartial(base ?? {});
+  create(base?: DeepPartial<HostServiceGetHostResponse>): HostServiceGetHostResponse {
+    return HostServiceGetHostResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<HostServiceGetResponse>): HostServiceGetResponse {
-    const message = createBaseHostServiceGetResponse();
+  fromPartial(object: DeepPartial<HostServiceGetHostResponse>): HostServiceGetHostResponse {
+    const message = createBaseHostServiceGetHostResponse();
     message.host = (object.host !== undefined && object.host !== null) ? Host.fromPartial(object.host) : undefined;
     return message;
   },
 };
 
-function createBaseHostServiceListRequest(): HostServiceListRequest {
-  return { orgIds: [], versions: [], offset: 0, limit: 0, search: undefined, sort: [] };
+function createBaseHostServiceGetRegionRequest(): HostServiceGetRegionRequest {
+  return { regionId: undefined, regionKey: undefined };
 }
 
-export const HostServiceListRequest = {
-  encode(message: HostServiceListRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.orgIds) {
-      writer.uint32(10).string(v!);
+export const HostServiceGetRegionRequest = {
+  encode(message: HostServiceGetRegionRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.regionId !== undefined) {
+      writer.uint32(10).string(message.regionId);
     }
-    for (const v of message.versions) {
-      writer.uint32(50).string(v!);
-    }
-    if (message.offset !== 0) {
-      writer.uint32(16).uint64(message.offset);
-    }
-    if (message.limit !== 0) {
-      writer.uint32(24).uint64(message.limit);
-    }
-    if (message.search !== undefined) {
-      HostSearch.encode(message.search, writer.uint32(34).fork()).ldelim();
-    }
-    for (const v of message.sort) {
-      HostSort.encode(v!, writer.uint32(42).fork()).ldelim();
+    if (message.regionKey !== undefined) {
+      writer.uint32(18).string(message.regionKey);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): HostServiceListRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): HostServiceGetRegionRequest {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseHostServiceListRequest();
+    const message = createBaseHostServiceGetRegionRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.regionId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.regionKey = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<HostServiceGetRegionRequest>): HostServiceGetRegionRequest {
+    return HostServiceGetRegionRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<HostServiceGetRegionRequest>): HostServiceGetRegionRequest {
+    const message = createBaseHostServiceGetRegionRequest();
+    message.regionId = object.regionId ?? undefined;
+    message.regionKey = object.regionKey ?? undefined;
+    return message;
+  },
+};
+
+function createBaseHostServiceGetRegionResponse(): HostServiceGetRegionResponse {
+  return { region: undefined };
+}
+
+export const HostServiceGetRegionResponse = {
+  encode(message: HostServiceGetRegionResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.region !== undefined) {
+      Region.encode(message.region, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): HostServiceGetRegionResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseHostServiceGetRegionResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.region = Region.decode(reader, reader.uint32());
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<HostServiceGetRegionResponse>): HostServiceGetRegionResponse {
+    return HostServiceGetRegionResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<HostServiceGetRegionResponse>): HostServiceGetRegionResponse {
+    const message = createBaseHostServiceGetRegionResponse();
+    message.region = (object.region !== undefined && object.region !== null)
+      ? Region.fromPartial(object.region)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseHostServiceListHostsRequest(): HostServiceListHostsRequest {
+  return { orgIds: [], bvVersions: [], offset: 0, limit: 0, search: undefined, sort: [] };
+}
+
+export const HostServiceListHostsRequest = {
+  encode(message: HostServiceListHostsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.orgIds) {
+      writer.uint32(10).string(v!);
+    }
+    for (const v of message.bvVersions) {
+      writer.uint32(18).string(v!);
+    }
+    if (message.offset !== 0) {
+      writer.uint32(24).uint64(message.offset);
+    }
+    if (message.limit !== 0) {
+      writer.uint32(32).uint64(message.limit);
+    }
+    if (message.search !== undefined) {
+      HostSearch.encode(message.search, writer.uint32(42).fork()).ldelim();
+    }
+    for (const v of message.sort) {
+      HostSort.encode(v!, writer.uint32(50).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): HostServiceListHostsRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseHostServiceListHostsRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -1097,36 +1391,36 @@ export const HostServiceListRequest = {
 
           message.orgIds.push(reader.string());
           continue;
-        case 6:
-          if (tag !== 50) {
-            break;
-          }
-
-          message.versions.push(reader.string());
-          continue;
         case 2:
-          if (tag !== 16) {
+          if (tag !== 18) {
             break;
           }
 
-          message.offset = longToNumber(reader.uint64() as Long);
+          message.bvVersions.push(reader.string());
           continue;
         case 3:
           if (tag !== 24) {
             break;
           }
 
-          message.limit = longToNumber(reader.uint64() as Long);
+          message.offset = longToNumber(reader.uint64() as Long);
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
+            break;
+          }
+
+          message.limit = longToNumber(reader.uint64() as Long);
+          continue;
+        case 5:
+          if (tag !== 42) {
             break;
           }
 
           message.search = HostSearch.decode(reader, reader.uint32());
           continue;
-        case 5:
-          if (tag !== 42) {
+        case 6:
+          if (tag !== 50) {
             break;
           }
 
@@ -1141,14 +1435,14 @@ export const HostServiceListRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<HostServiceListRequest>): HostServiceListRequest {
-    return HostServiceListRequest.fromPartial(base ?? {});
+  create(base?: DeepPartial<HostServiceListHostsRequest>): HostServiceListHostsRequest {
+    return HostServiceListHostsRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<HostServiceListRequest>): HostServiceListRequest {
-    const message = createBaseHostServiceListRequest();
+  fromPartial(object: DeepPartial<HostServiceListHostsRequest>): HostServiceListHostsRequest {
+    const message = createBaseHostServiceListHostsRequest();
     message.orgIds = object.orgIds?.map((e) => e) || [];
-    message.versions = object.versions?.map((e) => e) || [];
+    message.bvVersions = object.bvVersions?.map((e) => e) || [];
     message.offset = object.offset ?? 0;
     message.limit = object.limit ?? 0;
     message.search = (object.search !== undefined && object.search !== null)
@@ -1160,7 +1454,15 @@ export const HostServiceListRequest = {
 };
 
 function createBaseHostSearch(): HostSearch {
-  return { operator: 0, id: undefined, name: undefined, version: undefined, os: undefined, ip: undefined };
+  return {
+    operator: 0,
+    hostId: undefined,
+    networkName: undefined,
+    displayName: undefined,
+    bvVersion: undefined,
+    os: undefined,
+    ip: undefined,
+  };
 }
 
 export const HostSearch = {
@@ -1168,20 +1470,23 @@ export const HostSearch = {
     if (message.operator !== 0) {
       writer.uint32(8).int32(message.operator);
     }
-    if (message.id !== undefined) {
-      writer.uint32(18).string(message.id);
+    if (message.hostId !== undefined) {
+      writer.uint32(18).string(message.hostId);
     }
-    if (message.name !== undefined) {
-      writer.uint32(26).string(message.name);
+    if (message.networkName !== undefined) {
+      writer.uint32(26).string(message.networkName);
     }
-    if (message.version !== undefined) {
-      writer.uint32(34).string(message.version);
+    if (message.displayName !== undefined) {
+      writer.uint32(34).string(message.displayName);
+    }
+    if (message.bvVersion !== undefined) {
+      writer.uint32(42).string(message.bvVersion);
     }
     if (message.os !== undefined) {
-      writer.uint32(42).string(message.os);
+      writer.uint32(50).string(message.os);
     }
     if (message.ip !== undefined) {
-      writer.uint32(50).string(message.ip);
+      writer.uint32(58).string(message.ip);
     }
     return writer;
   },
@@ -1205,31 +1510,38 @@ export const HostSearch = {
             break;
           }
 
-          message.id = reader.string();
+          message.hostId = reader.string();
           continue;
         case 3:
           if (tag !== 26) {
             break;
           }
 
-          message.name = reader.string();
+          message.networkName = reader.string();
           continue;
         case 4:
           if (tag !== 34) {
             break;
           }
 
-          message.version = reader.string();
+          message.displayName = reader.string();
           continue;
         case 5:
           if (tag !== 42) {
             break;
           }
 
-          message.os = reader.string();
+          message.bvVersion = reader.string();
           continue;
         case 6:
           if (tag !== 50) {
+            break;
+          }
+
+          message.os = reader.string();
+          continue;
+        case 7:
+          if (tag !== 58) {
             break;
           }
 
@@ -1251,9 +1563,10 @@ export const HostSearch = {
   fromPartial(object: DeepPartial<HostSearch>): HostSearch {
     const message = createBaseHostSearch();
     message.operator = object.operator ?? 0;
-    message.id = object.id ?? undefined;
-    message.name = object.name ?? undefined;
-    message.version = object.version ?? undefined;
+    message.hostId = object.hostId ?? undefined;
+    message.networkName = object.networkName ?? undefined;
+    message.displayName = object.displayName ?? undefined;
+    message.bvVersion = object.bvVersion ?? undefined;
     message.os = object.os ?? undefined;
     message.ip = object.ip ?? undefined;
     return message;
@@ -1317,25 +1630,25 @@ export const HostSort = {
   },
 };
 
-function createBaseHostServiceListResponse(): HostServiceListResponse {
-  return { hosts: [], hostCount: 0 };
+function createBaseHostServiceListHostsResponse(): HostServiceListHostsResponse {
+  return { hosts: [], total: 0 };
 }
 
-export const HostServiceListResponse = {
-  encode(message: HostServiceListResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const HostServiceListHostsResponse = {
+  encode(message: HostServiceListHostsResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.hosts) {
       Host.encode(v!, writer.uint32(10).fork()).ldelim();
     }
-    if (message.hostCount !== 0) {
-      writer.uint32(16).uint64(message.hostCount);
+    if (message.total !== 0) {
+      writer.uint32(16).uint64(message.total);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): HostServiceListResponse {
+  decode(input: _m0.Reader | Uint8Array, length?: number): HostServiceListHostsResponse {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseHostServiceListResponse();
+    const message = createBaseHostServiceListHostsResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -1351,7 +1664,7 @@ export const HostServiceListResponse = {
             break;
           }
 
-          message.hostCount = longToNumber(reader.uint64() as Long);
+          message.total = longToNumber(reader.uint64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -1362,76 +1675,37 @@ export const HostServiceListResponse = {
     return message;
   },
 
-  create(base?: DeepPartial<HostServiceListResponse>): HostServiceListResponse {
-    return HostServiceListResponse.fromPartial(base ?? {});
+  create(base?: DeepPartial<HostServiceListHostsResponse>): HostServiceListHostsResponse {
+    return HostServiceListHostsResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<HostServiceListResponse>): HostServiceListResponse {
-    const message = createBaseHostServiceListResponse();
+  fromPartial(object: DeepPartial<HostServiceListHostsResponse>): HostServiceListHostsResponse {
+    const message = createBaseHostServiceListHostsResponse();
     message.hosts = object.hosts?.map((e) => Host.fromPartial(e)) || [];
-    message.hostCount = object.hostCount ?? 0;
+    message.total = object.total ?? 0;
     return message;
   },
 };
 
-function createBaseHostServiceUpdateRequest(): HostServiceUpdateRequest {
-  return {
-    id: "",
-    name: undefined,
-    version: undefined,
-    os: undefined,
-    osVersion: undefined,
-    region: undefined,
-    billingAmount: undefined,
-    totalDiskSpace: undefined,
-    managedBy: undefined,
-    updateTags: undefined,
-    cost: undefined,
-  };
+function createBaseHostServiceListRegionsRequest(): HostServiceListRegionsRequest {
+  return { imageId: "", orgId: undefined };
 }
 
-export const HostServiceUpdateRequest = {
-  encode(message: HostServiceUpdateRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+export const HostServiceListRegionsRequest = {
+  encode(message: HostServiceListRegionsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.imageId !== "") {
+      writer.uint32(10).string(message.imageId);
     }
-    if (message.name !== undefined) {
-      writer.uint32(18).string(message.name);
-    }
-    if (message.version !== undefined) {
-      writer.uint32(26).string(message.version);
-    }
-    if (message.os !== undefined) {
-      writer.uint32(42).string(message.os);
-    }
-    if (message.osVersion !== undefined) {
-      writer.uint32(50).string(message.osVersion);
-    }
-    if (message.region !== undefined) {
-      writer.uint32(34).string(message.region);
-    }
-    if (message.billingAmount !== undefined) {
-      BillingAmount.encode(message.billingAmount, writer.uint32(58).fork()).ldelim();
-    }
-    if (message.totalDiskSpace !== undefined) {
-      writer.uint32(64).uint64(message.totalDiskSpace);
-    }
-    if (message.managedBy !== undefined) {
-      writer.uint32(72).int32(message.managedBy);
-    }
-    if (message.updateTags !== undefined) {
-      UpdateTags.encode(message.updateTags, writer.uint32(82).fork()).ldelim();
-    }
-    if (message.cost !== undefined) {
-      BillingAmount.encode(message.cost, writer.uint32(90).fork()).ldelim();
+    if (message.orgId !== undefined) {
+      writer.uint32(18).string(message.orgId);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): HostServiceUpdateRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): HostServiceListRegionsRequest {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseHostServiceUpdateRequest();
+    const message = createBaseHostServiceListRegionsRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -1440,21 +1714,248 @@ export const HostServiceUpdateRequest = {
             break;
           }
 
-          message.id = reader.string();
+          message.imageId = reader.string();
           continue;
         case 2:
           if (tag !== 18) {
             break;
           }
 
-          message.name = reader.string();
+          message.orgId = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<HostServiceListRegionsRequest>): HostServiceListRegionsRequest {
+    return HostServiceListRegionsRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<HostServiceListRegionsRequest>): HostServiceListRegionsRequest {
+    const message = createBaseHostServiceListRegionsRequest();
+    message.imageId = object.imageId ?? "";
+    message.orgId = object.orgId ?? undefined;
+    return message;
+  },
+};
+
+function createBaseHostServiceListRegionsResponse(): HostServiceListRegionsResponse {
+  return { regions: [] };
+}
+
+export const HostServiceListRegionsResponse = {
+  encode(message: HostServiceListRegionsResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.regions) {
+      RegionInfo.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): HostServiceListRegionsResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseHostServiceListRegionsResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.regions.push(RegionInfo.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<HostServiceListRegionsResponse>): HostServiceListRegionsResponse {
+    return HostServiceListRegionsResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<HostServiceListRegionsResponse>): HostServiceListRegionsResponse {
+    const message = createBaseHostServiceListRegionsResponse();
+    message.regions = object.regions?.map((e) => RegionInfo.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseRegionInfo(): RegionInfo {
+  return { region: undefined, validHosts: 0, freeIps: 0 };
+}
+
+export const RegionInfo = {
+  encode(message: RegionInfo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.region !== undefined) {
+      Region.encode(message.region, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.validHosts !== 0) {
+      writer.uint32(16).uint32(message.validHosts);
+    }
+    if (message.freeIps !== 0) {
+      writer.uint32(24).uint32(message.freeIps);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): RegionInfo {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseRegionInfo();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.region = Region.decode(reader, reader.uint32());
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.validHosts = reader.uint32();
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.freeIps = reader.uint32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<RegionInfo>): RegionInfo {
+    return RegionInfo.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<RegionInfo>): RegionInfo {
+    const message = createBaseRegionInfo();
+    message.region = (object.region !== undefined && object.region !== null)
+      ? Region.fromPartial(object.region)
+      : undefined;
+    message.validHosts = object.validHosts ?? 0;
+    message.freeIps = object.freeIps ?? 0;
+    return message;
+  },
+};
+
+function createBaseHostServiceUpdateHostRequest(): HostServiceUpdateHostRequest {
+  return {
+    hostId: "",
+    networkName: undefined,
+    displayName: undefined,
+    regionId: undefined,
+    os: undefined,
+    osVersion: undefined,
+    bvVersion: undefined,
+    cpuCores: undefined,
+    memoryBytes: undefined,
+    diskBytes: undefined,
+    scheduleType: undefined,
+    updateTags: undefined,
+    cost: undefined,
+  };
+}
+
+export const HostServiceUpdateHostRequest = {
+  encode(message: HostServiceUpdateHostRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.hostId !== "") {
+      writer.uint32(10).string(message.hostId);
+    }
+    if (message.networkName !== undefined) {
+      writer.uint32(18).string(message.networkName);
+    }
+    if (message.displayName !== undefined) {
+      writer.uint32(26).string(message.displayName);
+    }
+    if (message.regionId !== undefined) {
+      writer.uint32(34).string(message.regionId);
+    }
+    if (message.os !== undefined) {
+      writer.uint32(42).string(message.os);
+    }
+    if (message.osVersion !== undefined) {
+      writer.uint32(50).string(message.osVersion);
+    }
+    if (message.bvVersion !== undefined) {
+      writer.uint32(58).string(message.bvVersion);
+    }
+    if (message.cpuCores !== undefined) {
+      writer.uint32(64).uint64(message.cpuCores);
+    }
+    if (message.memoryBytes !== undefined) {
+      writer.uint32(72).uint64(message.memoryBytes);
+    }
+    if (message.diskBytes !== undefined) {
+      writer.uint32(80).uint64(message.diskBytes);
+    }
+    if (message.scheduleType !== undefined) {
+      writer.uint32(88).int32(message.scheduleType);
+    }
+    if (message.updateTags !== undefined) {
+      UpdateTags.encode(message.updateTags, writer.uint32(98).fork()).ldelim();
+    }
+    if (message.cost !== undefined) {
+      BillingAmount.encode(message.cost, writer.uint32(106).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): HostServiceUpdateHostRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseHostServiceUpdateHostRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.hostId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.networkName = reader.string();
           continue;
         case 3:
           if (tag !== 26) {
             break;
           }
 
-          message.version = reader.string();
+          message.displayName = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.regionId = reader.string();
           continue;
         case 5:
           if (tag !== 42) {
@@ -1470,43 +1971,50 @@ export const HostServiceUpdateRequest = {
 
           message.osVersion = reader.string();
           continue;
-        case 4:
-          if (tag !== 34) {
-            break;
-          }
-
-          message.region = reader.string();
-          continue;
         case 7:
           if (tag !== 58) {
             break;
           }
 
-          message.billingAmount = BillingAmount.decode(reader, reader.uint32());
+          message.bvVersion = reader.string();
           continue;
         case 8:
           if (tag !== 64) {
             break;
           }
 
-          message.totalDiskSpace = longToNumber(reader.uint64() as Long);
+          message.cpuCores = longToNumber(reader.uint64() as Long);
           continue;
         case 9:
           if (tag !== 72) {
             break;
           }
 
-          message.managedBy = reader.int32() as any;
+          message.memoryBytes = longToNumber(reader.uint64() as Long);
           continue;
         case 10:
-          if (tag !== 82) {
+          if (tag !== 80) {
+            break;
+          }
+
+          message.diskBytes = longToNumber(reader.uint64() as Long);
+          continue;
+        case 11:
+          if (tag !== 88) {
+            break;
+          }
+
+          message.scheduleType = reader.int32() as any;
+          continue;
+        case 12:
+          if (tag !== 98) {
             break;
           }
 
           message.updateTags = UpdateTags.decode(reader, reader.uint32());
           continue;
-        case 11:
-          if (tag !== 90) {
+        case 13:
+          if (tag !== 106) {
             break;
           }
 
@@ -1521,23 +2029,23 @@ export const HostServiceUpdateRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<HostServiceUpdateRequest>): HostServiceUpdateRequest {
-    return HostServiceUpdateRequest.fromPartial(base ?? {});
+  create(base?: DeepPartial<HostServiceUpdateHostRequest>): HostServiceUpdateHostRequest {
+    return HostServiceUpdateHostRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<HostServiceUpdateRequest>): HostServiceUpdateRequest {
-    const message = createBaseHostServiceUpdateRequest();
-    message.id = object.id ?? "";
-    message.name = object.name ?? undefined;
-    message.version = object.version ?? undefined;
+  fromPartial(object: DeepPartial<HostServiceUpdateHostRequest>): HostServiceUpdateHostRequest {
+    const message = createBaseHostServiceUpdateHostRequest();
+    message.hostId = object.hostId ?? "";
+    message.networkName = object.networkName ?? undefined;
+    message.displayName = object.displayName ?? undefined;
+    message.regionId = object.regionId ?? undefined;
     message.os = object.os ?? undefined;
     message.osVersion = object.osVersion ?? undefined;
-    message.region = object.region ?? undefined;
-    message.billingAmount = (object.billingAmount !== undefined && object.billingAmount !== null)
-      ? BillingAmount.fromPartial(object.billingAmount)
-      : undefined;
-    message.totalDiskSpace = object.totalDiskSpace ?? undefined;
-    message.managedBy = object.managedBy ?? undefined;
+    message.bvVersion = object.bvVersion ?? undefined;
+    message.cpuCores = object.cpuCores ?? undefined;
+    message.memoryBytes = object.memoryBytes ?? undefined;
+    message.diskBytes = object.diskBytes ?? undefined;
+    message.scheduleType = object.scheduleType ?? undefined;
     message.updateTags = (object.updateTags !== undefined && object.updateTags !== null)
       ? UpdateTags.fromPartial(object.updateTags)
       : undefined;
@@ -1548,19 +2056,227 @@ export const HostServiceUpdateRequest = {
   },
 };
 
-function createBaseHostServiceUpdateResponse(): HostServiceUpdateResponse {
-  return {};
+function createBaseHostServiceUpdateHostResponse(): HostServiceUpdateHostResponse {
+  return { host: undefined };
 }
 
-export const HostServiceUpdateResponse = {
-  encode(_: HostServiceUpdateResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const HostServiceUpdateHostResponse = {
+  encode(message: HostServiceUpdateHostResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.host !== undefined) {
+      Host.encode(message.host, writer.uint32(10).fork()).ldelim();
+    }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): HostServiceUpdateResponse {
+  decode(input: _m0.Reader | Uint8Array, length?: number): HostServiceUpdateHostResponse {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseHostServiceUpdateResponse();
+    const message = createBaseHostServiceUpdateHostResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.host = Host.decode(reader, reader.uint32());
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<HostServiceUpdateHostResponse>): HostServiceUpdateHostResponse {
+    return HostServiceUpdateHostResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<HostServiceUpdateHostResponse>): HostServiceUpdateHostResponse {
+    const message = createBaseHostServiceUpdateHostResponse();
+    message.host = (object.host !== undefined && object.host !== null) ? Host.fromPartial(object.host) : undefined;
+    return message;
+  },
+};
+
+function createBaseHostServiceUpdateRegionRequest(): HostServiceUpdateRegionRequest {
+  return { regionId: "", displayName: undefined, skuCode: undefined };
+}
+
+export const HostServiceUpdateRegionRequest = {
+  encode(message: HostServiceUpdateRegionRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.regionId !== "") {
+      writer.uint32(10).string(message.regionId);
+    }
+    if (message.displayName !== undefined) {
+      writer.uint32(18).string(message.displayName);
+    }
+    if (message.skuCode !== undefined) {
+      writer.uint32(26).string(message.skuCode);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): HostServiceUpdateRegionRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseHostServiceUpdateRegionRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.regionId = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.displayName = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.skuCode = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<HostServiceUpdateRegionRequest>): HostServiceUpdateRegionRequest {
+    return HostServiceUpdateRegionRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<HostServiceUpdateRegionRequest>): HostServiceUpdateRegionRequest {
+    const message = createBaseHostServiceUpdateRegionRequest();
+    message.regionId = object.regionId ?? "";
+    message.displayName = object.displayName ?? undefined;
+    message.skuCode = object.skuCode ?? undefined;
+    return message;
+  },
+};
+
+function createBaseHostServiceUpdateRegionResponse(): HostServiceUpdateRegionResponse {
+  return { region: undefined };
+}
+
+export const HostServiceUpdateRegionResponse = {
+  encode(message: HostServiceUpdateRegionResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.region !== undefined) {
+      Region.encode(message.region, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): HostServiceUpdateRegionResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseHostServiceUpdateRegionResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.region = Region.decode(reader, reader.uint32());
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<HostServiceUpdateRegionResponse>): HostServiceUpdateRegionResponse {
+    return HostServiceUpdateRegionResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<HostServiceUpdateRegionResponse>): HostServiceUpdateRegionResponse {
+    const message = createBaseHostServiceUpdateRegionResponse();
+    message.region = (object.region !== undefined && object.region !== null)
+      ? Region.fromPartial(object.region)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseHostServiceDeleteHostRequest(): HostServiceDeleteHostRequest {
+  return { hostId: "" };
+}
+
+export const HostServiceDeleteHostRequest = {
+  encode(message: HostServiceDeleteHostRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.hostId !== "") {
+      writer.uint32(10).string(message.hostId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): HostServiceDeleteHostRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseHostServiceDeleteHostRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.hostId = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<HostServiceDeleteHostRequest>): HostServiceDeleteHostRequest {
+    return HostServiceDeleteHostRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<HostServiceDeleteHostRequest>): HostServiceDeleteHostRequest {
+    const message = createBaseHostServiceDeleteHostRequest();
+    message.hostId = object.hostId ?? "";
+    return message;
+  },
+};
+
+function createBaseHostServiceDeleteHostResponse(): HostServiceDeleteHostResponse {
+  return {};
+}
+
+export const HostServiceDeleteHostResponse = {
+  encode(_: HostServiceDeleteHostResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): HostServiceDeleteHostResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseHostServiceDeleteHostResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -1573,24 +2289,24 @@ export const HostServiceUpdateResponse = {
     return message;
   },
 
-  create(base?: DeepPartial<HostServiceUpdateResponse>): HostServiceUpdateResponse {
-    return HostServiceUpdateResponse.fromPartial(base ?? {});
+  create(base?: DeepPartial<HostServiceDeleteHostResponse>): HostServiceDeleteHostResponse {
+    return HostServiceDeleteHostResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(_: DeepPartial<HostServiceUpdateResponse>): HostServiceUpdateResponse {
-    const message = createBaseHostServiceUpdateResponse();
+  fromPartial(_: DeepPartial<HostServiceDeleteHostResponse>): HostServiceDeleteHostResponse {
+    const message = createBaseHostServiceDeleteHostResponse();
     return message;
   },
 };
 
 function createBaseHostServiceStartRequest(): HostServiceStartRequest {
-  return { id: "" };
+  return { hostId: "" };
 }
 
 export const HostServiceStartRequest = {
   encode(message: HostServiceStartRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.hostId !== "") {
+      writer.uint32(10).string(message.hostId);
     }
     return writer;
   },
@@ -1607,7 +2323,7 @@ export const HostServiceStartRequest = {
             break;
           }
 
-          message.id = reader.string();
+          message.hostId = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -1624,7 +2340,7 @@ export const HostServiceStartRequest = {
 
   fromPartial(object: DeepPartial<HostServiceStartRequest>): HostServiceStartRequest {
     const message = createBaseHostServiceStartRequest();
-    message.id = object.id ?? "";
+    message.hostId = object.hostId ?? "";
     return message;
   },
 };
@@ -1665,13 +2381,13 @@ export const HostServiceStartResponse = {
 };
 
 function createBaseHostServiceStopRequest(): HostServiceStopRequest {
-  return { id: "" };
+  return { hostId: "" };
 }
 
 export const HostServiceStopRequest = {
   encode(message: HostServiceStopRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.hostId !== "") {
+      writer.uint32(10).string(message.hostId);
     }
     return writer;
   },
@@ -1688,7 +2404,7 @@ export const HostServiceStopRequest = {
             break;
           }
 
-          message.id = reader.string();
+          message.hostId = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -1705,7 +2421,7 @@ export const HostServiceStopRequest = {
 
   fromPartial(object: DeepPartial<HostServiceStopRequest>): HostServiceStopRequest {
     const message = createBaseHostServiceStopRequest();
-    message.id = object.id ?? "";
+    message.hostId = object.hostId ?? "";
     return message;
   },
 };
@@ -1746,13 +2462,13 @@ export const HostServiceStopResponse = {
 };
 
 function createBaseHostServiceRestartRequest(): HostServiceRestartRequest {
-  return { id: "" };
+  return { hostId: "" };
 }
 
 export const HostServiceRestartRequest = {
   encode(message: HostServiceRestartRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.hostId !== "") {
+      writer.uint32(10).string(message.hostId);
     }
     return writer;
   },
@@ -1769,7 +2485,7 @@ export const HostServiceRestartRequest = {
             break;
           }
 
-          message.id = reader.string();
+          message.hostId = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -1786,7 +2502,7 @@ export const HostServiceRestartRequest = {
 
   fromPartial(object: DeepPartial<HostServiceRestartRequest>): HostServiceRestartRequest {
     const message = createBaseHostServiceRestartRequest();
-    message.id = object.id ?? "";
+    message.hostId = object.hostId ?? "";
     return message;
   },
 };
@@ -1826,446 +2542,94 @@ export const HostServiceRestartResponse = {
   },
 };
 
-function createBaseHostServiceDeleteRequest(): HostServiceDeleteRequest {
-  return { id: "" };
-}
-
-export const HostServiceDeleteRequest = {
-  encode(message: HostServiceDeleteRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): HostServiceDeleteRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseHostServiceDeleteRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.id = reader.string();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<HostServiceDeleteRequest>): HostServiceDeleteRequest {
-    return HostServiceDeleteRequest.fromPartial(base ?? {});
-  },
-
-  fromPartial(object: DeepPartial<HostServiceDeleteRequest>): HostServiceDeleteRequest {
-    const message = createBaseHostServiceDeleteRequest();
-    message.id = object.id ?? "";
-    return message;
-  },
-};
-
-function createBaseHostServiceDeleteResponse(): HostServiceDeleteResponse {
-  return {};
-}
-
-export const HostServiceDeleteResponse = {
-  encode(_: HostServiceDeleteResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): HostServiceDeleteResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseHostServiceDeleteResponse();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<HostServiceDeleteResponse>): HostServiceDeleteResponse {
-    return HostServiceDeleteResponse.fromPartial(base ?? {});
-  },
-
-  fromPartial(_: DeepPartial<HostServiceDeleteResponse>): HostServiceDeleteResponse {
-    const message = createBaseHostServiceDeleteResponse();
-    return message;
-  },
-};
-
-function createBaseHostServiceRegionsRequest(): HostServiceRegionsRequest {
-  return { orgId: undefined, hostType: undefined, blockchainId: "", version: "", nodeType: 0 };
-}
-
-export const HostServiceRegionsRequest = {
-  encode(message: HostServiceRegionsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.orgId !== undefined) {
-      writer.uint32(10).string(message.orgId);
-    }
-    if (message.hostType !== undefined) {
-      writer.uint32(16).int32(message.hostType);
-    }
-    if (message.blockchainId !== "") {
-      writer.uint32(26).string(message.blockchainId);
-    }
-    if (message.version !== "") {
-      writer.uint32(34).string(message.version);
-    }
-    if (message.nodeType !== 0) {
-      writer.uint32(40).int32(message.nodeType);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): HostServiceRegionsRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseHostServiceRegionsRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.orgId = reader.string();
-          continue;
-        case 2:
-          if (tag !== 16) {
-            break;
-          }
-
-          message.hostType = reader.int32() as any;
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.blockchainId = reader.string();
-          continue;
-        case 4:
-          if (tag !== 34) {
-            break;
-          }
-
-          message.version = reader.string();
-          continue;
-        case 5:
-          if (tag !== 40) {
-            break;
-          }
-
-          message.nodeType = reader.int32() as any;
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<HostServiceRegionsRequest>): HostServiceRegionsRequest {
-    return HostServiceRegionsRequest.fromPartial(base ?? {});
-  },
-
-  fromPartial(object: DeepPartial<HostServiceRegionsRequest>): HostServiceRegionsRequest {
-    const message = createBaseHostServiceRegionsRequest();
-    message.orgId = object.orgId ?? undefined;
-    message.hostType = object.hostType ?? undefined;
-    message.blockchainId = object.blockchainId ?? "";
-    message.version = object.version ?? "";
-    message.nodeType = object.nodeType ?? 0;
-    return message;
-  },
-};
-
-function createBaseHostServiceRegionsResponse(): HostServiceRegionsResponse {
-  return { regions: [] };
-}
-
-export const HostServiceRegionsResponse = {
-  encode(message: HostServiceRegionsResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.regions) {
-      Region.encode(v!, writer.uint32(10).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): HostServiceRegionsResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseHostServiceRegionsResponse();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.regions.push(Region.decode(reader, reader.uint32()));
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<HostServiceRegionsResponse>): HostServiceRegionsResponse {
-    return HostServiceRegionsResponse.fromPartial(base ?? {});
-  },
-
-  fromPartial(object: DeepPartial<HostServiceRegionsResponse>): HostServiceRegionsResponse {
-    const message = createBaseHostServiceRegionsResponse();
-    message.regions = object.regions?.map((e) => Region.fromPartial(e)) || [];
-    return message;
-  },
-};
-
-function createBaseRegion(): Region {
-  return { name: undefined, pricingTier: undefined };
-}
-
-export const Region = {
-  encode(message: Region, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== undefined) {
-      writer.uint32(10).string(message.name);
-    }
-    if (message.pricingTier !== undefined) {
-      writer.uint32(18).string(message.pricingTier);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): Region {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseRegion();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.name = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.pricingTier = reader.string();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<Region>): Region {
-    return Region.fromPartial(base ?? {});
-  },
-
-  fromPartial(object: DeepPartial<Region>): Region {
-    const message = createBaseRegion();
-    message.name = object.name ?? undefined;
-    message.pricingTier = object.pricingTier ?? undefined;
-    return message;
-  },
-};
-
-function createBaseHostIpAddress(): HostIpAddress {
-  return { ip: "", assigned: false };
-}
-
-export const HostIpAddress = {
-  encode(message: HostIpAddress, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.ip !== "") {
-      writer.uint32(10).string(message.ip);
-    }
-    if (message.assigned === true) {
-      writer.uint32(16).bool(message.assigned);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): HostIpAddress {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseHostIpAddress();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.ip = reader.string();
-          continue;
-        case 2:
-          if (tag !== 16) {
-            break;
-          }
-
-          message.assigned = reader.bool();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<HostIpAddress>): HostIpAddress {
-    return HostIpAddress.fromPartial(base ?? {});
-  },
-
-  fromPartial(object: DeepPartial<HostIpAddress>): HostIpAddress {
-    const message = createBaseHostIpAddress();
-    message.ip = object.ip ?? "";
-    message.assigned = object.assigned ?? false;
-    return message;
-  },
-};
-
-function createBaseHostStatus(): HostStatus {
-  return { hostId: "", connectionStatus: undefined };
-}
-
-export const HostStatus = {
-  encode(message: HostStatus, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.hostId !== "") {
-      writer.uint32(10).string(message.hostId);
-    }
-    if (message.connectionStatus !== undefined) {
-      writer.uint32(16).int32(message.connectionStatus);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): HostStatus {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseHostStatus();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.hostId = reader.string();
-          continue;
-        case 2:
-          if (tag !== 16) {
-            break;
-          }
-
-          message.connectionStatus = reader.int32() as any;
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<HostStatus>): HostStatus {
-    return HostStatus.fromPartial(base ?? {});
-  },
-
-  fromPartial(object: DeepPartial<HostStatus>): HostStatus {
-    const message = createBaseHostStatus();
-    message.hostId = object.hostId ?? "";
-    message.connectionStatus = object.connectionStatus ?? undefined;
-    return message;
-  },
-};
-
-/** Manage hosts. */
+/** Service for managing hosts. */
 export type HostServiceDefinition = typeof HostServiceDefinition;
 export const HostServiceDefinition = {
   name: "HostService",
   fullName: "blockjoy.v1.HostService",
   methods: {
-    /** Create a single host. */
-    create: {
-      name: "Create",
-      requestType: HostServiceCreateRequest,
+    /** Create a new host. */
+    createHost: {
+      name: "CreateHost",
+      requestType: HostServiceCreateHostRequest,
       requestStream: false,
-      responseType: HostServiceCreateResponse,
+      responseType: HostServiceCreateHostResponse,
       responseStream: false,
       options: {},
     },
-    /** Get info for a single host. */
-    get: {
-      name: "Get",
-      requestType: HostServiceGetRequest,
+    /** Create a new region. */
+    createRegion: {
+      name: "CreateRegion",
+      requestType: HostServiceCreateRegionRequest,
       requestStream: false,
-      responseType: HostServiceGetResponse,
+      responseType: HostServiceCreateRegionResponse,
+      responseStream: false,
+      options: {},
+    },
+    /** Get the info for a host. */
+    getHost: {
+      name: "GetHost",
+      requestType: HostServiceGetHostRequest,
+      requestStream: false,
+      responseType: HostServiceGetHostResponse,
+      responseStream: false,
+      options: {},
+    },
+    /** Get the info for a region. */
+    getRegion: {
+      name: "GetRegion",
+      requestType: HostServiceGetRegionRequest,
+      requestStream: false,
+      responseType: HostServiceGetRegionResponse,
       responseStream: false,
       options: {},
     },
     /** List all hosts matching some criteria. */
-    list: {
-      name: "List",
-      requestType: HostServiceListRequest,
+    listHosts: {
+      name: "ListHosts",
+      requestType: HostServiceListHostsRequest,
       requestStream: false,
-      responseType: HostServiceListResponse,
+      responseType: HostServiceListHostsResponse,
       responseStream: false,
       options: {},
     },
-    /** Update a single host. */
-    update: {
-      name: "Update",
-      requestType: HostServiceUpdateRequest,
+    /** List the regions with available hosts. */
+    listRegions: {
+      name: "ListRegions",
+      requestType: HostServiceListRegionsRequest,
       requestStream: false,
-      responseType: HostServiceUpdateResponse,
+      responseType: HostServiceListRegionsResponse,
       responseStream: false,
       options: {},
     },
-    /** Delete a single host. */
-    delete: {
-      name: "Delete",
-      requestType: HostServiceDeleteRequest,
+    /** Update an existing host. */
+    updateHost: {
+      name: "UpdateHost",
+      requestType: HostServiceUpdateHostRequest,
       requestStream: false,
-      responseType: HostServiceDeleteResponse,
+      responseType: HostServiceUpdateHostResponse,
       responseStream: false,
       options: {},
     },
-    /** Start a single host. */
+    /** Update an existing region. */
+    updateRegion: {
+      name: "UpdateRegion",
+      requestType: HostServiceUpdateRegionRequest,
+      requestStream: false,
+      responseType: HostServiceUpdateRegionResponse,
+      responseStream: false,
+      options: {},
+    },
+    /** Delete an existing host. */
+    deleteHost: {
+      name: "DeleteHost",
+      requestType: HostServiceDeleteHostRequest,
+      requestStream: false,
+      responseType: HostServiceDeleteHostResponse,
+      responseStream: false,
+      options: {},
+    },
+    /** Start a host. */
     start: {
       name: "Start",
       requestType: HostServiceStartRequest,
@@ -2274,7 +2638,7 @@ export const HostServiceDefinition = {
       responseStream: false,
       options: {},
     },
-    /** Stop a single host. */
+    /** Stop a host. */
     stop: {
       name: "Stop",
       requestType: HostServiceStopRequest,
@@ -2283,7 +2647,7 @@ export const HostServiceDefinition = {
       responseStream: false,
       options: {},
     },
-    /** Restart a single host. */
+    /** Restart a host. */
     restart: {
       name: "Restart",
       requestType: HostServiceRestartRequest,
@@ -2292,112 +2656,133 @@ export const HostServiceDefinition = {
       responseStream: false,
       options: {},
     },
-    /** Returns a list of regions where there are hosts available */
-    regions: {
-      name: "Regions",
-      requestType: HostServiceRegionsRequest,
-      requestStream: false,
-      responseType: HostServiceRegionsResponse,
-      responseStream: false,
-      options: {},
-    },
   },
 } as const;
 
 export interface HostServiceImplementation<CallContextExt = {}> {
-  /** Create a single host. */
-  create(
-    request: HostServiceCreateRequest,
+  /** Create a new host. */
+  createHost(
+    request: HostServiceCreateHostRequest,
     context: CallContext & CallContextExt,
-  ): Promise<DeepPartial<HostServiceCreateResponse>>;
-  /** Get info for a single host. */
-  get(
-    request: HostServiceGetRequest,
+  ): Promise<DeepPartial<HostServiceCreateHostResponse>>;
+  /** Create a new region. */
+  createRegion(
+    request: HostServiceCreateRegionRequest,
     context: CallContext & CallContextExt,
-  ): Promise<DeepPartial<HostServiceGetResponse>>;
+  ): Promise<DeepPartial<HostServiceCreateRegionResponse>>;
+  /** Get the info for a host. */
+  getHost(
+    request: HostServiceGetHostRequest,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<HostServiceGetHostResponse>>;
+  /** Get the info for a region. */
+  getRegion(
+    request: HostServiceGetRegionRequest,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<HostServiceGetRegionResponse>>;
   /** List all hosts matching some criteria. */
-  list(
-    request: HostServiceListRequest,
+  listHosts(
+    request: HostServiceListHostsRequest,
     context: CallContext & CallContextExt,
-  ): Promise<DeepPartial<HostServiceListResponse>>;
-  /** Update a single host. */
-  update(
-    request: HostServiceUpdateRequest,
+  ): Promise<DeepPartial<HostServiceListHostsResponse>>;
+  /** List the regions with available hosts. */
+  listRegions(
+    request: HostServiceListRegionsRequest,
     context: CallContext & CallContextExt,
-  ): Promise<DeepPartial<HostServiceUpdateResponse>>;
-  /** Delete a single host. */
-  delete(
-    request: HostServiceDeleteRequest,
+  ): Promise<DeepPartial<HostServiceListRegionsResponse>>;
+  /** Update an existing host. */
+  updateHost(
+    request: HostServiceUpdateHostRequest,
     context: CallContext & CallContextExt,
-  ): Promise<DeepPartial<HostServiceDeleteResponse>>;
-  /** Start a single host. */
+  ): Promise<DeepPartial<HostServiceUpdateHostResponse>>;
+  /** Update an existing region. */
+  updateRegion(
+    request: HostServiceUpdateRegionRequest,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<HostServiceUpdateRegionResponse>>;
+  /** Delete an existing host. */
+  deleteHost(
+    request: HostServiceDeleteHostRequest,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<HostServiceDeleteHostResponse>>;
+  /** Start a host. */
   start(
     request: HostServiceStartRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<HostServiceStartResponse>>;
-  /** Stop a single host. */
+  /** Stop a host. */
   stop(
     request: HostServiceStopRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<HostServiceStopResponse>>;
-  /** Restart a single host. */
+  /** Restart a host. */
   restart(
     request: HostServiceRestartRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<HostServiceRestartResponse>>;
-  /** Returns a list of regions where there are hosts available */
-  regions(
-    request: HostServiceRegionsRequest,
-    context: CallContext & CallContextExt,
-  ): Promise<DeepPartial<HostServiceRegionsResponse>>;
 }
 
 export interface HostServiceClient<CallOptionsExt = {}> {
-  /** Create a single host. */
-  create(
-    request: DeepPartial<HostServiceCreateRequest>,
+  /** Create a new host. */
+  createHost(
+    request: DeepPartial<HostServiceCreateHostRequest>,
     options?: CallOptions & CallOptionsExt,
-  ): Promise<HostServiceCreateResponse>;
-  /** Get info for a single host. */
-  get(
-    request: DeepPartial<HostServiceGetRequest>,
+  ): Promise<HostServiceCreateHostResponse>;
+  /** Create a new region. */
+  createRegion(
+    request: DeepPartial<HostServiceCreateRegionRequest>,
     options?: CallOptions & CallOptionsExt,
-  ): Promise<HostServiceGetResponse>;
+  ): Promise<HostServiceCreateRegionResponse>;
+  /** Get the info for a host. */
+  getHost(
+    request: DeepPartial<HostServiceGetHostRequest>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<HostServiceGetHostResponse>;
+  /** Get the info for a region. */
+  getRegion(
+    request: DeepPartial<HostServiceGetRegionRequest>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<HostServiceGetRegionResponse>;
   /** List all hosts matching some criteria. */
-  list(
-    request: DeepPartial<HostServiceListRequest>,
+  listHosts(
+    request: DeepPartial<HostServiceListHostsRequest>,
     options?: CallOptions & CallOptionsExt,
-  ): Promise<HostServiceListResponse>;
-  /** Update a single host. */
-  update(
-    request: DeepPartial<HostServiceUpdateRequest>,
+  ): Promise<HostServiceListHostsResponse>;
+  /** List the regions with available hosts. */
+  listRegions(
+    request: DeepPartial<HostServiceListRegionsRequest>,
     options?: CallOptions & CallOptionsExt,
-  ): Promise<HostServiceUpdateResponse>;
-  /** Delete a single host. */
-  delete(
-    request: DeepPartial<HostServiceDeleteRequest>,
+  ): Promise<HostServiceListRegionsResponse>;
+  /** Update an existing host. */
+  updateHost(
+    request: DeepPartial<HostServiceUpdateHostRequest>,
     options?: CallOptions & CallOptionsExt,
-  ): Promise<HostServiceDeleteResponse>;
-  /** Start a single host. */
+  ): Promise<HostServiceUpdateHostResponse>;
+  /** Update an existing region. */
+  updateRegion(
+    request: DeepPartial<HostServiceUpdateRegionRequest>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<HostServiceUpdateRegionResponse>;
+  /** Delete an existing host. */
+  deleteHost(
+    request: DeepPartial<HostServiceDeleteHostRequest>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<HostServiceDeleteHostResponse>;
+  /** Start a host. */
   start(
     request: DeepPartial<HostServiceStartRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<HostServiceStartResponse>;
-  /** Stop a single host. */
+  /** Stop a host. */
   stop(
     request: DeepPartial<HostServiceStopRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<HostServiceStopResponse>;
-  /** Restart a single host. */
+  /** Restart a host. */
   restart(
     request: DeepPartial<HostServiceRestartRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<HostServiceRestartResponse>;
-  /** Returns a list of regions where there are hosts available */
-  regions(
-    request: DeepPartial<HostServiceRegionsRequest>,
-    options?: CallOptions & CallOptionsExt,
-  ): Promise<HostServiceRegionsResponse>;
 }
 
 declare const self: any | undefined;

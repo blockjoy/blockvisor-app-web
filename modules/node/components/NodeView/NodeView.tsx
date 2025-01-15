@@ -42,7 +42,7 @@ export const NodeView = ({ children, hideEditPanel }: Props) => {
             <SkeletonView />
           </div>
         </div>
-      ) : !node?.id ? (
+      ) : !node?.nodeId ? (
         <EmptyColumn
           title="Node Not Found"
           description="No node exists with this ID"

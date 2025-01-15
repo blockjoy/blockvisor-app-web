@@ -15,10 +15,12 @@ import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { styles } from './AdminList.styles';
 import { AdminListHeader } from './AdminListHeader/AdminListHeader';
 import { AdminListTable } from './AdminListTable/AdminListTable';
-import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
+import { Protocol } from '@modules/grpc/library/blockjoy/v1/protocol';
+import { User } from '@modules/grpc/library/blockjoy/v1/user';
 
 type Props = {
   name: keyof AdminSettings;
+  idPropertyName: string;
   columns: AdminListColumn[];
   hidePagination?: boolean;
   defaultSortField: number;
@@ -31,7 +33,8 @@ type Props = {
   selectedIds?: string[];
   tagsAdded?: AdminTags[];
   tagsRemoved?: AdminTags[];
-  blockchains?: Blockchain[];
+  protocols?: Protocol[];
+  users?: User[];
   setTagsAdded?: Dispatch<SetStateAction<AdminTags[]>>;
   setTagsRemoved?: Dispatch<SetStateAction<AdminTags[]>>;
   onIdSelected?: (id: string, isSelected: boolean) => void;
@@ -59,6 +62,7 @@ type ListSettings = {
 
 export const AdminList = ({
   name,
+  idPropertyName,
   columns,
   hidePagination,
   defaultSortField,
@@ -67,7 +71,8 @@ export const AdminList = ({
   additionalHeaderButtons,
   tagsAdded,
   tagsRemoved,
-  blockchains,
+  protocols,
+  users,
   setTagsAdded,
   setTagsRemoved,
   onIdSelected,
@@ -266,7 +271,9 @@ export const AdminList = ({
       const listCopy = [...list];
 
       tagsAdded?.forEach((tag) => {
-        const foundListItem = listCopy.find((item) => item.id === tag.id);
+        const foundListItem = listCopy.find(
+          (item) => item[idPropertyName] === tag.id,
+        );
 
         if (foundListItem) {
           foundListItem.tags = {
@@ -290,7 +297,9 @@ export const AdminList = ({
       const listCopy = [...list];
 
       tagsRemoved?.forEach((tag) => {
-        const foundListItem = listCopy.find((item) => item.id === tag.id);
+        const foundListItem = listCopy.find(
+          (item) => item[idPropertyName] === tag.id,
+        );
 
         if (foundListItem) {
           foundListItem.tags = {
@@ -321,6 +330,7 @@ export const AdminList = ({
       />
       <AdminListTable
         name={name}
+        idPropertyName={idPropertyName}
         isLoading={isLoading}
         list={listMap(list)}
         listTotal={listTotal}
@@ -331,7 +341,8 @@ export const AdminList = ({
         activeSortField={sortField}
         activeSortOrder={sortOrder}
         selectedIds={selectedIds}
-        blockchains={blockchains}
+        protocols={protocols}
+        users={users}
         onIdSelected={onIdSelected}
         onIdAllSelected={onIdAllSelected}
         onPageChanged={handlePageChanged}

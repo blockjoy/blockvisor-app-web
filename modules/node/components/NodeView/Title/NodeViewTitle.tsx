@@ -17,7 +17,7 @@ export const NodeViewTitle = () => {
       icon={<IconNode />}
       onTitleClick={handleNodesClicked}
       isLoading={isLoading}
-      childTitle={node?.id}
+      childTitle={node?.nodeId}
       canCopyChild
     />
   );

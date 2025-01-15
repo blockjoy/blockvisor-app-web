@@ -6,9 +6,8 @@ import { NodeServiceCreateRequest } from '@modules/grpc/library/blockjoy/v1/node
 import { colors } from 'styles/utils.colors.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { styles } from './NodeViewHeader.styles';
-import { BlockchainIcon } from '@shared/components';
+import { ProtocolIcon } from '@shared/components';
 import {
-  convertNodeTypeToName,
   NodeTags,
   NodeViewReportProblem,
   useNodeAdd,
@@ -18,8 +17,7 @@ import {
 } from '@modules/node';
 import { wrapper } from 'styles/wrapper.styles';
 import { ROUTES } from '@shared/constants/routes';
-import { NodeViewHeaderActions } from './Actions/NodeViewHeaderActions';
-import { getNodeJobProgress } from '@modules/node/utils/getNodeJobProgress';
+import { NodeViewHeaderActions } from './NodeViewHeaderActions/NodeViewHeaderActions';
 import { useGetOrganizations } from '@modules/organization';
 import { useHostList } from '@modules/host';
 import { nodeClient } from '@modules/grpc';
@@ -43,8 +41,6 @@ export const NodeViewHeader = () => {
   const handleActionView = (action: NodeAction | null) => setActionView(action);
   const handleClose = () => setActionView(null);
 
-  const progress = getNodeJobProgress(node!);
-
   useEffect(() => {
     if (!actionView && error) setError('');
   }, [actionView]);
@@ -56,7 +52,7 @@ export const NodeViewHeader = () => {
       node!,
       () => {
         toast.success('Node Deleted');
-        removeFromNodeList(node!.id);
+        removeFromNodeList(node!.nodeId);
 
         navigate(ROUTES.NODES, () => {
           loadHosts();
@@ -68,16 +64,17 @@ export const NodeViewHeader = () => {
   };
 
   const handleReportProblem = async (message: string) => {
-    await nodeClient.reportProblem(node?.id!, message);
+    await nodeClient.reportProblem(node?.nodeId!, message);
     toast.success('Problem Reported');
     handleClose();
   };
 
-  const handleUpdateNode = async (value: string) => {
+  const handleUpdateNode = async (newDisplayName: string) => {
     setIsSaving(true);
     await updateNode({
-      displayName: value,
-      ids: [node?.id!],
+      newDisplayName,
+      nodeId: node?.nodeId!,
+      newValues: [],
     });
     toast.success('Node name updated');
     setIsSaving(false);
@@ -88,16 +85,13 @@ export const NodeViewHeader = () => {
     if (!node) return;
 
     const params: NodeServiceCreateRequest = {
-      oldNodeId: node.id,
+      oldNodeId: node.nodeId,
       orgId: node.orgId,
-      blockchainId: node.blockchainId,
-      version: node.version,
-      nodeType: node.nodeType,
-      properties: node.properties,
-      network: node.network,
-      placement: node.placement,
-      allowIps: node.allowIps,
-      denyIps: node.denyIps,
+      launcher: undefined,
+      imageId: node.protocolId,
+      addRules: [],
+      newValues: [],
+      tags: node.tags,
     };
 
     await createNode(
@@ -120,7 +114,7 @@ export const NodeViewHeader = () => {
       {actionView === 'delete' && (
         <DeleteModal
           portalId="delete-node-modal"
-          elementName={escapeHtml(node?.displayName!)}
+          elementName={escapeHtml(node?.displayName! || node?.nodeName!)}
           entityName="Node"
           onHide={handleClose}
           onSubmit={handleDeleteNode}
@@ -132,7 +126,7 @@ export const NodeViewHeader = () => {
         <DeleteModal
           portalId="recreate-node-modal"
           type="Recreate"
-          elementName={escapeHtml(node?.displayName!)}
+          elementName={escapeHtml(node?.displayName! || node?.nodeName!)}
           entityName="Node"
           onHide={handleClose}
           onSubmit={handleRecreateNode}
@@ -149,17 +143,17 @@ export const NodeViewHeader = () => {
 
       <section css={wrapper.main}>
         <header css={styles.header}>
-          {isLoading && !node?.id ? (
+          {isLoading && !node?.nodeId ? (
             <SkeletonGrid>
               <Skeleton width="400px" />
             </SkeletonGrid>
           ) : (
-            node?.id && (
+            node?.nodeId && (
               <>
                 <div css={styles.blockchainIcon}>
-                  <BlockchainIcon
+                  <ProtocolIcon
                     size="40px"
-                    blockchainName={node.blockchainName}
+                    protocolName={node.versionKey?.protocolKey}
                   />
                 </div>
                 <div css={styles.name}>
@@ -169,7 +163,7 @@ export const NodeViewHeader = () => {
                       isLoading={isLoading}
                       isSaving={isSaving!}
                       additionalContentRight={
-                        <Copy value={node?.displayName!} />
+                        <Copy value={node.displayName!} />
                       }
                       onSaveClicked={handleUpdateNode}
                       onEditClicked={handleEditClicked}
@@ -181,11 +175,9 @@ export const NodeViewHeader = () => {
                     <div css={styles.detailsFooter}>
                       <div css={styles.nodeType}>
                         <p>
-                          {node.blockchainName}
+                          {node.versionKey?.protocolKey}
                           {' | '}
-                          {convertNodeTypeToName(node.nodeType)}
-                          {' | '}
-                          {node.network}
+                          {node.versionKey?.variantKey}
                         </p>
                       </div>
                       {node!.createdAt && (
@@ -201,9 +193,22 @@ export const NodeViewHeader = () => {
                 </div>
                 <div css={styles.nodeStatus}>
                   <NodeStatus
-                    status={node.status}
-                    downloadingCurrent={progress?.current}
-                    downloadingTotal={progress?.total}
+                    status={node.nodeStatus?.state!}
+                    protocolStatus={node.nodeStatus?.protocol?.state}
+                    jobs={node.jobs}
+                    // protocolStatus="uploading"
+                    // jobs={[
+                    //   {
+                    //     name: 'testing',
+                    //     status: 2,
+                    //     logs: [],
+                    //     restarts: 0,
+                    //     progress: {
+                    //       current: 10,
+                    //       total: 20,
+                    //     },
+                    //   },
+                    // ]}
                   />
                 </div>
                 <div css={styles.actions}>

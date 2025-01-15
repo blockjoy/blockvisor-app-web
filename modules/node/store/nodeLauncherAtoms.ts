@@ -1,36 +1,35 @@
 import { atom } from 'recoil';
-import { NodeType } from '@modules/grpc/library/blockjoy/common/v1/node';
 import {
-  BlockchainNodeType,
-  BlockchainVersion,
-} from '@modules/grpc/library/blockjoy/v1/blockchain';
-import { NetworkConfig } from '@modules/grpc/library/blockjoy/common/v1/blockchain';
-import { Region } from '@modules/grpc/library/blockjoy/v1/host';
-import { NodeLauncherHost, NodeLauncherState } from '@modules/node';
+  Protocol,
+  ProtocolVersion,
+} from '@modules/grpc/library/blockjoy/v1/protocol';
+import {
+  NodeLauncherHost,
+  NodeLauncherRegion,
+  NodeLauncherState,
+} from '@modules/node';
+import { Image } from '@modules/grpc/library/blockjoy/v1/image';
 
 const nodeLauncher = atom<NodeLauncherState>({
   key: 'nodeLauncher',
   default: {
-    blockchainId: '',
-    nodeType: NodeType.NODE_TYPE_UNSPECIFIED,
-    nodeTypeVersion: '',
-    allowIps: [],
-    denyIps: [],
-    placement: {},
+    defaultFirewall: [],
+    firewall: [],
+    properties: [],
   },
 });
 
-const selectedNodeType = atom<BlockchainNodeType | null>({
-  key: 'nodeLauncher.nodeType',
+const selectedProtocol = atom<Protocol | null>({
+  key: 'nodeLauncher.protocol',
   default: null,
 });
 
-const selectedVersion = atom<BlockchainVersion | null>({
+const selectedVersion = atom<ProtocolVersion | null>({
   key: 'nodeLauncher.version',
   default: null,
 });
 
-const selectedRegion = atom<Region | null>({
+const selectedRegions = atom<NodeLauncherRegion[] | null>({
   key: 'nodeLauncher.region',
   default: null,
 });
@@ -40,8 +39,23 @@ const selectedHosts = atom<NodeLauncherHost[] | null>({
   default: null,
 });
 
-const selectedNetwork = atom<NetworkConfig | null>({
-  key: 'nodeLauncher.network',
+const selectedImage = atom<Image | null>({
+  key: 'nodeLauncher.image',
+  default: null,
+});
+
+const variants = atom<string[]>({
+  key: 'nodeLauncher.variants',
+  default: [],
+});
+
+const versions = atom<ProtocolVersion[]>({
+  key: 'nodeLauncher.versions',
+  default: [],
+});
+
+const selectedVariant = atom<string | null>({
+  key: 'nodeLauncher.variant',
   default: null,
 });
 
@@ -62,12 +76,15 @@ const isLaunching = atom<boolean>({
 
 export const nodeLauncherAtoms = {
   nodeLauncher,
+  variants,
+  versions,
 
-  selectedNodeType,
-  selectedRegion,
+  selectedProtocol,
+  selectedRegions,
   selectedVersion,
   selectedHosts,
-  selectedNetwork,
+  selectedImage,
+  selectedVariant,
 
   error,
   isLaunchError,

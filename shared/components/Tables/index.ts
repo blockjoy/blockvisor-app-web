@@ -1,6 +1,7 @@
 export * from './TableGrid/TableGrid';
 export * from './TableGrid/TableGridCell';
 export * from './Table/Table';
+export * from './Table/TableDynamic';
 export * from './TableAdd/TableAdd';
 export * from './Table/TableSkeleton';
 export * from './Table/TableBlock';
@@ -15,3 +16,6 @@ export * from './Table/utils/paginate';
 export * from './Table/utils/sort';
 export * from './Table/utils/filter';
 export * from './ViewPicker/ViewPicker';
+
+export * from './Table/utils/generateCellStyles';
+export * from './Table/utils/transformHeaders';

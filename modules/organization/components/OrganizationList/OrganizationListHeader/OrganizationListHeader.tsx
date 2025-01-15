@@ -24,7 +24,7 @@ export const OrganizationListHeader = () => {
       await createOrganization(name, async (org: Org) => {
         addToOrganizations(org);
         setOrganization(org);
-        router.push(`/organizations/${org.id}`);
+        router.push(`/organizations/${org.orgId}`);
       });
     } catch (error) {
       if (error instanceof ApplicationError) toast.error(error.message);

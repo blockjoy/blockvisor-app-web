@@ -7,7 +7,6 @@ import {
 } from '@modules/billing';
 import { organizationSelectors } from '@modules/organization';
 import { authSelectors } from '@modules/auth';
-import { hostSelectors } from '@modules/host';
 
 type LauncherView = 'payment-required' | 'confirm-subscription' | 'launcher';
 
@@ -49,18 +48,16 @@ export const withLauncherGuard = (Component: any) => {
     const billingExempt = useRecoilValue(
       authSelectors.hasPermission('billing-exempt'),
     );
-    const isManagedHost = useRecoilValue(hostSelectors.isManagedHost);
 
     const [activeView, setActiveView] = useState<LauncherView>('launcher');
     const [fulfilRequirements, setFulfilRequirements] = useState(false);
 
     const localCanCreateResource =
-      (type === 'launch-node' && isManagedHost && (isAdmin || isOwner)) ||
-      canCreateResource;
+      (type === 'launch-node' && (isAdmin || isOwner)) || canCreateResource;
 
     useEffect(() => {
       setFulfilRequirements(false);
-    }, [defaultOrganization?.id]);
+    }, [defaultOrganization?.orgId]);
 
     const handleDefaultView = () => {
       setActiveView('launcher');

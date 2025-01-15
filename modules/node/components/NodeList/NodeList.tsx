@@ -9,7 +9,7 @@ import {
   EmptyColumn,
   PageTitle,
   PageTitleLabel,
-  Table,
+  TableDynamic,
   TableGrid,
 } from '@shared/components';
 import { debounce, ROUTES, useViewport } from '@shared/index';
@@ -23,6 +23,9 @@ import {
   nodeAtoms,
   nodeSelectors,
   useNodeSort,
+  NODE_LIST_ITEMS,
+  useNodeListLayout,
+  useNodeListContext,
 } from '@modules/node';
 import { layoutSelectors } from '@modules/layout';
 import { wrapper } from 'styles/wrapper.styles';
@@ -35,7 +38,9 @@ export const NodeList = () => {
   const router = useRouter();
 
   const queryParams = useRecoilValue(nodeSelectors.queryParams);
+  const isFiltersOpen = useRecoilValue(layoutSelectors.isNodeFiltersOpen);
   const setPagination = useSetRecoilState(nodeAtoms.nodeListPagination);
+  const headers = useRecoilValue(nodeSelectors.nodeListHeaders);
 
   const nodeListWrapperRef = useRef<HTMLDivElement>(null);
   const currentQueryParams = useRef(queryParams);
@@ -43,6 +48,8 @@ export const NodeList = () => {
   const { loadNodes, nodeList, nodeCount, nodeListLoadingState } =
     useNodeList();
   const { updateSorting } = useNodeSort();
+  const { updateColumns } = useNodeListLayout();
+  const { items: contextItems } = useNodeListContext();
   const { isXlrg } = useViewport();
 
   const activeView = useRecoilValue(layoutSelectors.activeNodeView(isXlrg));
@@ -93,7 +100,7 @@ export const NodeList = () => {
   };
 
   const cells = mapNodeListToGrid(nodeList!, handleNodeClicked);
-  const { headers, rows } = mapNodeListToRows(nodeList);
+  const rows = mapNodeListToRows(nodeList, NODE_LIST_ITEMS);
 
   const { isFiltered, isEmpty } = resultsStatus(
     nodeList?.length!,
@@ -134,7 +141,10 @@ export const NodeList = () => {
 
       <div css={[styles.wrapper, wrapper.main]}>
         <NodeFilters />
-        <div css={styles.nodeListWrapper} ref={nodeListWrapperRef}>
+        <div
+          css={styles.nodeListWrapper(isFiltersOpen)}
+          ref={nodeListWrapperRef}
+        >
           {!isXlrg && <NodeListHeader />}
 
           {nodeListLoadingState === 'initializing' ? (
@@ -158,30 +168,40 @@ export const NodeList = () => {
               }
             />
           ) : (
-            <InfiniteScroll
-              dataLength={nodeList?.length!}
-              next={loadMore}
-              hasMore={hasMore}
-              style={{ overflow: 'hidden' }}
-              scrollThreshold={0.75}
-              loader={''}
-            >
-              {activeView === 'table' ? (
-                <Table
-                  isLoading={nodeListLoadingState}
-                  headers={headers}
-                  preload={0}
-                  rows={rows}
-                  queryParams={queryParams}
-                  handleSort={updateSorting}
-                  onRowClick={handleNodeClicked}
-                />
-              ) : (
-                <div css={styles.gridWrapper}>
-                  <TableGrid isLoading={nodeListLoadingState} cells={cells!} />
-                </div>
-              )}
-            </InfiniteScroll>
+            <>
+              <InfiniteScroll
+                dataLength={nodeList?.length!}
+                next={loadMore}
+                hasMore={hasMore}
+                style={{ overflow: 'hidden' }}
+                scrollThreshold={0.75}
+                loader={''}
+              >
+                {activeView === 'table' ? (
+                  <TableDynamic
+                    isLoading={nodeListLoadingState}
+                    headers={headers}
+                    preload={0}
+                    rows={rows}
+                    fixedRowHeight="70px"
+                    queryParams={queryParams}
+                    handleSort={updateSorting}
+                    handleUpdateColumns={updateColumns}
+                    onRowClick={handleNodeClicked}
+                    isResizable
+                    isDraggable
+                    contextItems={contextItems}
+                  />
+                ) : (
+                  <div css={styles.gridWrapper}>
+                    <TableGrid
+                      isLoading={nodeListLoadingState}
+                      cells={cells!}
+                    />
+                  </div>
+                )}
+              </InfiniteScroll>
+            </>
           )}
         </div>
       </div>

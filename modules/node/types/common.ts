@@ -1,22 +1,36 @@
+import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import { UINodeFilterCriteria } from '@modules/grpc';
-import { NetType } from '@modules/grpc/library/blockjoy/common/v1/blockchain';
-import { NodeType } from '@modules/grpc/library/blockjoy/common/v1/node';
-import { Host, Region } from '@modules/grpc/library/blockjoy/v1/host';
 import {
-  NodePlacement,
-  NodeProperty,
-  NodeSort,
-} from '@modules/grpc/library/blockjoy/v1/node';
+  Host,
+  Region,
+  RegionInfo,
+} from '@modules/grpc/library/blockjoy/v1/host';
+import { Node, NodeSort } from '@modules/grpc/library/blockjoy/v1/node';
+import { ImageProperty } from '@modules/grpc/library/blockjoy/v1/image';
+import { UiType } from '@modules/grpc/library/blockjoy/common/v1/protocol';
+import { FirewallRule } from '@modules/grpc/library/blockjoy/common/v1/config';
+
+export type NodePropertyGroup = {
+  key: string;
+  keyGroup?: string;
+  value: string;
+  uiType: UiType;
+  properties: ImageProperty[];
+  displayName: string;
+  displayGroup?: string;
+};
+
+export type NodeConfig = {
+  properties: NodePropertyGroup[];
+  firewall: FirewallRule[];
+  autoUpgrade: boolean;
+};
 
 export type NodeLauncherState = {
-  blockchainId: string;
-  nodeTypeVersion: string;
-  nodeType: NodeType;
-  properties?: NodeProperty[];
+  properties?: NodePropertyGroup[];
   keyFiles?: NodeFiles[];
-  allowIps: FilteredIpAddr[];
-  denyIps: FilteredIpAddr[];
-  placement: NodePlacement;
+  firewall: FirewallRule[];
+  defaultFirewall: FirewallRule[];
 };
 
 export type NodeLauncherHost = {
@@ -25,11 +39,16 @@ export type NodeLauncherHost = {
   isValid?: boolean;
 };
 
+export type NodeLauncherRegion = {
+  nodesToLaunch: number;
+  regionInfo: RegionInfo;
+  isValid?: boolean;
+};
+
 export type CreateNodeParams = {
   version: string;
   nodeType: number;
   blockchain: string;
-  nodeTypeProperties: NodeProperty[];
   key_files?: File[];
   network: string;
   allowedIps: FilteredIpAddr[];
@@ -37,8 +56,7 @@ export type CreateNodeParams = {
 };
 
 export type BlockchainSimple = {
-  blockchainId?: string;
-  nodeType?: NodeType;
+  protocolId?: string;
   version?: string;
 };
 
@@ -48,13 +66,36 @@ export type BlockchainSimpleWRegion = BlockchainSimple & {
 
 export type NetworkConfigSimple = {
   id: string;
-  blockchainId?: string;
+  protocolId?: string;
   name?: string;
-  netType?: NetType;
 };
 
 export type InitialNodeQueryParams = {
   pagination: Pagination;
   filter: UINodeFilterCriteria;
   sort: NodeSort[];
+};
+
+export type NodeListColumnKey =
+  | keyof Node
+  | 'customNodeInfo'
+  | 'customNodeHealth'
+  | 'customProtocolStatus';
+
+export type NodeListLayoutGroupItem = {
+  key: NodeListColumnKey;
+  name: string;
+  label?: string;
+  dependencies?: NodeListColumnKey[];
+  isGrouped?: boolean;
+};
+
+export type NodeListLayoutInputItem = {
+  id?: string;
+  label?: string;
+} & React.InputHTMLAttributes<HTMLInputElement>;
+
+export type NodeListItem = TableHeader<NodeListColumnKey> & {
+  component: (node: Node) => EmotionJSX.Element;
+  isDisabled?: boolean;
 };

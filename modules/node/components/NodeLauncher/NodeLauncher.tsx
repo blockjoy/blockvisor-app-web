@@ -16,20 +16,20 @@ import IconRocket from '@public/assets/icons/app/Rocket.svg';
 
 export const NodeLauncher = ({
   fulfilReqs,
+  resetFulfilReqs,
   onCreateClick,
   hasPermissionsToCreate,
 }: LauncherWithGuardProps) => {
   const {
     handleHostsChanged,
-    handleRegionChanged,
+    handleRegionsChanged,
     handleRegionsLoaded,
     handleProtocolSelected,
     handleNodePropertyChanged,
     handleNodeConfigPropertyChanged,
     handleVersionChanged,
-    handleNetworkChanged,
-    handleFileUploaded,
-  } = useNodeLauncherHandlers({ fulfilReqs });
+    handleVariantChanged,
+  } = useNodeLauncherHandlers({ fulfilReqs, resetFulfilReqs });
 
   const hasProtocol = useRecoilValue(nodeLauncherSelectors.hasProtocol);
   const hasSummary = useRecoilValue(nodeLauncherSelectors.hasSummary);
@@ -45,26 +45,23 @@ export const NodeLauncher = ({
   return (
     <>
       <PageTitle title="Launch Node" icon={<IconRocket />} />
-
       <div css={[wrapper.main, styles.wrapper]}>
         <NodeLauncherProtocol onProtocolSelected={handleProtocolSelected} />
-
         {hasProtocol ? (
           <>
             {hasConfig && (
               <NodeLauncherConfig
-                onNetworkChanged={handleNetworkChanged}
-                onFileUploaded={handleFileUploaded}
                 onNodeConfigPropertyChanged={handleNodeConfigPropertyChanged}
                 onNodePropertyChanged={handleNodePropertyChanged}
                 onVersionChanged={handleVersionChanged}
+                onVariantChanged={handleVariantChanged}
               />
             )}
             {hasSummary && (
               <NodeLauncherSummary
                 hasPermissionsToCreate={!!hasPermissionsToCreate}
                 onHostsChanged={handleHostsChanged}
-                onRegionChanged={handleRegionChanged}
+                onRegionsChanged={handleRegionsChanged}
                 onCreateNodeClicked={onCreateClick}
                 onRegionsLoaded={handleRegionsLoaded}
               />

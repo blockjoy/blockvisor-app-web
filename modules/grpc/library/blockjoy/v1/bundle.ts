@@ -1,45 +1,37 @@
 /* eslint-disable */
 import type { CallContext, CallOptions } from "nice-grpc-common";
 import _m0 from "protobufjs/minimal";
-import { ArchiveLocation } from "../common/v1/image";
 
 export const protobufPackage = "blockjoy.v1";
 
 export interface BundleServiceRetrieveRequest {
-  id: BundleIdentifier | undefined;
+  bundleId: BundleIdentifier | undefined;
 }
 
 export interface BundleServiceRetrieveResponse {
-  location: ArchiveLocation | undefined;
+  url: string;
 }
 
-export interface BundleServiceListBundleVersionsRequest {
+export interface BundleServiceListVersionsRequest {
 }
 
-export interface BundleServiceListBundleVersionsResponse {
-  identifiers: BundleIdentifier[];
-}
-
-export interface BundleServiceDeleteRequest {
-  id: BundleIdentifier | undefined;
-}
-
-export interface BundleServiceDeleteResponse {
+export interface BundleServiceListVersionsResponse {
+  bundleIds: BundleIdentifier[];
 }
 
 export interface BundleIdentifier {
-  /** The semantic version of the bundle version. */
+  /** The semantic version of the bundle. */
   version: string;
 }
 
 function createBaseBundleServiceRetrieveRequest(): BundleServiceRetrieveRequest {
-  return { id: undefined };
+  return { bundleId: undefined };
 }
 
 export const BundleServiceRetrieveRequest = {
   encode(message: BundleServiceRetrieveRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined) {
-      BundleIdentifier.encode(message.id, writer.uint32(10).fork()).ldelim();
+    if (message.bundleId !== undefined) {
+      BundleIdentifier.encode(message.bundleId, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -56,7 +48,7 @@ export const BundleServiceRetrieveRequest = {
             break;
           }
 
-          message.id = BundleIdentifier.decode(reader, reader.uint32());
+          message.bundleId = BundleIdentifier.decode(reader, reader.uint32());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -73,19 +65,21 @@ export const BundleServiceRetrieveRequest = {
 
   fromPartial(object: DeepPartial<BundleServiceRetrieveRequest>): BundleServiceRetrieveRequest {
     const message = createBaseBundleServiceRetrieveRequest();
-    message.id = (object.id !== undefined && object.id !== null) ? BundleIdentifier.fromPartial(object.id) : undefined;
+    message.bundleId = (object.bundleId !== undefined && object.bundleId !== null)
+      ? BundleIdentifier.fromPartial(object.bundleId)
+      : undefined;
     return message;
   },
 };
 
 function createBaseBundleServiceRetrieveResponse(): BundleServiceRetrieveResponse {
-  return { location: undefined };
+  return { url: "" };
 }
 
 export const BundleServiceRetrieveResponse = {
   encode(message: BundleServiceRetrieveResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.location !== undefined) {
-      ArchiveLocation.encode(message.location, writer.uint32(10).fork()).ldelim();
+    if (message.url !== "") {
+      writer.uint32(10).string(message.url);
     }
     return writer;
   },
@@ -102,7 +96,7 @@ export const BundleServiceRetrieveResponse = {
             break;
           }
 
-          message.location = ArchiveLocation.decode(reader, reader.uint32());
+          message.url = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -119,26 +113,24 @@ export const BundleServiceRetrieveResponse = {
 
   fromPartial(object: DeepPartial<BundleServiceRetrieveResponse>): BundleServiceRetrieveResponse {
     const message = createBaseBundleServiceRetrieveResponse();
-    message.location = (object.location !== undefined && object.location !== null)
-      ? ArchiveLocation.fromPartial(object.location)
-      : undefined;
+    message.url = object.url ?? "";
     return message;
   },
 };
 
-function createBaseBundleServiceListBundleVersionsRequest(): BundleServiceListBundleVersionsRequest {
+function createBaseBundleServiceListVersionsRequest(): BundleServiceListVersionsRequest {
   return {};
 }
 
-export const BundleServiceListBundleVersionsRequest = {
-  encode(_: BundleServiceListBundleVersionsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const BundleServiceListVersionsRequest = {
+  encode(_: BundleServiceListVersionsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): BundleServiceListBundleVersionsRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): BundleServiceListVersionsRequest {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseBundleServiceListBundleVersionsRequest();
+    const message = createBaseBundleServiceListVersionsRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -151,32 +143,32 @@ export const BundleServiceListBundleVersionsRequest = {
     return message;
   },
 
-  create(base?: DeepPartial<BundleServiceListBundleVersionsRequest>): BundleServiceListBundleVersionsRequest {
-    return BundleServiceListBundleVersionsRequest.fromPartial(base ?? {});
+  create(base?: DeepPartial<BundleServiceListVersionsRequest>): BundleServiceListVersionsRequest {
+    return BundleServiceListVersionsRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(_: DeepPartial<BundleServiceListBundleVersionsRequest>): BundleServiceListBundleVersionsRequest {
-    const message = createBaseBundleServiceListBundleVersionsRequest();
+  fromPartial(_: DeepPartial<BundleServiceListVersionsRequest>): BundleServiceListVersionsRequest {
+    const message = createBaseBundleServiceListVersionsRequest();
     return message;
   },
 };
 
-function createBaseBundleServiceListBundleVersionsResponse(): BundleServiceListBundleVersionsResponse {
-  return { identifiers: [] };
+function createBaseBundleServiceListVersionsResponse(): BundleServiceListVersionsResponse {
+  return { bundleIds: [] };
 }
 
-export const BundleServiceListBundleVersionsResponse = {
-  encode(message: BundleServiceListBundleVersionsResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.identifiers) {
+export const BundleServiceListVersionsResponse = {
+  encode(message: BundleServiceListVersionsResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.bundleIds) {
       BundleIdentifier.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): BundleServiceListBundleVersionsResponse {
+  decode(input: _m0.Reader | Uint8Array, length?: number): BundleServiceListVersionsResponse {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseBundleServiceListBundleVersionsResponse();
+    const message = createBaseBundleServiceListVersionsResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -185,7 +177,7 @@ export const BundleServiceListBundleVersionsResponse = {
             break;
           }
 
-          message.identifiers.push(BundleIdentifier.decode(reader, reader.uint32()));
+          message.bundleIds.push(BundleIdentifier.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -196,94 +188,13 @@ export const BundleServiceListBundleVersionsResponse = {
     return message;
   },
 
-  create(base?: DeepPartial<BundleServiceListBundleVersionsResponse>): BundleServiceListBundleVersionsResponse {
-    return BundleServiceListBundleVersionsResponse.fromPartial(base ?? {});
+  create(base?: DeepPartial<BundleServiceListVersionsResponse>): BundleServiceListVersionsResponse {
+    return BundleServiceListVersionsResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(object: DeepPartial<BundleServiceListBundleVersionsResponse>): BundleServiceListBundleVersionsResponse {
-    const message = createBaseBundleServiceListBundleVersionsResponse();
-    message.identifiers = object.identifiers?.map((e) => BundleIdentifier.fromPartial(e)) || [];
-    return message;
-  },
-};
-
-function createBaseBundleServiceDeleteRequest(): BundleServiceDeleteRequest {
-  return { id: undefined };
-}
-
-export const BundleServiceDeleteRequest = {
-  encode(message: BundleServiceDeleteRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== undefined) {
-      BundleIdentifier.encode(message.id, writer.uint32(10).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): BundleServiceDeleteRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseBundleServiceDeleteRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.id = BundleIdentifier.decode(reader, reader.uint32());
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<BundleServiceDeleteRequest>): BundleServiceDeleteRequest {
-    return BundleServiceDeleteRequest.fromPartial(base ?? {});
-  },
-
-  fromPartial(object: DeepPartial<BundleServiceDeleteRequest>): BundleServiceDeleteRequest {
-    const message = createBaseBundleServiceDeleteRequest();
-    message.id = (object.id !== undefined && object.id !== null) ? BundleIdentifier.fromPartial(object.id) : undefined;
-    return message;
-  },
-};
-
-function createBaseBundleServiceDeleteResponse(): BundleServiceDeleteResponse {
-  return {};
-}
-
-export const BundleServiceDeleteResponse = {
-  encode(_: BundleServiceDeleteResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): BundleServiceDeleteResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseBundleServiceDeleteResponse();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<BundleServiceDeleteResponse>): BundleServiceDeleteResponse {
-    return BundleServiceDeleteResponse.fromPartial(base ?? {});
-  },
-
-  fromPartial(_: DeepPartial<BundleServiceDeleteResponse>): BundleServiceDeleteResponse {
-    const message = createBaseBundleServiceDeleteResponse();
+  fromPartial(object: DeepPartial<BundleServiceListVersionsResponse>): BundleServiceListVersionsResponse {
+    const message = createBaseBundleServiceListVersionsResponse();
+    message.bundleIds = object.bundleIds?.map((e) => BundleIdentifier.fromPartial(e)) || [];
     return message;
   },
 };
@@ -334,13 +245,13 @@ export const BundleIdentifier = {
   },
 };
 
-/** Retrieve and manage BVD bundles. */
+/** Retrieve and manage bundles. */
 export type BundleServiceDefinition = typeof BundleServiceDefinition;
 export const BundleServiceDefinition = {
   name: "BundleService",
   fullName: "blockjoy.v1.BundleService",
   methods: {
-    /** Retrieve image for specific version and state. */
+    /** Retrieve the bundle url for some version. */
     retrieve: {
       name: "Retrieve",
       requestType: BundleServiceRetrieveRequest,
@@ -350,20 +261,11 @@ export const BundleServiceDefinition = {
       options: {},
     },
     /** List all available bundle versions. */
-    listBundleVersions: {
-      name: "ListBundleVersions",
-      requestType: BundleServiceListBundleVersionsRequest,
+    listVersions: {
+      name: "ListVersions",
+      requestType: BundleServiceListVersionsRequest,
       requestStream: false,
-      responseType: BundleServiceListBundleVersionsResponse,
-      responseStream: false,
-      options: {},
-    },
-    /** Delete bundle from storage. */
-    delete: {
-      name: "Delete",
-      requestType: BundleServiceDeleteRequest,
-      requestStream: false,
-      responseType: BundleServiceDeleteResponse,
+      responseType: BundleServiceListVersionsResponse,
       responseStream: false,
       options: {},
     },
@@ -371,39 +273,29 @@ export const BundleServiceDefinition = {
 } as const;
 
 export interface BundleServiceImplementation<CallContextExt = {}> {
-  /** Retrieve image for specific version and state. */
+  /** Retrieve the bundle url for some version. */
   retrieve(
     request: BundleServiceRetrieveRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<BundleServiceRetrieveResponse>>;
   /** List all available bundle versions. */
-  listBundleVersions(
-    request: BundleServiceListBundleVersionsRequest,
+  listVersions(
+    request: BundleServiceListVersionsRequest,
     context: CallContext & CallContextExt,
-  ): Promise<DeepPartial<BundleServiceListBundleVersionsResponse>>;
-  /** Delete bundle from storage. */
-  delete(
-    request: BundleServiceDeleteRequest,
-    context: CallContext & CallContextExt,
-  ): Promise<DeepPartial<BundleServiceDeleteResponse>>;
+  ): Promise<DeepPartial<BundleServiceListVersionsResponse>>;
 }
 
 export interface BundleServiceClient<CallOptionsExt = {}> {
-  /** Retrieve image for specific version and state. */
+  /** Retrieve the bundle url for some version. */
   retrieve(
     request: DeepPartial<BundleServiceRetrieveRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<BundleServiceRetrieveResponse>;
   /** List all available bundle versions. */
-  listBundleVersions(
-    request: DeepPartial<BundleServiceListBundleVersionsRequest>,
+  listVersions(
+    request: DeepPartial<BundleServiceListVersionsRequest>,
     options?: CallOptions & CallOptionsExt,
-  ): Promise<BundleServiceListBundleVersionsResponse>;
-  /** Delete bundle from storage. */
-  delete(
-    request: DeepPartial<BundleServiceDeleteRequest>,
-    options?: CallOptions & CallOptionsExt,
-  ): Promise<BundleServiceDeleteResponse>;
+  ): Promise<BundleServiceListVersionsResponse>;
 }
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;

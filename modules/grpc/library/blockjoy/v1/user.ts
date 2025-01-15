@@ -16,9 +16,8 @@ export enum UserSortField {
   UNRECOGNIZED = -1,
 }
 
-/** User representation. */
 export interface User {
-  id: string;
+  userId: string;
   email: string;
   firstName: string;
   lastName: string;
@@ -26,7 +25,7 @@ export interface User {
 }
 
 export interface UserServiceGetRequest {
-  id: string;
+  userId: string;
 }
 
 export interface UserServiceGetResponse {
@@ -34,49 +33,31 @@ export interface UserServiceGetResponse {
 }
 
 export interface UserServiceListRequest {
-  /**
-   * Return only users from this org. This is required for users that do not
-   * have access to the entire system (i.e. blockjoy's admins).
-   */
-  orgId?:
-    | string
-    | undefined;
-  /** The number of items to be skipped over. */
+  /** If non-empty, list user details for these user ids. */
+  userIds: string[];
+  /** If non-empty, list users from these org ids. */
+  orgIds: string[];
+  /** The number of results to skip. */
   offset: number;
-  /**
-   * The number of items that will be returned. Together with offset, you can
-   * use this to get pagination.
-   */
+  /** Limit the number of results. */
   limit: number;
-  /** Search params. */
+  /** Search these parameters. */
   search?:
     | UserSearch
     | undefined;
-  /** The field sorting order of results. */
+  /** Sort the results in this order. */
   sort: UserSort[];
 }
 
-/**
- * This message contains fields used to search organizations as opposed to just
- * filtering them.
- */
+/** Search users by these fields. */
 export interface UserSearch {
-  /** The way the search parameters should be combined. */
+  /** How to combine the parameters. */
   operator: SearchOperator;
-  /** Search only the id. */
-  id?:
-    | string
-    | undefined;
-  /**
-   * Return only users whose email has the provided pattern as a substring. Note
-   * that this search is not case sensitive. The wildcard symbol here is `'%'`.
-   * For example, a query for all users whose email starts with `baremetal`
-   * would look like `"baremetal%"`.
-   */
+  /** Search for matching emails (case-insensitive and '%' is a wildcard). */
   email?:
     | string
     | undefined;
-  /** Search only the full name. */
+  /** Search for this full name. */
   name?: string | undefined;
 }
 
@@ -87,8 +68,7 @@ export interface UserSort {
 
 export interface UserServiceListResponse {
   users: User[];
-  /** The total number of users matching your query. */
-  userCount: number;
+  total: number;
 }
 
 export interface UserServiceCreateRequest {
@@ -103,8 +83,7 @@ export interface UserServiceCreateResponse {
 }
 
 export interface UserServiceUpdateRequest {
-  /** The id of the user to be updated. */
-  id: string;
+  userId: string;
   firstName?: string | undefined;
   lastName?: string | undefined;
 }
@@ -114,38 +93,13 @@ export interface UserServiceUpdateResponse {
 }
 
 export interface UserServiceDeleteRequest {
-  id: string;
+  userId: string;
 }
 
 export interface UserServiceDeleteResponse {
 }
 
-export interface UserServiceGetBillingRequest {
-  userId: string;
-}
-
-export interface UserServiceGetBillingResponse {
-  billingId?: string | undefined;
-}
-
-export interface UserServiceUpdateBillingRequest {
-  userId: string;
-  billingId?: string | undefined;
-}
-
-export interface UserServiceUpdateBillingResponse {
-  billingId?: string | undefined;
-}
-
-export interface UserServiceDeleteBillingRequest {
-  userId: string;
-}
-
-export interface UserServiceDeleteBillingResponse {
-}
-
 export interface UserServiceGetSettingsRequest {
-  /** The id of the user for which to return the settings. */
   userId: string;
 }
 
@@ -160,31 +114,31 @@ export interface UserServiceGetSettingsResponse_SettingsEntry {
 
 export interface UserServiceUpdateSettingsRequest {
   userId: string;
-  name: string;
+  key: string;
   value: Uint8Array;
 }
 
 export interface UserServiceUpdateSettingsResponse {
-  name: string;
+  key: string;
   value: Uint8Array;
 }
 
 export interface UserServiceDeleteSettingsRequest {
   userId: string;
-  name: string;
+  key: string;
 }
 
 export interface UserServiceDeleteSettingsResponse {
 }
 
 function createBaseUser(): User {
-  return { id: "", email: "", firstName: "", lastName: "", createdAt: undefined };
+  return { userId: "", email: "", firstName: "", lastName: "", createdAt: undefined };
 }
 
 export const User = {
   encode(message: User, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.userId !== "") {
+      writer.uint32(10).string(message.userId);
     }
     if (message.email !== "") {
       writer.uint32(18).string(message.email);
@@ -213,7 +167,7 @@ export const User = {
             break;
           }
 
-          message.id = reader.string();
+          message.userId = reader.string();
           continue;
         case 2:
           if (tag !== 18) {
@@ -258,7 +212,7 @@ export const User = {
 
   fromPartial(object: DeepPartial<User>): User {
     const message = createBaseUser();
-    message.id = object.id ?? "";
+    message.userId = object.userId ?? "";
     message.email = object.email ?? "";
     message.firstName = object.firstName ?? "";
     message.lastName = object.lastName ?? "";
@@ -268,13 +222,13 @@ export const User = {
 };
 
 function createBaseUserServiceGetRequest(): UserServiceGetRequest {
-  return { id: "" };
+  return { userId: "" };
 }
 
 export const UserServiceGetRequest = {
   encode(message: UserServiceGetRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.userId !== "") {
+      writer.uint32(10).string(message.userId);
     }
     return writer;
   },
@@ -291,7 +245,7 @@ export const UserServiceGetRequest = {
             break;
           }
 
-          message.id = reader.string();
+          message.userId = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -308,7 +262,7 @@ export const UserServiceGetRequest = {
 
   fromPartial(object: DeepPartial<UserServiceGetRequest>): UserServiceGetRequest {
     const message = createBaseUserServiceGetRequest();
-    message.id = object.id ?? "";
+    message.userId = object.userId ?? "";
     return message;
   },
 };
@@ -360,13 +314,16 @@ export const UserServiceGetResponse = {
 };
 
 function createBaseUserServiceListRequest(): UserServiceListRequest {
-  return { orgId: undefined, offset: 0, limit: 0, search: undefined, sort: [] };
+  return { userIds: [], orgIds: [], offset: 0, limit: 0, search: undefined, sort: [] };
 }
 
 export const UserServiceListRequest = {
   encode(message: UserServiceListRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.orgId !== undefined) {
-      writer.uint32(10).string(message.orgId);
+    for (const v of message.userIds) {
+      writer.uint32(10).string(v!);
+    }
+    for (const v of message.orgIds) {
+      writer.uint32(18).string(v!);
     }
     if (message.offset !== 0) {
       writer.uint32(24).uint64(message.offset);
@@ -395,7 +352,14 @@ export const UserServiceListRequest = {
             break;
           }
 
-          message.orgId = reader.string();
+          message.userIds.push(reader.string());
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.orgIds.push(reader.string());
           continue;
         case 3:
           if (tag !== 24) {
@@ -440,7 +404,8 @@ export const UserServiceListRequest = {
 
   fromPartial(object: DeepPartial<UserServiceListRequest>): UserServiceListRequest {
     const message = createBaseUserServiceListRequest();
-    message.orgId = object.orgId ?? undefined;
+    message.userIds = object.userIds?.map((e) => e) || [];
+    message.orgIds = object.orgIds?.map((e) => e) || [];
     message.offset = object.offset ?? 0;
     message.limit = object.limit ?? 0;
     message.search = (object.search !== undefined && object.search !== null)
@@ -452,7 +417,7 @@ export const UserServiceListRequest = {
 };
 
 function createBaseUserSearch(): UserSearch {
-  return { operator: 0, id: undefined, email: undefined, name: undefined };
+  return { operator: 0, email: undefined, name: undefined };
 }
 
 export const UserSearch = {
@@ -460,14 +425,11 @@ export const UserSearch = {
     if (message.operator !== 0) {
       writer.uint32(8).int32(message.operator);
     }
-    if (message.id !== undefined) {
-      writer.uint32(18).string(message.id);
-    }
     if (message.email !== undefined) {
-      writer.uint32(26).string(message.email);
+      writer.uint32(18).string(message.email);
     }
     if (message.name !== undefined) {
-      writer.uint32(34).string(message.name);
+      writer.uint32(26).string(message.name);
     }
     return writer;
   },
@@ -491,17 +453,10 @@ export const UserSearch = {
             break;
           }
 
-          message.id = reader.string();
+          message.email = reader.string();
           continue;
         case 3:
           if (tag !== 26) {
-            break;
-          }
-
-          message.email = reader.string();
-          continue;
-        case 4:
-          if (tag !== 34) {
             break;
           }
 
@@ -523,7 +478,6 @@ export const UserSearch = {
   fromPartial(object: DeepPartial<UserSearch>): UserSearch {
     const message = createBaseUserSearch();
     message.operator = object.operator ?? 0;
-    message.id = object.id ?? undefined;
     message.email = object.email ?? undefined;
     message.name = object.name ?? undefined;
     return message;
@@ -588,7 +542,7 @@ export const UserSort = {
 };
 
 function createBaseUserServiceListResponse(): UserServiceListResponse {
-  return { users: [], userCount: 0 };
+  return { users: [], total: 0 };
 }
 
 export const UserServiceListResponse = {
@@ -596,8 +550,8 @@ export const UserServiceListResponse = {
     for (const v of message.users) {
       User.encode(v!, writer.uint32(10).fork()).ldelim();
     }
-    if (message.userCount !== 0) {
-      writer.uint32(16).uint64(message.userCount);
+    if (message.total !== 0) {
+      writer.uint32(16).uint64(message.total);
     }
     return writer;
   },
@@ -621,7 +575,7 @@ export const UserServiceListResponse = {
             break;
           }
 
-          message.userCount = longToNumber(reader.uint64() as Long);
+          message.total = longToNumber(reader.uint64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -639,7 +593,7 @@ export const UserServiceListResponse = {
   fromPartial(object: DeepPartial<UserServiceListResponse>): UserServiceListResponse {
     const message = createBaseUserServiceListResponse();
     message.users = object.users?.map((e) => User.fromPartial(e)) || [];
-    message.userCount = object.userCount ?? 0;
+    message.total = object.total ?? 0;
     return message;
   },
 };
@@ -770,13 +724,13 @@ export const UserServiceCreateResponse = {
 };
 
 function createBaseUserServiceUpdateRequest(): UserServiceUpdateRequest {
-  return { id: "", firstName: undefined, lastName: undefined };
+  return { userId: "", firstName: undefined, lastName: undefined };
 }
 
 export const UserServiceUpdateRequest = {
   encode(message: UserServiceUpdateRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.userId !== "") {
+      writer.uint32(10).string(message.userId);
     }
     if (message.firstName !== undefined) {
       writer.uint32(18).string(message.firstName);
@@ -799,7 +753,7 @@ export const UserServiceUpdateRequest = {
             break;
           }
 
-          message.id = reader.string();
+          message.userId = reader.string();
           continue;
         case 2:
           if (tag !== 18) {
@@ -830,7 +784,7 @@ export const UserServiceUpdateRequest = {
 
   fromPartial(object: DeepPartial<UserServiceUpdateRequest>): UserServiceUpdateRequest {
     const message = createBaseUserServiceUpdateRequest();
-    message.id = object.id ?? "";
+    message.userId = object.userId ?? "";
     message.firstName = object.firstName ?? undefined;
     message.lastName = object.lastName ?? undefined;
     return message;
@@ -884,13 +838,13 @@ export const UserServiceUpdateResponse = {
 };
 
 function createBaseUserServiceDeleteRequest(): UserServiceDeleteRequest {
-  return { id: "" };
+  return { userId: "" };
 }
 
 export const UserServiceDeleteRequest = {
   encode(message: UserServiceDeleteRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
+    if (message.userId !== "") {
+      writer.uint32(10).string(message.userId);
     }
     return writer;
   },
@@ -907,7 +861,7 @@ export const UserServiceDeleteRequest = {
             break;
           }
 
-          message.id = reader.string();
+          message.userId = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -924,7 +878,7 @@ export const UserServiceDeleteRequest = {
 
   fromPartial(object: DeepPartial<UserServiceDeleteRequest>): UserServiceDeleteRequest {
     const message = createBaseUserServiceDeleteRequest();
-    message.id = object.id ?? "";
+    message.userId = object.userId ?? "";
     return message;
   },
 };
@@ -960,282 +914,6 @@ export const UserServiceDeleteResponse = {
 
   fromPartial(_: DeepPartial<UserServiceDeleteResponse>): UserServiceDeleteResponse {
     const message = createBaseUserServiceDeleteResponse();
-    return message;
-  },
-};
-
-function createBaseUserServiceGetBillingRequest(): UserServiceGetBillingRequest {
-  return { userId: "" };
-}
-
-export const UserServiceGetBillingRequest = {
-  encode(message: UserServiceGetBillingRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.userId !== "") {
-      writer.uint32(10).string(message.userId);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceGetBillingRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseUserServiceGetBillingRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.userId = reader.string();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<UserServiceGetBillingRequest>): UserServiceGetBillingRequest {
-    return UserServiceGetBillingRequest.fromPartial(base ?? {});
-  },
-
-  fromPartial(object: DeepPartial<UserServiceGetBillingRequest>): UserServiceGetBillingRequest {
-    const message = createBaseUserServiceGetBillingRequest();
-    message.userId = object.userId ?? "";
-    return message;
-  },
-};
-
-function createBaseUserServiceGetBillingResponse(): UserServiceGetBillingResponse {
-  return { billingId: undefined };
-}
-
-export const UserServiceGetBillingResponse = {
-  encode(message: UserServiceGetBillingResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.billingId !== undefined) {
-      writer.uint32(10).string(message.billingId);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceGetBillingResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseUserServiceGetBillingResponse();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.billingId = reader.string();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<UserServiceGetBillingResponse>): UserServiceGetBillingResponse {
-    return UserServiceGetBillingResponse.fromPartial(base ?? {});
-  },
-
-  fromPartial(object: DeepPartial<UserServiceGetBillingResponse>): UserServiceGetBillingResponse {
-    const message = createBaseUserServiceGetBillingResponse();
-    message.billingId = object.billingId ?? undefined;
-    return message;
-  },
-};
-
-function createBaseUserServiceUpdateBillingRequest(): UserServiceUpdateBillingRequest {
-  return { userId: "", billingId: undefined };
-}
-
-export const UserServiceUpdateBillingRequest = {
-  encode(message: UserServiceUpdateBillingRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.userId !== "") {
-      writer.uint32(10).string(message.userId);
-    }
-    if (message.billingId !== undefined) {
-      writer.uint32(18).string(message.billingId);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceUpdateBillingRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseUserServiceUpdateBillingRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.userId = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.billingId = reader.string();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<UserServiceUpdateBillingRequest>): UserServiceUpdateBillingRequest {
-    return UserServiceUpdateBillingRequest.fromPartial(base ?? {});
-  },
-
-  fromPartial(object: DeepPartial<UserServiceUpdateBillingRequest>): UserServiceUpdateBillingRequest {
-    const message = createBaseUserServiceUpdateBillingRequest();
-    message.userId = object.userId ?? "";
-    message.billingId = object.billingId ?? undefined;
-    return message;
-  },
-};
-
-function createBaseUserServiceUpdateBillingResponse(): UserServiceUpdateBillingResponse {
-  return { billingId: undefined };
-}
-
-export const UserServiceUpdateBillingResponse = {
-  encode(message: UserServiceUpdateBillingResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.billingId !== undefined) {
-      writer.uint32(10).string(message.billingId);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceUpdateBillingResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseUserServiceUpdateBillingResponse();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.billingId = reader.string();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<UserServiceUpdateBillingResponse>): UserServiceUpdateBillingResponse {
-    return UserServiceUpdateBillingResponse.fromPartial(base ?? {});
-  },
-
-  fromPartial(object: DeepPartial<UserServiceUpdateBillingResponse>): UserServiceUpdateBillingResponse {
-    const message = createBaseUserServiceUpdateBillingResponse();
-    message.billingId = object.billingId ?? undefined;
-    return message;
-  },
-};
-
-function createBaseUserServiceDeleteBillingRequest(): UserServiceDeleteBillingRequest {
-  return { userId: "" };
-}
-
-export const UserServiceDeleteBillingRequest = {
-  encode(message: UserServiceDeleteBillingRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.userId !== "") {
-      writer.uint32(10).string(message.userId);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceDeleteBillingRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseUserServiceDeleteBillingRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.userId = reader.string();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<UserServiceDeleteBillingRequest>): UserServiceDeleteBillingRequest {
-    return UserServiceDeleteBillingRequest.fromPartial(base ?? {});
-  },
-
-  fromPartial(object: DeepPartial<UserServiceDeleteBillingRequest>): UserServiceDeleteBillingRequest {
-    const message = createBaseUserServiceDeleteBillingRequest();
-    message.userId = object.userId ?? "";
-    return message;
-  },
-};
-
-function createBaseUserServiceDeleteBillingResponse(): UserServiceDeleteBillingResponse {
-  return {};
-}
-
-export const UserServiceDeleteBillingResponse = {
-  encode(_: UserServiceDeleteBillingResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): UserServiceDeleteBillingResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseUserServiceDeleteBillingResponse();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<UserServiceDeleteBillingResponse>): UserServiceDeleteBillingResponse {
-    return UserServiceDeleteBillingResponse.fromPartial(base ?? {});
-  },
-
-  fromPartial(_: DeepPartial<UserServiceDeleteBillingResponse>): UserServiceDeleteBillingResponse {
-    const message = createBaseUserServiceDeleteBillingResponse();
     return message;
   },
 };
@@ -1406,7 +1084,7 @@ export const UserServiceGetSettingsResponse_SettingsEntry = {
 };
 
 function createBaseUserServiceUpdateSettingsRequest(): UserServiceUpdateSettingsRequest {
-  return { userId: "", name: "", value: new Uint8Array(0) };
+  return { userId: "", key: "", value: new Uint8Array(0) };
 }
 
 export const UserServiceUpdateSettingsRequest = {
@@ -1414,8 +1092,8 @@ export const UserServiceUpdateSettingsRequest = {
     if (message.userId !== "") {
       writer.uint32(10).string(message.userId);
     }
-    if (message.name !== "") {
-      writer.uint32(18).string(message.name);
+    if (message.key !== "") {
+      writer.uint32(18).string(message.key);
     }
     if (message.value.length !== 0) {
       writer.uint32(26).bytes(message.value);
@@ -1442,7 +1120,7 @@ export const UserServiceUpdateSettingsRequest = {
             break;
           }
 
-          message.name = reader.string();
+          message.key = reader.string();
           continue;
         case 3:
           if (tag !== 26) {
@@ -1467,20 +1145,20 @@ export const UserServiceUpdateSettingsRequest = {
   fromPartial(object: DeepPartial<UserServiceUpdateSettingsRequest>): UserServiceUpdateSettingsRequest {
     const message = createBaseUserServiceUpdateSettingsRequest();
     message.userId = object.userId ?? "";
-    message.name = object.name ?? "";
+    message.key = object.key ?? "";
     message.value = object.value ?? new Uint8Array(0);
     return message;
   },
 };
 
 function createBaseUserServiceUpdateSettingsResponse(): UserServiceUpdateSettingsResponse {
-  return { name: "", value: new Uint8Array(0) };
+  return { key: "", value: new Uint8Array(0) };
 }
 
 export const UserServiceUpdateSettingsResponse = {
   encode(message: UserServiceUpdateSettingsResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== "") {
-      writer.uint32(10).string(message.name);
+    if (message.key !== "") {
+      writer.uint32(10).string(message.key);
     }
     if (message.value.length !== 0) {
       writer.uint32(18).bytes(message.value);
@@ -1500,7 +1178,7 @@ export const UserServiceUpdateSettingsResponse = {
             break;
           }
 
-          message.name = reader.string();
+          message.key = reader.string();
           continue;
         case 2:
           if (tag !== 18) {
@@ -1524,14 +1202,14 @@ export const UserServiceUpdateSettingsResponse = {
 
   fromPartial(object: DeepPartial<UserServiceUpdateSettingsResponse>): UserServiceUpdateSettingsResponse {
     const message = createBaseUserServiceUpdateSettingsResponse();
-    message.name = object.name ?? "";
+    message.key = object.key ?? "";
     message.value = object.value ?? new Uint8Array(0);
     return message;
   },
 };
 
 function createBaseUserServiceDeleteSettingsRequest(): UserServiceDeleteSettingsRequest {
-  return { userId: "", name: "" };
+  return { userId: "", key: "" };
 }
 
 export const UserServiceDeleteSettingsRequest = {
@@ -1539,8 +1217,8 @@ export const UserServiceDeleteSettingsRequest = {
     if (message.userId !== "") {
       writer.uint32(10).string(message.userId);
     }
-    if (message.name !== "") {
-      writer.uint32(18).string(message.name);
+    if (message.key !== "") {
+      writer.uint32(18).string(message.key);
     }
     return writer;
   },
@@ -1564,7 +1242,7 @@ export const UserServiceDeleteSettingsRequest = {
             break;
           }
 
-          message.name = reader.string();
+          message.key = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -1582,7 +1260,7 @@ export const UserServiceDeleteSettingsRequest = {
   fromPartial(object: DeepPartial<UserServiceDeleteSettingsRequest>): UserServiceDeleteSettingsRequest {
     const message = createBaseUserServiceDeleteSettingsRequest();
     message.userId = object.userId ?? "";
-    message.name = object.name ?? "";
+    message.key = object.key ?? "";
     return message;
   },
 };
@@ -1673,39 +1351,7 @@ export const UserServiceDefinition = {
       responseStream: false,
       options: {},
     },
-    /** Retrieve the billing details of this user. */
-    getBilling: {
-      name: "GetBilling",
-      requestType: UserServiceGetBillingRequest,
-      requestStream: false,
-      responseType: UserServiceGetBillingResponse,
-      responseStream: false,
-      options: {},
-    },
-    /** Overwrite the billing details of this user. */
-    updateBilling: {
-      name: "UpdateBilling",
-      requestType: UserServiceUpdateBillingRequest,
-      requestStream: false,
-      responseType: UserServiceUpdateBillingResponse,
-      responseStream: false,
-      options: {},
-    },
-    /** Remove the billing details of this user. */
-    deleteBilling: {
-      name: "DeleteBilling",
-      requestType: UserServiceDeleteBillingRequest,
-      requestStream: false,
-      responseType: UserServiceDeleteBillingResponse,
-      responseStream: false,
-      options: {},
-    },
-    /**
-     * Retrieve the `settings` for this user. This is a string -> string map that
-     * may be used by frontends to communicate those settings that are not used by
-     * the backend in between sessions and devices. This field is free-form and
-     * ignored by the backend.
-     */
+    /** Retrieve the settings for a user. */
     getSettings: {
       name: "GetSettings",
       requestType: UserServiceGetSettingsRequest,
@@ -1714,7 +1360,7 @@ export const UserServiceDefinition = {
       responseStream: false,
       options: {},
     },
-    /** Modify a setting for this user. */
+    /** Modify a setting for a user. */
     updateSettings: {
       name: "UpdateSettings",
       requestType: UserServiceUpdateSettingsRequest,
@@ -1723,7 +1369,7 @@ export const UserServiceDefinition = {
       responseStream: false,
       options: {},
     },
-    /** Reset delete a setting for this user. */
+    /** Delete a setting for a user. */
     deleteSettings: {
       name: "DeleteSettings",
       requestType: UserServiceDeleteSettingsRequest,
@@ -1761,37 +1407,17 @@ export interface UserServiceImplementation<CallContextExt = {}> {
     request: UserServiceDeleteRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<UserServiceDeleteResponse>>;
-  /** Retrieve the billing details of this user. */
-  getBilling(
-    request: UserServiceGetBillingRequest,
-    context: CallContext & CallContextExt,
-  ): Promise<DeepPartial<UserServiceGetBillingResponse>>;
-  /** Overwrite the billing details of this user. */
-  updateBilling(
-    request: UserServiceUpdateBillingRequest,
-    context: CallContext & CallContextExt,
-  ): Promise<DeepPartial<UserServiceUpdateBillingResponse>>;
-  /** Remove the billing details of this user. */
-  deleteBilling(
-    request: UserServiceDeleteBillingRequest,
-    context: CallContext & CallContextExt,
-  ): Promise<DeepPartial<UserServiceDeleteBillingResponse>>;
-  /**
-   * Retrieve the `settings` for this user. This is a string -> string map that
-   * may be used by frontends to communicate those settings that are not used by
-   * the backend in between sessions and devices. This field is free-form and
-   * ignored by the backend.
-   */
+  /** Retrieve the settings for a user. */
   getSettings(
     request: UserServiceGetSettingsRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<UserServiceGetSettingsResponse>>;
-  /** Modify a setting for this user. */
+  /** Modify a setting for a user. */
   updateSettings(
     request: UserServiceUpdateSettingsRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<UserServiceUpdateSettingsResponse>>;
-  /** Reset delete a setting for this user. */
+  /** Delete a setting for a user. */
   deleteSettings(
     request: UserServiceDeleteSettingsRequest,
     context: CallContext & CallContextExt,
@@ -1824,37 +1450,17 @@ export interface UserServiceClient<CallOptionsExt = {}> {
     request: DeepPartial<UserServiceDeleteRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<UserServiceDeleteResponse>;
-  /** Retrieve the billing details of this user. */
-  getBilling(
-    request: DeepPartial<UserServiceGetBillingRequest>,
-    options?: CallOptions & CallOptionsExt,
-  ): Promise<UserServiceGetBillingResponse>;
-  /** Overwrite the billing details of this user. */
-  updateBilling(
-    request: DeepPartial<UserServiceUpdateBillingRequest>,
-    options?: CallOptions & CallOptionsExt,
-  ): Promise<UserServiceUpdateBillingResponse>;
-  /** Remove the billing details of this user. */
-  deleteBilling(
-    request: DeepPartial<UserServiceDeleteBillingRequest>,
-    options?: CallOptions & CallOptionsExt,
-  ): Promise<UserServiceDeleteBillingResponse>;
-  /**
-   * Retrieve the `settings` for this user. This is a string -> string map that
-   * may be used by frontends to communicate those settings that are not used by
-   * the backend in between sessions and devices. This field is free-form and
-   * ignored by the backend.
-   */
+  /** Retrieve the settings for a user. */
   getSettings(
     request: DeepPartial<UserServiceGetSettingsRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<UserServiceGetSettingsResponse>;
-  /** Modify a setting for this user. */
+  /** Modify a setting for a user. */
   updateSettings(
     request: DeepPartial<UserServiceUpdateSettingsRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<UserServiceUpdateSettingsResponse>;
-  /** Reset delete a setting for this user. */
+  /** Delete a setting for a user. */
   deleteSettings(
     request: DeepPartial<UserServiceDeleteSettingsRequest>,
     options?: CallOptions & CallOptionsExt,

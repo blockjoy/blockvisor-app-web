@@ -35,7 +35,7 @@ export const usePaymentMethods = (): IPaymentMethodsHook => {
 
     try {
       const data = await organizationClient.listPaymentMethods(
-        defaultOrganization?.id!,
+        defaultOrganization?.orgId!,
       );
 
       console.log('%cGetPaymentMethods', 'color: #bff589', data);

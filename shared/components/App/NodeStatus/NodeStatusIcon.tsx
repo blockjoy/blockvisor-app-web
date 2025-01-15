@@ -5,7 +5,7 @@ import {
   getNodeStatusInfo,
   NodeStatusType,
 } from './NodeStatus';
-import { NodeStatus as NodeStatusEnum } from '@modules/grpc/library/blockjoy/common/v1/node';
+import { NodeState } from '@modules/grpc/library/blockjoy/common/v1/node';
 
 import { SvgIcon } from '@shared/components';
 
@@ -15,6 +15,9 @@ const NodeStatusSpinner = dynamic(() => import('./NodeStatusSpinner'));
 
 const IconUndefined = dynamic(
   () => import('@public/assets/icons/nodeStatus/Undefined.svg'),
+);
+const IconBlockchain = dynamic(
+  () => import('@public/assets/icons/app/Blockchain.svg'),
 );
 const IconDeleted = dynamic(
   () => import('@public/assets/icons/common/Trash.svg'),
@@ -48,6 +51,9 @@ const IconElecting = dynamic(
 );
 const IconExporting = dynamic(
   () => import('@public/assets/icons/nodeStatus/Exporting.svg'),
+);
+const IconHeart = dynamic(
+  () => import('@public/assets/icons/common/Heart.svg'),
 );
 const IconIngesting = dynamic(
   () => import('@public/assets/icons/nodeStatus/Ingesting.svg'),
@@ -94,6 +100,10 @@ const getIcon = (statusName: string) => {
     switch (statusName) {
       case 'EARNING':
         return <IconEarning />;
+      case 'HEALTHY':
+      case 'UNHEALTHY':
+      case 'NEUTRAL':
+        return <IconHeart />;
       case 'BROADCASTING':
         return <IconBroadcasting />;
       case 'CANCELLED':
@@ -141,6 +151,7 @@ const getIcon = (statusName: string) => {
 
 type NodeStatusIconProps = {
   status?: number;
+  protocolStatus?: string;
   type?: NodeStatusType;
   size: string;
   isDefaultColor?: boolean;
@@ -148,30 +159,30 @@ type NodeStatusIconProps = {
 
 export const NodeStatusIcon = ({
   status,
+  protocolStatus,
   type,
   size = '24px',
   isDefaultColor,
 }: NodeStatusIconProps) => {
-  const statusName = getNodeStatusInfo(status!, type)?.name;
-
+  const statusName = getNodeStatusInfo(status, type, protocolStatus)?.name;
   return (
     <Suspense fallback={null}>
-      {statusName?.includes('PROVISIONING') ||
-      status === 0 ||
-      status === NodeStatusEnum.NODE_STATUS_UPLOADING ||
-      status === NodeStatusEnum.NODE_STATUS_DOWNLOADING ||
-      status === NodeStatusEnum.NODE_STATUS_UPDATING ? (
+      {protocolStatus === 'downloading' ||
+      protocolStatus === 'uploading' ||
+      (type !== 'protocol' && status === NodeState.NODE_STATE_STARTING) ||
+      (type !== 'protocol' && status === NodeState.NODE_STATE_UPGRADING) ? (
         <NodeStatusSpinner
           isDefaultColor={isDefaultColor}
           size={size}
           status={status!}
+          protocolStatus={protocolStatus}
         />
       ) : (
         <SvgIcon
-          additionalStyles={[getNodeStatusColor(status!, type)]}
+          additionalStyles={[getNodeStatusColor(status!, type, protocolStatus)]}
           size={size}
         >
-          {status === undefined ? <IconNode /> : getIcon(statusName!)}
+          {getIcon(statusName!)}
         </SvgIcon>
       )}
     </Suspense>

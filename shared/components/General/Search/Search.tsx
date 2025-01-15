@@ -95,7 +95,7 @@ export const Search = ({
       )}
       {version !== 'submit' && searchText.length ? (
         <button css={styles.clearButton} onClick={handleClear} type="button">
-          <SvgIcon>
+          <SvgIcon isDefaultColor>
             <IconClose />
           </SvgIcon>
         </button>

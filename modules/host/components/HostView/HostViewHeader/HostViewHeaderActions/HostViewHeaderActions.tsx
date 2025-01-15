@@ -15,7 +15,7 @@ export const HostViewHeaderActions = ({ onDeleteClicked }: Props) => {
   const { host } = useHostView();
 
   const handleAdminClicked = () =>
-    router.push(`/admin?name=hosts&id=${host?.id}`);
+    router.push(`/admin?name=hosts&id=${host?.hostId}`);
 
   const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
   const canDelete = useRecoilValue(authSelectors.hasPermission('host-delete'));

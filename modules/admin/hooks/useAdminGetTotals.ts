@@ -3,51 +3,55 @@ import {
   userClient,
   hostClient,
   organizationClient,
-  blockchainClient,
+  protocolClient,
 } from '@modules/grpc';
 
 export const useAdminGetTotals = () => {
   const getTotalUsers = async () => {
     const response = await userClient.listUsers('', {
       currentPage: 0,
-      itemsPerPage: 0,
+      itemsPerPage: 10000,
     });
-    return response.userCount;
+    return response.total;
   };
 
   const getTotalNodes = async () => {
-    const response = await nodeClient.listNodes(undefined, undefined, {
-      currentPage: 0,
-      itemsPerPage: 0,
-    });
-    return response.nodeCount;
+    try {
+      const response = await nodeClient.listNodes(undefined, undefined, {
+        currentPage: 0,
+        itemsPerPage: 10000,
+      });
+      return response.total;
+    } catch (err) {
+      return 0;
+    }
   };
 
   const getTotalHosts = async () => {
     const response = await hostClient.listHosts(undefined, undefined, {
       currentPage: 0,
-      itemsPerPage: 0,
+      itemsPerPage: 10000,
     });
-    return response.hostCount;
+    return response.total;
   };
 
   const getTotalOrgs = async () => {
     const response = await organizationClient.listOrganizations(
       {
         currentPage: 0,
-        itemsPerPage: 0,
+        itemsPerPage: 10000,
       },
       [],
       '',
       true,
       false,
     );
-    return response.orgCount;
+    return response.total;
   };
 
-  const getTotalBlockchains = async () => {
-    const response = await blockchainClient.listBlockchains();
-    return response.blockchainCount;
+  const getTotalProtocols = async () => {
+    const response = await protocolClient.listProtocols();
+    return response.total;
   };
 
   return {
@@ -55,6 +59,6 @@ export const useAdminGetTotals = () => {
     getTotalNodes,
     getTotalHosts,
     getTotalOrgs,
-    getTotalBlockchains,
+    getTotalProtocols,
   };
 };

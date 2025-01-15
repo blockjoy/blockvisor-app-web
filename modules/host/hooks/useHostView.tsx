@@ -27,17 +27,17 @@ export const useHostView = () => {
   const { hostList, removeFromHostList } = useHostList();
 
   const loadHost = async (id?: string | string[]) => {
-    const foundHost = hostList.find((h) => h.id === id)!;
+    const foundHost = hostList.find((h) => h.hostId === id)!;
     if (foundHost) {
       setIsLoading('finished');
       if (!isSuperUser) {
-        setHost(hostList.find((h) => h.id === id)!);
+        setHost(hostList.find((h) => h.hostId === id)!);
       } else {
         setHost(foundHost);
         const host = await hostClient.getHost(id as string);
         setHost(host);
-        if (foundHost.orgId !== defaultOrganization?.id)
-          switchOrganization(foundHost.orgId, foundHost.orgName);
+        if (foundHost.orgId !== defaultOrganization?.orgId)
+          switchOrganization(foundHost.orgId!, foundHost.orgName!);
       }
       return;
     }
@@ -47,8 +47,8 @@ export const useHostView = () => {
     try {
       const host = await hostClient.getHost(id as string);
       setHost(host);
-      if (host.orgId !== defaultOrganization?.id)
-        switchOrganization(host.orgId, host.orgName);
+      if (host.orgId && host.orgId !== defaultOrganization?.orgId)
+        switchOrganization(host.orgId!, host.orgName!);
     } catch (err) {
       setHost(null);
     } finally {

@@ -74,7 +74,6 @@ export const globalStyles = (theme: ITheme) => css`
 
   /* --- LIGHT THEME --- */
   :root.theme--light {
-    /* TODO: Add light theme colors, these are just for testing */
     --color-overlay-background-1: hsl(240, 20%, 85%);
 
     --color-text-3: hsl(160, 4%, 14%);
@@ -235,14 +234,6 @@ export const globalStyles = (theme: ITheme) => css`
     ::-webkit-scrollbar-track {
       background: rgb(255 255 255 / 2%);
     }
-
-    ::-webkit-scrollbar-thumb {
-      background: rgb(255 255 255 / 10%);
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-      background: rgb(255 255 255 / 20%);
-    }
   }
   *,
   *:before,
@@ -317,13 +308,13 @@ export const globalStyles = (theme: ITheme) => css`
   }
 
   *::-webkit-scrollbar-thumb {
-    background: var(--color-text-3);
+    background: rgb(255 255 255 / 10%);
     border-radius: 8px;
     outline: 0;
 
     &:hover,
     &:active {
-      background: var(--color-text-4);
+      background: rgb(255 255 255 / 20%);
     }
   }
 `;

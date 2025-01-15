@@ -1,5 +1,9 @@
 import { ChangeEvent, ComponentType, useState } from 'react';
-import { filterSearch } from '@shared/index';
+import {
+  filterSearch,
+  TAG_VALIDATION_REGEX,
+  TAG_VALIDATION_MESSAGES,
+} from '@shared/index';
 import { DropdownSearch } from '../DropdownSearch/DropdownSearch';
 import { DropdownProps } from '../Dropdown';
 
@@ -22,11 +26,19 @@ export const withSearchDropdown = <T extends { id?: string; name?: string }>(
     const [searchQuery, setSearchQuery] = useState('');
     const [isTouchedQuery, setIsTouchedQuery] = useState(false);
     const [filteredData, setFilteredData] = useState<T[]>(items);
+    const [validationMessage, setValidationMessage] = useState(
+      TAG_VALIDATION_MESSAGES.required,
+    );
 
     const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
       if (!isTouchedQuery) setIsTouchedQuery(true);
 
       const query = e.target.value;
+
+      const validateMessage = handleValidate?.(query);
+
+      setValidationMessage(validateMessage);
+
       setSearchQuery(query);
 
       const filtered = filterSearch<T>(items, query);
@@ -35,7 +47,7 @@ export const withSearchDropdown = <T extends { id?: string; name?: string }>(
     };
 
     const handleSelect = (item: T | null) => {
-      handleSelected(item);
+      handleSelected(item!);
       setSearchQuery('');
       // Added Timeout due to animation in the DropdownMenu
       setTimeout(() => {
@@ -50,6 +62,17 @@ export const withSearchDropdown = <T extends { id?: string; name?: string }>(
       setSearchQuery('');
     };
 
+    const handleValidate = (value?: string) => {
+      if (!value?.trim()) return TAG_VALIDATION_MESSAGES.required;
+
+      if (value.length < 3) return TAG_VALIDATION_MESSAGES.minLength;
+
+      if (!TAG_VALIDATION_REGEX.test(value))
+        return TAG_VALIDATION_MESSAGES.invalidFormat;
+
+      return '';
+    };
+
     return (
       <Component
         {...props}
@@ -61,12 +84,17 @@ export const withSearchDropdown = <T extends { id?: string; name?: string }>(
           <DropdownSearch
             name="search-dropdown"
             value={searchQuery}
+            isValid={!Boolean(validationMessage)}
             handleChange={handleSearch}
             isOpen={isOpen}
             isEmpty={!filteredData.length}
             {...(searchPlaceholder && { placeholder: searchPlaceholder })}
             {...(emptyMessage && {
-              emptyMessage: searchQuery.length ? addNewMessage : emptyMessage,
+              emptyMessage: searchQuery.length
+                ? !Boolean(validationMessage)
+                  ? addNewMessage
+                  : validationMessage
+                : emptyMessage,
             })}
             {...(Boolean(onSubmit) && { handleSubmit })}
           />

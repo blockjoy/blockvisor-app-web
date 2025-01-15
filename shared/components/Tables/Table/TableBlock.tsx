@@ -4,7 +4,7 @@ import { ITheme } from 'types/theme';
 type Props = {
   middleRow?: string | React.ReactNode;
   bottomRow?: string | React.ReactNode;
-  topRow: string | React.ReactNode;
+  topRow?: string | React.ReactNode;
   isOverflow?: boolean;
 };
 
@@ -51,9 +51,11 @@ export const TableBlock = ({
   isOverflow = true,
 }: Props) => (
   <span css={styles.wrapper}>
-    <span css={styles.topRow(isOverflow)} className="has-hover-color">
-      {topRow}
-    </span>
+    {topRow && (
+      <span css={styles.topRow(isOverflow)} className="has-hover-color">
+        {topRow}
+      </span>
+    )}
     <span css={styles.row}>
       {!!middleRow && <span css={styles.middleRow}>{middleRow}</span>}
       {!!bottomRow && <span css={styles.bottomRow}>{bottomRow}</span>}

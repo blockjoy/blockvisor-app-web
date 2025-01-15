@@ -5,7 +5,7 @@ import { ITheme } from 'types/theme';
 export const styles = {
   base: (theme: ITheme) => css`
     th {
-      width: 200px;
+      width: 220px;
       vertical-align: top;
       padding-top: 35px;
     }

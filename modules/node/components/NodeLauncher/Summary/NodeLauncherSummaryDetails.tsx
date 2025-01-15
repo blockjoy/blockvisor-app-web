@@ -1,15 +1,12 @@
 import { useRecoilValue } from 'recoil';
-import {
-  blockchainAtoms,
-  nodeLauncherAtoms,
-  nodeLauncherSelectors,
-} from '@modules/node';
-import { nodeTypeList } from '@shared/constants/lookups';
+import { nodeLauncherAtoms, nodeLauncherSelectors } from '@modules/node';
 import { hostAtoms } from '@modules/host';
 import { authSelectors } from '@modules/auth';
 import { styles } from './NodeLauncherSummaryDetails.styles';
 import IconCheckCircle from '@public/assets/icons/common/CheckCircle.svg';
 import IconUncheckCircle from '@public/assets/icons/common/UncheckCircle.svg';
+import { capitalized } from '@modules/admin';
+import { kebabToCapitalized } from 'utils';
 
 type Props = {
   totalNodesToLaunch: number;
@@ -17,20 +14,21 @@ type Props = {
 
 export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
   const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
-  const blockchains = useRecoilValue(blockchainAtoms.blockchains);
-  const nodeLauncher = useRecoilValue(nodeLauncherAtoms.nodeLauncher);
   const hasSummary = useRecoilValue(nodeLauncherSelectors.hasSummary);
+  const nodeLauncher = useRecoilValue(nodeLauncherAtoms.nodeLauncher);
   const isNodeValid = useRecoilValue(nodeLauncherSelectors.isNodeValid);
   const isConfigValid = useRecoilValue(nodeLauncherSelectors.isConfigValid);
+  const isNodeAllocationValid = useRecoilValue(
+    nodeLauncherSelectors.isNodeAllocationValid,
+  );
   const error = useRecoilValue(nodeLauncherAtoms.error);
   const selectedHosts = useRecoilValue(nodeLauncherAtoms.selectedHosts);
   const allHosts = useRecoilValue(hostAtoms.allHosts);
-  const selectedRegion = useRecoilValue(nodeLauncherAtoms.selectedRegion);
+  const selectedRegions = useRecoilValue(nodeLauncherAtoms.selectedRegions);
   const selectedVersion = useRecoilValue(nodeLauncherAtoms.selectedVersion);
+  const selectedProtocol = useRecoilValue(nodeLauncherAtoms.selectedProtocol);
 
-  const { blockchainId, nodeType, properties } = nodeLauncher;
-
-  const blockchain = blockchains?.find((b) => b.id === blockchainId);
+  const { properties } = nodeLauncher;
 
   return (
     <div css={styles.summary}>
@@ -40,29 +38,23 @@ export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
             <IconCheckCircle />
           </span>
           <div>
-            <label>Blockchain</label>
+            <label>Protocol</label>
             <span>
-              {blockchain?.displayName || blockchain?.name || 'Not Selected'}
+              {capitalized(selectedProtocol?.name!) || 'Not Selected'}
             </span>
           </div>
         </li>
-        <li>
-          <span css={styles.summaryIcon}>
-            <IconCheckCircle />
-          </span>
-          <div>
-            <label>Type</label>
-            <span>
-              {nodeTypeList?.find((n) => n.id === +nodeType)?.name ||
-                'Not Selected'}
-            </span>
-          </div>
-        </li>
-        {isSuperUser && selectedHosts && (
+        {isSuperUser && (selectedHosts || selectedRegions) && (
           <li>
-            <span css={styles.summaryIcon}>
-              <IconCheckCircle />
-            </span>
+            {isConfigValid && isNodeValid && isNodeAllocationValid ? (
+              <span css={styles.summaryIcon}>
+                <IconCheckCircle />
+              </span>
+            ) : (
+              <span css={styles.summaryIcon}>
+                <IconUncheckCircle />
+              </span>
+            )}
             <div>
               <label>Quantity</label>
               <span>{totalNodesToLaunch}</span>
@@ -70,7 +62,7 @@ export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
           </li>
         )}
         <li>
-          {!isSuperUser || (isConfigValid && isNodeValid) ? (
+          {isConfigValid && isNodeValid && isNodeAllocationValid ? (
             <span css={styles.summaryIcon}>
               <IconCheckCircle />
             </span>
@@ -81,16 +73,16 @@ export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
           )}
 
           <div>
-            <label>Configuration</label>
+            <label>Config</label>
             <span>
-              {!isSuperUser || (isConfigValid && isNodeValid)
+              {isConfigValid && isNodeValid && isNodeAllocationValid
                 ? 'Ready For Liftoff'
                 : 'Needs Work'}
             </span>
           </div>
         </li>
       </ul>
-      {(!isConfigValid || !isNodeValid) && isSuperUser && (
+      {(!isConfigValid || !isNodeValid || !isNodeAllocationValid) && (
         <>
           <h2 css={styles.missingFieldsTitle}>
             The following needs to be added:
@@ -98,32 +90,35 @@ export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
           <div css={styles.missingFields}>
             {!isConfigValid
               ? properties
-                  ?.filter(
-                    (property) =>
-                      property.required &&
-                      !property.disabled &&
-                      !property.value,
-                  )
+                  ?.filter((property) => !property.value)
                   .map((property) => (
-                    <div key={property.name}>{property.displayName}</div>
+                    <div key={property.key}>
+                      {kebabToCapitalized(property.key)}
+                    </div>
                   ))
               : null}
-            {!isNodeValid ? (
+            {!isNodeValid || !isNodeAllocationValid ? (
               <>
-                {!selectedHosts && allHosts?.length ? (
+                {!selectedHosts && !selectedRegions && allHosts?.length ? (
                   <div>Host or Region</div>
                 ) : null}
-                {!selectedRegion && !allHosts?.length ? (
+                {!selectedRegions && !allHosts?.length ? (
                   <div>Region</div>
                 ) : null}
-                {!hasSummary ? <div>Blockchain</div> : null}
+                {!hasSummary ? <div>Protocol</div> : null}
               </>
             ) : null}
             {!selectedVersion && <div>Version</div>}
+            {(selectedHosts && !selectedHosts?.every((host) => host.isValid)) ||
+            (selectedRegions &&
+              !selectedRegions?.every((region) => region.isValid) && (
+                <div>Valid Node Allocation</div>
+              )) ? (
+              <div>Valid Node Allocation</div>
+            ) : null}
           </div>
         </>
       )}
-
       {error && <div css={styles.serverError}>{error}</div>}
     </div>
   );

@@ -1,10 +1,10 @@
 import { useRecoilValue } from 'recoil';
 import Link from 'next/link';
 import { authSelectors } from '@modules/auth';
-import { HostIpAddress } from '@modules/grpc/library/blockjoy/v1/host';
 import { styles } from './HostIps.styles';
 import { sortIps } from '@modules/node';
 import { DetailsTableTabs, DetailsTableTabsList } from '@shared/components';
+import { HostIpAddress } from '@modules/grpc/library/blockjoy/common/v1/host';
 
 type Props = { ipAddresses: HostIpAddress[] };
 

@@ -37,21 +37,21 @@ export const HostView = ({ children }: HostViewProps) => {
 
   return (
     <>
-      {isLoading === 'finished' && !host?.id ? (
+      {isLoading === 'finished' && !host?.hostId ? (
         <EmptyColumn
           title="Host Not Found"
           description="No host exists with this ID"
         />
       ) : (
         <>
-          {host?.id && (
+          {host?.hostId && (
             <>
               <HostViewHeader />
               <HostViewTabs />
             </>
           )}
           <div css={styles.wrapper}>
-            {isLoading !== 'finished' && !host?.id ? (
+            {isLoading !== 'finished' && !host?.hostId ? (
               <div css={styles.loader}>
                 <SkeletonView />
               </div>

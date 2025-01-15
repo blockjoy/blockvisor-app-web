@@ -55,11 +55,11 @@ export const AdminHostsTag = ({ selectedIds, list, setList }: Props) => {
           (async () => {
             try {
               await hostClient.updateHost({
-                id: hostId,
+                hostId,
                 updateTags: { addTag: { name: tag } },
               });
 
-              const foundHost = listCopy.find((h) => h.id === hostId);
+              const foundHost = listCopy.find((h) => h.hostId === hostId);
               if (!foundHost) return;
               foundHost.tags?.tags.push({ name: tag });
             } catch (err) {

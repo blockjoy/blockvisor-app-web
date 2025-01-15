@@ -1,19 +1,16 @@
 import { AdminList } from '../AdminList/AdminList';
-import { blockchainClient, nodeClient } from '@modules/grpc';
+import { protocolClient, nodeClient, userClient } from '@modules/grpc';
 import { DateTime, NodeStatus } from '@shared/components';
 import {
-  AdminNodesFilterBlockchain,
+  AdminNodesFilterProtocol,
   AdminNodesFilterOrg,
   AdminNodesFilterUser,
   AdminNodesFilterHost,
   AdminNodesFilterRegion,
   AdminNodesFilterIp,
-  AdminNodesFilterNetwork,
+  AdminNodesFilterVariant,
   AdminNodesFilterVersion,
-  AdminNodesFilterNodeType,
   AdminNodesFilterStatus,
-  AdminNodesContainerStatus,
-  AdminNodesSyncStatus,
 } from '@modules/admin/components';
 import { AdminNodesUpgrade } from './AdminNodesUpgrade/AdminNodesUpgrade';
 import { AdminNodesOrgAssign } from './AdminNodesOrgAssign/AdminNodesOrgAssign';
@@ -21,14 +18,13 @@ import { AdminNodesActions } from './AdminNodesActions/AdminNodesActions';
 import { pageSize } from '@modules/admin/constants/constants';
 import { Node, NodeSortField } from '@modules/grpc/library/blockjoy/v1/node';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
-import { convertNodeTypeToName } from '@modules/node/utils/convertNodeTypeToName';
 import { capitalized, createAdminNodeFilters } from '@modules/admin';
 import { AdminListColumn } from '@modules/admin/types/AdminListColumn';
-import { useEffect, useState } from 'react';
-import { Blockchain } from '@modules/grpc/library/blockjoy/v1/blockchain';
-import { Currency } from '../../AdminFinancesByHost/Currency/Currency';
+import { useState } from 'react';
+import { Protocol } from '@modules/grpc/library/blockjoy/v1/protocol';
 import { AdminListEditCost } from '../AdminListEditCost/AdminListEditCost';
 import { BillingAmount } from '@modules/grpc/library/blockjoy/common/v1/currency';
+import { User } from '@modules/grpc/library/blockjoy/v1/user';
 
 const columns: AdminListColumn[] = [
   {
@@ -50,29 +46,27 @@ const columns: AdminListColumn[] = [
     isVisible: false,
   },
   {
-    name: 'status',
-    displayName: 'Node Status',
+    name: 'nodeState',
+    displayName: 'Node State',
     width: '200px',
-    sortField: NodeSortField.NODE_SORT_FIELD_NODE_STATUS,
+    sortField: NodeSortField.NODE_SORT_FIELD_NODE_STATE,
     isVisible: true,
     filterComponent: AdminNodesFilterStatus,
     filterDropdownMinWidth: 160,
   },
   {
-    name: 'containerStatus',
-    width: '200px',
-    sortField: NodeSortField.NODE_SORT_FIELD_CONTAINER_STATUS,
-    isVisible: false,
-    filterComponent: AdminNodesContainerStatus,
-    filterDropdownMinWidth: 120,
+    name: 'protocolHealth',
+    displayName: 'Protocol Health',
+    width: '160px',
+    sortField: NodeSortField.NODE_SORT_FIELD_PROTOCOL_HEALTH,
+    isVisible: true,
   },
   {
-    name: 'syncStatus',
-    width: '140px',
-    sortField: NodeSortField.NODE_SORT_FIELD_SYNC_STATUS,
-    isVisible: false,
-    filterComponent: AdminNodesSyncStatus,
-    filterDropdownMinWidth: 120,
+    name: 'protocolState',
+    displayName: 'Protocol State',
+    width: '160px',
+    sortField: NodeSortField.NODE_SORT_FIELD_PROTOCOL_STATE,
+    isVisible: true,
   },
   {
     name: 'cost',
@@ -82,7 +76,7 @@ const columns: AdminListColumn[] = [
   {
     name: 'host',
     width: '200px',
-    sortField: NodeSortField.NODE_SORT_FIELD_HOST_NAME,
+    // sortField: NodeSortField.NODE_SORT_FIELD_HOST_NAME,
     isVisible: true,
     filterComponent: AdminNodesFilterHost,
     filterDropdownMaxWidth: 250,
@@ -95,33 +89,24 @@ const columns: AdminListColumn[] = [
     sortField: NodeSortField.NODE_SORT_FIELD_BLOCK_HEIGHT,
   },
   {
-    name: 'blockchainName',
-    displayName: 'blockchain',
+    name: 'protocolName',
+    displayName: 'protocol',
     width: '140px',
     isVisible: true,
-    filterComponent: AdminNodesFilterBlockchain,
+    filterComponent: AdminNodesFilterProtocol,
     filterDropdownMinWidth: 200,
   },
   {
-    name: 'nodeType',
-    displayName: 'Node Type',
-    width: '140px',
-    sortField: NodeSortField.NODE_SORT_FIELD_NODE_TYPE,
-    isVisible: true,
-    filterComponent: AdminNodesFilterNodeType,
-    filterDropdownMinWidth: 100,
-    filterDropdownMaxWidth: 120,
-  },
-  {
-    name: 'network',
+    name: 'variant',
     width: '140px',
     isVisible: true,
-    filterComponent: AdminNodesFilterNetwork,
+    filterComponent: AdminNodesFilterVariant,
     filterDropdownMinWidth: 160,
     filterDropdownMaxWidth: 200,
   },
   {
-    name: 'version',
+    name: 'semanticVersion',
+    displayName: 'Version',
     width: '100px',
     isVisible: true,
     filterComponent: AdminNodesFilterVersion,
@@ -129,11 +114,11 @@ const columns: AdminListColumn[] = [
     filterDropdownMaxWidth: 220,
   },
   {
-    name: 'ip',
+    name: 'ipAddress',
     width: '140px',
     isVisible: false,
     filterComponent: AdminNodesFilterIp,
-    filterDropdownMinWidth: 140,
+    filterDropdownMinWidth: 170,
   },
   {
     name: 'ipGateway',
@@ -144,8 +129,6 @@ const columns: AdminListColumn[] = [
     name: 'region',
     width: '140px',
     isVisible: true,
-    filterComponent: AdminNodesFilterRegion,
-    filterDropdownMinWidth: 200,
   },
   {
     name: 'address',
@@ -180,7 +163,8 @@ const columns: AdminListColumn[] = [
 ];
 
 export const AdminNodes = () => {
-  const [blockchains, setBlockchains] = useState<Blockchain[]>([]);
+  const [protocols, setProtocols] = useState<Protocol[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
 
   const getList = async (
     keyword?: string,
@@ -189,58 +173,93 @@ export const AdminNodes = () => {
     sortOrder?: SortOrder,
     filters?: AdminListColumn[],
   ) => {
+    if (!users.length) {
+      const usersResponse = await userClient.listUsers();
+      setUsers(usersResponse.users);
+    }
+
+    if (!protocols?.length) {
+      const protocolsResponse = await protocolClient.listProtocols();
+      setProtocols(protocolsResponse.protocols);
+    }
+
     const sort =
       page === -1 ? undefined : [{ field: sortField!, order: sortOrder! }];
 
-    const response = await nodeClient.listNodes(
-      undefined,
-      {
-        keyword,
-        ...createAdminNodeFilters(filters!),
-      },
-      {
-        currentPage: page === -1 ? 0 : page!,
-        itemsPerPage: page === -1 ? 50000 : pageSize,
-      },
-      sort,
-    );
-    return { list: response.nodes, total: response.nodeCount };
+    try {
+      const response = await nodeClient.listNodes(
+        undefined,
+        {
+          keyword,
+          ...createAdminNodeFilters(filters!),
+        },
+        {
+          currentPage: page === -1 ? 0 : page!,
+          itemsPerPage: page === -1 ? 50000 : pageSize,
+        },
+        sort,
+      );
+
+      return {
+        list: response.nodes,
+        total: response.total,
+      };
+    } catch (err) {
+      return {
+        list: [],
+        total: 0,
+      };
+    }
   };
 
-  const handleUpdate = async (id: string, cost: BillingAmount) => {
+  const handleUpdate = async (nodeId: string, cost: BillingAmount) => {
     nodeClient.updateNode({
-      ids: [id],
+      nodeId,
       cost,
+      newValues: [],
     });
   };
 
   const listMap = (list: Node[]) =>
     list.map((node) => {
+      const user = users.find((u) => u.userId === node.createdBy?.resourceId);
+      const createdBy = `${user?.firstName} ${user?.lastName}`;
       return {
         ...node,
-        status: <NodeStatus status={node.status} hasBorder={false} />,
-        containerStatus: (
+        variant: node.versionKey?.variantKey,
+        nodeState: (
+          <NodeStatus status={node.nodeStatus?.state!} hasBorder={false} />
+        ),
+        protocolHealth: node.nodeStatus?.protocol?.health ? (
           <NodeStatus
-            status={node.containerStatus}
-            type="container"
+            status={node.nodeStatus?.protocol?.health!}
+            type="protocol"
             hasBorder={false}
           />
+        ) : (
+          '-'
         ),
-        syncStatus: (
-          <NodeStatus status={node.syncStatus} type="sync" hasBorder={false} />
+        protocolState: node.nodeStatus?.protocol?.state ? (
+          <NodeStatus
+            view="simple"
+            protocolStatus={node.nodeStatus?.protocol?.state}
+            hasBorder={false}
+            jobs={node.jobs}
+          />
+        ) : (
+          '-'
         ),
-        nodeType: capitalized(convertNodeTypeToName(node.nodeType)),
-        region: node.placement?.scheduler?.region,
+        region: node.regionName,
         createdAt: <DateTime date={node.createdAt!} />,
-        createdBy: node.createdBy?.name,
-        host: node.hostName,
         cost: (
           <AdminListEditCost
-            id={node.id}
+            id={node.nodeId}
             defaultValue={node.cost?.amount?.amountMinorUnits}
             onUpdate={handleUpdate}
           />
         ),
+        host: node.hostDisplayName || node.hostNetworkName,
+        protocolName: capitalized(node.versionKey?.protocolKey!),
       };
     });
 
@@ -259,24 +278,18 @@ export const AdminNodes = () => {
     }
   };
 
-  useEffect(() => {
-    (async () => {
-      const blockchainsResponse = await blockchainClient.listBlockchains();
-      console.log('blockchainsResponse', blockchainsResponse);
-      setBlockchains(blockchainsResponse.blockchains);
-    })();
-  }, []);
-
   return (
     <AdminList
       name="nodes"
+      idPropertyName="nodeId"
       defaultSortField={NodeSortField.NODE_SORT_FIELD_CREATED_AT}
       defaultSortOrder={SortOrder.SORT_ORDER_DESCENDING}
       columns={columns}
       getList={getList}
       listMap={listMap}
       selectedIds={selectedIds}
-      blockchains={blockchains}
+      protocols={protocols}
+      users={users}
       onIdSelected={handleIdSelected}
       onIdAllSelected={handleIdAllSelected}
       additionalHeaderButtons={[
