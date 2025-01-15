@@ -1,10 +1,10 @@
 /* eslint-disable */
-import Long from 'long';
-import _m0 from 'protobufjs/minimal';
-import { Timestamp } from '../../../google/protobuf/timestamp';
-import { Resource } from './resource';
+import Long from "long";
+import _m0 from "protobufjs/minimal";
+import { Timestamp } from "../../../google/protobuf/timestamp";
+import { Resource } from "./resource";
 
-export const protobufPackage = 'blockjoy.common.v1';
+export const protobufPackage = "blockjoy.common.v1";
 
 /** The reported state of a node. */
 export enum NodeState {
@@ -99,7 +99,9 @@ export interface ProtocolStatus {
 /** Determines how and where nodes are created. */
 export interface NodeLauncher {
   /** Create nodes on these hosts. */
-  byHost?: ByHost | undefined;
+  byHost?:
+    | ByHost
+    | undefined;
   /** Create nodes in these regions. */
   byRegion?: ByRegion | undefined;
 }
@@ -135,9 +137,13 @@ export interface NodeJob {
   /** The current status of this job. */
   status: NodeJobStatus;
   /** The exit code of a stopped process. */
-  exitCode?: number | undefined;
+  exitCode?:
+    | number
+    | undefined;
   /** A readable message to manually inspect the state of the job. */
-  message?: string | undefined;
+  message?:
+    | string
+    | undefined;
   /** A list of log lines with information about the current job. */
   logs: string[];
   /** The number of job restarts since the last reset. */
@@ -149,9 +155,13 @@ export interface NodeJob {
 /** The progress a job has made towards completion. */
 export interface NodeJobProgress {
   /** The total units of progress to complete. */
-  total?: number | undefined;
+  total?:
+    | number
+    | undefined;
   /** The units of progress currently completed. */
-  current?: number | undefined;
+  current?:
+    | number
+    | undefined;
   /** Additional info on the job progress. */
   message?: string | undefined;
 }
@@ -161,7 +171,9 @@ export interface NodeReport {
   /** The problem description. */
   message: string;
   /** The entity that created the report. */
-  createdBy: Resource | undefined;
+  createdBy:
+    | Resource
+    | undefined;
   /** The moment the issue was raised. */
   createdAt: Date | undefined;
 }
@@ -171,10 +183,7 @@ function createBaseNodeStatus(): NodeStatus {
 }
 
 export const NodeStatus = {
-  encode(
-    message: NodeStatus,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: NodeStatus, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.state !== 0) {
       writer.uint32(8).int32(message.state);
     }
@@ -182,17 +191,13 @@ export const NodeStatus = {
       writer.uint32(16).int32(message.next);
     }
     if (message.protocol !== undefined) {
-      ProtocolStatus.encode(
-        message.protocol,
-        writer.uint32(26).fork(),
-      ).ldelim();
+      ProtocolStatus.encode(message.protocol, writer.uint32(26).fork()).ldelim();
     }
     return writer;
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): NodeStatus {
-    const reader =
-      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNodeStatus();
     while (reader.pos < end) {
@@ -236,24 +241,20 @@ export const NodeStatus = {
     const message = createBaseNodeStatus();
     message.state = object.state ?? 0;
     message.next = object.next ?? undefined;
-    message.protocol =
-      object.protocol !== undefined && object.protocol !== null
-        ? ProtocolStatus.fromPartial(object.protocol)
-        : undefined;
+    message.protocol = (object.protocol !== undefined && object.protocol !== null)
+      ? ProtocolStatus.fromPartial(object.protocol)
+      : undefined;
     return message;
   },
 };
 
 function createBaseProtocolStatus(): ProtocolStatus {
-  return { state: '', health: 0 };
+  return { state: "", health: 0 };
 }
 
 export const ProtocolStatus = {
-  encode(
-    message: ProtocolStatus,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
-    if (message.state !== '') {
+  encode(message: ProtocolStatus, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.state !== "") {
       writer.uint32(10).string(message.state);
     }
     if (message.health !== 0) {
@@ -263,8 +264,7 @@ export const ProtocolStatus = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ProtocolStatus {
-    const reader =
-      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseProtocolStatus();
     while (reader.pos < end) {
@@ -299,7 +299,7 @@ export const ProtocolStatus = {
 
   fromPartial(object: DeepPartial<ProtocolStatus>): ProtocolStatus {
     const message = createBaseProtocolStatus();
-    message.state = object.state ?? '';
+    message.state = object.state ?? "";
     message.health = object.health ?? 0;
     return message;
   },
@@ -310,10 +310,7 @@ function createBaseNodeLauncher(): NodeLauncher {
 }
 
 export const NodeLauncher = {
-  encode(
-    message: NodeLauncher,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: NodeLauncher, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.byHost !== undefined) {
       ByHost.encode(message.byHost, writer.uint32(10).fork()).ldelim();
     }
@@ -324,8 +321,7 @@ export const NodeLauncher = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): NodeLauncher {
-    const reader =
-      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNodeLauncher();
     while (reader.pos < end) {
@@ -360,14 +356,12 @@ export const NodeLauncher = {
 
   fromPartial(object: DeepPartial<NodeLauncher>): NodeLauncher {
     const message = createBaseNodeLauncher();
-    message.byHost =
-      object.byHost !== undefined && object.byHost !== null
-        ? ByHost.fromPartial(object.byHost)
-        : undefined;
-    message.byRegion =
-      object.byRegion !== undefined && object.byRegion !== null
-        ? ByRegion.fromPartial(object.byRegion)
-        : undefined;
+    message.byHost = (object.byHost !== undefined && object.byHost !== null)
+      ? ByHost.fromPartial(object.byHost)
+      : undefined;
+    message.byRegion = (object.byRegion !== undefined && object.byRegion !== null)
+      ? ByRegion.fromPartial(object.byRegion)
+      : undefined;
     return message;
   },
 };
@@ -377,10 +371,7 @@ function createBaseByHost(): ByHost {
 }
 
 export const ByHost = {
-  encode(
-    message: ByHost,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: ByHost, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.hostCounts) {
       HostCount.encode(v!, writer.uint32(10).fork()).ldelim();
     }
@@ -388,8 +379,7 @@ export const ByHost = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ByHost {
-    const reader =
-      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseByHost();
     while (reader.pos < end) {
@@ -417,22 +407,18 @@ export const ByHost = {
 
   fromPartial(object: DeepPartial<ByHost>): ByHost {
     const message = createBaseByHost();
-    message.hostCounts =
-      object.hostCounts?.map((e) => HostCount.fromPartial(e)) || [];
+    message.hostCounts = object.hostCounts?.map((e) => HostCount.fromPartial(e)) || [];
     return message;
   },
 };
 
 function createBaseHostCount(): HostCount {
-  return { hostId: '', nodeCount: 0 };
+  return { hostId: "", nodeCount: 0 };
 }
 
 export const HostCount = {
-  encode(
-    message: HostCount,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
-    if (message.hostId !== '') {
+  encode(message: HostCount, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.hostId !== "") {
       writer.uint32(10).string(message.hostId);
     }
     if (message.nodeCount !== 0) {
@@ -442,8 +428,7 @@ export const HostCount = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): HostCount {
-    const reader =
-      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseHostCount();
     while (reader.pos < end) {
@@ -478,7 +463,7 @@ export const HostCount = {
 
   fromPartial(object: DeepPartial<HostCount>): HostCount {
     const message = createBaseHostCount();
-    message.hostId = object.hostId ?? '';
+    message.hostId = object.hostId ?? "";
     message.nodeCount = object.nodeCount ?? 0;
     return message;
   },
@@ -489,10 +474,7 @@ function createBaseByRegion(): ByRegion {
 }
 
 export const ByRegion = {
-  encode(
-    message: ByRegion,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: ByRegion, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.regionCounts) {
       RegionCount.encode(v!, writer.uint32(10).fork()).ldelim();
     }
@@ -500,8 +482,7 @@ export const ByRegion = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ByRegion {
-    const reader =
-      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseByRegion();
     while (reader.pos < end) {
@@ -512,9 +493,7 @@ export const ByRegion = {
             break;
           }
 
-          message.regionCounts.push(
-            RegionCount.decode(reader, reader.uint32()),
-          );
+          message.regionCounts.push(RegionCount.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -531,27 +510,18 @@ export const ByRegion = {
 
   fromPartial(object: DeepPartial<ByRegion>): ByRegion {
     const message = createBaseByRegion();
-    message.regionCounts =
-      object.regionCounts?.map((e) => RegionCount.fromPartial(e)) || [];
+    message.regionCounts = object.regionCounts?.map((e) => RegionCount.fromPartial(e)) || [];
     return message;
   },
 };
 
 function createBaseRegionCount(): RegionCount {
-  return {
-    regionId: '',
-    nodeCount: 0,
-    resource: undefined,
-    similarity: undefined,
-  };
+  return { regionId: "", nodeCount: 0, resource: undefined, similarity: undefined };
 }
 
 export const RegionCount = {
-  encode(
-    message: RegionCount,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
-    if (message.regionId !== '') {
+  encode(message: RegionCount, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.regionId !== "") {
       writer.uint32(10).string(message.regionId);
     }
     if (message.nodeCount !== 0) {
@@ -567,8 +537,7 @@ export const RegionCount = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): RegionCount {
-    const reader =
-      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseRegionCount();
     while (reader.pos < end) {
@@ -617,7 +586,7 @@ export const RegionCount = {
 
   fromPartial(object: DeepPartial<RegionCount>): RegionCount {
     const message = createBaseRegionCount();
-    message.regionId = object.regionId ?? '';
+    message.regionId = object.regionId ?? "";
     message.nodeCount = object.nodeCount ?? 0;
     message.resource = object.resource ?? undefined;
     message.similarity = object.similarity ?? undefined;
@@ -626,23 +595,12 @@ export const RegionCount = {
 };
 
 function createBaseNodeJob(): NodeJob {
-  return {
-    name: '',
-    status: 0,
-    exitCode: undefined,
-    message: undefined,
-    logs: [],
-    restarts: 0,
-    progress: undefined,
-  };
+  return { name: "", status: 0, exitCode: undefined, message: undefined, logs: [], restarts: 0, progress: undefined };
 }
 
 export const NodeJob = {
-  encode(
-    message: NodeJob,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
-    if (message.name !== '') {
+  encode(message: NodeJob, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
     if (message.status !== 0) {
@@ -661,17 +619,13 @@ export const NodeJob = {
       writer.uint32(48).uint64(message.restarts);
     }
     if (message.progress !== undefined) {
-      NodeJobProgress.encode(
-        message.progress,
-        writer.uint32(58).fork(),
-      ).ldelim();
+      NodeJobProgress.encode(message.progress, writer.uint32(58).fork()).ldelim();
     }
     return writer;
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): NodeJob {
-    const reader =
-      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNodeJob();
     while (reader.pos < end) {
@@ -741,16 +695,15 @@ export const NodeJob = {
 
   fromPartial(object: DeepPartial<NodeJob>): NodeJob {
     const message = createBaseNodeJob();
-    message.name = object.name ?? '';
+    message.name = object.name ?? "";
     message.status = object.status ?? 0;
     message.exitCode = object.exitCode ?? undefined;
     message.message = object.message ?? undefined;
     message.logs = object.logs?.map((e) => e) || [];
     message.restarts = object.restarts ?? 0;
-    message.progress =
-      object.progress !== undefined && object.progress !== null
-        ? NodeJobProgress.fromPartial(object.progress)
-        : undefined;
+    message.progress = (object.progress !== undefined && object.progress !== null)
+      ? NodeJobProgress.fromPartial(object.progress)
+      : undefined;
     return message;
   },
 };
@@ -760,10 +713,7 @@ function createBaseNodeJobProgress(): NodeJobProgress {
 }
 
 export const NodeJobProgress = {
-  encode(
-    message: NodeJobProgress,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: NodeJobProgress, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.total !== undefined) {
       writer.uint32(8).uint32(message.total);
     }
@@ -777,8 +727,7 @@ export const NodeJobProgress = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): NodeJobProgress {
-    const reader =
-      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNodeJobProgress();
     while (reader.pos < end) {
@@ -828,40 +777,28 @@ export const NodeJobProgress = {
 };
 
 function createBaseNodeReport(): NodeReport {
-  return {
-    reportId: '',
-    message: '',
-    createdBy: undefined,
-    createdAt: undefined,
-  };
+  return { reportId: "", message: "", createdBy: undefined, createdAt: undefined };
 }
 
 export const NodeReport = {
-  encode(
-    message: NodeReport,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
-    if (message.reportId !== '') {
+  encode(message: NodeReport, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.reportId !== "") {
       writer.uint32(10).string(message.reportId);
     }
-    if (message.message !== '') {
+    if (message.message !== "") {
       writer.uint32(18).string(message.message);
     }
     if (message.createdBy !== undefined) {
       Resource.encode(message.createdBy, writer.uint32(26).fork()).ldelim();
     }
     if (message.createdAt !== undefined) {
-      Timestamp.encode(
-        toTimestamp(message.createdAt),
-        writer.uint32(34).fork(),
-      ).ldelim();
+      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(34).fork()).ldelim();
     }
     return writer;
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): NodeReport {
-    const reader =
-      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNodeReport();
     while (reader.pos < end) {
@@ -893,9 +830,7 @@ export const NodeReport = {
             break;
           }
 
-          message.createdAt = fromTimestamp(
-            Timestamp.decode(reader, reader.uint32()),
-          );
+          message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -912,12 +847,11 @@ export const NodeReport = {
 
   fromPartial(object: DeepPartial<NodeReport>): NodeReport {
     const message = createBaseNodeReport();
-    message.reportId = object.reportId ?? '';
-    message.message = object.message ?? '';
-    message.createdBy =
-      object.createdBy !== undefined && object.createdBy !== null
-        ? Resource.fromPartial(object.createdBy)
-        : undefined;
+    message.reportId = object.reportId ?? "";
+    message.message = object.message ?? "";
+    message.createdBy = (object.createdBy !== undefined && object.createdBy !== null)
+      ? Resource.fromPartial(object.createdBy)
+      : undefined;
     message.createdAt = object.createdAt ?? undefined;
     return message;
   },
@@ -927,38 +861,26 @@ declare const self: any | undefined;
 declare const window: any | undefined;
 declare const global: any | undefined;
 const tsProtoGlobalThis: any = (() => {
-  if (typeof globalThis !== 'undefined') {
+  if (typeof globalThis !== "undefined") {
     return globalThis;
   }
-  if (typeof self !== 'undefined') {
+  if (typeof self !== "undefined") {
     return self;
   }
-  if (typeof window !== 'undefined') {
+  if (typeof window !== "undefined") {
     return window;
   }
-  if (typeof global !== 'undefined') {
+  if (typeof global !== "undefined") {
     return global;
   }
-  throw 'Unable to locate global object';
+  throw "Unable to locate global object";
 })();
 
-type Builtin =
-  | Date
-  | Function
-  | Uint8Array
-  | string
-  | number
-  | boolean
-  | undefined;
+type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends {}
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin ? T
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 function toTimestamp(date: Date): Timestamp {
@@ -975,9 +897,7 @@ function fromTimestamp(t: Timestamp): Date {
 
 function longToNumber(long: Long): number {
   if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new tsProtoGlobalThis.Error(
-      'Value is larger than Number.MAX_SAFE_INTEGER',
-    );
+    throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
   return long.toNumber();
 }
