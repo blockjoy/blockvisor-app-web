@@ -46,10 +46,14 @@ export interface ImageProperty {
   defaultValue: string;
   /** Whether the value may change at runtime. */
   dynamicValue: boolean;
-  /** A readable description of this property. */
-  description?: string | undefined;
   /** How this field should be displayed in the UI. */
   uiType: UiType;
+  /** The display name of this property. */
+  displayName?: string | undefined;
+  /** The display name of the property group. */
+  displayGroup?: string | undefined;
+  /** Additional information describing this property. */
+  description?: string | undefined;
   /** Additional CPU cores needed when using this property. */
   addCpuCores?: number | undefined;
   /** Additional memory bytes needed when using this property. */
@@ -104,10 +108,14 @@ export interface AddImageProperty {
   defaultValue: string;
   /** Whether the value may change at runtime. */
   dynamicValue: boolean;
-  /** A readable description of this property. */
-  description?: string | undefined;
   /** How this field should be displayed in the UI. */
   uiType: UiType;
+  /** The display name of this property. */
+  displayName?: string | undefined;
+  /** The display name of the property group. */
+  displayGroup?: string | undefined;
+  /** Additional information describing this property. */
+  description?: string | undefined;
   /** Additional CPU cores needed when using this property. */
   addCpuCores?: number | undefined;
   /** Additional memory bytes needed when using this property. */

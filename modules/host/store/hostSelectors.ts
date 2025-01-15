@@ -1,18 +1,13 @@
 import { selector, selectorFamily } from 'recoil';
 import isEqual from 'lodash/isEqual';
 import { Host, HostSort } from '@modules/grpc/library/blockjoy/v1/host';
-import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { hostClient, UIHostFilterCriteria } from '@modules/grpc';
 import { authAtoms, authSelectors } from '@modules/auth';
 import { hostAtoms, InitialHostQueryParams } from '@modules/host';
-import { sort } from '@shared/components';
-import { nodeStatusList } from '@shared/constants/nodeStatusList';
 import {
   HOST_FILTERS_DEFAULT,
   HOST_SORT_DEFAULT,
 } from '@shared/constants/lookups';
-import { nodeLauncherAtoms } from '@modules/node';
-import { organizationSelectors } from '@modules/organization';
 
 const settings = selector<HostSettings>({
   key: 'host.settings',

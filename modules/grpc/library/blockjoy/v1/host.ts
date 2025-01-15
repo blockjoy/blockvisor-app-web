@@ -309,10 +309,6 @@ function createBaseHost(): Host {
     createdAt: undefined,
     updatedAt: undefined,
     cost: undefined,
-    createdBy: undefined,
-    createdAt: undefined,
-    updatedAt: undefined,
-    cost: undefined,
   };
 }
 

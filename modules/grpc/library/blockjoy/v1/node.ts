@@ -339,10 +339,6 @@ function createBaseNode(): Node {
     createdAt: undefined,
     updatedAt: undefined,
     cost: undefined,
-    createdBy: undefined,
-    createdAt: undefined,
-    updatedAt: undefined,
-    cost: undefined,
   };
 }
 
@@ -754,9 +750,7 @@ export const Node = {
             break;
           }
 
-          message.updatedAt = fromTimestamp(
-            Timestamp.decode(reader, reader.uint32()),
-          );
+          message.createdBy = Resource.decode(reader, reader.uint32());
           continue;
         case 38:
           if (tag !== 306) {
@@ -770,7 +764,7 @@ export const Node = {
             break;
           }
 
-          message.updatedAt = fromTimestamp(
+          message.createdAt = fromTimestamp(
             Timestamp.decode(reader, reader.uint32()),
           );
           continue;
