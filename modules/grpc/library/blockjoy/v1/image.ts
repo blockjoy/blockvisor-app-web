@@ -1,13 +1,13 @@
 /* eslint-disable */
-import Long from 'long';
-import type { CallContext, CallOptions } from 'nice-grpc-common';
-import _m0 from 'protobufjs/minimal';
-import { Empty } from '../../google/protobuf/empty';
-import { Timestamp } from '../../google/protobuf/timestamp';
-import { FirewallConfig, RamdiskConfig } from '../common/v1/config';
-import { ProtocolVersionKey, UiType, Visibility } from '../common/v1/protocol';
+import Long from "long";
+import type { CallContext, CallOptions } from "nice-grpc-common";
+import _m0 from "protobufjs/minimal";
+import { Empty } from "../../google/protobuf/empty";
+import { Timestamp } from "../../google/protobuf/timestamp";
+import { FirewallConfig, RamdiskConfig } from "../common/v1/config";
+import { ProtocolVersionKey, UiType, Visibility } from "../common/v1/protocol";
 
-export const protobufPackage = 'blockjoy.v1';
+export const protobufPackage = "blockjoy.v1";
 
 /** An image build for some protocol version. */
 export interface Image {
@@ -37,23 +37,41 @@ export interface ImageProperty {
   /** The lookup key for this property. */
   key: string;
   /** A repeated key to group switches and enums. */
-  keyGroup?: string | undefined;
+  keyGroup?:
+    | string
+    | undefined;
   /** For repeated key groups, one value must be the default. */
-  isGroupDefault?: boolean | undefined;
+  isGroupDefault?:
+    | boolean
+    | undefined;
   /** Whether this property requires different archive data. */
   newArchive: boolean;
   /** The default value for this property. */
   defaultValue: string;
   /** Whether the value may change at runtime. */
   dynamicValue: boolean;
-  /** A readable description of this property. */
-  description?: string | undefined;
   /** How this field should be displayed in the UI. */
   uiType: UiType;
+  /** The display name of this property. */
+  displayName?:
+    | string
+    | undefined;
+  /** The display name of the property group. */
+  displayGroup?:
+    | string
+    | undefined;
+  /** Additional information describing this property. */
+  description?:
+    | string
+    | undefined;
   /** Additional CPU cores needed when using this property. */
-  addCpuCores?: number | undefined;
+  addCpuCores?:
+    | number
+    | undefined;
   /** Additional memory bytes needed when using this property. */
-  addMemoryBytes?: number | undefined;
+  addMemoryBytes?:
+    | number
+    | undefined;
   /** Additional disk bytes needed when using this property. */
   addDiskBytes?: number | undefined;
 }
@@ -70,15 +88,21 @@ export interface ImageServiceAddImageRequest {
   /** The protocol version id to add this image to. */
   protocolVersionId: string;
   /** Whether this is a public or org-image version. */
-  orgId?: string | undefined;
+  orgId?:
+    | string
+    | undefined;
   /** An identifier to where the image is stored. */
   imageUri: string;
   /** A readable description of this image. */
-  description?: string | undefined;
+  description?:
+    | string
+    | undefined;
   /** The set of properties for configuring this image. */
   properties: AddImageProperty[];
   /** The firewall config for this image. */
-  firewall: FirewallConfig | undefined;
+  firewall:
+    | FirewallConfig
+    | undefined;
   /** The minimum CPU cores nodes for this image will launch with. */
   minCpuCores: number;
   /** The minimum memory nodes for this image will launch with. */
@@ -95,23 +119,41 @@ export interface AddImageProperty {
   /** The lookup key for this property (in lower-kebab-case). */
   key: string;
   /** A repeated key to group switches and enums. */
-  keyGroup?: string | undefined;
+  keyGroup?:
+    | string
+    | undefined;
   /** For repeated key groups, one value must be the default. */
-  isGroupDefault?: boolean | undefined;
+  isGroupDefault?:
+    | boolean
+    | undefined;
   /** Whether this property requires different archive data. */
   newArchive: boolean;
   /** The default value for this property. */
   defaultValue: string;
   /** Whether the value may change at runtime. */
   dynamicValue: boolean;
-  /** A readable description of this property. */
-  description?: string | undefined;
   /** How this field should be displayed in the UI. */
   uiType: UiType;
+  /** The display name of this property. */
+  displayName?:
+    | string
+    | undefined;
+  /** The display name of the property group. */
+  displayGroup?:
+    | string
+    | undefined;
+  /** Additional information describing this property. */
+  description?:
+    | string
+    | undefined;
   /** Additional CPU cores needed when using this property. */
-  addCpuCores?: number | undefined;
+  addCpuCores?:
+    | number
+    | undefined;
   /** Additional memory bytes needed when using this property. */
-  addMemoryBytes?: number | undefined;
+  addMemoryBytes?:
+    | number
+    | undefined;
   /** Additional disk bytes needed when using this property. */
   addDiskBytes?: number | undefined;
 }
@@ -119,8 +161,10 @@ export interface AddImageProperty {
 export interface ArchivePointer {
   /** The combination of new_archive property keys to lookup an archive. */
   newArchiveKeys: string[];
-  /** Use this store id. */
-  storeId?: string | undefined;
+  /** Use this store key. */
+  storeKey?:
+    | string
+    | undefined;
   /** This combination of new_archive properties is disallowed. */
   disallowed?: Empty | undefined;
 }
@@ -132,11 +176,17 @@ export interface ImageServiceAddImageResponse {
 
 export interface ImageServiceGetImageRequest {
   /** The version key to get the latest image of. */
-  versionKey: ProtocolVersionKey | undefined;
+  versionKey:
+    | ProtocolVersionKey
+    | undefined;
   /** The org id for private protocols, versions or images. */
-  orgId?: string | undefined;
+  orgId?:
+    | string
+    | undefined;
   /** A semantic protocol version, or none for latest. */
-  semanticVersion?: string | undefined;
+  semanticVersion?:
+    | string
+    | undefined;
   /** An image build version, or none for latest. */
   buildVersion?: number | undefined;
 }
@@ -174,11 +224,11 @@ export interface ImageServiceUpdateImageResponse {
 
 function createBaseImage(): Image {
   return {
-    imageId: '',
-    protocolVersionId: '',
+    imageId: "",
+    protocolVersionId: "",
     orgId: undefined,
     buildVersion: 0,
-    imageUri: '',
+    imageUri: "",
     description: undefined,
     properties: [],
     firewall: undefined,
@@ -194,10 +244,10 @@ function createBaseImage(): Image {
 
 export const Image = {
   encode(message: Image, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.imageId !== '') {
+    if (message.imageId !== "") {
       writer.uint32(10).string(message.imageId);
     }
-    if (message.protocolVersionId !== '') {
+    if (message.protocolVersionId !== "") {
       writer.uint32(18).string(message.protocolVersionId);
     }
     if (message.orgId !== undefined) {
@@ -206,7 +256,7 @@ export const Image = {
     if (message.buildVersion !== 0) {
       writer.uint32(32).uint64(message.buildVersion);
     }
-    if (message.imageUri !== '') {
+    if (message.imageUri !== "") {
       writer.uint32(42).string(message.imageUri);
     }
     if (message.description !== undefined) {
@@ -216,10 +266,7 @@ export const Image = {
       ImageProperty.encode(v!, writer.uint32(58).fork()).ldelim();
     }
     if (message.firewall !== undefined) {
-      FirewallConfig.encode(
-        message.firewall,
-        writer.uint32(66).fork(),
-      ).ldelim();
+      FirewallConfig.encode(message.firewall, writer.uint32(66).fork()).ldelim();
     }
     if (message.minCpuCores !== 0) {
       writer.uint32(72).uint64(message.minCpuCores);
@@ -237,23 +284,16 @@ export const Image = {
       writer.uint32(104).int32(message.visibility);
     }
     if (message.createdAt !== undefined) {
-      Timestamp.encode(
-        toTimestamp(message.createdAt),
-        writer.uint32(114).fork(),
-      ).ldelim();
+      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(114).fork()).ldelim();
     }
     if (message.updatedAt !== undefined) {
-      Timestamp.encode(
-        toTimestamp(message.updatedAt),
-        writer.uint32(122).fork(),
-      ).ldelim();
+      Timestamp.encode(toTimestamp(message.updatedAt), writer.uint32(122).fork()).ldelim();
     }
     return writer;
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Image {
-    const reader =
-      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseImage();
     while (reader.pos < end) {
@@ -306,9 +346,7 @@ export const Image = {
             break;
           }
 
-          message.properties.push(
-            ImageProperty.decode(reader, reader.uint32()),
-          );
+          message.properties.push(ImageProperty.decode(reader, reader.uint32()));
           continue;
         case 8:
           if (tag !== 66) {
@@ -357,18 +395,14 @@ export const Image = {
             break;
           }
 
-          message.createdAt = fromTimestamp(
-            Timestamp.decode(reader, reader.uint32()),
-          );
+          message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
         case 15:
           if (tag !== 122) {
             break;
           }
 
-          message.updatedAt = fromTimestamp(
-            Timestamp.decode(reader, reader.uint32()),
-          );
+          message.updatedAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -385,23 +419,20 @@ export const Image = {
 
   fromPartial(object: DeepPartial<Image>): Image {
     const message = createBaseImage();
-    message.imageId = object.imageId ?? '';
-    message.protocolVersionId = object.protocolVersionId ?? '';
+    message.imageId = object.imageId ?? "";
+    message.protocolVersionId = object.protocolVersionId ?? "";
     message.orgId = object.orgId ?? undefined;
     message.buildVersion = object.buildVersion ?? 0;
-    message.imageUri = object.imageUri ?? '';
+    message.imageUri = object.imageUri ?? "";
     message.description = object.description ?? undefined;
-    message.properties =
-      object.properties?.map((e) => ImageProperty.fromPartial(e)) || [];
-    message.firewall =
-      object.firewall !== undefined && object.firewall !== null
-        ? FirewallConfig.fromPartial(object.firewall)
-        : undefined;
+    message.properties = object.properties?.map((e) => ImageProperty.fromPartial(e)) || [];
+    message.firewall = (object.firewall !== undefined && object.firewall !== null)
+      ? FirewallConfig.fromPartial(object.firewall)
+      : undefined;
     message.minCpuCores = object.minCpuCores ?? 0;
     message.minMemoryBytes = object.minMemoryBytes ?? 0;
     message.minDiskBytes = object.minDiskBytes ?? 0;
-    message.ramdisks =
-      object.ramdisks?.map((e) => RamdiskConfig.fromPartial(e)) || [];
+    message.ramdisks = object.ramdisks?.map((e) => RamdiskConfig.fromPartial(e)) || [];
     message.visibility = object.visibility ?? 0;
     message.createdAt = object.createdAt ?? undefined;
     message.updatedAt = object.updatedAt ?? undefined;
@@ -411,13 +442,13 @@ export const Image = {
 
 function createBaseImageProperty(): ImageProperty {
   return {
-    imagePropertyId: '',
-    imageId: '',
-    key: '',
+    imagePropertyId: "",
+    imageId: "",
+    key: "",
     keyGroup: undefined,
     isGroupDefault: undefined,
     newArchive: false,
-    defaultValue: '',
+    defaultValue: "",
     dynamicValue: false,
     uiType: 0,
     displayName: undefined,
@@ -430,17 +461,14 @@ function createBaseImageProperty(): ImageProperty {
 }
 
 export const ImageProperty = {
-  encode(
-    message: ImageProperty,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
-    if (message.imagePropertyId !== '') {
+  encode(message: ImageProperty, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.imagePropertyId !== "") {
       writer.uint32(10).string(message.imagePropertyId);
     }
-    if (message.imageId !== '') {
+    if (message.imageId !== "") {
       writer.uint32(18).string(message.imageId);
     }
-    if (message.key !== '') {
+    if (message.key !== "") {
       writer.uint32(26).string(message.key);
     }
     if (message.keyGroup !== undefined) {
@@ -452,7 +480,7 @@ export const ImageProperty = {
     if (message.newArchive === true) {
       writer.uint32(48).bool(message.newArchive);
     }
-    if (message.defaultValue !== '') {
+    if (message.defaultValue !== "") {
       writer.uint32(58).string(message.defaultValue);
     }
     if (message.dynamicValue === true) {
@@ -483,8 +511,7 @@ export const ImageProperty = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ImageProperty {
-    const reader =
-      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseImageProperty();
     while (reader.pos < end) {
@@ -610,13 +637,13 @@ export const ImageProperty = {
 
   fromPartial(object: DeepPartial<ImageProperty>): ImageProperty {
     const message = createBaseImageProperty();
-    message.imagePropertyId = object.imagePropertyId ?? '';
-    message.imageId = object.imageId ?? '';
-    message.key = object.key ?? '';
+    message.imagePropertyId = object.imagePropertyId ?? "";
+    message.imageId = object.imageId ?? "";
+    message.key = object.key ?? "";
     message.keyGroup = object.keyGroup ?? undefined;
     message.isGroupDefault = object.isGroupDefault ?? undefined;
     message.newArchive = object.newArchive ?? false;
-    message.defaultValue = object.defaultValue ?? '';
+    message.defaultValue = object.defaultValue ?? "";
     message.dynamicValue = object.dynamicValue ?? false;
     message.uiType = object.uiType ?? 0;
     message.displayName = object.displayName ?? undefined;
@@ -630,22 +657,19 @@ export const ImageProperty = {
 };
 
 function createBaseArchive(): Archive {
-  return { archiveId: '', imageId: '', storeId: '', imagePropertyIds: [] };
+  return { archiveId: "", imageId: "", storeKey: "", imagePropertyIds: [] };
 }
 
 export const Archive = {
-  encode(
-    message: Archive,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
-    if (message.archiveId !== '') {
+  encode(message: Archive, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.archiveId !== "") {
       writer.uint32(10).string(message.archiveId);
     }
-    if (message.imageId !== '') {
+    if (message.imageId !== "") {
       writer.uint32(18).string(message.imageId);
     }
-    if (message.storeId !== '') {
-      writer.uint32(26).string(message.storeId);
+    if (message.storeKey !== "") {
+      writer.uint32(26).string(message.storeKey);
     }
     for (const v of message.imagePropertyIds) {
       writer.uint32(34).string(v!);
@@ -654,8 +678,7 @@ export const Archive = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Archive {
-    const reader =
-      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseArchive();
     while (reader.pos < end) {
@@ -704,9 +727,9 @@ export const Archive = {
 
   fromPartial(object: DeepPartial<Archive>): Archive {
     const message = createBaseArchive();
-    message.archiveId = object.archiveId ?? '';
-    message.imageId = object.imageId ?? '';
-    message.storeId = object.storeId ?? '';
+    message.archiveId = object.archiveId ?? "";
+    message.imageId = object.imageId ?? "";
+    message.storeKey = object.storeKey ?? "";
     message.imagePropertyIds = object.imagePropertyIds?.map((e) => e) || [];
     return message;
   },
@@ -714,9 +737,9 @@ export const Archive = {
 
 function createBaseImageServiceAddImageRequest(): ImageServiceAddImageRequest {
   return {
-    protocolVersionId: '',
+    protocolVersionId: "",
     orgId: undefined,
-    imageUri: '',
+    imageUri: "",
     description: undefined,
     properties: [],
     firewall: undefined,
@@ -729,17 +752,14 @@ function createBaseImageServiceAddImageRequest(): ImageServiceAddImageRequest {
 }
 
 export const ImageServiceAddImageRequest = {
-  encode(
-    message: ImageServiceAddImageRequest,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
-    if (message.protocolVersionId !== '') {
+  encode(message: ImageServiceAddImageRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.protocolVersionId !== "") {
       writer.uint32(10).string(message.protocolVersionId);
     }
     if (message.orgId !== undefined) {
       writer.uint32(18).string(message.orgId);
     }
-    if (message.imageUri !== '') {
+    if (message.imageUri !== "") {
       writer.uint32(26).string(message.imageUri);
     }
     if (message.description !== undefined) {
@@ -749,10 +769,7 @@ export const ImageServiceAddImageRequest = {
       AddImageProperty.encode(v!, writer.uint32(42).fork()).ldelim();
     }
     if (message.firewall !== undefined) {
-      FirewallConfig.encode(
-        message.firewall,
-        writer.uint32(50).fork(),
-      ).ldelim();
+      FirewallConfig.encode(message.firewall, writer.uint32(50).fork()).ldelim();
     }
     if (message.minCpuCores !== 0) {
       writer.uint32(56).uint64(message.minCpuCores);
@@ -772,12 +789,8 @@ export const ImageServiceAddImageRequest = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): ImageServiceAddImageRequest {
-    const reader =
-      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): ImageServiceAddImageRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseImageServiceAddImageRequest();
     while (reader.pos < end) {
@@ -816,9 +829,7 @@ export const ImageServiceAddImageRequest = {
             break;
           }
 
-          message.properties.push(
-            AddImageProperty.decode(reader, reader.uint32()),
-          );
+          message.properties.push(AddImageProperty.decode(reader, reader.uint32()));
           continue;
         case 6:
           if (tag !== 50) {
@@ -860,9 +871,7 @@ export const ImageServiceAddImageRequest = {
             break;
           }
 
-          message.archivePointers.push(
-            ArchivePointer.decode(reader, reader.uint32()),
-          );
+          message.archivePointers.push(ArchivePointer.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -873,44 +882,36 @@ export const ImageServiceAddImageRequest = {
     return message;
   },
 
-  create(
-    base?: DeepPartial<ImageServiceAddImageRequest>,
-  ): ImageServiceAddImageRequest {
+  create(base?: DeepPartial<ImageServiceAddImageRequest>): ImageServiceAddImageRequest {
     return ImageServiceAddImageRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(
-    object: DeepPartial<ImageServiceAddImageRequest>,
-  ): ImageServiceAddImageRequest {
+  fromPartial(object: DeepPartial<ImageServiceAddImageRequest>): ImageServiceAddImageRequest {
     const message = createBaseImageServiceAddImageRequest();
-    message.protocolVersionId = object.protocolVersionId ?? '';
+    message.protocolVersionId = object.protocolVersionId ?? "";
     message.orgId = object.orgId ?? undefined;
-    message.imageUri = object.imageUri ?? '';
+    message.imageUri = object.imageUri ?? "";
     message.description = object.description ?? undefined;
-    message.properties =
-      object.properties?.map((e) => AddImageProperty.fromPartial(e)) || [];
-    message.firewall =
-      object.firewall !== undefined && object.firewall !== null
-        ? FirewallConfig.fromPartial(object.firewall)
-        : undefined;
+    message.properties = object.properties?.map((e) => AddImageProperty.fromPartial(e)) || [];
+    message.firewall = (object.firewall !== undefined && object.firewall !== null)
+      ? FirewallConfig.fromPartial(object.firewall)
+      : undefined;
     message.minCpuCores = object.minCpuCores ?? 0;
     message.minMemoryBytes = object.minMemoryBytes ?? 0;
     message.minDiskBytes = object.minDiskBytes ?? 0;
-    message.ramdisks =
-      object.ramdisks?.map((e) => RamdiskConfig.fromPartial(e)) || [];
-    message.archivePointers =
-      object.archivePointers?.map((e) => ArchivePointer.fromPartial(e)) || [];
+    message.ramdisks = object.ramdisks?.map((e) => RamdiskConfig.fromPartial(e)) || [];
+    message.archivePointers = object.archivePointers?.map((e) => ArchivePointer.fromPartial(e)) || [];
     return message;
   },
 };
 
 function createBaseAddImageProperty(): AddImageProperty {
   return {
-    key: '',
+    key: "",
     keyGroup: undefined,
     isGroupDefault: undefined,
     newArchive: false,
-    defaultValue: '',
+    defaultValue: "",
     dynamicValue: false,
     uiType: 0,
     displayName: undefined,
@@ -923,11 +924,8 @@ function createBaseAddImageProperty(): AddImageProperty {
 }
 
 export const AddImageProperty = {
-  encode(
-    message: AddImageProperty,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
-    if (message.key !== '') {
+  encode(message: AddImageProperty, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.key !== "") {
       writer.uint32(10).string(message.key);
     }
     if (message.keyGroup !== undefined) {
@@ -939,7 +937,7 @@ export const AddImageProperty = {
     if (message.newArchive === true) {
       writer.uint32(32).bool(message.newArchive);
     }
-    if (message.defaultValue !== '') {
+    if (message.defaultValue !== "") {
       writer.uint32(42).string(message.defaultValue);
     }
     if (message.dynamicValue === true) {
@@ -970,8 +968,7 @@ export const AddImageProperty = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): AddImageProperty {
-    const reader =
-      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAddImageProperty();
     while (reader.pos < end) {
@@ -1083,11 +1080,11 @@ export const AddImageProperty = {
 
   fromPartial(object: DeepPartial<AddImageProperty>): AddImageProperty {
     const message = createBaseAddImageProperty();
-    message.key = object.key ?? '';
+    message.key = object.key ?? "";
     message.keyGroup = object.keyGroup ?? undefined;
     message.isGroupDefault = object.isGroupDefault ?? undefined;
     message.newArchive = object.newArchive ?? false;
-    message.defaultValue = object.defaultValue ?? '';
+    message.defaultValue = object.defaultValue ?? "";
     message.dynamicValue = object.dynamicValue ?? false;
     message.uiType = object.uiType ?? 0;
     message.displayName = object.displayName ?? undefined;
@@ -1105,10 +1102,7 @@ function createBaseArchivePointer(): ArchivePointer {
 }
 
 export const ArchivePointer = {
-  encode(
-    message: ArchivePointer,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: ArchivePointer, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.newArchiveKeys) {
       writer.uint32(10).string(v!);
     }
@@ -1122,8 +1116,7 @@ export const ArchivePointer = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ArchivePointer {
-    const reader =
-      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseArchivePointer();
     while (reader.pos < end) {
@@ -1166,11 +1159,10 @@ export const ArchivePointer = {
   fromPartial(object: DeepPartial<ArchivePointer>): ArchivePointer {
     const message = createBaseArchivePointer();
     message.newArchiveKeys = object.newArchiveKeys?.map((e) => e) || [];
-    message.storeId = object.storeId ?? undefined;
-    message.disallowed =
-      object.disallowed !== undefined && object.disallowed !== null
-        ? Empty.fromPartial(object.disallowed)
-        : undefined;
+    message.storeKey = object.storeKey ?? undefined;
+    message.disallowed = (object.disallowed !== undefined && object.disallowed !== null)
+      ? Empty.fromPartial(object.disallowed)
+      : undefined;
     return message;
   },
 };
@@ -1180,10 +1172,7 @@ function createBaseImageServiceAddImageResponse(): ImageServiceAddImageResponse 
 }
 
 export const ImageServiceAddImageResponse = {
-  encode(
-    message: ImageServiceAddImageResponse,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: ImageServiceAddImageResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.image !== undefined) {
       Image.encode(message.image, writer.uint32(10).fork()).ldelim();
     }
@@ -1193,12 +1182,8 @@ export const ImageServiceAddImageResponse = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): ImageServiceAddImageResponse {
-    const reader =
-      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): ImageServiceAddImageResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseImageServiceAddImageResponse();
     while (reader.pos < end) {
@@ -1227,45 +1212,26 @@ export const ImageServiceAddImageResponse = {
     return message;
   },
 
-  create(
-    base?: DeepPartial<ImageServiceAddImageResponse>,
-  ): ImageServiceAddImageResponse {
+  create(base?: DeepPartial<ImageServiceAddImageResponse>): ImageServiceAddImageResponse {
     return ImageServiceAddImageResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(
-    object: DeepPartial<ImageServiceAddImageResponse>,
-  ): ImageServiceAddImageResponse {
+  fromPartial(object: DeepPartial<ImageServiceAddImageResponse>): ImageServiceAddImageResponse {
     const message = createBaseImageServiceAddImageResponse();
-    message.image =
-      object.image !== undefined && object.image !== null
-        ? Image.fromPartial(object.image)
-        : undefined;
-    message.archives =
-      object.archives?.map((e) => Archive.fromPartial(e)) || [];
+    message.image = (object.image !== undefined && object.image !== null) ? Image.fromPartial(object.image) : undefined;
+    message.archives = object.archives?.map((e) => Archive.fromPartial(e)) || [];
     return message;
   },
 };
 
 function createBaseImageServiceGetImageRequest(): ImageServiceGetImageRequest {
-  return {
-    versionKey: undefined,
-    orgId: undefined,
-    semanticVersion: undefined,
-    buildVersion: undefined,
-  };
+  return { versionKey: undefined, orgId: undefined, semanticVersion: undefined, buildVersion: undefined };
 }
 
 export const ImageServiceGetImageRequest = {
-  encode(
-    message: ImageServiceGetImageRequest,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: ImageServiceGetImageRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.versionKey !== undefined) {
-      ProtocolVersionKey.encode(
-        message.versionKey,
-        writer.uint32(10).fork(),
-      ).ldelim();
+      ProtocolVersionKey.encode(message.versionKey, writer.uint32(10).fork()).ldelim();
     }
     if (message.orgId !== undefined) {
       writer.uint32(18).string(message.orgId);
@@ -1279,12 +1245,8 @@ export const ImageServiceGetImageRequest = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): ImageServiceGetImageRequest {
-    const reader =
-      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): ImageServiceGetImageRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseImageServiceGetImageRequest();
     while (reader.pos < end) {
@@ -1295,10 +1257,7 @@ export const ImageServiceGetImageRequest = {
             break;
           }
 
-          message.versionKey = ProtocolVersionKey.decode(
-            reader,
-            reader.uint32(),
-          );
+          message.versionKey = ProtocolVersionKey.decode(reader, reader.uint32());
           continue;
         case 2:
           if (tag !== 18) {
@@ -1330,20 +1289,15 @@ export const ImageServiceGetImageRequest = {
     return message;
   },
 
-  create(
-    base?: DeepPartial<ImageServiceGetImageRequest>,
-  ): ImageServiceGetImageRequest {
+  create(base?: DeepPartial<ImageServiceGetImageRequest>): ImageServiceGetImageRequest {
     return ImageServiceGetImageRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(
-    object: DeepPartial<ImageServiceGetImageRequest>,
-  ): ImageServiceGetImageRequest {
+  fromPartial(object: DeepPartial<ImageServiceGetImageRequest>): ImageServiceGetImageRequest {
     const message = createBaseImageServiceGetImageRequest();
-    message.versionKey =
-      object.versionKey !== undefined && object.versionKey !== null
-        ? ProtocolVersionKey.fromPartial(object.versionKey)
-        : undefined;
+    message.versionKey = (object.versionKey !== undefined && object.versionKey !== null)
+      ? ProtocolVersionKey.fromPartial(object.versionKey)
+      : undefined;
     message.orgId = object.orgId ?? undefined;
     message.semanticVersion = object.semanticVersion ?? undefined;
     message.buildVersion = object.buildVersion ?? undefined;
@@ -1356,22 +1310,15 @@ function createBaseImageServiceGetImageResponse(): ImageServiceGetImageResponse 
 }
 
 export const ImageServiceGetImageResponse = {
-  encode(
-    message: ImageServiceGetImageResponse,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: ImageServiceGetImageResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.image !== undefined) {
       Image.encode(message.image, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): ImageServiceGetImageResponse {
-    const reader =
-      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): ImageServiceGetImageResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseImageServiceGetImageResponse();
     while (reader.pos < end) {
@@ -1393,34 +1340,24 @@ export const ImageServiceGetImageResponse = {
     return message;
   },
 
-  create(
-    base?: DeepPartial<ImageServiceGetImageResponse>,
-  ): ImageServiceGetImageResponse {
+  create(base?: DeepPartial<ImageServiceGetImageResponse>): ImageServiceGetImageResponse {
     return ImageServiceGetImageResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(
-    object: DeepPartial<ImageServiceGetImageResponse>,
-  ): ImageServiceGetImageResponse {
+  fromPartial(object: DeepPartial<ImageServiceGetImageResponse>): ImageServiceGetImageResponse {
     const message = createBaseImageServiceGetImageResponse();
-    message.image =
-      object.image !== undefined && object.image !== null
-        ? Image.fromPartial(object.image)
-        : undefined;
+    message.image = (object.image !== undefined && object.image !== null) ? Image.fromPartial(object.image) : undefined;
     return message;
   },
 };
 
 function createBaseImageServiceListArchivesRequest(): ImageServiceListArchivesRequest {
-  return { imageId: '', orgId: undefined };
+  return { imageId: "", orgId: undefined };
 }
 
 export const ImageServiceListArchivesRequest = {
-  encode(
-    message: ImageServiceListArchivesRequest,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
-    if (message.imageId !== '') {
+  encode(message: ImageServiceListArchivesRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.imageId !== "") {
       writer.uint32(10).string(message.imageId);
     }
     if (message.orgId !== undefined) {
@@ -1429,12 +1366,8 @@ export const ImageServiceListArchivesRequest = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): ImageServiceListArchivesRequest {
-    const reader =
-      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): ImageServiceListArchivesRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseImageServiceListArchivesRequest();
     while (reader.pos < end) {
@@ -1463,17 +1396,13 @@ export const ImageServiceListArchivesRequest = {
     return message;
   },
 
-  create(
-    base?: DeepPartial<ImageServiceListArchivesRequest>,
-  ): ImageServiceListArchivesRequest {
+  create(base?: DeepPartial<ImageServiceListArchivesRequest>): ImageServiceListArchivesRequest {
     return ImageServiceListArchivesRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(
-    object: DeepPartial<ImageServiceListArchivesRequest>,
-  ): ImageServiceListArchivesRequest {
+  fromPartial(object: DeepPartial<ImageServiceListArchivesRequest>): ImageServiceListArchivesRequest {
     const message = createBaseImageServiceListArchivesRequest();
-    message.imageId = object.imageId ?? '';
+    message.imageId = object.imageId ?? "";
     message.orgId = object.orgId ?? undefined;
     return message;
   },
@@ -1484,22 +1413,15 @@ function createBaseImageServiceListArchivesResponse(): ImageServiceListArchivesR
 }
 
 export const ImageServiceListArchivesResponse = {
-  encode(
-    message: ImageServiceListArchivesResponse,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: ImageServiceListArchivesResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.archives) {
       Archive.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): ImageServiceListArchivesResponse {
-    const reader =
-      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): ImageServiceListArchivesResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseImageServiceListArchivesResponse();
     while (reader.pos < end) {
@@ -1521,32 +1443,24 @@ export const ImageServiceListArchivesResponse = {
     return message;
   },
 
-  create(
-    base?: DeepPartial<ImageServiceListArchivesResponse>,
-  ): ImageServiceListArchivesResponse {
+  create(base?: DeepPartial<ImageServiceListArchivesResponse>): ImageServiceListArchivesResponse {
     return ImageServiceListArchivesResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(
-    object: DeepPartial<ImageServiceListArchivesResponse>,
-  ): ImageServiceListArchivesResponse {
+  fromPartial(object: DeepPartial<ImageServiceListArchivesResponse>): ImageServiceListArchivesResponse {
     const message = createBaseImageServiceListArchivesResponse();
-    message.archives =
-      object.archives?.map((e) => Archive.fromPartial(e)) || [];
+    message.archives = object.archives?.map((e) => Archive.fromPartial(e)) || [];
     return message;
   },
 };
 
 function createBaseImageServiceUpdateArchiveRequest(): ImageServiceUpdateArchiveRequest {
-  return { archiveId: '', storeId: undefined };
+  return { archiveId: "", storeKey: undefined };
 }
 
 export const ImageServiceUpdateArchiveRequest = {
-  encode(
-    message: ImageServiceUpdateArchiveRequest,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
-    if (message.archiveId !== '') {
+  encode(message: ImageServiceUpdateArchiveRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.archiveId !== "") {
       writer.uint32(10).string(message.archiveId);
     }
     if (message.storeKey !== undefined) {
@@ -1555,12 +1469,8 @@ export const ImageServiceUpdateArchiveRequest = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): ImageServiceUpdateArchiveRequest {
-    const reader =
-      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): ImageServiceUpdateArchiveRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseImageServiceUpdateArchiveRequest();
     while (reader.pos < end) {
@@ -1589,18 +1499,14 @@ export const ImageServiceUpdateArchiveRequest = {
     return message;
   },
 
-  create(
-    base?: DeepPartial<ImageServiceUpdateArchiveRequest>,
-  ): ImageServiceUpdateArchiveRequest {
+  create(base?: DeepPartial<ImageServiceUpdateArchiveRequest>): ImageServiceUpdateArchiveRequest {
     return ImageServiceUpdateArchiveRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(
-    object: DeepPartial<ImageServiceUpdateArchiveRequest>,
-  ): ImageServiceUpdateArchiveRequest {
+  fromPartial(object: DeepPartial<ImageServiceUpdateArchiveRequest>): ImageServiceUpdateArchiveRequest {
     const message = createBaseImageServiceUpdateArchiveRequest();
-    message.archiveId = object.archiveId ?? '';
-    message.storeId = object.storeId ?? undefined;
+    message.archiveId = object.archiveId ?? "";
+    message.storeKey = object.storeKey ?? undefined;
     return message;
   },
 };
@@ -1610,22 +1516,15 @@ function createBaseImageServiceUpdateArchiveResponse(): ImageServiceUpdateArchiv
 }
 
 export const ImageServiceUpdateArchiveResponse = {
-  encode(
-    message: ImageServiceUpdateArchiveResponse,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: ImageServiceUpdateArchiveResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.archive !== undefined) {
       Archive.encode(message.archive, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): ImageServiceUpdateArchiveResponse {
-    const reader =
-      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): ImageServiceUpdateArchiveResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseImageServiceUpdateArchiveResponse();
     while (reader.pos < end) {
@@ -1647,34 +1546,26 @@ export const ImageServiceUpdateArchiveResponse = {
     return message;
   },
 
-  create(
-    base?: DeepPartial<ImageServiceUpdateArchiveResponse>,
-  ): ImageServiceUpdateArchiveResponse {
+  create(base?: DeepPartial<ImageServiceUpdateArchiveResponse>): ImageServiceUpdateArchiveResponse {
     return ImageServiceUpdateArchiveResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(
-    object: DeepPartial<ImageServiceUpdateArchiveResponse>,
-  ): ImageServiceUpdateArchiveResponse {
+  fromPartial(object: DeepPartial<ImageServiceUpdateArchiveResponse>): ImageServiceUpdateArchiveResponse {
     const message = createBaseImageServiceUpdateArchiveResponse();
-    message.archive =
-      object.archive !== undefined && object.archive !== null
-        ? Archive.fromPartial(object.archive)
-        : undefined;
+    message.archive = (object.archive !== undefined && object.archive !== null)
+      ? Archive.fromPartial(object.archive)
+      : undefined;
     return message;
   },
 };
 
 function createBaseImageServiceUpdateImageRequest(): ImageServiceUpdateImageRequest {
-  return { imageId: '', visibility: undefined };
+  return { imageId: "", visibility: undefined };
 }
 
 export const ImageServiceUpdateImageRequest = {
-  encode(
-    message: ImageServiceUpdateImageRequest,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
-    if (message.imageId !== '') {
+  encode(message: ImageServiceUpdateImageRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.imageId !== "") {
       writer.uint32(10).string(message.imageId);
     }
     if (message.visibility !== undefined) {
@@ -1683,12 +1574,8 @@ export const ImageServiceUpdateImageRequest = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): ImageServiceUpdateImageRequest {
-    const reader =
-      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): ImageServiceUpdateImageRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseImageServiceUpdateImageRequest();
     while (reader.pos < end) {
@@ -1717,17 +1604,13 @@ export const ImageServiceUpdateImageRequest = {
     return message;
   },
 
-  create(
-    base?: DeepPartial<ImageServiceUpdateImageRequest>,
-  ): ImageServiceUpdateImageRequest {
+  create(base?: DeepPartial<ImageServiceUpdateImageRequest>): ImageServiceUpdateImageRequest {
     return ImageServiceUpdateImageRequest.fromPartial(base ?? {});
   },
 
-  fromPartial(
-    object: DeepPartial<ImageServiceUpdateImageRequest>,
-  ): ImageServiceUpdateImageRequest {
+  fromPartial(object: DeepPartial<ImageServiceUpdateImageRequest>): ImageServiceUpdateImageRequest {
     const message = createBaseImageServiceUpdateImageRequest();
-    message.imageId = object.imageId ?? '';
+    message.imageId = object.imageId ?? "";
     message.visibility = object.visibility ?? undefined;
     return message;
   },
@@ -1738,22 +1621,15 @@ function createBaseImageServiceUpdateImageResponse(): ImageServiceUpdateImageRes
 }
 
 export const ImageServiceUpdateImageResponse = {
-  encode(
-    message: ImageServiceUpdateImageResponse,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: ImageServiceUpdateImageResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.image !== undefined) {
       Image.encode(message.image, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): ImageServiceUpdateImageResponse {
-    const reader =
-      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): ImageServiceUpdateImageResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseImageServiceUpdateImageResponse();
     while (reader.pos < end) {
@@ -1775,20 +1651,13 @@ export const ImageServiceUpdateImageResponse = {
     return message;
   },
 
-  create(
-    base?: DeepPartial<ImageServiceUpdateImageResponse>,
-  ): ImageServiceUpdateImageResponse {
+  create(base?: DeepPartial<ImageServiceUpdateImageResponse>): ImageServiceUpdateImageResponse {
     return ImageServiceUpdateImageResponse.fromPartial(base ?? {});
   },
 
-  fromPartial(
-    object: DeepPartial<ImageServiceUpdateImageResponse>,
-  ): ImageServiceUpdateImageResponse {
+  fromPartial(object: DeepPartial<ImageServiceUpdateImageResponse>): ImageServiceUpdateImageResponse {
     const message = createBaseImageServiceUpdateImageResponse();
-    message.image =
-      object.image !== undefined && object.image !== null
-        ? Image.fromPartial(object.image)
-        : undefined;
+    message.image = (object.image !== undefined && object.image !== null) ? Image.fromPartial(object.image) : undefined;
     return message;
   },
 };
@@ -1796,12 +1665,12 @@ export const ImageServiceUpdateImageResponse = {
 /** Service for managing protocol image builds. */
 export type ImageServiceDefinition = typeof ImageServiceDefinition;
 export const ImageServiceDefinition = {
-  name: 'ImageService',
-  fullName: 'blockjoy.v1.ImageService',
+  name: "ImageService",
+  fullName: "blockjoy.v1.ImageService",
   methods: {
     /** Create a new image and set of properties for a protocol version. */
     addImage: {
-      name: 'AddImage',
+      name: "AddImage",
       requestType: ImageServiceAddImageRequest,
       requestStream: false,
       responseType: ImageServiceAddImageResponse,
@@ -1810,7 +1679,7 @@ export const ImageServiceDefinition = {
     },
     /** Get image info for some protocol and node type. */
     getImage: {
-      name: 'GetImage',
+      name: "GetImage",
       requestType: ImageServiceGetImageRequest,
       requestStream: false,
       responseType: ImageServiceGetImageResponse,
@@ -1819,7 +1688,7 @@ export const ImageServiceDefinition = {
     },
     /** List all image archives for some image. */
     listArchives: {
-      name: 'ListArchives',
+      name: "ListArchives",
       requestType: ImageServiceListArchivesRequest,
       requestStream: false,
       responseType: ImageServiceListArchivesResponse,
@@ -1828,7 +1697,7 @@ export const ImageServiceDefinition = {
     },
     /** Update the storage location of an image archive. */
     updateArchive: {
-      name: 'UpdateArchive',
+      name: "UpdateArchive",
       requestType: ImageServiceUpdateArchiveRequest,
       requestStream: false,
       responseType: ImageServiceUpdateArchiveResponse,
@@ -1837,7 +1706,7 @@ export const ImageServiceDefinition = {
     },
     /** Update the config of an existing image. */
     updateImage: {
-      name: 'UpdateImage',
+      name: "UpdateImage",
       requestType: ImageServiceUpdateImageRequest,
       requestStream: false,
       responseType: ImageServiceUpdateImageResponse,
@@ -1907,38 +1776,26 @@ declare const self: any | undefined;
 declare const window: any | undefined;
 declare const global: any | undefined;
 const tsProtoGlobalThis: any = (() => {
-  if (typeof globalThis !== 'undefined') {
+  if (typeof globalThis !== "undefined") {
     return globalThis;
   }
-  if (typeof self !== 'undefined') {
+  if (typeof self !== "undefined") {
     return self;
   }
-  if (typeof window !== 'undefined') {
+  if (typeof window !== "undefined") {
     return window;
   }
-  if (typeof global !== 'undefined') {
+  if (typeof global !== "undefined") {
     return global;
   }
-  throw 'Unable to locate global object';
+  throw "Unable to locate global object";
 })();
 
-type Builtin =
-  | Date
-  | Function
-  | Uint8Array
-  | string
-  | number
-  | boolean
-  | undefined;
+type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends {}
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin ? T
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 function toTimestamp(date: Date): Timestamp {
@@ -1955,9 +1812,7 @@ function fromTimestamp(t: Timestamp): Date {
 
 function longToNumber(long: Long): number {
   if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new tsProtoGlobalThis.Error(
-      'Value is larger than Number.MAX_SAFE_INTEGER',
-    );
+    throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
   return long.toNumber();
 }

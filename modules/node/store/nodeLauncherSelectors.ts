@@ -2,8 +2,6 @@ import { selector, selectorFamily } from 'recoil';
 import { nodeLauncherAtoms } from '@modules/node';
 import { authSelectors } from '@modules/auth';
 import { billingAtoms } from '@modules/billing';
-import { ImageProperty } from '@modules/grpc/library/blockjoy/v1/image';
-import { UiType } from '@modules/grpc/library/blockjoy/common/v1/protocol';
 
 const hasProtocol = selector<boolean>({
   key: 'nodeLauncher.hasProtocol',
@@ -132,7 +130,6 @@ const nodeLauncherStatus = selectorFamily<
       const price = get(billingAtoms.price);
       const isNodeAllocationValidVal = get(isNodeAllocationValid);
       const billingExempt = get(authSelectors.hasPermission('billing-exempt'));
-      const isManagedHost = get(hostSelectors.isManagedHost);
 
       const disablingConditions: Record<string, boolean> = {
         NoPermission: !hasPermissionsToCreate,

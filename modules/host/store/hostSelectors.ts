@@ -1,18 +1,13 @@
 import { selector, selectorFamily } from 'recoil';
 import isEqual from 'lodash/isEqual';
 import { Host, HostSort } from '@modules/grpc/library/blockjoy/v1/host';
-import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { hostClient, UIHostFilterCriteria } from '@modules/grpc';
 import { authAtoms, authSelectors } from '@modules/auth';
 import { hostAtoms, InitialHostQueryParams } from '@modules/host';
-import { sort } from '@shared/components';
-import { nodeStatusList } from '@shared/constants/nodeStatusList';
 import {
   HOST_FILTERS_DEFAULT,
   HOST_SORT_DEFAULT,
 } from '@shared/constants/lookups';
-import { nodeLauncherAtoms } from '@modules/node';
-import { organizationSelectors } from '@modules/organization';
 
 const settings = selector<HostSettings>({
   key: 'host.settings',
@@ -127,53 +122,6 @@ const hostListSorted = selector<Host[]>({
   },
 });
 
-const filtersStatusAll = selectorFamily<
-  (HostStatus & FilterListItem)[],
-  string[]
->({
-  key: 'host.filters.hostStatus.all',
-  get: (tempFilters: string[]) => () => {
-    const allStatuses = sort(
-      nodeStatusList
-        .filter((item) => item.id !== 0 && !item.type)
-        .map((item) => ({
-          ...item,
-          name: item.name?.toLowerCase(),
-          id: item.id?.toString(),
-        })),
-      {
-        field: 'name',
-        order: SortOrder.SORT_ORDER_ASCENDING,
-      },
-    );
-
-    if (!allStatuses.length) return [];
-
-    const allFilters = allStatuses.map((status) => ({
-      ...status,
-      isChecked: tempFilters?.some((filter) => status.id === filter),
-    }));
-
-    return allFilters;
-  },
-});
-
-const isManagedHost = selector({
-  key: 'host.selected.isManaged',
-  get: ({ get }) => {
-    const selectedHosts = get(nodeLauncherAtoms.selectedHosts);
-    if (!selectedHosts?.length) return;
-
-    const isSuperUser = get(authSelectors.isSuperUser);
-    const defaultOrganization = get(organizationSelectors.defaultOrganization);
-
-    return (
-      !isSuperUser &&
-      defaultOrganization?.id === selectedHosts?.[0]?.host?.orgId
-    );
-  },
-});
-
 export const hostSelectors = {
   settings,
   filters,
@@ -184,6 +132,4 @@ export const hostSelectors = {
   hostById,
 
   hostListSorted,
-
-  isManagedHost,
 };

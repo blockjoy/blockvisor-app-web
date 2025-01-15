@@ -136,7 +136,7 @@ export const NodeRegionSelectMultiple = ({ onChange }: Props) => {
 
           <Scrollbar additionalStyles={[styles.scrollbar]}>
             {!filteredRegions?.length && (
-              <p css={styles.dropdownEmpty}>No hosts found</p>
+              <p css={styles.dropdownEmpty}>No regions found</p>
             )}
             <ul>
               {filteredRegions?.map((regionInfo) => {
