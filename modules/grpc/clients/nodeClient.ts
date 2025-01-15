@@ -32,8 +32,6 @@ export type UINode = {
   orgId: string;
   protocolId: string;
   version?: string;
-  // nodeType: NodeType;
-  // properties: NodeProperty[];
   network: string;
 };
 
@@ -76,7 +74,6 @@ class NodeClient {
       orgIds: orgId ? [orgId!] : filter?.orgIds!,
       hostIds: filter?.hostIds!,
       ipAddresses: filter?.ips!,
-      // TODO: Filter nodes by region and variant
       userIds: filter?.userIds!,
       semanticVersions: filter?.semanticVersions!,
       offset: getPaginationOffset(pagination!),

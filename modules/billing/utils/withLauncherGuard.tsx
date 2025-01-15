@@ -52,6 +52,9 @@ export const withLauncherGuard = (Component: any) => {
     const [activeView, setActiveView] = useState<LauncherView>('launcher');
     const [fulfilRequirements, setFulfilRequirements] = useState(false);
 
+    const localCanCreateResource =
+      (type === 'launch-node' && (isAdmin || isOwner)) || canCreateResource;
+
     useEffect(() => {
       setFulfilRequirements(false);
     }, [defaultOrganization?.orgId]);
@@ -74,7 +77,7 @@ export const withLauncherGuard = (Component: any) => {
     };
 
     const handleCreateClicked = () => {
-      if (!canCreateResource && !billingExempt) {
+      if (!localCanCreateResource && !billingExempt) {
         const newActiveView: LauncherView = !hasPaymentMethod
           ? 'payment-required'
           : 'confirm-subscription';

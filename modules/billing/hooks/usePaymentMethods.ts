@@ -43,7 +43,7 @@ export const usePaymentMethods = (): IPaymentMethodsHook => {
 
       return data;
     } catch (error) {
-      console.error('Failed to fetch Payment method', error);
+      console.log('Failed to fetch Payment method', error);
       return [];
     } finally {
       setPaymentMethodsLoadingState('finished');
@@ -55,7 +55,7 @@ export const usePaymentMethods = (): IPaymentMethodsHook => {
 
     try {
     } catch (error) {
-      console.error('Failed to delete Payment method', error);
+      console.log('Failed to delete Payment method', error);
     } finally {
       setPaymentMethodsLoadingState('finished');
     }
@@ -66,7 +66,7 @@ export const usePaymentMethods = (): IPaymentMethodsHook => {
 
     try {
     } catch (error) {
-      console.error('Failed to set default Payment method', error);
+      console.log('Failed to set default Payment method', error);
     } finally {
       setPaymentMethodsLoadingState('finished');
     }

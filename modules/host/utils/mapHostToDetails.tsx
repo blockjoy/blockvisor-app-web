@@ -63,13 +63,6 @@ export const mapHostToDetails = (host: Host) => {
     });
   }
 
-  // if (host?billingAmount)
-  //   details.push({
-  //     label: 'Monthly Cost',
-  //     data:
-  //       formatters.formatAmount(host?.billingAmount?.amount!, 'amount') || '-',
-  //   });
-
   return details;
 };
 
@@ -89,10 +82,6 @@ export const mapHostToDetailsLaunch = (host: Host) => {
       label: 'Launched On',
       data: !host.createdAt ? '-' : <DateTime date={host.createdAt} />,
     },
-    // {
-    //   label: 'Managed By',
-    //   data: <HostManagedBy managedBy={host.managedBy} />,
-    // },
   ];
 
   return details;
