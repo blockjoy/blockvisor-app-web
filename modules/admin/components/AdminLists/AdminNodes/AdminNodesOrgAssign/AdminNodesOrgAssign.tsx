@@ -55,8 +55,6 @@ export const AdminNodesOrgAssign = ({ selectedIds, list, setList }: Props) => {
         );
       }
 
-      console.log('calls', calls);
-
       await Promise.all(calls);
 
       for (let id of selectedIds) {

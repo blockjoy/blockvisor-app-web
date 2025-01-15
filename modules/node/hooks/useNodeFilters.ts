@@ -29,7 +29,6 @@ export const useNodeFilters = (): UseNodeFiltersHook => {
   const [tempFiltersTotal, setTempFiltersTotal] = useRecoilState(
     nodeAtoms.filtersTempTotal,
   );
-
   const setSearchQuery = useSetRecoilState(nodeAtoms.filtersSearchQuery);
   const resetPagination = useResetRecoilState(nodeAtoms.nodeListPagination);
   const setAppLoadingState = useSetRecoilState(settingsAtoms.appLoadingState);

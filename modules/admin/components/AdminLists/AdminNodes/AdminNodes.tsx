@@ -251,6 +251,8 @@ export const AdminNodes = () => {
         ),
         region: node.regionName,
         createdAt: <DateTime date={node.createdAt!} />,
+        createdBy,
+        host: node.hostDisplayName || node.hostNetworkName,
         cost: (
           <AdminListEditCost
             id={node.nodeId}
@@ -258,7 +260,6 @@ export const AdminNodes = () => {
             onUpdate={handleUpdate}
           />
         ),
-        host: node.hostDisplayName || node.hostNetworkName,
         protocolName: capitalized(node.versionKey?.protocolKey!),
       };
     });

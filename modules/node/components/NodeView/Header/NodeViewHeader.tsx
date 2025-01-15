@@ -196,19 +196,6 @@ export const NodeViewHeader = () => {
                     status={node.nodeStatus?.state!}
                     protocolStatus={node.nodeStatus?.protocol?.state}
                     jobs={node.jobs}
-                    // protocolStatus="uploading"
-                    // jobs={[
-                    //   {
-                    //     name: 'testing',
-                    //     status: 2,
-                    //     logs: [],
-                    //     restarts: 0,
-                    //     progress: {
-                    //       current: 10,
-                    //       total: 20,
-                    //     },
-                    //   },
-                    // ]}
                   />
                 </div>
                 <div css={styles.actions}>
