@@ -184,7 +184,7 @@ const filtersVersionAll = selector<FilterListItem[]>({
       isChecked: tempSemanticVersions?.some((filter) => sv === filter) ?? false,
     }));
 
-    return allFilters;
+    return [];
   },
 });
 

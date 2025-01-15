@@ -258,6 +258,7 @@ export const AdminNodes = () => {
             onUpdate={handleUpdate}
           />
         ),
+        createdBy,
         host: node.hostDisplayName || node.hostNetworkName,
         protocolName: capitalized(node.versionKey?.protocolKey!),
       };

@@ -312,16 +312,12 @@ export const useNodeLauncherHandlers = ({
 
   const handleRegionsLoaded = (regionInfo: RegionInfo | null) => {
     if (!isSuperUser) {
-      setSelectedRegions(
-        regionInfo
-          ? [
-              {
-                nodesToLaunch: 1,
-                regionInfo: regionInfo!,
-              },
-            ]
-          : regionInfo,
-      );
+      setSelectedRegions([
+        {
+          nodesToLaunch: 1,
+          regionInfo: regionInfo!,
+        },
+      ]);
     }
   };
 

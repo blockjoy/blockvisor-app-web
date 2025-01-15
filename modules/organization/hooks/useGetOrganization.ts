@@ -37,13 +37,6 @@ export function useGetOrganization() {
         (organization?.orgId &&
           organization?.orgId !== defaultOrganization?.orgId));
 
-    console.log('shouldUpdateDefault', {
-      shouldUpdateDefault,
-      organization,
-      defaultOrganization,
-      id,
-    });
-
     if (organization) {
       setOrganization(organization);
       if (shouldUpdateDefault)

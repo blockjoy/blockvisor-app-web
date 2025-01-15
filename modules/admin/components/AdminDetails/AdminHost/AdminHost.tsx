@@ -102,18 +102,6 @@ export const AdminHost = () => {
       label: 'Cost',
       data: <Currency cents={host.cost?.amount?.amountMinorUnits!} />,
     },
-    // {
-    //   id: 'managedBy',
-    //   label: 'Managed By',
-    //   data: <HostManagedBy managedBy={host.managedBy} />,
-    //   editSettings: {
-    //     field: 'managedBy',
-    //     isNumber: true,
-    //     controlType: 'dropdown',
-    //     defaultValue: host.managedBy?.toString(),
-    //     dropdownValues: createDropdownValuesFromEnum(ManagedBy, 'MANAGED_BY_'),
-    //   },
-    // },
     {
       id: 'memSize',
       label: 'Memory Size',
@@ -124,11 +112,6 @@ export const AdminHost = () => {
       label: 'Disk Size',
       data: formatters.formatSize(host.diskBytes, 'bytes'),
     },
-    // {
-    //   id: 'billingAmount',
-    //   label: 'Billing Amount',
-    //   data: host. ? `$${host.billingAmount?.amount}` : '-',
-    // },
     {
       id: 'tags',
       label: 'Tags',
