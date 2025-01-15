@@ -387,7 +387,7 @@ export const Host = {
       ).ldelim();
     }
     if (message.cost !== undefined) {
-      BillingAmount.encode(message.cost, writer.uint32(202).fork()).ldelim();
+      BillingAmount.encode(message.cost, writer.uint32(178).fork()).ldelim();
     }
     return writer;
   },
