@@ -72,6 +72,8 @@ export interface ImageConfig {
   storeKey: string;
   /** The configured image property values. */
   values: PropertyValueConfig[];
+  /** The minimum semantic babel version to run this image. */
+  minBabelVersion: string;
 }
 
 /** A configured image property. */
@@ -341,7 +343,7 @@ export const RamdiskConfig = {
 };
 
 function createBaseImageConfig(): ImageConfig {
-  return { imageId: "", imageUri: "", archiveId: "", storeKey: "", values: [] };
+  return { imageId: "", imageUri: "", archiveId: "", storeKey: "", values: [], minBabelVersion: "" };
 }
 
 export const ImageConfig = {
@@ -360,6 +362,9 @@ export const ImageConfig = {
     }
     for (const v of message.values) {
       PropertyValueConfig.encode(v!, writer.uint32(42).fork()).ldelim();
+    }
+    if (message.minBabelVersion !== "") {
+      writer.uint32(50).string(message.minBabelVersion);
     }
     return writer;
   },
@@ -406,6 +411,13 @@ export const ImageConfig = {
 
           message.values.push(PropertyValueConfig.decode(reader, reader.uint32()));
           continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.minBabelVersion = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -426,6 +438,7 @@ export const ImageConfig = {
     message.archiveId = object.archiveId ?? "";
     message.storeKey = object.storeKey ?? "";
     message.values = object.values?.map((e) => PropertyValueConfig.fromPartial(e)) || [];
+    message.minBabelVersion = object.minBabelVersion ?? "";
     return message;
   },
 };

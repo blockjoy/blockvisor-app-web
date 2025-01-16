@@ -22,6 +22,7 @@ export interface Image {
   minCpuCores: number;
   minMemoryBytes: number;
   minDiskBytes: number;
+  minBabelVersion: string;
   ramdisks: RamdiskConfig[];
   visibility: Visibility;
   createdAt: Date | undefined;
@@ -103,12 +104,14 @@ export interface ImageServiceAddImageRequest {
   firewall:
     | FirewallConfig
     | undefined;
-  /** The minimum CPU cores nodes for this image will launch with. */
+  /** The minimum CPU cores to run this image. */
   minCpuCores: number;
-  /** The minimum memory nodes for this image will launch with. */
+  /** The minimum memory to run this image. */
   minMemoryBytes: number;
-  /** The minimum disk space nodes for this image will launch with. */
+  /** The minimum disk space to run this image. */
   minDiskBytes: number;
+  /** The minimum babel version to run this image. */
+  minBabelVersion: string;
   /** The set of attached ramdisks. */
   ramdisks: RamdiskConfig[];
   /** Point each combination of new_archive properties to the correct data. */
@@ -235,6 +238,7 @@ function createBaseImage(): Image {
     minCpuCores: 0,
     minMemoryBytes: 0,
     minDiskBytes: 0,
+    minBabelVersion: "",
     ramdisks: [],
     visibility: 0,
     createdAt: undefined,
@@ -277,17 +281,20 @@ export const Image = {
     if (message.minDiskBytes !== 0) {
       writer.uint32(88).uint64(message.minDiskBytes);
     }
+    if (message.minBabelVersion !== "") {
+      writer.uint32(98).string(message.minBabelVersion);
+    }
     for (const v of message.ramdisks) {
-      RamdiskConfig.encode(v!, writer.uint32(98).fork()).ldelim();
+      RamdiskConfig.encode(v!, writer.uint32(106).fork()).ldelim();
     }
     if (message.visibility !== 0) {
-      writer.uint32(104).int32(message.visibility);
+      writer.uint32(112).int32(message.visibility);
     }
     if (message.createdAt !== undefined) {
-      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(114).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(122).fork()).ldelim();
     }
     if (message.updatedAt !== undefined) {
-      Timestamp.encode(toTimestamp(message.updatedAt), writer.uint32(122).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.updatedAt), writer.uint32(130).fork()).ldelim();
     }
     return writer;
   },
@@ -381,24 +388,31 @@ export const Image = {
             break;
           }
 
-          message.ramdisks.push(RamdiskConfig.decode(reader, reader.uint32()));
+          message.minBabelVersion = reader.string();
           continue;
         case 13:
-          if (tag !== 104) {
+          if (tag !== 106) {
+            break;
+          }
+
+          message.ramdisks.push(RamdiskConfig.decode(reader, reader.uint32()));
+          continue;
+        case 14:
+          if (tag !== 112) {
             break;
           }
 
           message.visibility = reader.int32() as any;
           continue;
-        case 14:
-          if (tag !== 114) {
+        case 15:
+          if (tag !== 122) {
             break;
           }
 
           message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
-        case 15:
-          if (tag !== 122) {
+        case 16:
+          if (tag !== 130) {
             break;
           }
 
@@ -432,6 +446,7 @@ export const Image = {
     message.minCpuCores = object.minCpuCores ?? 0;
     message.minMemoryBytes = object.minMemoryBytes ?? 0;
     message.minDiskBytes = object.minDiskBytes ?? 0;
+    message.minBabelVersion = object.minBabelVersion ?? "";
     message.ramdisks = object.ramdisks?.map((e) => RamdiskConfig.fromPartial(e)) || [];
     message.visibility = object.visibility ?? 0;
     message.createdAt = object.createdAt ?? undefined;
@@ -746,6 +761,7 @@ function createBaseImageServiceAddImageRequest(): ImageServiceAddImageRequest {
     minCpuCores: 0,
     minMemoryBytes: 0,
     minDiskBytes: 0,
+    minBabelVersion: "",
     ramdisks: [],
     archivePointers: [],
   };
@@ -780,11 +796,14 @@ export const ImageServiceAddImageRequest = {
     if (message.minDiskBytes !== 0) {
       writer.uint32(72).uint64(message.minDiskBytes);
     }
+    if (message.minBabelVersion !== "") {
+      writer.uint32(82).string(message.minBabelVersion);
+    }
     for (const v of message.ramdisks) {
-      RamdiskConfig.encode(v!, writer.uint32(82).fork()).ldelim();
+      RamdiskConfig.encode(v!, writer.uint32(90).fork()).ldelim();
     }
     for (const v of message.archivePointers) {
-      ArchivePointer.encode(v!, writer.uint32(90).fork()).ldelim();
+      ArchivePointer.encode(v!, writer.uint32(98).fork()).ldelim();
     }
     return writer;
   },
@@ -864,10 +883,17 @@ export const ImageServiceAddImageRequest = {
             break;
           }
 
-          message.ramdisks.push(RamdiskConfig.decode(reader, reader.uint32()));
+          message.minBabelVersion = reader.string();
           continue;
         case 11:
           if (tag !== 90) {
+            break;
+          }
+
+          message.ramdisks.push(RamdiskConfig.decode(reader, reader.uint32()));
+          continue;
+        case 12:
+          if (tag !== 98) {
             break;
           }
 
@@ -899,6 +925,7 @@ export const ImageServiceAddImageRequest = {
     message.minCpuCores = object.minCpuCores ?? 0;
     message.minMemoryBytes = object.minMemoryBytes ?? 0;
     message.minDiskBytes = object.minDiskBytes ?? 0;
+    message.minBabelVersion = object.minBabelVersion ?? "";
     message.ramdisks = object.ramdisks?.map((e) => RamdiskConfig.fromPartial(e)) || [];
     message.archivePointers = object.archivePointers?.map((e) => ArchivePointer.fromPartial(e)) || [];
     return message;
