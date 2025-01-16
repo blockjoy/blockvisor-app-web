@@ -1,8 +1,8 @@
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { renderNodeConfigControl } from '@modules/node/utils/renderNodeConfigControl';
 import { ProtocolVersion } from '@modules/grpc/library/blockjoy/v1/protocol';
-import { FormLabel, FormHeader, sort } from '@shared/components';
+import { FormLabel, FormHeader, sort, SvgIcon } from '@shared/components';
 import {
   NodeLauncherPanel,
   NodeVersionSelect,
@@ -16,6 +16,8 @@ import { styles } from './NodeLauncherConfig.styles';
 import { UiType } from '@modules/grpc/library/blockjoy/common/v1/protocol';
 import { kebabToCapitalized } from 'utils';
 import { FirewallRule } from '@modules/grpc/library/blockjoy/common/v1/config';
+import IconPlus from '@public/assets/icons/common/Plus.svg';
+import IconMinus from '@public/assets/icons/common/Minus.svg';
 
 type NodeLauncherConfigProps = {
   onNodeConfigPropertyChanged: (
@@ -39,12 +41,16 @@ export const NodeLauncherConfig = ({
 }: NodeLauncherConfigProps) => {
   const nodeLauncher = useRecoilValue(nodeLauncherAtoms.nodeLauncher);
 
+  const [showAdvancedConfig, setShowAdvancedConfig] = useState(false);
+
   const { properties } = nodeLauncher;
 
   const sortedProperties = sort(properties, { field: 'key' });
 
   const handleFirewallChanged = (nextFirewall: FirewallRule[]) =>
     onNodePropertyChanged('firewall', nextFirewall);
+
+  const toggleAdvancedConfig = () => setShowAdvancedConfig(!showAdvancedConfig);
 
   return (
     <NodeLauncherPanel>
@@ -57,36 +63,59 @@ export const NodeLauncherConfig = ({
         <FormLabel>Version</FormLabel>
         <NodeVersionSelect onVersionChanged={onVersionChanged} />
 
-        <FormLabel hint="Add IP addresses that are allowed/denied">
-          Firewall Rules
+        <FormLabel>
+          <button
+            css={styles.advancedConfigButton}
+            onClick={toggleAdvancedConfig}
+          >
+            Advanced Config
+            <SvgIcon size="10px" isDefaultColor>
+              {showAdvancedConfig ? <IconMinus /> : <IconPlus />}
+            </SvgIcon>
+          </button>
         </FormLabel>
-        <NodeFirewallRules
-          wrapperStyles={styles.firewall}
-          rules={nodeLauncher.firewall}
-          onFirewallChanged={handleFirewallChanged}
-        />
 
-        {sortedProperties?.map((propertyGroup: NodePropertyGroup, index) => {
-          const isRequired =
-            (propertyGroup.uiType === UiType.UI_TYPE_TEXT ||
-              propertyGroup.uiType === UiType.UI_TYPE_PASSWORD) &&
-            propertyGroup.value === '';
+        {showAdvancedConfig && (
+          <div
+            css={[
+              styles.advancedConfig,
+              showAdvancedConfig && styles.advancedConfigOpen,
+            ]}
+          >
+            <FormLabel hint="Add IP addresses that are allowed/denied">
+              Firewall Rules
+            </FormLabel>
+            <NodeFirewallRules
+              wrapperStyles={styles.firewall}
+              rules={nodeLauncher.firewall}
+              onFirewallChanged={handleFirewallChanged}
+            />
 
-          return (
-            <Fragment key={propertyGroup.keyGroup! + index!}>
-              <FormLabel isCapitalized isRequired={isRequired}>
-                {propertyGroup.displayGroup ||
-                  kebabToCapitalized(
-                    propertyGroup.keyGroup || propertyGroup.key,
-                  )}
-              </FormLabel>
-              {renderNodeConfigControl(
-                propertyGroup,
-                onNodeConfigPropertyChanged,
-              )}
-            </Fragment>
-          );
-        })}
+            {sortedProperties?.map(
+              (propertyGroup: NodePropertyGroup, index) => {
+                const isRequired =
+                  (propertyGroup.uiType === UiType.UI_TYPE_TEXT ||
+                    propertyGroup.uiType === UiType.UI_TYPE_PASSWORD) &&
+                  propertyGroup.value === '';
+
+                return (
+                  <Fragment key={propertyGroup.keyGroup! + index!}>
+                    <FormLabel isCapitalized isRequired={isRequired}>
+                      {propertyGroup.displayGroup ||
+                        kebabToCapitalized(
+                          propertyGroup.keyGroup || propertyGroup.key,
+                        )}
+                    </FormLabel>
+                    {renderNodeConfigControl(
+                      propertyGroup,
+                      onNodeConfigPropertyChanged,
+                    )}
+                  </Fragment>
+                );
+              },
+            )}
+          </div>
+        )}
       </div>
     </NodeLauncherPanel>
   );
