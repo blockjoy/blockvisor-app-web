@@ -9,7 +9,7 @@ import {
   NODE_FILTERS_DEFAULT,
   NODE_SORT_DEFAULT,
 } from '@shared/constants/lookups';
-import { NodeStatusListItem, sort, transformHeaders } from '@shared/components';
+import { sort, transformHeaders } from '@shared/components';
 import {
   nodeAtoms,
   protocolAtoms,
@@ -133,7 +133,7 @@ const filtersStatusAll = selector<FilterListItem[]>({
     const tempFilters = get(nodeAtoms.tempFilters);
     const { nodeStatus: tempNodeStatus } = tempFilters;
 
-    const allStatuses: (NodeStatusListItem & FilterListItem)[] = sort(
+    const allStatuses: FilterListItem[] = sort(
       createDropdownValuesFromEnum(NodeState, 'NODE_STATE_').map((item) => ({
         ...item,
         name: item.name?.toLowerCase(),

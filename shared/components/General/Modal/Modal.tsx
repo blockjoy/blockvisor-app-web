@@ -11,6 +11,7 @@ type Props = {
   handleClose?: any;
   additionalStyles?: SerializedStyles[];
   isActive?: boolean;
+  inContainer?: boolean;
 } & React.PropsWithChildren;
 
 export function Modal({
@@ -20,12 +21,13 @@ export function Modal({
   handleClose,
   additionalStyles,
   isActive,
+  inContainer,
 }: Props) {
   const ref = useRef<HTMLDivElement | null>(null);
   useClickOutside(ref, handleClose, isActive);
 
   const handleEsc = (e: KeyboardEvent) => {
-    if (e.key === 'Escape') {
+    if (e.key === 'Escape' && handleClose) {
       handleClose();
     }
   };
@@ -48,18 +50,24 @@ export function Modal({
   }
 
   return (
-    <Portal wrapperId={portalId}>
+    <Portal wrapperId={portalId} {...(inContainer && { inContainer })}>
       <div css={[isOpen && styles.modal]} id="js-auth-layout">
         <div
           ref={ref}
           css={[isOpen && styles.base, additionalStyles && additionalStyles]}
         >
           {children}
-          <button type="button" onClick={handleClose} css={styles.closeButton}>
-            <SvgIcon size="24px">
-              <IconClose />
-            </SvgIcon>
-          </button>
+          {handleClose && (
+            <button
+              type="button"
+              onClick={handleClose}
+              css={styles.closeButton}
+            >
+              <SvgIcon size="24px">
+                <IconClose />
+              </SvgIcon>
+            </button>
+          )}
         </div>
       </div>
     </Portal>

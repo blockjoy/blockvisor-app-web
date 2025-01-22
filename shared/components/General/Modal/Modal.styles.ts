@@ -15,6 +15,7 @@ export const styles = {
     display: flex;
     justify-items: center;
     align-items: center;
+    z-index: 15;
   `,
   base: (theme: ITheme) => css`
     position: relative;

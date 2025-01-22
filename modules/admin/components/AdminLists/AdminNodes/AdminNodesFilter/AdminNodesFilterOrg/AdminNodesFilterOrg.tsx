@@ -1,10 +1,6 @@
-import { Org } from '@modules/grpc/library/blockjoy/v1/org';
 import { useEffect, useState } from 'react';
-import {
-  AdminListFilterControl,
-  adminSelectors,
-  dedupedAdminDropdownList,
-} from '@modules/admin';
+import { AdminListFilterControl, adminSelectors } from '@modules/admin';
+import { unique } from '@shared/index';
 import { sort } from '@shared/components';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { AdminFilterControlProps } from '@modules/admin/types/AdminFilterControlProps';
@@ -16,7 +12,7 @@ export const AdminNodesFilterOrg = ({
   listAll,
   onFilterChange,
 }: AdminFilterControlProps<Node>) => {
-  const [list, setList] = useState<Org[]>();
+  const [list, setList] = useState<AdminFilterDropdownItem[]>();
 
   const settings = useRecoilValue(adminSelectors.settings);
   const settingsColumns = settings['nodes']?.columns ?? [];
@@ -37,7 +33,7 @@ export const AdminNodesFilterOrg = ({
         name: orgName,
       }))
       ?.filter((org) => org.name !== 'Personal');
-    setList(sort(dedupedAdminDropdownList(all!), { field: 'name' }));
+    setList(sort(unique(all!, 'id'), { field: 'name' }));
   }, [listAll]);
 
   return (
