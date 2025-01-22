@@ -22,6 +22,7 @@ export const ROUTES = {
   ORGANIZATION: (id: string) => `/organizations/${id}`,
   PROFILE: '/profile',
   REGISTER: '/register',
+  SETTINGS: '/settings',
 };
 
 export const PUBLIC_ROUTES = [

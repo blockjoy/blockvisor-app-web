@@ -4,6 +4,7 @@ export * from './constants/lookups';
 export * from './constants/routes';
 export * from './constants/countries';
 export * from './constants/pipedrive';
+export * from './constants/resources';
 export * from './constants/states';
 export * from './constants/tag';
 
@@ -40,5 +41,6 @@ export * from './utils/getDocumentWidth';
 export * from './utils/getUpdatedHeaders';
 export * from './utils/infiniteScroll';
 export * from './utils/storybook';
+export * from './utils/unique';
 export * from './utils/updateTableColumns';
 export * from './utils/validation';

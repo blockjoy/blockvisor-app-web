@@ -4,7 +4,7 @@ import { AdminListFilterControl, adminSelectors } from '@modules/admin';
 import { useRecoilValue } from 'recoil';
 import { AdminFilterControlProps } from '@modules/admin/types/AdminFilterControlProps';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
-import { ProtocolVersionKey } from '@modules/grpc/library/blockjoy/common/v1/protocol';
+import { unique } from '@shared/index';
 
 export const AdminNodesFilterVariant = ({
   columnName,
@@ -26,36 +26,40 @@ export const AdminNodesFilterVariant = ({
     protocolFilters?.some((protocolFilter) => protocolFilter === p.protocolId),
   );
 
-  const filteredNetworks: AdminFilterDropdownItem[] = Array.from(
-    new Set(sort(listAll?.map(({ versionKey }) => versionKey?.variantKey))),
-  )
-    .filter(
+  const filteredNetworks =
+    listAll?.filter(
       (item) =>
         !selectedProtocols?.length ||
-        selectedProtocols?.some((p) => p.protocolId === item.protocolId),
-    )
-    .map((variantKey) => ({
-      id: variantKey,
-      name: variantKey,
-    }));
+        selectedProtocols.some((p) => p.protocolId === item.protocolId),
+    ) ?? [];
+
+  const sortedNetworks = sort(
+    unique(
+      filteredNetworks.map(({ versionKey }) => ({
+        id: versionKey?.variantKey,
+        name: versionKey?.variantKey,
+      })),
+      'name',
+    ),
+    { field: 'name' },
+  );
 
   useEffect(() => {
-    const all: ProtocolVersionKey[] = Array.from(
-      new Set(sort(listAll?.map((node) => node.versionKey?.variantKey))),
+    const newList = sort(
+      listAll?.map(({ versionKey }) => ({
+        id: versionKey?.protocolKey,
+        name: versionKey?.variantKey,
+      })) ?? [],
+      { field: 'name' },
     );
 
-    const networksMapped = all.map((versionKey) => ({
-      id: versionKey.protocolKey,
-      name: versionKey.variantKey,
-    }));
-
-    setList(networksMapped);
+    setList(newList);
   }, [listAll]);
 
   return (
     <AdminListFilterControl
       columnName={columnName}
-      items={filteredNetworks?.length ? filteredNetworks : list}
+      items={sortedNetworks?.length ? sortedNetworks : list}
       values={values}
       onFilterChange={onFilterChange}
     />

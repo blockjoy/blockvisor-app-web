@@ -14,6 +14,11 @@ declare namespace globalThis {
 
   type AdminListColumn =
     import('@modules/admin/types/AdminListColumn').AdminListColumn;
+
+  type ApiKeysSort = {
+    field: keyof import('@modules/grpc/library/blockjoy/v1/api_key').ListApiKey;
+    order: SearchSortOrder;
+  };
 }
 
 type UserSettings = {
@@ -23,6 +28,7 @@ type UserSettings = {
   organization?: string;
   admin?: string;
   billing?: string;
+  apiKeys?: string;
 };
 
 type UserSettingsUI = {
@@ -32,6 +38,7 @@ type UserSettingsUI = {
   organization?: OrganizationSettings;
   admin?: AdminSettings;
   billing?: BillingSettings;
+  apiKeys?: ApiKeysSettings;
 };
 
 type LayoutBasicSettings = {
@@ -82,4 +89,8 @@ type AdminSettings = {
 
 type BillingSettings = {
   bypassBilling: boolean;
+};
+
+type ApiKeysSettings = {
+  sort: ApiKeysSort;
 };

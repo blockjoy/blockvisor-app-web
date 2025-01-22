@@ -51,7 +51,9 @@ export function useDefaultOrganization() {
   ) => {
     setPermissionsLoadingState('loading');
 
-    if (['/nodes', '/hosts'].some((path) => pathname?.includes(path)))
+    if (
+      ['/nodes', '/hosts', '/settings'].some((path) => pathname?.includes(path))
+    )
       setAppLoadingState('loading');
 
     await updateSettings(

@@ -8,6 +8,7 @@ import { ProfileBubble } from './ProfileBubble';
 import { styles } from './ProfileDropdown.styles';
 import { escapeHtml } from '@shared/utils/escapeHtml';
 import { spacing } from 'styles/utils.spacing.styles';
+import IconCog from '@public/assets/icons/common/Cog.svg';
 import IconDoor from '@public/assets/icons/common/Door.svg';
 import IconPerson from '@public/assets/icons/common/Person.svg';
 
@@ -23,6 +24,12 @@ export const ProfileDropdown = () => {
 
   const items: ProfileDropdownItem[] = useMemo(
     () => [
+      {
+        id: 'settings',
+        name: 'Settings',
+        icon: <IconCog />,
+        onClick: () => router.push(ROUTES.SETTINGS),
+      },
       {
         id: 'profile',
         name: 'Profile',

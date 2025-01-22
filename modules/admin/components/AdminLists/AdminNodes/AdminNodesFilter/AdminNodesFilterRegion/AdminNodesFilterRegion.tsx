@@ -30,7 +30,7 @@ export const AdminNodesFilterRegion = ({
                 (!protocolFilters?.length ||
                   protocolFilters?.includes(node.protocolId)),
             )
-            .map((node) => node.placement?.scheduler?.region),
+            .map((node) => node.placement?.scheduler?.region) ?? [],
         ),
       ),
     );

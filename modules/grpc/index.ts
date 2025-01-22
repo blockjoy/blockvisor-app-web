@@ -1,3 +1,4 @@
+export * from './clients/apiKeyClient';
 export * from './clients/protocolClient';
 export * from './clients/nodeClient';
 export * from './clients/hostClient';
