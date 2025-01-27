@@ -15,12 +15,17 @@ import {
   protocolAtoms,
   InitialNodeQueryParams,
   NODE_LIST_ITEMS,
+  getCreatedByName,
 } from '@modules/node';
 import { authAtoms } from '@modules/auth';
 import { createDropdownValuesFromEnum } from '@modules/admin';
 import { NodeState } from '@modules/grpc/library/blockjoy/common/v1/node';
 import { layoutSelectors } from '@modules/layout';
-import { organizationSelectors } from '@modules/organization';
+import {
+  organizationAtoms,
+  organizationSelectors,
+} from '@modules/organization';
+import { Resource } from '@modules/grpc/library/blockjoy/common/v1/resource';
 
 const settings = selector<NodeSettings>({
   key: 'node.settings',
@@ -220,21 +225,36 @@ const nodesTagsAll = selector<Tag[]>({
   },
 });
 
-const nodesCreatedBy = selector({
-  key: 'nodes.list.createdBy',
-  get: ({ get }) => {
-    const nodeList = get(nodeAtoms.nodeList);
+const nodeCreatedBy = selectorFamily<
+  string | null,
+  Readonly<Record<string, string | undefined>>
+>({
+  key: 'node.createdBy',
+  get:
+    ({ createdBySerializedParam, hostId, hostDisplayName, hostNetworkName }) =>
+    ({ get }) => {
+      const createdBy: Resource = JSON.parse(
+        createdBySerializedParam as string,
+      );
 
-    const createdByIds: string[] = nodeList.map(
-      (node) => node.createdBy?.resourceId!,
-    );
+      const defaultOrganization = get(
+        organizationSelectors.defaultOrganization,
+      );
+      const allOrganizations = get(organizationAtoms.allOrganizations);
+      const allNodes = get(nodeAtoms.nodeList);
 
-    const organizationMembersByIds = get(
-      organizationSelectors.organizationMembersByIds(createdByIds),
-    );
+      const createdByName = getCreatedByName({
+        createdBy,
+        hostId,
+        hostDisplayName,
+        hostNetworkName,
+        defaultOrganization,
+        allOrganizations,
+        allNodes,
+      });
 
-    return organizationMembersByIds;
-  },
+      return createdByName;
+    },
 });
 
 export const nodeSelectors = {
@@ -258,5 +278,5 @@ export const nodeSelectors = {
 
   nodesTagsAll,
 
-  nodesCreatedBy,
+  nodeCreatedBy,
 };

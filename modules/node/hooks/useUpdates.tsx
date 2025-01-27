@@ -7,12 +7,17 @@ import {
   NodeMessage,
   NodeUpdated,
 } from '@modules/grpc/library/blockjoy/v1/event';
-import { useNodeList, useNodeView } from '@modules/node';
+import {
+  getCreatedByName,
+  nodeAtoms,
+  useNodeList,
+  useNodeView,
+} from '@modules/node';
 import { showNotification } from '@modules/mqtt';
 import { authAtoms, authSelectors } from '@modules/auth';
 import {
-  useDefaultOrganization,
-  useGetOrganizations,
+  organizationAtoms,
+  organizationSelectors,
 } from '@modules/organization';
 
 const styles = {
@@ -29,26 +34,17 @@ export const useUpdates = () => {
   const router = useRouter();
   const user = useRecoilValue(authAtoms.user);
 
-  const { organizations } = useGetOrganizations();
-  const { defaultOrganization } = useDefaultOrganization();
-  const selectedOrg = organizations.find(
-    (org) => org.orgId === defaultOrganization?.orgId,
+  const defaultOrganization = useRecoilValue(
+    organizationSelectors.defaultOrganization,
   );
+  const allOrganizations = useRecoilValue(organizationAtoms.allOrganizations);
+  const allNodes = useRecoilValue(nodeAtoms.nodeList);
 
   const { addToNodeList, removeFromNodeList, modifyNodeInNodeList } =
     useNodeList();
   const { unloadNode, modifyNode, node: activeNode } = useNodeView();
   const canGetHost = useRecoilValue(authSelectors.hasPermission('host-get'));
   const canGetNode = useRecoilValue(authSelectors.hasPermission('node-get'));
-
-  const getUserName = (userId?: string) => {
-    try {
-      const user = selectedOrg?.members.find((m) => m.userId === userId);
-      return user?.name;
-    } catch (err) {
-      return '-';
-    }
-  };
 
   const handleNodeUpdate = (message: Message) => {
     const { type, payload }: Message = message;
@@ -68,10 +64,18 @@ export const useUpdates = () => {
 
         if (createdBy?.resourceId === user?.userId) break;
 
-        const userName = getUserName(createdBy?.resourceId);
+        const createdByName = getCreatedByName({
+          createdBy,
+          hostId: node?.hostId,
+          hostDisplayName: node?.hostDisplayName,
+          hostNetworkName: node?.hostNetworkName,
+          defaultOrganization,
+          allOrganizations,
+          allNodes,
+        });
 
         const message = createdBy?.resourceId ? (
-          `${userName} launched a node `
+          `${createdByName} launched a node `
         ) : (
           <>
             Node launched from CLI for Host{' '}
@@ -122,6 +126,8 @@ export const useUpdates = () => {
 
         const { nodeId, deletedBy }: NodeDeleted = payloadDeserialized.deleted!;
 
+        const deletedNode = allNodes?.find((node) => node.nodeId === nodeId);
+
         removeFromNodeList(nodeId);
 
         if (activeNode?.nodeId === nodeId) {
@@ -130,10 +136,18 @@ export const useUpdates = () => {
 
         if (deletedBy?.resourceId === user?.userId) break;
 
-        const userName = getUserName(deletedBy?.resourceId);
+        const deletedByName = getCreatedByName({
+          createdBy: deletedBy,
+          hostId: deletedNode?.hostId,
+          hostDisplayName: deletedNode?.hostDisplayName,
+          hostNetworkName: deletedNode?.hostNetworkName,
+          defaultOrganization,
+          allOrganizations,
+          allNodes,
+        });
 
         const message = deletedBy?.resourceId
-          ? `${userName} just deleted a node`
+          ? `${deletedByName} just deleted a node`
           : 'Node deleted from CLI';
 
         showNotification(type, message);
