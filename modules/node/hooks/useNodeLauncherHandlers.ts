@@ -259,7 +259,7 @@ export const useNodeLauncherHandlers = ({
 
       const versionsResponse = await protocolClient.listVersions({
         versionKey: {
-          protocolKey: selectedVariant.protocol,
+          protocolKey: selectedProtocol?.key!,
           variantKey: selectedVariant.variantKey,
         },
         orgId: defaultOrganization?.orgId,
