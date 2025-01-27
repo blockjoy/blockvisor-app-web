@@ -54,6 +54,8 @@ const formatDate = (date: Date, type?: FormatDateType): string => {
 
   const dateValue = typeof date === 'string' ? new Date(date) : date;
 
+  if (isNaN(date.getTime())) return '';
+
   return formattedDate.format(dateValue);
 };
 

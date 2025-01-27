@@ -18,7 +18,10 @@ export const ApiKeyView = ({ handleView }: Props) => {
   const handleCopyAndClose = () => {
     if (apiKeyToken?.apiKey) copyToClipboard(apiKeyToken?.apiKey);
     setApiKeyToken(null);
-    handleView?.('list');
+    handleView?.({
+      drawer: null,
+      modal: null,
+    });
   };
 
   return (

@@ -7,14 +7,16 @@ type Props = {
 };
 
 export const ApiKeysHeader = ({ handleView }: Props) => {
+  const handleClick = () => {
+    handleView?.({
+      drawer: 'create',
+    });
+  };
+
   return (
     <header css={styles.header}>
       <div>API Keys</div>
-      <Button
-        size="small"
-        style="outline"
-        onClick={() => handleView?.('create')}
-      >
+      <Button size="small" style="outline" onClick={handleClick}>
         <SvgIcon size="10px">
           <IconPlus />
         </SvgIcon>

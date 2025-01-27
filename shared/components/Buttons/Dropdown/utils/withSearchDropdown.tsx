@@ -1,9 +1,5 @@
 import { ChangeEvent, ComponentType, useState } from 'react';
-import {
-  filterSearch,
-  TAG_VALIDATION_REGEX,
-  TAG_VALIDATION_MESSAGES,
-} from '@shared/index';
+import { filterSearch } from '@shared/index';
 import { DropdownSearch } from '../DropdownSearch/DropdownSearch';
 import { DropdownProps } from '../Dropdown';
 
@@ -12,6 +8,10 @@ type WithSearchDropdownProps = {
   emptyMessage?: string;
   addNewMessage?: string;
   onSubmit?: (tag: string) => void;
+  validation?: {
+    required?: string;
+    callback?: (value?: string) => string;
+  };
 };
 
 export const withSearchDropdown = <T extends { id?: string; name?: string }>(
@@ -20,14 +20,19 @@ export const withSearchDropdown = <T extends { id?: string; name?: string }>(
 ) => {
   const WithSearchDropdown = (props: DropdownProps<T>) => {
     const { items, handleSelected } = props;
-    const { searchPlaceholder, emptyMessage, addNewMessage, onSubmit } =
-      customProps ?? {};
+    const {
+      searchPlaceholder,
+      emptyMessage,
+      addNewMessage,
+      onSubmit,
+      validation,
+    } = customProps ?? {};
 
     const [searchQuery, setSearchQuery] = useState('');
     const [isTouchedQuery, setIsTouchedQuery] = useState(false);
     const [filteredData, setFilteredData] = useState<T[]>(items);
     const [validationMessage, setValidationMessage] = useState(
-      TAG_VALIDATION_MESSAGES.required,
+      validation?.required ?? '',
     );
 
     const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
@@ -35,9 +40,10 @@ export const withSearchDropdown = <T extends { id?: string; name?: string }>(
 
       const query = e.target.value;
 
-      const validateMessage = handleValidate?.(query);
-
-      setValidationMessage(validateMessage);
+      if (validation?.callback) {
+        const validateMessage = validation?.callback?.(query);
+        setValidationMessage(validateMessage);
+      }
 
       setSearchQuery(query);
 
@@ -60,17 +66,6 @@ export const withSearchDropdown = <T extends { id?: string; name?: string }>(
 
       onSubmit?.(query);
       setSearchQuery('');
-    };
-
-    const handleValidate = (value?: string) => {
-      if (!value?.trim()) return TAG_VALIDATION_MESSAGES.required;
-
-      if (value.length < 3) return TAG_VALIDATION_MESSAGES.minLength;
-
-      if (!TAG_VALIDATION_REGEX.test(value))
-        return TAG_VALIDATION_MESSAGES.invalidFormat;
-
-      return '';
     };
 
     return (

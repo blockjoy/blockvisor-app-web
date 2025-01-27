@@ -1,6 +1,7 @@
 export * from './components';
 
 export * from './hooks/usePermissions';
+export * from './hooks/usePersonalPermissions';
 export * from './hooks/useIdentity';
 export * from './hooks/useIdentityRepository';
 export * from './hooks/useSignIn';

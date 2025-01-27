@@ -4,10 +4,12 @@ import { toast } from 'react-toastify';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { ResourceType } from '@modules/grpc/library/blockjoy/common/v1/resource';
 import {
-  ApiKeyServiceCreateRequest,
-  ApiKeyServiceUpdateRequest,
-} from '@modules/grpc/library/blockjoy/v1/api_key';
-import { ApiKeyFormFields, useApiKeys, settingsAtoms } from '@modules/settings';
+  ApiKeyFormFields,
+  useApiKeys,
+  settingsAtoms,
+  generateApiKeyFormParams,
+  API_KEY_FORM_DEFAULT_VALUES,
+} from '@modules/settings';
 import {
   Button,
   ButtonGroup,
@@ -16,87 +18,91 @@ import {
   FormError,
 } from '@shared/components';
 import { authAtoms } from '@modules/auth';
-import { spacing } from 'styles/utils.spacing.styles';
+import { organizationSelectors } from '@modules/organization';
 import { styles } from './ApiKeyForm.styles';
 
-export type ApiKeyFormParams = {
+export type ApiKeyForm = {
   label: string;
   resourceId: string;
   resourceType: ResourceType;
+  permissions: string[];
 };
 
 type Props = {
-  action?: Partial<ApiKeysView>;
+  view?: ApiKeysView['drawer'];
   handleView?: (view: ApiKeysView) => void;
 };
 
-export const ApiKeyForm = ({ action, handleView }: Props) => {
+export const ApiKeyForm = ({ view, handleView }: Props) => {
   const [apiKey, setApiKey] = useRecoilState(settingsAtoms.apiKey);
 
+  const defaultOrganization = useRecoilValue(
+    organizationSelectors.defaultOrganization,
+  );
+  const personalOrganization = useRecoilValue(
+    organizationSelectors.personalOrganization,
+  );
   const userSettingsLoadingState = useRecoilValue(
     authAtoms.userSettingsLoadingState,
   );
 
   const [error, setError] = useState<string | null>(null);
 
-  const { apiKeyLoadingState, createApiKey, updateApiKey, listApiKeys } =
-    useApiKeys();
+  const { apiKeyLoadingState, createApiKey, listApiKeys } = useApiKeys();
 
-  const defaultValues = {
-    label: '',
-    resourceId: '',
-    resourceType: ResourceType.RESOURCE_TYPE_UNSPECIFIED,
-  };
-
-  const form = useForm<ApiKeyFormParams>({ defaultValues });
+  const form = useForm<ApiKeyForm>({
+    defaultValues: API_KEY_FORM_DEFAULT_VALUES,
+  });
 
   const {
     formState: { isValid, isDirty },
   } = form;
 
-  const handleSubmit = async (params: ApiKeyFormParams) => {
+  const handleSubmit = async (params: ApiKeyForm) => {
+    const createParams = generateApiKeyFormParams(
+      params,
+      defaultOrganization?.orgId,
+      personalOrganization?.orgId,
+    );
+
     const successCallback = () => {
-      toast.success(`Api Key is ${action}d successfully`);
+      toast.success(`Api Key is created successfully`);
 
-      if (action === 'create') {
-        handleView?.('view');
-        listApiKeys();
-      } else {
-        handleView?.('list');
-      }
+      handleView?.({
+        drawer: 'view',
+        modal: 'viewToken',
+      });
 
-      form.reset(defaultValues);
+      listApiKeys();
+
+      setError(null);
+      form.reset(API_KEY_FORM_DEFAULT_VALUES);
     };
 
-    const errorCallback = (err: string) => setError(err);
+    const errorCallback = (err: string) => {
+      setError(err);
+    };
 
-    if (action === 'create') {
-      const createParams: ApiKeyServiceCreateRequest = {
-        label: params.label,
-        resource: {
-          resourceId: params.resourceId,
-          resourceType: params.resourceType,
-        },
-      };
-
-      await createApiKey(createParams, successCallback, errorCallback);
-    } else {
-      const updateParams: ApiKeyServiceUpdateRequest = {
-        apiKeyId: apiKey?.apiKeyId!,
-        label: params.label,
-      };
-
-      await updateApiKey(updateParams, successCallback, errorCallback);
-    }
+    await createApiKey(createParams, successCallback, errorCallback);
   };
 
   const handleClose = () => {
-    handleView?.('list');
-    setApiKey(null);
+    handleView?.({
+      drawer: null,
+      modal: null,
+    });
 
     setTimeout(() => {
-      form.reset(defaultValues);
+      setApiKey(null);
+      setError(null);
+      form.reset(API_KEY_FORM_DEFAULT_VALUES);
     }, 300);
+  };
+
+  const handleDeleteView = () => {
+    handleView?.({
+      modal: 'delete',
+    });
   };
 
   useEffect(() => {
@@ -105,47 +111,65 @@ export const ApiKeyForm = ({ action, handleView }: Props) => {
         label: apiKey?.label,
         resourceId: apiKey?.resource?.resourceId,
         resourceType: apiKey?.resource?.resourceType,
+        permissions: apiKey?.permissions,
       });
+    } else {
+      form.reset(API_KEY_FORM_DEFAULT_VALUES);
     }
   }, [apiKey]);
 
-  const isOpen = action === 'create' || action === 'update';
+  const isOpen = view === 'view' || view === 'create';
 
   return (
     <Drawer
-      title={`${action === 'create' ? 'Add' : 'Update'} API key`}
+      title={`${view === 'create' ? 'Add' : ''} API key`}
       isOpen={isOpen}
       onClose={handleClose}
       asideStyles={[styles.drawer]}
     >
-      <DrawerContent>
+      <DrawerContent bottomBorder={false}>
         <FormProvider {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)}>
-            <div css={spacing.bottom.mediumLarge}>
-              <ApiKeyFormFields form={form} action={action} />
-            </div>
+            <ApiKeyFormFields form={form} view={view} />
 
-            <ButtonGroup>
-              <Button
-                loading={apiKeyLoadingState !== 'finished'}
-                disabled={
-                  apiKeyLoadingState !== 'finished' ||
-                  !isValid ||
-                  !isDirty ||
-                  userSettingsLoadingState === 'loading'
-                }
-                style="primary"
-                size="small"
-                type="submit"
+            <div css={styles.bottom}>
+              <ButtonGroup>
+                {!apiKey ? (
+                  <Button
+                    loading={apiKeyLoadingState !== 'finished'}
+                    disabled={
+                      apiKeyLoadingState !== 'finished' ||
+                      !isValid ||
+                      !isDirty ||
+                      userSettingsLoadingState === 'loading'
+                    }
+                    style="primary"
+                    size="small"
+                    type="submit"
+                  >
+                    Add
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={handleDeleteView}
+                    style="warning"
+                    size="small"
+                  >
+                    Delete
+                  </Button>
+                )}
+                <Button onClick={handleClose} style="outline" size="small">
+                  Cancel
+                </Button>
+              </ButtonGroup>
+
+              <FormError
+                isVisible={Boolean(error)}
+                additionalStyles={styles.error}
               >
-                {action === 'create' ? 'Add' : 'Update'}
-              </Button>
-              <Button onClick={handleClose} style="outline" size="small">
-                Cancel
-              </Button>
-            </ButtonGroup>
-
-            <FormError isVisible={Boolean(error)}>{error}</FormError>
+                {error}
+              </FormError>
+            </div>
           </form>
         </FormProvider>
       </DrawerContent>

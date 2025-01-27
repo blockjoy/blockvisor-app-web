@@ -21,7 +21,7 @@ export function Modal({
   handleClose,
   additionalStyles,
   isActive,
-  inContainer,
+  inContainer = false,
 }: Props) {
   const ref = useRef<HTMLDivElement | null>(null);
   useClickOutside(ref, handleClose, isActive);
@@ -50,7 +50,7 @@ export function Modal({
   }
 
   return (
-    <Portal wrapperId={portalId} {...(inContainer && { inContainer })}>
+    <Portal wrapperId={portalId} inContainer={inContainer}>
       <div css={[isOpen && styles.modal]} id="js-auth-layout">
         <div
           ref={ref}
