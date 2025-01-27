@@ -20,8 +20,8 @@ const styles = {
 };
 
 export const NodeVariantSelect = ({ onChange }: NodeVariantSelectProps) => {
-  const selectedProtocol = useRecoilValue(nodeLauncherAtoms.selectedProtocol);
   const variants = useRecoilValue(nodeLauncherAtoms.variants);
+
   const selectedVariant = useRecoilValue(nodeLauncherAtoms.selectedVariant);
 
   const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
@@ -43,12 +43,14 @@ export const NodeVariantSelect = ({ onChange }: NodeVariantSelectProps) => {
         { field: 'name' },
       )}
       itemKey="version"
-      {...(selectedProtocol
+      {...(selectedVariant?.variantKey
         ? {
-            renderButtonText: <p css={styles.buttonText}>{selectedVariant}</p>,
+            renderButtonText: (
+              <p css={styles.buttonText}>{selectedVariant.variantKey}</p>
+            ),
           }
         : isSuperUser
-        ? { error: 'No Versions Available' }
+        ? { error: 'No Variants Available' }
         : { defaultText: <p css={styles.buttonText}>Auto select</p> })}
       renderItem={(item) => <>{item.name}</>}
       isOpen={isOpen}
@@ -58,8 +60,8 @@ export const NodeVariantSelect = ({ onChange }: NodeVariantSelectProps) => {
         name?: string | undefined;
       }) => handleSelect(item.id!)}
       selectedItem={{
-        id: selectedVariant!,
-        name: selectedVariant!,
+        id: selectedVariant?.variantKey,
+        name: selectedVariant?.variantKey,
       }}
     />
   );

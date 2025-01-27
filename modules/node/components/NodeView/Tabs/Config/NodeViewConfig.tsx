@@ -33,6 +33,8 @@ export const NodeViewConfig = () => {
 
   const [isLoadingConfig, setIsLoadingConfig] = useState(true);
 
+  const [isSaving, setIsSaving] = useState(false);
+
   const [nodeConfig, setNodeConfig] = useRecoilState<NodeConfig | null>(
     nodeAtoms.nodeConfig,
   );
@@ -78,12 +80,37 @@ export const NodeViewConfig = () => {
     });
   };
 
-  useEffect(() => {
-    if (nodeConfig) {
-      setIsLoadingConfig(false);
-      return;
-    }
+  const handleSave = async () => {
+    if (!node?.config?.firewall) return;
 
+    setIsSaving(true);
+
+    const newFirewall: FirewallConfig = {
+      ...node?.config?.firewall,
+      rules: nodeConfig?.firewall!,
+    };
+
+    await updateNode(
+      {
+        nodeId: node?.nodeId!,
+        autoUpgrade: nodeConfig?.autoUpgrade,
+        newValues: sortedProperties.map((property) => ({
+          key: property.key,
+          value: property.value,
+        })),
+        newFirewall,
+      },
+      true,
+    );
+
+    setOriginalPropertyValues(
+      sortedProperties.map((property) => property.value),
+    );
+
+    setIsSaving(false);
+  };
+
+  const buildConfig = () => {
     if (!nodeImage || !node) return;
 
     const nextProperties = node.config?.image?.values?.map((property) => {
@@ -120,35 +147,28 @@ export const NodeViewConfig = () => {
     setOriginalFirewall(firewallCopy);
 
     setIsLoadingConfig(false);
-  }, [node, nodeImage]);
-
-  const handleSave = async () => {
-    if (!node?.config?.firewall) return;
-
-    const newFirewall: FirewallConfig = {
-      ...node?.config?.firewall,
-      rules: nodeConfig?.firewall!,
-    };
-
-    await updateNode(
-      {
-        nodeId: node?.nodeId!,
-        autoUpgrade: nodeConfig?.autoUpgrade,
-        newValues: sortedProperties.map((property) => ({
-          key: property.key,
-          value: property.value,
-        })),
-        newFirewall,
-      },
-      true,
-    );
   };
 
-  const editedValues = nodeConfig?.properties.map((p) => p.value);
+  useEffect(() => {
+    if (nodeConfig) {
+      setIsLoadingConfig(false);
+      return;
+    } else {
+      buildConfig();
+    }
+  }, [node, nodeImage]);
+
+  useEffect(() => {
+    buildConfig();
+  }, []);
+
+  const editedValues = sort(
+    !nodeConfig?.properties ? [] : nodeConfig?.properties.map((p) => p.value),
+  );
 
   const isDirty =
-    !isEqual(editedValues, originalPropertyValues) ||
-    !isEqual([...nodeConfig?.firewall!], originalFirewall) ||
+    !isEqual(sort(editedValues), sort(originalPropertyValues)) ||
+    !isEqual(nodeConfig?.firewall, originalFirewall) ||
     nodeConfig?.autoUpgrade !== node?.autoUpgrade;
 
   const isValid = nodeConfig?.properties.every(
@@ -202,7 +222,7 @@ export const NodeViewConfig = () => {
         <Button
           size="small"
           loading={isLoading}
-          disabled={!isDirty || !isValid}
+          disabled={!isDirty || !isValid || isSaving}
           onClick={handleSave}
         >
           Update

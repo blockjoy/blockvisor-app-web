@@ -7,6 +7,7 @@ import {
   NodeLauncherHost,
   NodeLauncherRegion,
   NodeLauncherState,
+  NodeLauncherVariant,
 } from '@modules/node';
 import { Image } from '@modules/grpc/library/blockjoy/v1/image';
 
@@ -54,7 +55,7 @@ const versions = atom<ProtocolVersion[]>({
   default: [],
 });
 
-const selectedVariant = atom<string | null>({
+const selectedVariant = atom<NodeLauncherVariant | null>({
   key: 'nodeLauncher.variant',
   default: null,
 });

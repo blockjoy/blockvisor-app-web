@@ -111,6 +111,7 @@ export const useNodeLauncherHandlers = ({
   );
 
   const setVariants = useSetRecoilState(nodeLauncherAtoms.variants);
+
   const [versions, setVersions] = useRecoilState(nodeLauncherAtoms.versions);
 
   const [selectedVariant, setSelectedVariant] = useRecoilState(
@@ -157,11 +158,6 @@ export const useNodeLauncherHandlers = ({
       }
     }
   }, [allHosts]);
-
-  useEffect(() => {
-    if (!selectedProtocol) return;
-    setSelectedVersion(sortVersions(versions)[0]);
-  }, [selectedProtocol]);
 
   useEffect(() => {
     if (!selectedImage) return;
@@ -240,16 +236,42 @@ export const useNodeLauncherHandlers = ({
   useEffect(() => {
     (async () => {
       if (!defaultOrganization || !selectedProtocol) return;
-
       const variantsResponse = await protocolClient.listVariants({
         protocolId: selectedProtocol?.protocolId!,
         orgId: defaultOrganization?.orgId,
       });
 
       setVariants(variantsResponse);
-      setSelectedVariant(variantsResponse[0]);
+
+      setSelectedVariant({
+        protocol: selectedProtocol.key,
+        variantKey: variantsResponse[0],
+      });
     })();
   }, [selectedProtocol, defaultOrganization]);
+
+  useEffect(() => {
+    (async () => {
+      if (!selectedVariant?.variantKey) {
+        setSelectedVersion(null);
+        return;
+      }
+
+      const versionsResponse = await protocolClient.listVersions({
+        versionKey: {
+          protocolKey: selectedVariant.protocol,
+          variantKey: selectedVariant.variantKey,
+        },
+        orgId: defaultOrganization?.orgId,
+      });
+
+      setVersions(versionsResponse);
+
+      setSelectedVersion(
+        versionsResponse.length ? sortVersions(versionsResponse)[0] : null,
+      );
+    })();
+  }, [selectedVariant]);
 
   useEffect(() => {
     if (selectedVersion && selectedRegions && defaultOrganization)
@@ -282,23 +304,6 @@ export const useNodeLauncherHandlers = ({
     if (defaultOrganization?.orgId && selectedImage) getRegions();
   }, [defaultOrganization?.orgId, selectedImage]);
 
-  useEffect(() => {
-    if (selectedVariant && selectedProtocol) {
-      (async () => {
-        const versionsResponse = await protocolClient.listVersions({
-          versionKey: {
-            protocolKey: selectedProtocol?.key,
-            variantKey: selectedVariant,
-          },
-          orgId: defaultOrganization?.orgId,
-        });
-
-        setVersions(versionsResponse);
-        setSelectedVersion(sortVersions(versionsResponse)[0]);
-      })();
-    }
-  }, [selectedVariant]);
-
   const handleHostsChanged = (hosts: NodeLauncherHost[] | null) => {
     Mixpanel.track('Launch Node - Host Changed');
     setSelectedHosts(hosts);
@@ -327,7 +332,6 @@ export const useNodeLauncherHandlers = ({
 
   const handleProtocolSelected = (protocol: Protocol) => {
     setSelectedProtocol(protocol);
-
     Mixpanel.track('Launch Node - Protocol Selected', {
       protocol: protocol.name,
     });
@@ -355,8 +359,6 @@ export const useNodeLauncherHandlers = ({
   ) => {
     setError('');
     setIsLaunchError(false);
-
-    console.log('handleNodeConfigPropertyChanged', { key, keyGroup, value });
 
     if (!nodeLauncherState.properties) return;
 
@@ -392,7 +394,11 @@ export const useNodeLauncherHandlers = ({
     setSelectedVersion(version);
   };
 
-  const handleVariantChanged = (variant: string) => setSelectedVariant(variant);
+  const handleVariantChanged = (variant: string) =>
+    setSelectedVariant({
+      protocol: selectedProtocol?.key!,
+      variantKey: variant,
+    });
 
   const handleCreateNodeClicked = async () => {
     setIsLaunching(true);
@@ -409,8 +415,6 @@ export const useNodeLauncherHandlers = ({
       launcher: {},
       addRules: nodeLauncherState.firewall,
     };
-
-    console.log('createNodeParams', params);
 
     if (selectedHosts?.length!) {
       params.launcher = {

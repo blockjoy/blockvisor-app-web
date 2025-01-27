@@ -22,5 +22,6 @@ const styles = {
     flex-direction: row;
     align-items: center;
     gap: 8px;
+    line-height: 1.6;
   `,
 };

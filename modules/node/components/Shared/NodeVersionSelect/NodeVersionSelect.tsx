@@ -40,7 +40,7 @@ export const NodeVersionSelect = ({
           nodeLauncherAtoms.versions,
         );
         onVersionChanged(
-          versionsRecoilState.find(
+          versionsRecoilState?.find(
             (v) => v.protocolVersionId === protocolVersionId,
           )!,
         );
@@ -50,8 +50,8 @@ export const NodeVersionSelect = ({
 
   return (
     <Dropdown
-      disabled={!isSuperUser || versions.length < 2}
-      items={sortVersions(versions).map((version) => ({
+      disabled={!isSuperUser || versions?.length! < 2}
+      items={sortVersions(versions!).map((version) => ({
         id: version.protocolVersionId,
         name: isSuperUser
           ? `${version.semanticVersion} - ${version.description}`
