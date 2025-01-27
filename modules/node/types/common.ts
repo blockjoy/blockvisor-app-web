@@ -45,6 +45,11 @@ export type NodeLauncherRegion = {
   isValid?: boolean;
 };
 
+export type NodeLauncherVariant = {
+  protocol: string;
+  variantKey: string;
+};
+
 export type CreateNodeParams = {
   version: string;
   nodeType: number;

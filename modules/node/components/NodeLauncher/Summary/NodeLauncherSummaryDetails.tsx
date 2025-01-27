@@ -5,8 +5,8 @@ import { authSelectors } from '@modules/auth';
 import { styles } from './NodeLauncherSummaryDetails.styles';
 import IconCheckCircle from '@public/assets/icons/common/CheckCircle.svg';
 import IconUncheckCircle from '@public/assets/icons/common/UncheckCircle.svg';
-import { capitalized } from '@modules/admin';
 import { kebabToCapitalized } from 'utils';
+import { capitalize } from 'utils/capitalize';
 
 type Props = {
   totalNodesToLaunch: number;
@@ -39,9 +39,7 @@ export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
           </span>
           <div>
             <label>Protocol</label>
-            <span>
-              {capitalized(selectedProtocol?.name!) || 'Not Selected'}
-            </span>
+            <span>{capitalize(selectedProtocol?.name!) || 'Not Selected'}</span>
           </div>
         </li>
         {isSuperUser && (selectedHosts || selectedRegions) && (
