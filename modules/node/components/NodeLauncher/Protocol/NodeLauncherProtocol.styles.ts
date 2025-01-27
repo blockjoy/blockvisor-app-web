@@ -7,12 +7,12 @@ export const styles = {
   wrapper: (theme: ITheme) => css`
     display: flex;
     flex-direction: column;
-    max-width: 25%;
+    max-width: 33.33%;
     padding: 10px 16px 10px 0;
     border-right: 1px solid ${theme.colorBorder};
 
     @media ${breakpoints.fromXLrg} {
-      flex: 1 1 200px;
+      flex: 1 1 400px;
       margin-left: -14px;
       min-height: calc(100vh - 72px);
       max-height: calc(100vh - 72px);

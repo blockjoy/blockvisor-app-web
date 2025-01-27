@@ -54,6 +54,7 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
     component: (node: Node) => (
       <NodeStatus
         protocolStatus={node.nodeStatus?.protocol?.state}
+        status={node.nodeStatus?.state}
         hasBorder={false}
         view="simple"
       />
@@ -123,6 +124,7 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
     component: (node: Node) => (
       <NodeStatus
         status={node.nodeStatus?.protocol?.health!}
+        protocolStatus={node.nodeStatus?.protocol?.state}
         jobs={node.jobs}
         hasBorder={false}
         view="simple"

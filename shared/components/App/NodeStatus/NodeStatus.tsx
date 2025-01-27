@@ -76,8 +76,16 @@ export const getNodeStatusColor = (
   }
 };
 
-export const checkIfUnspecified = (status: number, type?: NodeStatusType) => {
-  if (type === 'protocol' && status === undefined) return true;
+export const checkIfUnspecified = (
+  status?: number,
+  protocolStatus?: string,
+  type?: NodeStatusType,
+) => {
+  if (
+    type === 'protocol' &&
+    (status === undefined || protocolStatus === undefined)
+  )
+    return true;
 
   const statusName = getNodeStatusInfo(status, type)?.name!;
 
@@ -114,7 +122,7 @@ export const NodeStatus = ({
     setStatusNameWidth(nameRef.current?.clientWidth!);
   }, []);
 
-  const isUnspecified = checkIfUnspecified(status!, type);
+  const isUnspecified = checkIfUnspecified(status, protocolStatus, type);
   if (isUnspecified) return <span>-</span>;
 
   return (
