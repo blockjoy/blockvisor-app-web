@@ -1,3 +1,4 @@
-type ApiKeysView = 'list' | 'view' | 'create' | 'update';
-
-type ApiKeyAction = 'update' | 'regenerate' | 'delete';
+type ApiKeysView = {
+  drawer?: 'view' | 'create' | null;
+  modal?: 'viewToken' | 'delete' | null;
+};

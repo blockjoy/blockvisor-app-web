@@ -6,19 +6,24 @@ import {
   ApiKeysHeader,
   ApiKeysList,
   ApiKeyView,
+  ApiKeyActions,
+  DEFAULT_API_KEYS_VIEW,
 } from '@modules/settings';
 import { TableSkeleton } from '@shared/components';
-import { containers } from 'styles/containers.styles';
 
 export const ApiKeys = () => {
   const apiKeysLoadingState = useRecoilValue(settingsAtoms.apiKeysLoadingState);
 
-  const [view, setView] = useState<ApiKeysView>('list');
+  const [view, setView] = useState<ApiKeysView>(DEFAULT_API_KEYS_VIEW);
 
-  const handleView = (newView: ApiKeysView) => setView(newView);
+  const handleView = (nextView: ApiKeysView) =>
+    setView((prevView) => ({
+      ...prevView,
+      ...nextView,
+    }));
 
   return (
-    <div css={containers.mediumLarge}>
+    <div>
       <ApiKeysHeader handleView={handleView} />
 
       {apiKeysLoadingState !== 'finished' ? (
@@ -27,9 +32,13 @@ export const ApiKeys = () => {
         <ApiKeysList handleView={handleView} />
       )}
 
-      {view === 'view' && <ApiKeyView handleView={handleView} />}
+      <ApiKeyForm view={view.drawer} handleView={handleView} />
 
-      <ApiKeyForm action={view} handleView={handleView} />
+      {view.modal === 'viewToken' ? (
+        <ApiKeyView handleView={handleView} />
+      ) : view.modal === 'delete' ? (
+        <ApiKeyActions view={view.modal} handleView={handleView} />
+      ) : null}
     </div>
   );
 };

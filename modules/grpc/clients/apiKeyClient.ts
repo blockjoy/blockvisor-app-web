@@ -4,8 +4,6 @@ import {
   ApiKeyServiceCreateRequest,
   ApiKeyServiceDefinition,
   ApiKeyServiceDeleteRequest,
-  ApiKeyServiceRegenerateRequest,
-  ApiKeyServiceUpdateRequest,
 } from '../library/blockjoy/v1/api_key';
 import { getOptions, handleError } from '../utils/utils';
 import { authClient } from './authClient';
@@ -32,24 +30,6 @@ class ApiKeyClient {
       await authClient.refreshToken();
       const response = await this.client.list({}, getOptions());
       return response.apiKeys;
-    } catch (err) {
-      return handleError(err);
-    }
-  }
-
-  async updateApiKey(params: ApiKeyServiceUpdateRequest) {
-    try {
-      await authClient.refreshToken();
-      return await this.client.update(params, getOptions());
-    } catch (err) {
-      return handleError(err);
-    }
-  }
-
-  async regenerateApiKey(params: ApiKeyServiceRegenerateRequest) {
-    try {
-      await authClient.refreshToken();
-      return await this.client.regenerate(params, getOptions());
     } catch (err) {
       return handleError(err);
     }

@@ -2,12 +2,15 @@ import { css } from '@emotion/react';
 import { ITheme } from 'types/theme';
 
 export const styles = {
-  wrapper: (theme: ITheme) => css`
-    display: flex;
-    flex-direction: column;
-    padding-bottom: 10px;
-    border-bottom: 1px solid ${theme.colorBorder};
-  `,
+  wrapper: (bottomBorder?: boolean) => (theme: ITheme) =>
+    css`
+      display: flex;
+      flex-direction: column;
+      ${bottomBorder &&
+      `padding-bottom: 10px;
+      border-bottom: 1px solid ${theme.colorBorder};
+      `}
+    `,
   titleWrapper: css`
     display: flex;
     flex-direction: row;

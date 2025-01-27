@@ -5,7 +5,11 @@ import { withSearchDropdown, Dropdown } from '@shared/components';
 import { useSwitchOrganization } from '@modules/organization/hooks/useSwitchOrganization';
 import { organizationSelectors } from '@modules/organization';
 
-export const OrganizationSelect = () => {
+type Props = {
+  disabled?: boolean;
+};
+
+export const OrganizationSelect = ({ disabled = false }: Props) => {
   const selectedOrg = useRef<Org>();
 
   const allOrganizations = useRecoilValue(
@@ -58,6 +62,7 @@ export const OrganizationSelect = () => {
       handleOpen={handleClick}
       isLoading={false}
       size="small"
+      disabled={disabled}
     />
   );
 };

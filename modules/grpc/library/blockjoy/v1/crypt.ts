@@ -93,7 +93,7 @@ export const CryptServiceGetSecretRequest = {
 };
 
 function createBaseCryptServiceGetSecretResponse(): CryptServiceGetSecretResponse {
-  return { value: new Uint8Array(0) };
+  return { value: new Uint8Array() };
 }
 
 export const CryptServiceGetSecretResponse = {
@@ -133,13 +133,13 @@ export const CryptServiceGetSecretResponse = {
 
   fromPartial(object: DeepPartial<CryptServiceGetSecretResponse>): CryptServiceGetSecretResponse {
     const message = createBaseCryptServiceGetSecretResponse();
-    message.value = object.value ?? new Uint8Array(0);
+    message.value = object.value ?? new Uint8Array();
     return message;
   },
 };
 
 function createBaseCryptServicePutSecretRequest(): CryptServicePutSecretRequest {
-  return { resource: undefined, name: "", value: new Uint8Array(0) };
+  return { resource: undefined, name: "", value: new Uint8Array() };
 }
 
 export const CryptServicePutSecretRequest = {
@@ -203,7 +203,7 @@ export const CryptServicePutSecretRequest = {
       ? Resource.fromPartial(object.resource)
       : undefined;
     message.name = object.name ?? "";
-    message.value = object.value ?? new Uint8Array(0);
+    message.value = object.value ?? new Uint8Array();
     return message;
   },
 };

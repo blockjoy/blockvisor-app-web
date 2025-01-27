@@ -16,7 +16,7 @@ declare namespace globalThis {
     import('@modules/admin/types/AdminListColumn').AdminListColumn;
 
   type ApiKeysSort = {
-    field: keyof import('@modules/grpc/library/blockjoy/v1/api_key').ListApiKey;
+    field: keyof import('@modules/grpc/library/blockjoy/v1/api_key').ApiKey;
     order: SearchSortOrder;
   };
 }

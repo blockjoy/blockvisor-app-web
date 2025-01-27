@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { SerializedStyles } from '@emotion/react';
-import { Dropdown, InputLabel } from '@shared/components';
+import { Dropdown, InputLabel, withSearchDropdown } from '@shared/components';
 
 type Props = {
   items: Item[];
@@ -38,11 +38,19 @@ export const ResourceSelector = ({
     setSelected(() => items.find((item) => item.id === value) ?? null);
   }, [value]);
 
+  const ResourceDropdown = useMemo(
+    () =>
+      withSearchDropdown<Item>(Dropdown, {
+        emptyMessage: 'No resources found.',
+      }),
+    [items],
+  );
+
   return (
     <div>
       {label && (
         <InputLabel
-          css={[labelStyles]}
+          additionalStyles={labelStyles}
           labelSize={inputSize}
           name={name}
           disabled={disabled}
@@ -51,7 +59,7 @@ export const ResourceSelector = ({
         </InputLabel>
       )}
 
-      <Dropdown
+      <ResourceDropdown
         items={items}
         selectedItem={selected}
         handleSelected={handleChange}

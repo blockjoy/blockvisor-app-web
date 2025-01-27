@@ -8,4 +8,5 @@ export * from './hooks/useSettings';
 export * from './store/settingsAtoms';
 export * from './store/settingsSelectors';
 
+export * from './utils/generateApiKeyFormParams';
 export * from './utils/mapApiKeysToRows';

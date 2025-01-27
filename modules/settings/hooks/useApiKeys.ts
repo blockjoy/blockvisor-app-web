@@ -2,8 +2,6 @@ import { useRecoilState } from 'recoil';
 import {
   ApiKeyServiceCreateRequest,
   ApiKeyServiceDeleteRequest,
-  ApiKeyServiceRegenerateRequest,
-  ApiKeyServiceUpdateRequest,
 } from '@modules/grpc/library/blockjoy/v1/api_key';
 import { apiKeyClient } from '@modules/grpc';
 import { settingsAtoms } from '@modules/settings';
@@ -20,21 +18,6 @@ export const useApiKeys = () => {
     settingsAtoms.apiKeysLoadingState,
   );
 
-  const listApiKeys = async () => {
-    setApiKeysLoadingState('initializing');
-
-    try {
-      const response = await apiKeyClient.listApiKeys();
-
-      setApiKeys(response);
-    } catch (error) {
-      console.log('Failed to fetch Api Keys', error);
-      setApiKeys([]);
-    } finally {
-      setApiKeysLoadingState('finished');
-    }
-  };
-
   const createApiKey = async (
     params: ApiKeyServiceCreateRequest,
     onSuccess?: VoidFunction,
@@ -50,73 +33,25 @@ export const useApiKeys = () => {
       onSuccess?.();
     } catch (error: any) {
       console.log('Failed to create the Api Key', error);
-      onError?.(error);
+      onError?.('Error creating the api key, please try again.');
       setApiKeyToken(null);
     } finally {
       setApiKeyLoadingState('finished');
     }
   };
 
-  const updateApiKey = async (
-    params: ApiKeyServiceUpdateRequest,
-    onSuccess?: VoidFunction,
-    onError?: (errorMessage: string) => void,
-  ) => {
-    setApiKeyLoadingState('loading');
+  const listApiKeys = async () => {
+    setApiKeysLoadingState('initializing');
 
     try {
-      const response = await apiKeyClient.updateApiKey(params);
+      const response = await apiKeyClient.listApiKeys();
 
-      setApiKeys((prevApiKeys) =>
-        prevApiKeys.map((apiKey) =>
-          apiKey.apiKeyId === params.apiKeyId
-            ? {
-                ...apiKey,
-                label: params.label,
-                updatedAt: response.updatedAt,
-              }
-            : apiKey,
-        ),
-      );
-
-      onSuccess?.();
-    } catch (error: any) {
-      console.log('Failed to update the Api Key', error);
-
-      onError?.(error);
+      setApiKeys(response);
+    } catch (error) {
+      console.log('Failed to fetch Api Keys', error);
+      setApiKeys([]);
     } finally {
-      setApiKeyLoadingState('finished');
-    }
-  };
-
-  const regenerateApiKey = async (
-    params: ApiKeyServiceRegenerateRequest,
-    onSuccess?: VoidFunction,
-    onError?: (errorMessage: string) => void,
-  ) => {
-    setApiKeyLoadingState('loading');
-
-    try {
-      const response = await apiKeyClient.regenerateApiKey(params);
-      setApiKeyToken(response);
-
-      setApiKeys((prevApiKeys) =>
-        prevApiKeys.map((apiKey) =>
-          apiKey.apiKeyId === params.apiKeyId
-            ? {
-                ...apiKey,
-                updatedAt: response.updatedAt,
-              }
-            : apiKey,
-        ),
-      );
-
-      onSuccess?.();
-    } catch (error: any) {
-      console.log('Failed to regenerate the Api Key', error);
-      onError?.(error);
-    } finally {
-      setApiKeyLoadingState('finished');
+      setApiKeysLoadingState('finished');
     }
   };
 
@@ -137,7 +72,7 @@ export const useApiKeys = () => {
       onSuccess?.();
     } catch (error: any) {
       console.log('Failed to delete the Api Key', error);
-      onError?.(error);
+      onError?.('Failed to delete the Api Key');
     } finally {
       setApiKeyLoadingState('finished');
     }
@@ -150,10 +85,8 @@ export const useApiKeys = () => {
     apiKeys,
     apiKeysLoadingState,
 
-    listApiKeys,
     createApiKey,
-    updateApiKey,
-    regenerateApiKey,
+    listApiKeys,
     deleteApiKey,
   };
 };

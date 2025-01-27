@@ -49,8 +49,7 @@ export const ResourceTypeSelector = ({
       {label && (
         <InputLabel
           name={name}
-          disabled={disabled}
-          css={[labelStyles]}
+          additionalStyles={labelStyles}
           labelSize={inputSize}
         >
           {label}

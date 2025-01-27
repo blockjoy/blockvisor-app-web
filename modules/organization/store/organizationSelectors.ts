@@ -3,7 +3,7 @@ import { Org, OrgRole, OrgUser } from '@modules/grpc/library/blockjoy/v1/org';
 import { paginate, sort } from '@shared/components';
 import { InitialQueryParams as InitialQueryParamsOrganizationMembers } from '../ui/OrganizationMembersUIHelpers';
 import { organizationAtoms } from '@modules/organization';
-import { authAtoms, authSelectors } from '@modules/auth';
+import { authAtoms } from '@modules/auth';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 
 const settings = selector<OrganizationSettings | undefined>({
@@ -53,6 +53,17 @@ const currentOrganization = selector<Org | null>({
     const currentOrg = allOrgs.find((org) => org.orgId === defOrg?.orgId);
 
     return currentOrg || null;
+  },
+});
+
+const personalOrganization = selector<Org | null>({
+  key: 'organization.personal',
+  get: ({ get }) => {
+    const allOrgs = get(organizationAtoms.allOrganizations);
+
+    const personalOrg = allOrgs.find((org) => org.personal);
+
+    return personalOrg || null;
   },
 });
 
@@ -144,6 +155,7 @@ export const organizationSelectors = {
   settings,
 
   defaultOrganization,
+  personalOrganization,
 
   allOrganizationsSorted,
   organizationMembersActive,

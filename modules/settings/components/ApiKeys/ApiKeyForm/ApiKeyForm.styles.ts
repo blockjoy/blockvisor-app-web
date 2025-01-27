@@ -3,8 +3,21 @@ import { css } from '@emotion/react';
 export const styles = {
   drawer: css`
     top: 0;
-    width: 350px;
+    width: 1000px;
     max-width: 90vw;
     height: 100vh;
+
+    > div {
+      padding-bottom: 0;
+    }
+  `,
+  bottom: css`
+    position: sticky;
+    bottom: 0;
+    background: #222524;
+    padding: 10px 0;
+  `,
+  error: css`
+    margin-bottom: 10px;
   `,
 };

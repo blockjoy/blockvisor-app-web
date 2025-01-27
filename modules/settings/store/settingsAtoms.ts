@@ -1,8 +1,7 @@
 import { atom } from 'recoil';
 import {
   ApiKeyServiceCreateResponse,
-  ApiKeyServiceRegenerateResponse,
-  ListApiKey,
+  ApiKey,
 } from '@modules/grpc/library/blockjoy/v1/api_key';
 
 const appLoadingState = atom<LoadingState>({
@@ -10,7 +9,7 @@ const appLoadingState = atom<LoadingState>({
   default: 'finished',
 });
 
-const apiKey = atom<ListApiKey | null>({
+const apiKey = atom<ApiKey | null>({
   key: 'settings.apiKey',
   default: null,
 });
@@ -20,14 +19,12 @@ const apiKeyLoadingState = atom<LoadingState>({
   default: 'finished',
 });
 
-const apiKeyToken = atom<
-  ApiKeyServiceCreateResponse | ApiKeyServiceRegenerateResponse | null
->({
+const apiKeyToken = atom<ApiKeyServiceCreateResponse | null>({
   key: 'settings.apiKey.token',
   default: null,
 });
 
-const apiKeys = atom<ListApiKey[]>({
+const apiKeys = atom<ApiKey[]>({
   key: 'settings.apiKeys',
   default: [],
 });
