@@ -50,7 +50,7 @@ export const NodeVersionSelect = ({
 
   return (
     <Dropdown
-      disabled={!isSuperUser || versions?.length! < 2}
+      disabled={!isSuperUser || versions?.length! < 2 || !selectedVersion}
       items={sortVersions(versions!).map((version) => ({
         id: version.protocolVersionId,
         name: isSuperUser
