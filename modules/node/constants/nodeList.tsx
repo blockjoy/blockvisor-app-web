@@ -192,7 +192,12 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
     width: '160px',
     isVisible: true,
     component: (node: Node) => (
-      <NodeItems.CreatedBy createdBy={node.createdBy} />
+      <NodeItems.CreatedBy
+        createdBy={node.createdBy}
+        hostId={node.hostId}
+        hostDisplayName={node.hostDisplayName}
+        hostNetworkName={node.hostNetworkName}
+      />
     ),
     actions: LAYOUT_ACTIONS,
   },
