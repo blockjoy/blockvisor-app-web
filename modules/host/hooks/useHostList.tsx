@@ -4,7 +4,10 @@ import { ROUTES } from '@shared/constants/routes';
 import { HostServiceListHostsResponse } from '@modules/grpc/library/blockjoy/v1/host';
 import { hostClient } from '@modules/grpc/clients/hostClient';
 import { hostAtoms, hostSelectors } from 'modules/host';
-import { organizationSelectors } from '@modules/organization';
+import {
+  organizationAtoms,
+  organizationSelectors,
+} from '@modules/organization';
 
 export const useHostList = () => {
   const router = useRouter();
@@ -12,12 +15,18 @@ export const useHostList = () => {
   const defaultOrganization = useRecoilValue(
     organizationSelectors.defaultOrganization,
   );
+  const allOrganizations = useRecoilValue(organizationAtoms.allOrganizations);
   const queryParams = useRecoilValue(hostSelectors.queryParams);
   const [hostListLoadingState, setHostListLoadingState] = useRecoilState(
     hostAtoms.hostListLoadingState,
   );
   const [hostList, setHostList] = useRecoilState(hostAtoms.hostList);
   const [hostCount, setHostCount] = useRecoilState(hostAtoms.hostCount);
+  const [hostListGlobal, setHostListGlobal] = useRecoilState(
+    hostAtoms.hostListGlobal,
+  );
+  const [hostListGlobalLoadingState, setHostListGlobalLoadingState] =
+    useRecoilState(hostAtoms.hostListGlobalLoadingState);
 
   const loadHosts = async () => {
     if (hostListLoadingState !== 'initializing')
@@ -55,6 +64,30 @@ export const useHostList = () => {
     }
   };
 
+  const loadGlobalHosts = async () => {
+    try {
+      setHostListGlobalLoadingState('initializing');
+
+      const orgIds = allOrganizations.map((org) => org.orgId);
+
+      const response = await hostClient.listHosts(
+        undefined,
+        { orgIds },
+        {
+          currentPage: 0,
+          itemsPerPage: 1000,
+        },
+      );
+
+      setHostListGlobal(response.hosts);
+    } catch (error: any) {
+      console.log('Error caught while fetching all hosts: ', error);
+      setHostListGlobal([]);
+    } finally {
+      setHostListGlobalLoadingState('finished');
+    }
+  };
+
   const handleHostClick = (id: string) => {
     router.push(ROUTES.HOST(id));
   };
@@ -78,5 +111,9 @@ export const useHostList = () => {
     setHostList,
     handleHostClick,
     removeFromHostList,
+
+    hostListGlobal,
+    hostListGlobalLoadingState,
+    loadGlobalHosts,
   };
 };

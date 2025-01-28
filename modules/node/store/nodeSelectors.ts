@@ -241,7 +241,7 @@ const nodeCreatedBy = selectorFamily<
         organizationSelectors.defaultOrganization,
       );
       const allOrganizations = get(organizationAtoms.allOrganizations);
-      const allNodes = get(nodeAtoms.nodeList);
+      const nodeListGlobal = get(nodeAtoms.nodeListGlobal);
 
       const createdByName = getCreatedByName({
         createdBy,
@@ -249,8 +249,8 @@ const nodeCreatedBy = selectorFamily<
         hostDisplayName,
         hostNetworkName,
         defaultOrganization,
-        allOrganizations,
-        allNodes,
+        orgs: allOrganizations,
+        nodes: nodeListGlobal,
       });
 
       return createdByName;

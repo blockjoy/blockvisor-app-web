@@ -1,24 +1,14 @@
-import { useRecoilValue } from 'recoil';
 import { css } from '@emotion/react';
 import { ApiKey } from '@modules/grpc/library/blockjoy/v1/api_key';
 import { ITheme } from 'types/theme';
-import { getResourceName, RESOURCE_TYPE_ITEMS } from '@shared/index';
-import { Button, DateTime, SvgIcon } from '@shared/components';
-import { organizationAtoms } from '@modules/organization';
-import { nodeAtoms } from '@modules/node';
-import { hostAtoms } from '@modules/host';
-import { authAtoms } from '@modules/auth';
+import { RESOURCE_TYPE_ITEMS } from '@shared/index';
+import { Button, DateTime, SvgIcon, ResourceName } from '@shared/components';
 import IconDelete from '@public/assets/icons/common/Trash.svg';
 
 export const mapApiKeysToRows = (
   apiKeys?: ApiKey[],
   handleAction?: (view: ApiKeysView, apiKey: ApiKey) => void,
 ) => {
-  const user = useRecoilValue(authAtoms.user);
-  const allOrganizations = useRecoilValue(organizationAtoms.allOrganizations);
-  const allNodes = useRecoilValue(nodeAtoms.nodeList);
-  const allHosts = useRecoilValue(hostAtoms.allHosts);
-
   const handleDelete = (
     e: React.MouseEvent<HTMLButtonElement>,
     apiKey: ApiKey,
@@ -78,14 +68,6 @@ export const mapApiKeysToRows = (
         (res) => res.value === apiKey.resource?.resourceType,
       );
 
-      const resourceName = getResourceName({
-        resource: apiKey.resource,
-        user,
-        allOrganizations,
-        allHosts,
-        allNodes,
-      });
-
       return {
         key: apiKey.apiKeyId!,
         cells: [
@@ -103,7 +85,7 @@ export const mapApiKeysToRows = (
           },
           {
             key: 'customResourceName',
-            component: <span>{resourceName ?? '-'}</span>,
+            component: <ResourceName resource={apiKey.resource} />,
           },
           {
             key: 'actions',

@@ -9,17 +9,17 @@ import {
 type Params = {
   resource?: Resource;
   user?: User | null;
-  allOrganizations?: Org[];
-  allNodes?: Node[];
-  allHosts?: Host[];
+  orgs?: Org[];
+  hosts?: Host[];
+  nodes?: Node[];
 };
 
 export const getResourceName = ({
   resource,
   user,
-  allOrganizations,
-  allNodes,
-  allHosts,
+  orgs,
+  hosts,
+  nodes,
 }: Params): string | null => {
   switch (resource?.resourceType) {
     case ResourceType.RESOURCE_TYPE_USER: {
@@ -29,9 +29,7 @@ export const getResourceName = ({
     }
 
     case ResourceType.RESOURCE_TYPE_ORG: {
-      const org = allOrganizations?.find(
-        (org) => org.orgId === resource?.resourceId,
-      );
+      const org = orgs?.find((org) => org.orgId === resource?.resourceId);
 
       if (org) return org.name;
 
@@ -39,9 +37,7 @@ export const getResourceName = ({
     }
 
     case ResourceType.RESOURCE_TYPE_HOST: {
-      const host = allHosts?.find(
-        (host) => host.hostId === resource.resourceId,
-      );
+      const host = hosts?.find((host) => host.hostId === resource.resourceId);
 
       if (host) return host.displayName ?? host.networkName;
 
@@ -49,9 +45,7 @@ export const getResourceName = ({
     }
 
     case ResourceType.RESOURCE_TYPE_NODE: {
-      const node = allNodes?.find(
-        (node) => node.nodeId === resource?.resourceId,
-      );
+      const node = nodes?.find((node) => node.nodeId === resource?.resourceId);
 
       if (node) return node.displayName ?? node.nodeName;
 

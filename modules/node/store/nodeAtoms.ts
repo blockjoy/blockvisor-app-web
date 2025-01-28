@@ -27,6 +27,16 @@ const nodeConfig = atom<NodeConfig | null>({
   default: null,
 });
 
+const nodeListGlobal = atom<Node[]>({
+  key: 'node.global.all',
+  default: [],
+});
+
+const nodeListGlobalLoadingState = atom<LoadingState>({
+  key: 'node.global.all.loadingState',
+  default: 'finished',
+});
+
 const nodeList = atom<Node[]>({
   key: 'node.nodeList',
   default: [],
@@ -103,6 +113,10 @@ export const nodeAtoms = {
 
   activeNode,
   nodeImage,
+
+  nodeListGlobal,
+  nodeListGlobalLoadingState,
+
   nodeList,
   nodeListPagination,
   nodeCount,

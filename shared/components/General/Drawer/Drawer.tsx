@@ -1,4 +1,4 @@
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, useEffect, useRef } from 'react';
 import { SerializedStyles } from '@emotion/react';
 import { useEsc } from '@shared/index';
 import { SvgIcon } from '@shared/components';
@@ -7,6 +7,7 @@ import IconClose from '@public/assets/icons/common/Close.svg';
 
 type Props = {
   title?: string;
+  header?: React.ReactNode;
   isOpen: boolean;
   asideStyles?: SerializedStyles[];
   onClose: VoidFunction;
@@ -15,13 +16,24 @@ type Props = {
 export const Drawer = ({
   children,
   title,
+  header,
   isOpen,
   asideStyles,
   onClose,
 }: Props) => {
+  const asideRef = useRef<HTMLDivElement>(null);
+
   useEsc(() => {
     if (isOpen) onClose();
   });
+
+  useEffect(() => {
+    if (!isOpen) {
+      setTimeout(() => {
+        asideRef.current?.scrollTo({ top: 0, behavior: 'auto' });
+      }, 300);
+    }
+  }, [isOpen]);
 
   return (
     <>
@@ -36,10 +48,10 @@ export const Drawer = ({
           isOpen ? styles.open : '',
           asideStyles && asideStyles,
         ]}
+        ref={asideRef}
       >
-        <h4 css={styles.heading}>
-          <span>{title}</span>
-        </h4>
+        <div css={styles.header}>{header ?? <h4>{title}</h4>}</div>
+
         <div css={styles.content}>{children}</div>
         <button type="button" onClick={onClose} css={styles.closeButton}>
           <SvgIcon size="16px">

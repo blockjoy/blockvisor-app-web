@@ -38,7 +38,7 @@ export const useUpdates = () => {
     organizationSelectors.defaultOrganization,
   );
   const allOrganizations = useRecoilValue(organizationAtoms.allOrganizations);
-  const allNodes = useRecoilValue(nodeAtoms.nodeList);
+  const nodeListGlobal = useRecoilValue(nodeAtoms.nodeListGlobal);
 
   const { addToNodeList, removeFromNodeList, modifyNodeInNodeList } =
     useNodeList();
@@ -70,8 +70,8 @@ export const useUpdates = () => {
           hostDisplayName: node?.hostDisplayName,
           hostNetworkName: node?.hostNetworkName,
           defaultOrganization,
-          allOrganizations,
-          allNodes,
+          orgs: allOrganizations,
+          nodes: nodeListGlobal,
         });
 
         const message = createdBy?.resourceId ? (
@@ -126,7 +126,9 @@ export const useUpdates = () => {
 
         const { nodeId, deletedBy }: NodeDeleted = payloadDeserialized.deleted!;
 
-        const deletedNode = allNodes?.find((node) => node.nodeId === nodeId);
+        const deletedNode = nodeListGlobal?.find(
+          (node) => node.nodeId === nodeId,
+        );
 
         removeFromNodeList(nodeId);
 
@@ -142,8 +144,8 @@ export const useUpdates = () => {
           hostDisplayName: deletedNode?.hostDisplayName,
           hostNetworkName: deletedNode?.hostNetworkName,
           defaultOrganization,
-          allOrganizations,
-          allNodes,
+          orgs: allOrganizations,
+          nodes: nodeListGlobal,
         });
 
         const message = deletedBy?.resourceId

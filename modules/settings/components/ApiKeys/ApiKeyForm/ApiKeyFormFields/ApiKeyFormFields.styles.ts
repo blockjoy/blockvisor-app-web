@@ -1,6 +1,5 @@
 import { css } from '@emotion/react';
 import { breakpoints } from 'styles/variables.styles';
-import { ITheme } from 'types/theme';
 
 export const styles = {
   wrapper: css`
@@ -28,11 +27,6 @@ export const styles = {
   resourceType: css`
     @media ${breakpoints.fromMed} {
       grid-column-start: 1;
-    }
-  `,
-  resourceId: (theme: ITheme) => css`
-    button {
-      background-color: ${theme.colorInput};
     }
   `,
 };

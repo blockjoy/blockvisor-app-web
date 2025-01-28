@@ -6,8 +6,8 @@ type Params = Partial<
   Pick<Node, 'createdBy' | 'hostId' | 'hostDisplayName' | 'hostNetworkName'>
 > & {
   defaultOrganization?: DefaultOrganization | null;
-  allOrganizations?: Org[];
-  allNodes?: Node[];
+  orgs?: Org[];
+  nodes?: Node[];
 };
 
 export const getCreatedByName = ({
@@ -16,14 +16,12 @@ export const getCreatedByName = ({
   hostDisplayName,
   hostNetworkName,
   defaultOrganization,
-  allOrganizations,
-  allNodes,
+  orgs,
+  nodes,
 }: Params): string | null => {
   switch (createdBy?.resourceType) {
     case ResourceType.RESOURCE_TYPE_USER: {
-      const org = allOrganizations?.find(
-        (org) => org.orgId === defaultOrganization?.orgId,
-      );
+      const org = orgs?.find((org) => org.orgId === defaultOrganization?.orgId);
 
       const member = org?.members?.find(
         (member) => member.userId === createdBy.resourceId,
@@ -35,9 +33,7 @@ export const getCreatedByName = ({
     }
 
     case ResourceType.RESOURCE_TYPE_ORG: {
-      const org = allOrganizations?.find(
-        (org) => org.orgId === createdBy?.resourceId,
-      );
+      const org = orgs?.find((org) => org.orgId === createdBy?.resourceId);
 
       if (org) return org.name;
 
@@ -52,9 +48,7 @@ export const getCreatedByName = ({
     }
 
     case ResourceType.RESOURCE_TYPE_NODE: {
-      const node = allNodes?.find(
-        (node) => node.nodeId === createdBy?.resourceId,
-      );
+      const node = nodes?.find((node) => node.nodeId === createdBy?.resourceId);
 
       if (node) return node.displayName;
 

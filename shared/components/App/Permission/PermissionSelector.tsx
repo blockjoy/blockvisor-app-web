@@ -2,7 +2,6 @@ import { useRecoilValue } from 'recoil';
 import { SerializedStyles } from '@emotion/react';
 import { authAtoms } from '@modules/auth';
 import { Checkbox, InputLabel } from '@shared/components';
-import { PERMISSION_GROUPS } from '@shared/constants/permissions';
 import { styles } from './PermissionSelector.styles';
 
 type Props = {
@@ -30,13 +29,11 @@ export const PermissionSelector = ({
 
   const permissionsGrouped = (items ?? permissions)?.reduce(
     (acc: Record<string, string[]>, permission) => {
-      const groupName =
-        PERMISSION_GROUPS.find((prefix) => permission.startsWith(prefix)) ||
-        'other';
+      const group = permission.split('-')[0];
 
-      if (!acc[groupName]) acc[groupName] = [];
+      if (!acc[group]) acc[group] = [];
 
-      acc[groupName].push(permission);
+      acc[group].push(permission);
 
       return acc;
     },

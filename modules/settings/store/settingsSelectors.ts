@@ -1,10 +1,14 @@
 import { selector, selectorFamily } from 'recoil';
-import { ResourceType } from '@modules/grpc/library/blockjoy/common/v1/resource';
+import {
+  Resource,
+  ResourceType,
+} from '@modules/grpc/library/blockjoy/common/v1/resource';
 import { organizationAtoms } from '@modules/organization';
 import { authAtoms } from '@modules/auth';
 import { API_KEYS_DEFAULT_SORT } from '@modules/settings';
 import { nodeAtoms } from '@modules/node';
 import { hostAtoms } from '@modules/host';
+import { getResourceName } from '@shared/index';
 
 const apiKeysSettings = selector<ApiKeysSettings>({
   key: 'settings.apiKeys.settings',
@@ -29,10 +33,10 @@ const resources = selectorFamily<Item[], ResourceType>({
   key: 'settings.resources',
   get:
     (resourceType?: ResourceType) =>
-    async ({ get }) => {
+    ({ get }) => {
       if (!resourceType) return [];
 
-      const allNodes = get(nodeAtoms.nodeList);
+      const nodeList = get(nodeAtoms.nodeList);
       const allOrgs = get(organizationAtoms.allOrganizations);
       const allHosts = get(hostAtoms.allHosts);
 
@@ -43,7 +47,7 @@ const resources = selectorFamily<Item[], ResourceType>({
             name: org.name,
           }));
         case ResourceType.RESOURCE_TYPE_NODE:
-          return allNodes.map((node) => ({
+          return nodeList.map((node) => ({
             id: node.nodeId,
             name: node.nodeName,
           }));
@@ -58,4 +62,28 @@ const resources = selectorFamily<Item[], ResourceType>({
     },
 });
 
-export const settingsSelectors = { apiKeysSort, resources };
+const resourceName = selectorFamily<string | null, Readonly<string>>({
+  key: 'settings.resource.name',
+  get:
+    (resourceSerializedParam) =>
+    ({ get }) => {
+      const user = get(authAtoms.user);
+      const allOrganizations = get(organizationAtoms.allOrganizations);
+      const allHosts = get(hostAtoms.allHosts);
+      const nodeListGlobal = get(nodeAtoms.nodeListGlobal);
+
+      const resource = JSON.parse(resourceSerializedParam) as Resource;
+
+      const name = getResourceName({
+        resource,
+        user,
+        orgs: allOrganizations,
+        hosts: allHosts,
+        nodes: nodeListGlobal,
+      });
+
+      return name ?? null;
+    },
+});
+
+export const settingsSelectors = { apiKeysSort, resources, resourceName };

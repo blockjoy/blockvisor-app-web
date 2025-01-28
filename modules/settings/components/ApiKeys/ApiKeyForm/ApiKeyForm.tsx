@@ -3,20 +3,23 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { ResourceType } from '@modules/grpc/library/blockjoy/common/v1/resource';
-import {
-  ApiKeyFormFields,
-  useApiKeys,
-  settingsAtoms,
-  generateApiKeyFormParams,
-  API_KEY_FORM_DEFAULT_VALUES,
-} from '@modules/settings';
+import { useViewport } from '@shared/index';
 import {
   Button,
   ButtonGroup,
   Drawer,
   DrawerContent,
   FormError,
+  OrganizationPicker,
 } from '@shared/components';
+import {
+  ApiKeyFormFields,
+  useApiKeys,
+  settingsAtoms,
+  generateApiKeyFormParams,
+  API_KEY_FORM_DEFAULT_VALUES,
+  ApiKeyFormHeader,
+} from '@modules/settings';
 import { authAtoms } from '@modules/auth';
 import { organizationSelectors } from '@modules/organization';
 import { styles } from './ApiKeyForm.styles';
@@ -45,6 +48,8 @@ export const ApiKeyForm = ({ view, handleView }: Props) => {
   );
 
   const [error, setError] = useState<string | null>(null);
+
+  const { isMed } = useViewport();
 
   const { apiKeyLoadingState, createApiKey, listApiKeys } = useApiKeys();
 
@@ -120,12 +125,18 @@ export const ApiKeyForm = ({ view, handleView }: Props) => {
 
   return (
     <Drawer
-      title={`${view === 'create' ? 'Add' : ''} API key`}
+      header={<ApiKeyFormHeader view={view} />}
       isOpen={isOpen}
       onClose={handleClose}
       asideStyles={[styles.drawer]}
     >
       <DrawerContent bottomBorder={false}>
+        {isMed && (
+          <div css={styles.orgPicker}>
+            <OrganizationPicker />
+          </div>
+        )}
+
         <FormProvider {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)}>
             <ApiKeyFormFields form={form} view={view} />
