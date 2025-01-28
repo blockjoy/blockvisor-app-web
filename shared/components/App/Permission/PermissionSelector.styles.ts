@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { breakpoints } from 'styles/variables.styles';
 import { ITheme } from 'types/theme';
 
 export const styles = {
@@ -8,8 +9,14 @@ export const styles = {
   wrapper: css`
     display: grid;
     grid-gap: 10px;
-    grid-auto-rows: 0;
     grid-template-columns: repeat(2, minmax(100px, 1fr));
+
+    @media ${breakpoints.fromMed} {
+      grid-auto-rows: 0;
+    }
+    @media ${breakpoints.toMed} {
+      grid-template-columns: auto;
+    }
   `,
   group: (theme: ITheme) => css`
     display: grid;
@@ -21,8 +28,5 @@ export const styles = {
     font-size: 16px;
     text-transform: uppercase;
     margin-bottom: 10px;
-  `,
-  item: css`
-    display: grid;
   `,
 };

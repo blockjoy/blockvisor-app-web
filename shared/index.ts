@@ -38,6 +38,7 @@ export * from './utils/filterSearch';
 export * from './utils/formatters';
 export * from './utils/getCountries';
 export * from './utils/getDocumentWidth';
+export * from './utils/getResourceName';
 export * from './utils/getUpdatedHeaders';
 export * from './utils/infiniteScroll';
 export * from './utils/storybook';

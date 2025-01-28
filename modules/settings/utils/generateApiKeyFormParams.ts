@@ -4,8 +4,8 @@ import { ApiKeyForm } from '@modules/settings';
 
 export const generateApiKeyFormParams = (
   formParams: ApiKeyForm,
+  userId?: string,
   defaultOrganizationId?: string,
-  personalOrganizationId?: string,
 ) => {
   let resourceId = formParams.resourceId ?? '';
   let resourceType =
@@ -13,7 +13,7 @@ export const generateApiKeyFormParams = (
 
   switch (formParams.resourceType) {
     case ResourceType.RESOURCE_TYPE_USER: {
-      if (personalOrganizationId) resourceId = personalOrganizationId;
+      if (userId) resourceId = userId;
       break;
     }
     case ResourceType.RESOURCE_TYPE_ORG: {

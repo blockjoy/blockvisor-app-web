@@ -36,11 +36,9 @@ type Props = {
 export const ApiKeyForm = ({ view, handleView }: Props) => {
   const [apiKey, setApiKey] = useRecoilState(settingsAtoms.apiKey);
 
+  const user = useRecoilValue(authAtoms.user);
   const defaultOrganization = useRecoilValue(
     organizationSelectors.defaultOrganization,
-  );
-  const personalOrganization = useRecoilValue(
-    organizationSelectors.personalOrganization,
   );
   const userSettingsLoadingState = useRecoilValue(
     authAtoms.userSettingsLoadingState,
@@ -61,8 +59,8 @@ export const ApiKeyForm = ({ view, handleView }: Props) => {
   const handleSubmit = async (params: ApiKeyForm) => {
     const createParams = generateApiKeyFormParams(
       params,
+      user?.userId,
       defaultOrganization?.orgId,
-      personalOrganization?.orgId,
     );
 
     const successCallback = () => {
