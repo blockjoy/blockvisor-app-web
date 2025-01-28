@@ -5,52 +5,45 @@ import _m0 from "protobufjs/minimal";
 export const protobufPackage = "blockjoy.v1";
 
 export interface AuthServiceLoginRequest {
+  /** The email of the user logging in. */
   email: string;
+  /** The password of the user logging in. */
   password: string;
 }
 
 export interface AuthServiceLoginResponse {
-  /**
-   * This is the auth token that you will include with each request. It is a
-   * Json Web Token, and therefore it may be decoded and inspected by the client
-   * to seen the allowed permissions.
-   */
+  /** A bearer token for client requests. */
   token: string;
-  /**
-   * The `refresh token` is used to obtain a new token without having to provide
-   * the email and password again. Note that if you are a browser client, this
-   * field can be ignored, because we also include a HTTP-Only, Set-Cookie
-   * header. This means that this token does not have to be stored in
-   * localStorage.
-   */
+  /** The refresh token for refreshing the bearer token. */
   refresh: string;
 }
 
 export interface AuthServiceRefreshRequest {
-  /** This is your old token. It is allowed that this token is expired. */
+  /** The previous bearer token (which may be expired). */
   token: string;
-  /**
-   * This is the refresh token that was sent to you on login. It is optional
-   * here, because if it is not provided, the value from the metadata is used as
-   * a fallback. This means that if you are a browser client, you do not have to
-   * provide this field, as it was set by the call to AuthService/Login, or by
-   * the previous call to this endpoint.
-   */
+  /** The refresh token (or read from the request headers if omitted). */
   refresh?: string | undefined;
 }
 
 export interface AuthServiceRefreshResponse {
-  /** A newly minted Json Web Token. */
+  /** A new bearer token for client requests. */
   token: string;
-  /**
-   * The new refresh token. Just as with the call to AuthService/Login, this
-   * value is duplicated in the metadata, so a cookie can be set for the browser
-   * client.
-   */
+  /** A new refresh token for refreshing the bearer token. */
+  refresh: string;
+}
+
+export interface AuthServiceConfirmRequest {
+}
+
+export interface AuthServiceConfirmResponse {
+  /** A new bearer token for subsequent client requests. */
+  token: string;
+  /** A new refresh token for subsequent refresh requests. */
   refresh: string;
 }
 
 export interface AuthServiceResetPasswordRequest {
+  /** The email of the user resetting their password. */
   email: string;
 }
 
@@ -58,6 +51,7 @@ export interface AuthServiceResetPasswordResponse {
 }
 
 export interface AuthServiceUpdatePasswordRequest {
+  /** The new password following a reset request. */
   password: string;
 }
 
@@ -65,30 +59,23 @@ export interface AuthServiceUpdatePasswordResponse {
 }
 
 export interface AuthServiceUpdateUIPasswordRequest {
+  /** The user updating their password. */
   userId: string;
+  /** The existing password for the user. */
   oldPassword: string;
+  /** The new password for the user. */
   newPassword: string;
 }
 
 export interface AuthServiceUpdateUIPasswordResponse {
 }
 
-export interface AuthServiceConfirmRequest {
-}
-
-export interface AuthServiceConfirmResponse {
-  token: string;
-  refresh: string;
-}
-
-export interface AuthServiceSwitchOrgRequest {
-  orgId: string;
-}
-
 export interface AuthServiceListPermissionsRequest {
+  /** The user to list permissions for. */
   userId: string;
+  /** The org the user is acting on behalf of. */
   orgId: string;
-  /** Also include permissions from the token making the request. */
+  /** Whether to include permissions from the token in the response. */
   includeToken?: boolean | undefined;
 }
 
@@ -318,6 +305,98 @@ export const AuthServiceRefreshResponse = {
 
   fromPartial(object: DeepPartial<AuthServiceRefreshResponse>): AuthServiceRefreshResponse {
     const message = createBaseAuthServiceRefreshResponse();
+    message.token = object.token ?? "";
+    message.refresh = object.refresh ?? "";
+    return message;
+  },
+};
+
+function createBaseAuthServiceConfirmRequest(): AuthServiceConfirmRequest {
+  return {};
+}
+
+export const AuthServiceConfirmRequest = {
+  encode(_: AuthServiceConfirmRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): AuthServiceConfirmRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAuthServiceConfirmRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<AuthServiceConfirmRequest>): AuthServiceConfirmRequest {
+    return AuthServiceConfirmRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(_: DeepPartial<AuthServiceConfirmRequest>): AuthServiceConfirmRequest {
+    const message = createBaseAuthServiceConfirmRequest();
+    return message;
+  },
+};
+
+function createBaseAuthServiceConfirmResponse(): AuthServiceConfirmResponse {
+  return { token: "", refresh: "" };
+}
+
+export const AuthServiceConfirmResponse = {
+  encode(message: AuthServiceConfirmResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.token !== "") {
+      writer.uint32(10).string(message.token);
+    }
+    if (message.refresh !== "") {
+      writer.uint32(18).string(message.refresh);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): AuthServiceConfirmResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAuthServiceConfirmResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.token = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.refresh = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<AuthServiceConfirmResponse>): AuthServiceConfirmResponse {
+    return AuthServiceConfirmResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<AuthServiceConfirmResponse>): AuthServiceConfirmResponse {
+    const message = createBaseAuthServiceConfirmResponse();
     message.token = object.token ?? "";
     message.refresh = object.refresh ?? "";
     return message;
@@ -589,144 +668,6 @@ export const AuthServiceUpdateUIPasswordResponse = {
   },
 };
 
-function createBaseAuthServiceConfirmRequest(): AuthServiceConfirmRequest {
-  return {};
-}
-
-export const AuthServiceConfirmRequest = {
-  encode(_: AuthServiceConfirmRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): AuthServiceConfirmRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseAuthServiceConfirmRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<AuthServiceConfirmRequest>): AuthServiceConfirmRequest {
-    return AuthServiceConfirmRequest.fromPartial(base ?? {});
-  },
-
-  fromPartial(_: DeepPartial<AuthServiceConfirmRequest>): AuthServiceConfirmRequest {
-    const message = createBaseAuthServiceConfirmRequest();
-    return message;
-  },
-};
-
-function createBaseAuthServiceConfirmResponse(): AuthServiceConfirmResponse {
-  return { token: "", refresh: "" };
-}
-
-export const AuthServiceConfirmResponse = {
-  encode(message: AuthServiceConfirmResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.token !== "") {
-      writer.uint32(10).string(message.token);
-    }
-    if (message.refresh !== "") {
-      writer.uint32(18).string(message.refresh);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): AuthServiceConfirmResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseAuthServiceConfirmResponse();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.token = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.refresh = reader.string();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<AuthServiceConfirmResponse>): AuthServiceConfirmResponse {
-    return AuthServiceConfirmResponse.fromPartial(base ?? {});
-  },
-
-  fromPartial(object: DeepPartial<AuthServiceConfirmResponse>): AuthServiceConfirmResponse {
-    const message = createBaseAuthServiceConfirmResponse();
-    message.token = object.token ?? "";
-    message.refresh = object.refresh ?? "";
-    return message;
-  },
-};
-
-function createBaseAuthServiceSwitchOrgRequest(): AuthServiceSwitchOrgRequest {
-  return { orgId: "" };
-}
-
-export const AuthServiceSwitchOrgRequest = {
-  encode(message: AuthServiceSwitchOrgRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.orgId !== "") {
-      writer.uint32(10).string(message.orgId);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): AuthServiceSwitchOrgRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseAuthServiceSwitchOrgRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.orgId = reader.string();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  create(base?: DeepPartial<AuthServiceSwitchOrgRequest>): AuthServiceSwitchOrgRequest {
-    return AuthServiceSwitchOrgRequest.fromPartial(base ?? {});
-  },
-
-  fromPartial(object: DeepPartial<AuthServiceSwitchOrgRequest>): AuthServiceSwitchOrgRequest {
-    const message = createBaseAuthServiceSwitchOrgRequest();
-    message.orgId = object.orgId ?? "";
-    return message;
-  },
-};
-
 function createBaseAuthServiceListPermissionsRequest(): AuthServiceListPermissionsRequest {
   return { userId: "", orgId: "", includeToken: undefined };
 }
@@ -841,27 +782,18 @@ export const AuthServiceListPermissionsResponse = {
   },
 };
 
-/** Retrieve and refresh API token */
+/** Service for authentication and authorization. */
 export type AuthServiceDefinition = typeof AuthServiceDefinition;
 export const AuthServiceDefinition = {
   name: "AuthService",
   fullName: "blockjoy.v1.AuthService",
   methods: {
-    /** Login user, i.e. retrieve token */
+    /** Login with an email and password. */
     login: {
       name: "Login",
       requestType: AuthServiceLoginRequest,
       requestStream: false,
       responseType: AuthServiceLoginResponse,
-      responseStream: false,
-      options: {},
-    },
-    /** Confirm user registration */
-    confirm: {
-      name: "Confirm",
-      requestType: AuthServiceConfirmRequest,
-      requestStream: false,
-      responseType: AuthServiceConfirmResponse,
       responseStream: false,
       options: {},
     },
@@ -874,10 +806,16 @@ export const AuthServiceDefinition = {
       responseStream: false,
       options: {},
     },
-    /**
-     * Send the reset password email out to this user. Intentionally returns
-     * nothing to hide whether the user was registered or not.
-     */
+    /** Confirm the registration of a new user. */
+    confirm: {
+      name: "Confirm",
+      requestType: AuthServiceConfirmRequest,
+      requestStream: false,
+      responseType: AuthServiceConfirmResponse,
+      responseStream: false,
+      options: {},
+    },
+    /** Send an email to a user to reset their password. */
     resetPassword: {
       name: "ResetPassword",
       requestType: AuthServiceResetPasswordRequest,
@@ -886,7 +824,7 @@ export const AuthServiceDefinition = {
       responseStream: false,
       options: {},
     },
-    /** Update the user's password to a new value */
+    /** Update the user's password after a reset password request. */
     updatePassword: {
       name: "UpdatePassword",
       requestType: AuthServiceUpdatePasswordRequest,
@@ -895,7 +833,7 @@ export const AuthServiceDefinition = {
       responseStream: false,
       options: {},
     },
-    /** Update the user's password via profile UI */
+    /** Update the user's password after confirming the existing one. */
     updateUIPassword: {
       name: "UpdateUIPassword",
       requestType: AuthServiceUpdateUIPasswordRequest,
@@ -904,7 +842,7 @@ export const AuthServiceDefinition = {
       responseStream: false,
       options: {},
     },
-    /** List the permissions available for a user and org. */
+    /** List the permissions for a user on behalf of some org. */
     listPermissions: {
       name: "ListPermissions",
       requestType: AuthServiceListPermissionsRequest,
@@ -917,40 +855,37 @@ export const AuthServiceDefinition = {
 } as const;
 
 export interface AuthServiceImplementation<CallContextExt = {}> {
-  /** Login user, i.e. retrieve token */
+  /** Login with an email and password. */
   login(
     request: AuthServiceLoginRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<AuthServiceLoginResponse>>;
-  /** Confirm user registration */
-  confirm(
-    request: AuthServiceConfirmRequest,
-    context: CallContext & CallContextExt,
-  ): Promise<DeepPartial<AuthServiceConfirmResponse>>;
   /** Refresh API token. */
   refresh(
     request: AuthServiceRefreshRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<AuthServiceRefreshResponse>>;
-  /**
-   * Send the reset password email out to this user. Intentionally returns
-   * nothing to hide whether the user was registered or not.
-   */
+  /** Confirm the registration of a new user. */
+  confirm(
+    request: AuthServiceConfirmRequest,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<AuthServiceConfirmResponse>>;
+  /** Send an email to a user to reset their password. */
   resetPassword(
     request: AuthServiceResetPasswordRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<AuthServiceResetPasswordResponse>>;
-  /** Update the user's password to a new value */
+  /** Update the user's password after a reset password request. */
   updatePassword(
     request: AuthServiceUpdatePasswordRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<AuthServiceUpdatePasswordResponse>>;
-  /** Update the user's password via profile UI */
+  /** Update the user's password after confirming the existing one. */
   updateUIPassword(
     request: AuthServiceUpdateUIPasswordRequest,
     context: CallContext & CallContextExt,
   ): Promise<DeepPartial<AuthServiceUpdateUIPasswordResponse>>;
-  /** List the permissions available for a user and org. */
+  /** List the permissions for a user on behalf of some org. */
   listPermissions(
     request: AuthServiceListPermissionsRequest,
     context: CallContext & CallContextExt,
@@ -958,40 +893,37 @@ export interface AuthServiceImplementation<CallContextExt = {}> {
 }
 
 export interface AuthServiceClient<CallOptionsExt = {}> {
-  /** Login user, i.e. retrieve token */
+  /** Login with an email and password. */
   login(
     request: DeepPartial<AuthServiceLoginRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<AuthServiceLoginResponse>;
-  /** Confirm user registration */
-  confirm(
-    request: DeepPartial<AuthServiceConfirmRequest>,
-    options?: CallOptions & CallOptionsExt,
-  ): Promise<AuthServiceConfirmResponse>;
   /** Refresh API token. */
   refresh(
     request: DeepPartial<AuthServiceRefreshRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<AuthServiceRefreshResponse>;
-  /**
-   * Send the reset password email out to this user. Intentionally returns
-   * nothing to hide whether the user was registered or not.
-   */
+  /** Confirm the registration of a new user. */
+  confirm(
+    request: DeepPartial<AuthServiceConfirmRequest>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<AuthServiceConfirmResponse>;
+  /** Send an email to a user to reset their password. */
   resetPassword(
     request: DeepPartial<AuthServiceResetPasswordRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<AuthServiceResetPasswordResponse>;
-  /** Update the user's password to a new value */
+  /** Update the user's password after a reset password request. */
   updatePassword(
     request: DeepPartial<AuthServiceUpdatePasswordRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<AuthServiceUpdatePasswordResponse>;
-  /** Update the user's password via profile UI */
+  /** Update the user's password after confirming the existing one. */
   updateUIPassword(
     request: DeepPartial<AuthServiceUpdateUIPasswordRequest>,
     options?: CallOptions & CallOptionsExt,
   ): Promise<AuthServiceUpdateUIPasswordResponse>;
-  /** List the permissions available for a user and org. */
+  /** List the permissions for a user on behalf of some org. */
   listPermissions(
     request: DeepPartial<AuthServiceListPermissionsRequest>,
     options?: CallOptions & CallOptionsExt,

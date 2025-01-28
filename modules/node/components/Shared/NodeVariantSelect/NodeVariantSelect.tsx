@@ -32,16 +32,18 @@ export const NodeVariantSelect = ({ onChange }: NodeVariantSelectProps) => {
 
   const handleSelect = (variant: string) => onChange(variant);
 
+  const items = sort(
+    variants?.map((variant) => ({
+      id: variant,
+      name: variant,
+    })) ?? [],
+    { field: 'name' },
+  );
+
   return (
     <Dropdown
       disabled={!isSuperUser || variants?.length! < 2}
-      items={sort(
-        variants?.map((variant) => ({
-          id: variant,
-          name: variant,
-        }))!,
-        { field: 'name' },
-      )}
+      items={items}
       itemKey="version"
       {...(selectedVariant?.variantKey
         ? {
@@ -54,6 +56,7 @@ export const NodeVariantSelect = ({ onChange }: NodeVariantSelectProps) => {
         : { defaultText: <p css={styles.buttonText}>Auto select</p> })}
       renderItem={(item) => <>{item.name}</>}
       isOpen={isOpen}
+      isLoading={!variants}
       handleOpen={handleOpen}
       handleSelected={(item: {
         id?: string | undefined;
