@@ -81,7 +81,7 @@ export const PermissionSelector = ({
               <h3 css={styles.itemTitle}>
                 {permissiongGroupKey.replace('-', ' ')}
               </h3>
-              <div css={styles.item}>
+              <div>
                 {permissionsGrouped?.[permissiongGroupKey]?.map(
                   (permission) => (
                     <Checkbox

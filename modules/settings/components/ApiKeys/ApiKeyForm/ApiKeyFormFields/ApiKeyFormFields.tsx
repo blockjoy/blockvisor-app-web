@@ -62,7 +62,7 @@ export const ApiKeyFormFields = ({ view, form }: Props) => {
 
   return (
     <ul css={[reset.list, styles.wrapper]}>
-      <li css={[spacing.bottom.medium, styles.formField, styles.label]}>
+      <li css={[spacing.bottom.medium, styles.formField]}>
         <Input
           name="label"
           label="Label"
@@ -75,7 +75,7 @@ export const ApiKeyFormFields = ({ view, form }: Props) => {
         />
       </li>
 
-      <li css={[spacing.bottom.medium, styles.formField]}>
+      <li css={[spacing.bottom.medium, styles.formField, styles.resourceType]}>
         <Controller
           name="resourceType"
           rules={{
@@ -101,7 +101,9 @@ export const ApiKeyFormFields = ({ view, form }: Props) => {
 
       {Boolean(selectedResourceType) &&
         selectedResourceType !== ResourceType.RESOURCE_TYPE_USER && (
-          <li css={[spacing.bottom.medium, styles.formField]}>
+          <li
+            css={[spacing.bottom.medium, styles.formField, styles.resourceId]}
+          >
             <Controller
               name="resourceId"
               rules={{
