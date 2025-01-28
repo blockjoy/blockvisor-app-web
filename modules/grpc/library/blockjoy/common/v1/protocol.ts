@@ -38,6 +38,16 @@ export interface ProtocolVersionKey {
   variantKey: string;
 }
 
+/** Metadata associated with a `ProtocolVersionKey`. */
+export interface VersionMetadata {
+  /** The lookup key for metadata (e.g. `network`). */
+  metadataKey: string;
+  /** The value of the metadata key (e.g. `mainnet`). */
+  value: string;
+  /** A readable description of what the key and value represent. */
+  description?: string | undefined;
+}
+
 function createBaseProtocolVersionKey(): ProtocolVersionKey {
   return { protocolKey: "", variantKey: "" };
 }
@@ -91,6 +101,74 @@ export const ProtocolVersionKey = {
     const message = createBaseProtocolVersionKey();
     message.protocolKey = object.protocolKey ?? "";
     message.variantKey = object.variantKey ?? "";
+    return message;
+  },
+};
+
+function createBaseVersionMetadata(): VersionMetadata {
+  return { metadataKey: "", value: "", description: undefined };
+}
+
+export const VersionMetadata = {
+  encode(message: VersionMetadata, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.metadataKey !== "") {
+      writer.uint32(10).string(message.metadataKey);
+    }
+    if (message.value !== "") {
+      writer.uint32(18).string(message.value);
+    }
+    if (message.description !== undefined) {
+      writer.uint32(26).string(message.description);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): VersionMetadata {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseVersionMetadata();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.metadataKey = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.value = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.description = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  create(base?: DeepPartial<VersionMetadata>): VersionMetadata {
+    return VersionMetadata.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<VersionMetadata>): VersionMetadata {
+    const message = createBaseVersionMetadata();
+    message.metadataKey = object.metadataKey ?? "";
+    message.value = object.value ?? "";
+    message.description = object.description ?? undefined;
     return message;
   },
 };

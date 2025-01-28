@@ -45,14 +45,14 @@ const selectedImage = atom<Image | null>({
   default: null,
 });
 
-const variants = atom<string[]>({
+const variants = atom<string[] | null>({
   key: 'nodeLauncher.variants',
-  default: [],
+  default: null,
 });
 
-const versions = atom<ProtocolVersion[]>({
+const versions = atom<ProtocolVersion[] | null>({
   key: 'nodeLauncher.versions',
-  default: [],
+  default: null,
 });
 
 const selectedVariant = atom<NodeLauncherVariant | null>({
