@@ -1,6 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import { SerializedStyles } from '@emotion/react';
+import { ResourceType } from '@modules/grpc/library/blockjoy/common/v1/resource';
 import { Dropdown, InputLabel, withSearchDropdown } from '@shared/components';
+import { settingsSelectors } from '@modules/settings';
 
 type Props = {
   items: Item[];
@@ -11,6 +14,7 @@ type Props = {
   labelStyles?: SerializedStyles[];
   tabIndex?: number;
   disabled?: boolean;
+  resourceType?: ResourceType;
   onChange: (id?: string) => void;
 };
 
@@ -22,8 +26,18 @@ export const ResourceSelector = ({
   label,
   labelStyles,
   disabled,
+  resourceType,
   onChange,
 }: Props) => {
+  const resourceSerializedParam = JSON.stringify({
+    resourceId: value,
+    resourceType,
+  });
+
+  const resourceName = useRecoilValue(
+    settingsSelectors.resourceName(resourceSerializedParam),
+  );
+
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState<Item | null>(null);
 
@@ -46,6 +60,9 @@ export const ResourceSelector = ({
     [items],
   );
 
+  const resolvedSelected =
+    selected ?? (resourceName ? { id: value, name: resourceName } : null);
+
   return (
     <div>
       {label && (
@@ -61,7 +78,7 @@ export const ResourceSelector = ({
 
       <ResourceDropdown
         items={items}
-        selectedItem={selected}
+        selectedItem={resolvedSelected}
         handleSelected={handleChange}
         defaultText={`Select ${label?.toLowerCase()}`}
         isOpen={isOpen}

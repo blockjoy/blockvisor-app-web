@@ -57,7 +57,7 @@ export const styles = {
       fill: ${theme.colorText};
     }
   `,
-  heading: (theme: ITheme) => css`
+  header: (theme: ITheme) => css`
     padding: 20px 40px 15px 10px;
     position: relative;
     margin-bottom: 15px;

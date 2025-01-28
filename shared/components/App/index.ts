@@ -37,5 +37,6 @@ export * from './NotFound/NotFound';
 export * from './Page/ProfileDropdown/ProfileDropdown';
 export * from './Sorting/Sorting';
 export * from './Permission/PermissionSelector';
-export * from './Resource/ResouceSelector/ResourceSelector';
+export * from './Resource/ResourceName/ResourceName';
+export * from './Resource/ResourceSelector/ResourceSelector';
 export * from './Resource/ResourceTypeSelector/ResourceTypeSelector';

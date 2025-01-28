@@ -2,7 +2,10 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { nodeClient } from '@modules/grpc';
 import { nodeAtoms, nodeSelectors } from '@modules/node';
-import { organizationSelectors } from '@modules/organization';
+import {
+  organizationAtoms,
+  organizationSelectors,
+} from '@modules/organization';
 import { authSelectors } from '@modules/auth';
 
 export const useNodeList = () => {
@@ -11,6 +14,7 @@ export const useNodeList = () => {
   );
   const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
   const queryParams = useRecoilValue(nodeSelectors.queryParams);
+  const allOrganizations = useRecoilValue(organizationAtoms.allOrganizations);
   const [nodeListLoadingState, setNodeListLoadingState] = useRecoilState(
     nodeAtoms.nodeListLoadingState,
   );
@@ -24,6 +28,11 @@ export const useNodeList = () => {
   );
   const [nodeListByHostLoadingState, setNodeListByHostLoadingState] =
     useRecoilState(nodeAtoms.isLoadingNodeListByHost);
+  const [nodeListGlobal, setNodeListGlobal] = useRecoilState(
+    nodeAtoms.nodeListGlobal,
+  );
+  const [nodeListGlobalLoadingState, setNodeListGlobalLoadingState] =
+    useRecoilState(nodeAtoms.nodeListGlobalLoadingState);
 
   const loadNodes = async () => {
     if (nodeListLoadingState !== 'initializing')
@@ -90,6 +99,32 @@ export const useNodeList = () => {
     setNodeListByHostLoadingState('finished');
   };
 
+  const loadGlobalNodes = async () => {
+    try {
+      setNodeListGlobalLoadingState('initializing');
+
+      const orgIds = allOrganizations.map((org) => org.orgId);
+
+      const response = await nodeClient.listNodes(
+        undefined,
+        {
+          orgIds,
+        },
+        {
+          currentPage: 0,
+          itemsPerPage: 1000,
+        },
+      );
+
+      setNodeListGlobal(response.nodes);
+    } catch (error: any) {
+      console.log('Error caught while fetching all nodes: ', error);
+      setNodeListGlobal([]);
+    } finally {
+      setNodeListGlobalLoadingState('finished');
+    }
+  };
+
   const modifyNodeInNodeList = (node: Node) => {
     const nodeListCopy = [...nodeList];
 
@@ -136,5 +171,9 @@ export const useNodeList = () => {
     nodeListByHost,
     nodeListByHostCount,
     nodeListByHostLoadingState,
+
+    nodeListGlobal,
+    nodeListGlobalLoadingState,
+    loadGlobalNodes,
   };
 };

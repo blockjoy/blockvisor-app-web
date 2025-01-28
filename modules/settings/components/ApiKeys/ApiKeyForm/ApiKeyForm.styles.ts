@@ -7,7 +7,7 @@ export const styles = {
     max-width: 90vw;
     height: 100vh;
 
-    > div {
+    > div:nth-of-type(2) {
       padding-bottom: 0;
     }
   `,
@@ -19,5 +19,10 @@ export const styles = {
   `,
   error: css`
     margin-bottom: 10px;
+  `,
+  orgPicker: css`
+    margin-bottom: 15px;
+    position: relative;
+    top: -10px;
   `,
 };

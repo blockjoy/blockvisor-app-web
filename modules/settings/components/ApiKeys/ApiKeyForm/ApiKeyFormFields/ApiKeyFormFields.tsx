@@ -8,8 +8,6 @@ import {
   ResourceSelector,
   ResourceTypeSelector,
   PermissionSelector,
-  InputLabel,
-  OrganizationSelect,
 } from '@shared/components';
 import { usePersonalPermissions } from '@modules/auth';
 import { ApiKeyForm, settingsSelectors } from '@modules/settings';
@@ -51,6 +49,7 @@ export const ApiKeyFormFields = ({ view, form }: Props) => {
       listPermissions();
     } else if (
       selectedResourceType === ResourceType.RESOURCE_TYPE_ORG &&
+      view === 'create' &&
       defaultOrganization?.orgId &&
       defaultOrganization.orgId !== selectedResourceId
     ) {
@@ -99,47 +98,37 @@ export const ApiKeyFormFields = ({ view, form }: Props) => {
         />
       </li>
 
-      {Boolean(selectedResourceType) &&
-        selectedResourceType !== ResourceType.RESOURCE_TYPE_USER && (
-          <li
-            css={[spacing.bottom.medium, styles.formField, styles.resourceId]}
-          >
-            <Controller
-              name="resourceId"
-              rules={{
-                required:
-                  resourceType !== ResourceType.RESOURCE_TYPE_USER
-                    ? 'Resource is required'
-                    : false,
-              }}
-              render={({ field: { name, onChange, value } }) =>
-                resourceType?.value === ResourceType.RESOURCE_TYPE_ORG ? (
-                  <>
-                    <InputLabel name={name} additionalStyles={[typo.base]}>
-                      Organization
-                    </InputLabel>
-                    <Controller
-                      name={name}
-                      render={() => (
-                        <OrganizationSelect disabled={isDisabled} />
-                      )}
-                    />
-                  </>
-                ) : (
-                  <ResourceSelector
-                    items={resources}
-                    name={name}
-                    value={value}
-                    label={resourceType?.name ?? 'Resource'}
-                    labelStyles={[typo.base]}
-                    disabled={isDisabled}
-                    onChange={onChange}
-                  />
-                )
-              }
-            />
-          </li>
-        )}
+      {(Boolean(selectedResourceType) &&
+        [
+          ResourceType.RESOURCE_TYPE_HOST,
+          ResourceType.RESOURCE_TYPE_NODE,
+        ].includes(selectedResourceType)) ||
+      (selectedResourceType === ResourceType.RESOURCE_TYPE_ORG &&
+        view === 'view') ? (
+        <li css={[spacing.bottom.medium, styles.formField]}>
+          <Controller
+            name="resourceId"
+            rules={{
+              required:
+                resourceType !== ResourceType.RESOURCE_TYPE_USER
+                  ? 'Resource is required'
+                  : false,
+            }}
+            render={({ field: { name, onChange, value } }) => (
+              <ResourceSelector
+                items={resources}
+                name={name}
+                value={value}
+                label={resourceType?.name ?? 'Resource'}
+                labelStyles={[typo.base]}
+                disabled={isDisabled}
+                resourceType={selectedResourceType}
+                onChange={onChange}
+              />
+            )}
+          />
+        </li>
+      ) : null}
 
       <li css={[spacing.bottom.medium, styles.permissions]}>
         <Controller
