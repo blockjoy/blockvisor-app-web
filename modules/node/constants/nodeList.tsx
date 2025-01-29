@@ -51,14 +51,18 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
     width: '200px',
     dataField: NodeSortField.NODE_SORT_FIELD_PROTOCOL_STATE,
     isVisible: false,
-    component: (node: Node) => (
-      <NodeStatus
-        protocolStatus={node.nodeStatus?.protocol?.state}
-        status={node.nodeStatus?.state}
-        hasBorder={false}
-        view="simple"
-      />
-    ),
+    component: (node: Node) =>
+      node.nodeStatus?.protocol?.state &&
+      node.nodeStatus?.protocol?.state !== 'uploading' &&
+      node.nodeStatus?.protocol?.state !== 'downloading' ? (
+        <NodeStatus
+          protocolStatus={node.nodeStatus?.protocol?.state}
+          hasBorder={false}
+          view="simple"
+        />
+      ) : (
+        <>-</>
+      ),
     actions: ALL_ACTIONS,
   },
   {
@@ -124,8 +128,6 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
     component: (node: Node) => (
       <NodeStatus
         status={node.nodeStatus?.protocol?.health!}
-        protocolStatus={node.nodeStatus?.protocol?.state}
-        jobs={node.jobs}
         hasBorder={false}
         view="simple"
         type="protocol"
