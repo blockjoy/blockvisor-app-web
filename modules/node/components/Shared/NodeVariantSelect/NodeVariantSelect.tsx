@@ -42,7 +42,7 @@ export const NodeVariantSelect = ({ onChange }: NodeVariantSelectProps) => {
 
   return (
     <Dropdown
-      disabled={!isSuperUser || variants?.length! < 2}
+      disabled={variants?.length! < 2}
       items={items}
       itemKey="version"
       {...(selectedVariant?.variantKey
@@ -62,10 +62,14 @@ export const NodeVariantSelect = ({ onChange }: NodeVariantSelectProps) => {
         id?: string | undefined;
         name?: string | undefined;
       }) => handleSelect(item.id!)}
-      selectedItem={{
-        id: selectedVariant?.variantKey,
-        name: selectedVariant?.variantKey,
-      }}
+      selectedItem={
+        selectedVariant?.variantKey
+          ? {
+              id: selectedVariant?.variantKey,
+              name: selectedVariant?.variantKey,
+            }
+          : null
+      }
     />
   );
 };
