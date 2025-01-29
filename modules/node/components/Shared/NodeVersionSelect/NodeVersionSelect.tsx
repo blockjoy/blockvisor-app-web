@@ -67,7 +67,7 @@ export const NodeVersionSelect = ({
           }
         : isSuperUser
         ? { error: 'No Versions Available' }
-        : { defaultText: <p css={styles.buttonText}>Auto select</p> })}
+        : { defaultText: <>Auto select</> })}
       renderItem={(item) => item.name}
       isOpen={isOpen}
       isLoading={isSuperUser && !versions}

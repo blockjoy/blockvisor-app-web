@@ -82,7 +82,7 @@ export const NodeLauncherConfig = ({
               showAdvancedConfig && styles.advancedConfigOpen,
             ]}
           >
-            <FormLabel hint="Add IP addresses that are allowed/denied">
+            <FormLabel hint="Add IP addresses that are allowed/rejected">
               Firewall Rules
             </FormLabel>
             <NodeFirewallRules

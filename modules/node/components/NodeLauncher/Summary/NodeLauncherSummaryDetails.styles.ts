@@ -39,6 +39,7 @@ export const styles = {
       text-overflow: ellipsis;
       max-width: 100%;
       min-width: 0;
+      line-height: 1.4;
     }
   `,
   summaryIcon: (theme: ITheme) => css`
