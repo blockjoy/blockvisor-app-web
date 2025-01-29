@@ -26,6 +26,7 @@ export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
   const allHosts = useRecoilValue(hostAtoms.allHosts);
   const selectedRegions = useRecoilValue(nodeLauncherAtoms.selectedRegions);
   const selectedVersion = useRecoilValue(nodeLauncherAtoms.selectedVersion);
+  const selectedVariant = useRecoilValue(nodeLauncherAtoms.selectedVariant);
   const selectedProtocol = useRecoilValue(nodeLauncherAtoms.selectedProtocol);
 
   const { properties } = nodeLauncher;
@@ -106,7 +107,6 @@ export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
                 {!hasSummary ? <div>Protocol</div> : null}
               </>
             ) : null}
-            {!selectedVersion && <div>Version</div>}
             {(selectedHosts && !selectedHosts?.every((host) => host.isValid)) ||
             (selectedRegions &&
               !selectedRegions?.every((region) => region.isValid) && (

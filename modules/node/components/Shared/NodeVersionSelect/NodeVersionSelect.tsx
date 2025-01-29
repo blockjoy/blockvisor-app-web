@@ -48,15 +48,17 @@ export const NodeVersionSelect = ({
     [versions],
   );
 
+  const items = sortVersions(versions!).map((version) => ({
+    id: version.protocolVersionId,
+    name: isSuperUser
+      ? `${version.semanticVersion} - ${version.description}`
+      : version.semanticVersion,
+  }));
+
   return (
     <Dropdown
-      disabled={!isSuperUser || versions?.length! < 2}
-      items={sortVersions(versions!).map((version) => ({
-        id: version.protocolVersionId,
-        name: isSuperUser
-          ? `${version.semanticVersion} - ${version.description}`
-          : version.semanticVersion,
-      }))}
+      disabled={!isSuperUser || versions?.length! < 2 || !selectedVersion}
+      items={items}
       {...(selectedVersion
         ? {
             renderButtonText: (
@@ -65,18 +67,23 @@ export const NodeVersionSelect = ({
           }
         : isSuperUser
         ? { error: 'No Versions Available' }
-        : { defaultText: <p css={styles.buttonText}>Auto select</p> })}
+        : { defaultText: <>Auto select</> })}
       renderItem={(item) => item.name}
       isOpen={isOpen}
+      isLoading={isSuperUser && !versions}
       handleOpen={handleOpen}
       handleSelected={(item: {
         id?: string | undefined;
         name?: string | undefined;
       }) => handleSelect(item.id!)}
-      selectedItem={{
-        id: selectedVersion?.protocolVersionId,
-        name: selectedVersion?.semanticVersion,
-      }}
+      selectedItem={
+        selectedVersion
+          ? {
+              id: selectedVersion?.protocolVersionId,
+              name: selectedVersion?.semanticVersion,
+            }
+          : null
+      }
     />
   );
 };

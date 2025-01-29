@@ -1,13 +1,10 @@
 import { useRouter } from 'next/router';
-import { css } from '@emotion/react';
 import { protocolClient } from '@modules/grpc';
 import {
   Protocol,
   ProtocolServiceUpdateProtocolRequest,
 } from '@modules/grpc/library/blockjoy/v1/protocol';
 import { AdminDetail } from '../AdminDetail/AdminDetail';
-import { breakpoints } from 'styles/variables.styles';
-import { ITheme } from 'types/theme';
 import { useState } from 'react';
 import { delay } from '@shared/utils/delay';
 import {
@@ -16,31 +13,7 @@ import {
 } from '@modules/admin/utils';
 import { Visibility } from '@modules/grpc/library/blockjoy/common/v1/protocol';
 import { capitalize } from 'utils/capitalize';
-
-const styles = {
-  versionList: css`
-    @media ${breakpoints.fromLrg} {
-      columns: 2;
-
-      li {
-        padding-right: 30px;
-      }
-    }
-
-    @media ${breakpoints.fromXLrg} {
-      columns: 3;
-
-      li {
-        padding-right: 30px;
-      }
-    }
-  `,
-  versionDescription: (theme: ITheme) => css`
-    color: ${theme.colorDefault};
-    margin-left: 10px;
-    font-size: 14px;
-  `,
-};
+import { AdminProtocolVariants } from './AdminProtocolVariants/AdminProtocolVariants';
 
 export const AdminProtocol = () => {
   const router = useRouter();
@@ -55,36 +28,6 @@ export const AdminProtocol = () => {
   };
 
   const getItem = async () => await protocolClient.getProtocol(id as string);
-
-  // TODO: render versions
-  // const renderVersions = (item: Protocol) => {
-  //   const versions: any[] = [];
-
-  //   item.versions.forEach((version) => {
-  //     versions.push({
-  //       id: `blockchainVersion${version}`,
-  //       label: `${capitalize(
-  //         convertNodeTypeToName(nodeType.nodeType),
-  //       )} Versions`,
-  //       data: (
-  //         <ul css={nodeType.versions.length >= 10 && styles.versionList}>
-  //           {sortVersions(nodeType.versions).map((version) => (
-  //             <li key={version.id} css={spacing.bottom.small}>
-  //               {version.version}
-  //               {version.description && (
-  //                 <span css={styles.versionDescription}>
-  //                   {version.description}
-  //                 </span>
-  //               )}
-  //             </li>
-  //           ))}
-  //         </ul>
-  //       ),
-  //     });
-  //   });
-
-  //   return versions;
-  // };
 
   const handleSaveChanges = async (
     properties: AdminDetailProperty[],
@@ -102,30 +45,30 @@ export const AdminProtocol = () => {
     onSuccess();
   };
 
-  const customItems = (item: Protocol): AdminDetailProperty[] => [
+  const customItems = (protocol: Protocol): AdminDetailProperty[] => [
     {
       id: 'name',
       label: 'Name',
-      data: item.name,
-      copyValue: item.name,
+      data: protocol.name,
+      copyValue: protocol.name,
       editSettings: {
         field: 'name',
         isNumber: false,
         controlType: 'text',
-        defaultValue: item.name,
+        defaultValue: protocol.name,
       },
     },
     {
       id: 'protocolId',
       label: 'Protocol Id',
-      data: item.protocolId,
-      copyValue: item.protocolId,
+      data: protocol.protocolId,
+      copyValue: protocol.protocolId,
     },
     {
       id: 'visibilityText',
       label: 'Visibility',
       data: capitalize(
-        Visibility[item.visibility]
+        Visibility[protocol.visibility]
           ?.toString()
           ?.replace('VISIBILITY_', '')
           ?.toLowerCase(),
@@ -135,15 +78,23 @@ export const AdminProtocol = () => {
         isNumber: true,
         controlType: 'dropdown',
         dropdownValues: createDropdownValuesFromEnum(Visibility, 'VISIBILITY_'),
-        defaultValue: item.visibility?.toString(),
+        defaultValue: protocol.visibility?.toString(),
       },
     },
     {
       id: 'orgId',
       label: 'Org Id',
-      data: item.orgId,
+      data: protocol.orgId,
     },
-    // ...[...renderVersions(item)],
+    {
+      id: `variants`,
+      label: 'Variants',
+      data: !protocol.versions.length ? (
+        '-'
+      ) : (
+        <AdminProtocolVariants protocol={protocol} />
+      ),
+    },
   ];
 
   return (
@@ -161,6 +112,7 @@ export const AdminProtocol = () => {
         'visibility',
         'updatedAt',
         'orgId',
+        'versions',
       ]}
       customItems={customItems}
     />

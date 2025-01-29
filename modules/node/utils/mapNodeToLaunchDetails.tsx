@@ -25,7 +25,14 @@ export const mapNodeToLaunchDetails = (node: Node, isSuperUser?: boolean) => {
     },
     {
       label: 'Launched By',
-      data: <NodeItems.CreatedBy createdBy={node.createdBy} />,
+      data: (
+        <NodeItems.CreatedBy
+          createdBy={node.createdBy}
+          hostId={node.hostId}
+          hostDisplayName={node.hostDisplayName}
+          hostNetworkName={node.hostNetworkName}
+        />
+      ),
     },
     {
       label: 'Launched On',

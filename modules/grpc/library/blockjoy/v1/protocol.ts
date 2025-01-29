@@ -5,7 +5,7 @@ import _m0 from "protobufjs/minimal";
 import { Empty } from "../../google/protobuf/empty";
 import { Timestamp } from "../../google/protobuf/timestamp";
 import { BillingAmount } from "../common/v1/currency";
-import { ProtocolVersionKey, Visibility } from "../common/v1/protocol";
+import { ProtocolVersionKey, VersionMetadata, Visibility } from "../common/v1/protocol";
 import { SearchOperator, SortOrder } from "../common/v1/search";
 
 export const protobufPackage = "blockjoy.v1";
@@ -35,6 +35,7 @@ export interface ProtocolVersion {
   orgId?: string | undefined;
   protocolId: string;
   versionKey: ProtocolVersionKey | undefined;
+  metadata: VersionMetadata[];
   semanticVersion: string;
   skuCode: string;
   description?: string | undefined;
@@ -73,6 +74,8 @@ export interface ProtocolServiceAddVersionRequest {
   versionKey:
     | ProtocolVersionKey
     | undefined;
+  /** The metadata associated with the `version_key`. */
+  metadata: VersionMetadata[];
   /** A semantic version of the protocol software. */
   semanticVersion: string;
   /** The SKU code for this version (e.g. ETH-MN). */
@@ -433,6 +436,7 @@ function createBaseProtocolVersion(): ProtocolVersion {
     orgId: undefined,
     protocolId: "",
     versionKey: undefined,
+    metadata: [],
     semanticVersion: "",
     skuCode: "",
     description: undefined,
@@ -456,23 +460,26 @@ export const ProtocolVersion = {
     if (message.versionKey !== undefined) {
       ProtocolVersionKey.encode(message.versionKey, writer.uint32(34).fork()).ldelim();
     }
+    for (const v of message.metadata) {
+      VersionMetadata.encode(v!, writer.uint32(42).fork()).ldelim();
+    }
     if (message.semanticVersion !== "") {
-      writer.uint32(42).string(message.semanticVersion);
+      writer.uint32(50).string(message.semanticVersion);
     }
     if (message.skuCode !== "") {
-      writer.uint32(50).string(message.skuCode);
+      writer.uint32(58).string(message.skuCode);
     }
     if (message.description !== undefined) {
-      writer.uint32(58).string(message.description);
+      writer.uint32(66).string(message.description);
     }
     if (message.visibility !== 0) {
-      writer.uint32(64).int32(message.visibility);
+      writer.uint32(72).int32(message.visibility);
     }
     if (message.createdAt !== undefined) {
-      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(74).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(82).fork()).ldelim();
     }
     if (message.updatedAt !== undefined) {
-      Timestamp.encode(toTimestamp(message.updatedAt), writer.uint32(82).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.updatedAt), writer.uint32(90).fork()).ldelim();
     }
     return writer;
   },
@@ -517,38 +524,45 @@ export const ProtocolVersion = {
             break;
           }
 
-          message.semanticVersion = reader.string();
+          message.metadata.push(VersionMetadata.decode(reader, reader.uint32()));
           continue;
         case 6:
           if (tag !== 50) {
             break;
           }
 
-          message.skuCode = reader.string();
+          message.semanticVersion = reader.string();
           continue;
         case 7:
           if (tag !== 58) {
             break;
           }
 
-          message.description = reader.string();
+          message.skuCode = reader.string();
           continue;
         case 8:
-          if (tag !== 64) {
+          if (tag !== 66) {
+            break;
+          }
+
+          message.description = reader.string();
+          continue;
+        case 9:
+          if (tag !== 72) {
             break;
           }
 
           message.visibility = reader.int32() as any;
           continue;
-        case 9:
-          if (tag !== 74) {
+        case 10:
+          if (tag !== 82) {
             break;
           }
 
           message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
-        case 10:
-          if (tag !== 82) {
+        case 11:
+          if (tag !== 90) {
             break;
           }
 
@@ -575,6 +589,7 @@ export const ProtocolVersion = {
     message.versionKey = (object.versionKey !== undefined && object.versionKey !== null)
       ? ProtocolVersionKey.fromPartial(object.versionKey)
       : undefined;
+    message.metadata = object.metadata?.map((e) => VersionMetadata.fromPartial(e)) || [];
     message.semanticVersion = object.semanticVersion ?? "";
     message.skuCode = object.skuCode ?? "";
     message.description = object.description ?? undefined;
@@ -724,7 +739,14 @@ export const ProtocolServiceAddProtocolResponse = {
 };
 
 function createBaseProtocolServiceAddVersionRequest(): ProtocolServiceAddVersionRequest {
-  return { orgId: undefined, versionKey: undefined, semanticVersion: "", skuCode: "", description: undefined };
+  return {
+    orgId: undefined,
+    versionKey: undefined,
+    metadata: [],
+    semanticVersion: "",
+    skuCode: "",
+    description: undefined,
+  };
 }
 
 export const ProtocolServiceAddVersionRequest = {
@@ -735,14 +757,17 @@ export const ProtocolServiceAddVersionRequest = {
     if (message.versionKey !== undefined) {
       ProtocolVersionKey.encode(message.versionKey, writer.uint32(18).fork()).ldelim();
     }
+    for (const v of message.metadata) {
+      VersionMetadata.encode(v!, writer.uint32(26).fork()).ldelim();
+    }
     if (message.semanticVersion !== "") {
-      writer.uint32(26).string(message.semanticVersion);
+      writer.uint32(34).string(message.semanticVersion);
     }
     if (message.skuCode !== "") {
-      writer.uint32(34).string(message.skuCode);
+      writer.uint32(42).string(message.skuCode);
     }
     if (message.description !== undefined) {
-      writer.uint32(42).string(message.description);
+      writer.uint32(50).string(message.description);
     }
     return writer;
   },
@@ -773,17 +798,24 @@ export const ProtocolServiceAddVersionRequest = {
             break;
           }
 
-          message.semanticVersion = reader.string();
+          message.metadata.push(VersionMetadata.decode(reader, reader.uint32()));
           continue;
         case 4:
           if (tag !== 34) {
             break;
           }
 
-          message.skuCode = reader.string();
+          message.semanticVersion = reader.string();
           continue;
         case 5:
           if (tag !== 42) {
+            break;
+          }
+
+          message.skuCode = reader.string();
+          continue;
+        case 6:
+          if (tag !== 50) {
             break;
           }
 
@@ -808,6 +840,7 @@ export const ProtocolServiceAddVersionRequest = {
     message.versionKey = (object.versionKey !== undefined && object.versionKey !== null)
       ? ProtocolVersionKey.fromPartial(object.versionKey)
       : undefined;
+    message.metadata = object.metadata?.map((e) => VersionMetadata.fromPartial(e)) || [];
     message.semanticVersion = object.semanticVersion ?? "";
     message.skuCode = object.skuCode ?? "";
     message.description = object.description ?? undefined;

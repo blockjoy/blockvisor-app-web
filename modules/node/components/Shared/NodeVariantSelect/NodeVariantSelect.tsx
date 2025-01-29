@@ -32,16 +32,21 @@ export const NodeVariantSelect = ({ onChange }: NodeVariantSelectProps) => {
 
   const handleSelect = (variant: string) => onChange(variant);
 
+  const items = sort(
+    variants?.map((variant) => ({
+      id: variant,
+      name: variant,
+    })) ?? [],
+    { field: 'name' },
+  );
+
+  const error =
+    !selectedVariant || !variants?.length ? 'No Variants Available' : '';
+
   return (
     <Dropdown
-      disabled={!isSuperUser || variants?.length! < 2}
-      items={sort(
-        variants?.map((variant) => ({
-          id: variant,
-          name: variant,
-        }))!,
-        { field: 'name' },
-      )}
+      disabled={variants?.length! < 2 || !!error}
+      items={items}
       itemKey="version"
       {...(selectedVariant?.variantKey
         ? {
@@ -50,19 +55,24 @@ export const NodeVariantSelect = ({ onChange }: NodeVariantSelectProps) => {
             ),
           }
         : isSuperUser
-        ? { error: 'No Variants Available' }
-        : { defaultText: <p css={styles.buttonText}>Auto select</p> })}
+        ? { error }
+        : { defaultText: <>Auto select</> })}
       renderItem={(item) => <>{item.name}</>}
       isOpen={isOpen}
+      isLoading={!variants}
       handleOpen={handleOpen}
       handleSelected={(item: {
         id?: string | undefined;
         name?: string | undefined;
       }) => handleSelect(item.id!)}
-      selectedItem={{
-        id: selectedVariant?.variantKey,
-        name: selectedVariant?.variantKey,
-      }}
+      selectedItem={
+        selectedVariant?.variantKey
+          ? {
+              id: selectedVariant?.variantKey,
+              name: selectedVariant?.variantKey,
+            }
+          : null
+      }
     />
   );
 };

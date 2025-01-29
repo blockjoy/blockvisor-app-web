@@ -30,6 +30,14 @@ const IconArbitrum = dynamic(
   () => import(`@public/assets/icons/blockchain/Arbitrum.svg`),
 );
 
+const IconArbitrumOne = dynamic(
+  () => import(`@public/assets/icons/blockchain/Arbitrum-One.svg`),
+);
+
+const IconArbitrumNova = dynamic(
+  () => import(`@public/assets/icons/blockchain/Arbitrum-Nova.svg`),
+);
+
 const IconAvalanche = dynamic(
   () => import(`@public/assets/icons/blockchain/Avalanche.svg`),
 );
@@ -198,6 +206,12 @@ export const ProtocolIcon = ({
       break;
     case 'arbitrum':
       Component = IconArbitrum;
+      break;
+    case 'arbitrum one':
+      Component = IconArbitrumOne;
+      break;
+    case 'arbitrum nova':
+      Component = IconArbitrumNova;
       break;
     case 'avalanche':
       Component = IconAvalanche;

@@ -44,6 +44,7 @@ export * from './store/nodeLauncherSelectors';
 
 export * from './types/common';
 
+export * from './utils/getCreatedByName';
 export * from './utils/mapNodeListToRows';
 export * from './utils/resultsStatus';
 export * from './utils/sortLists';
