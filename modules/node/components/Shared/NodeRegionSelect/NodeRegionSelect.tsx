@@ -60,7 +60,6 @@ export const NodeRegionSelect = ({
       items={mappedRegions}
       handleSelected={handleSelected}
       selectedItem={selectedRegion}
-      isLoading={regionsLoadingState !== 'finished'}
       disabled={!!error}
       {...(!selectedRegions?.[0]
         ? isSuperUser

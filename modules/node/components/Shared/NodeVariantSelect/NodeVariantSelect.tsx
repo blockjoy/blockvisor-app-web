@@ -40,9 +40,12 @@ export const NodeVariantSelect = ({ onChange }: NodeVariantSelectProps) => {
     { field: 'name' },
   );
 
+  const error =
+    !selectedVariant || !variants?.length ? 'No Variants Available' : '';
+
   return (
     <Dropdown
-      disabled={variants?.length! < 2}
+      disabled={variants?.length! < 2 || !!error}
       items={items}
       itemKey="version"
       {...(selectedVariant?.variantKey
@@ -52,8 +55,8 @@ export const NodeVariantSelect = ({ onChange }: NodeVariantSelectProps) => {
             ),
           }
         : isSuperUser
-        ? { error: 'No Variants Available' }
-        : { defaultText: <p css={styles.buttonText}>Auto select</p> })}
+        ? { error }
+        : { defaultText: <>Auto select</> })}
       renderItem={(item) => <>{item.name}</>}
       isOpen={isOpen}
       isLoading={!variants}

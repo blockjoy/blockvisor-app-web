@@ -221,7 +221,10 @@ export const useNodeLauncherHandlers = ({
 
   useEffect(() => {
     (async () => {
-      if (!selectedVersion) return;
+      if (!selectedVersion) {
+        setSelectedImage(null);
+        return;
+      }
 
       const imageResponse = await imageClient.getImage({
         versionKey: selectedVersion.versionKey,
@@ -301,7 +304,8 @@ export const useNodeLauncherHandlers = ({
   }, [defaultOrganization?.orgId, isSuperUser]);
 
   useEffect(() => {
-    if (defaultOrganization?.orgId && selectedImage) getRegions();
+    console.log('defaultOrganization', defaultOrganization);
+    if (defaultOrganization?.orgId) getRegions();
   }, [defaultOrganization?.orgId, selectedImage]);
 
   const handleHostsChanged = (hosts: NodeLauncherHost[] | null) => {

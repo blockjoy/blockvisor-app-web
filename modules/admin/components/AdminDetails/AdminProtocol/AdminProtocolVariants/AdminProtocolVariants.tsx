@@ -25,8 +25,6 @@ export const AdminProtocolVariants = ({ protocol }: Props) => {
       { field: 'variantKey' },
     );
 
-    console.log(variants);
-
     return (
       <ul css={styles.variants}>
         {variants.map((variant) => (
