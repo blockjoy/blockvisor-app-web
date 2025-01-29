@@ -70,16 +70,20 @@ export const NodeVersionSelect = ({
         : { defaultText: <p css={styles.buttonText}>Auto select</p> })}
       renderItem={(item) => item.name}
       isOpen={isOpen}
-      isLoading={!versions}
+      isLoading={isSuperUser && !versions}
       handleOpen={handleOpen}
       handleSelected={(item: {
         id?: string | undefined;
         name?: string | undefined;
       }) => handleSelect(item.id!)}
-      selectedItem={{
-        id: selectedVersion?.protocolVersionId,
-        name: selectedVersion?.semanticVersion,
-      }}
+      selectedItem={
+        selectedVersion
+          ? {
+              id: selectedVersion?.protocolVersionId,
+              name: selectedVersion?.semanticVersion,
+            }
+          : null
+      }
     />
   );
 };
