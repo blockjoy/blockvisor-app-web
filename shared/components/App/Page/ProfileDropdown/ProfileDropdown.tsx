@@ -10,7 +10,6 @@ import { escapeHtml } from '@shared/utils/escapeHtml';
 import { spacing } from 'styles/utils.spacing.styles';
 import IconCog from '@public/assets/icons/common/Cog.svg';
 import IconDoor from '@public/assets/icons/common/Door.svg';
-import IconPerson from '@public/assets/icons/common/Person.svg';
 
 type ProfileDropdownItem = {
   id: string;
@@ -29,12 +28,6 @@ export const ProfileDropdown = () => {
         name: 'Settings',
         icon: <IconCog />,
         onClick: () => router.push(ROUTES.SETTINGS),
-      },
-      {
-        id: 'profile',
-        name: 'Profile',
-        icon: <IconPerson />,
-        onClick: () => router.push(ROUTES.PROFILE),
       },
       {
         id: 'sign-out',

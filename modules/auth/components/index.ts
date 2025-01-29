@@ -9,3 +9,4 @@ export * from './NewPasswordForm/NewPasswordForm';
 export * from './PrivateRoute/PrivateRoute';
 export * from './ProtectedRoute/ProtectedRoute';
 export * from './PublicRoute/PublicRoute';
+export * from './PasswordField/PasswordField';

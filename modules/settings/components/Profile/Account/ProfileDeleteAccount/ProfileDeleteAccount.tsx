@@ -1,9 +1,9 @@
-import { authAtoms } from '@modules/auth';
-import { DangerZone } from '@shared/components';
-import { useRouter } from 'next/router';
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 import { useRecoilValue } from 'recoil';
 import { delay } from '@shared/utils/delay';
+import { DangerZone } from '@shared/components';
+import { authAtoms } from '@modules/auth';
 
 export const ProfileDeleteAccount = () => {
   const user = useRecoilValue(authAtoms.user);

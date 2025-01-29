@@ -1,4 +1,5 @@
 export const ROUTES = {
+  API_KEYS: '/settings/api-keys',
   BILLING: '/billing',
   BILLING_PAYMENT_METHODS: '/billing/payment-methods',
   BILLING_SUBSCRIPTION: '/billing/subscription',
@@ -20,7 +21,7 @@ export const ROUTES = {
   NOT_FOUND: '/404',
   ORGANIZATIONS: '/organizations',
   ORGANIZATION: (id: string) => `/organizations/${id}`,
-  PROFILE: '/profile',
+  PROFILE: '/settings/profile',
   REGISTER: '/register',
   SETTINGS: '/settings',
 };

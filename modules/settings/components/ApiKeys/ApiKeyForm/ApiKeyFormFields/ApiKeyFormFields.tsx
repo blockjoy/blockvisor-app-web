@@ -10,8 +10,9 @@ import {
   PermissionSelector,
 } from '@shared/components';
 import { usePersonalPermissions } from '@modules/auth';
-import { ApiKeyForm, settingsSelectors } from '@modules/settings';
+import { settingsSelectors } from '@modules/settings';
 import { organizationSelectors } from '@modules/organization';
+import { ApiKeyForm } from '../ApiKeyForm';
 import { spacing } from 'styles/utils.spacing.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { reset } from 'styles/utils.reset.styles';

@@ -1,15 +1,12 @@
 import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import {
-  settingsAtoms,
-  ApiKeyForm,
-  ApiKeysHeader,
-  ApiKeysList,
-  ApiKeyView,
-  ApiKeyActions,
-  DEFAULT_API_KEYS_VIEW,
-} from '@modules/settings';
+import { settingsAtoms, DEFAULT_API_KEYS_VIEW } from '@modules/settings';
 import { TableSkeleton } from '@shared/components';
+import { ApiKeysHeader } from './ApiKeysHeader/ApiKeysHeader';
+import { ApiKeysList } from './ApiKeysList/ApiKeysList';
+import { ApiKeyForm } from './ApiKeyForm/ApiKeyForm';
+import { ApiKeyView } from './ApiKeyView/ApiKeyView';
+import { ApiKeyActions } from './ApiKeyActions/ApiKeyActions';
 
 export const ApiKeys = () => {
   const apiKeysLoadingState = useRecoilValue(settingsAtoms.apiKeysLoadingState);
