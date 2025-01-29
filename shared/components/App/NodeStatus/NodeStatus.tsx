@@ -83,7 +83,8 @@ export const checkIfUnspecified = (
 ) => {
   if (
     type === 'protocol' &&
-    (status === undefined || protocolStatus === undefined)
+    status === undefined &&
+    protocolStatus === undefined
   )
     return true;
 
@@ -150,13 +151,11 @@ export const NodeStatus = ({
         protocolStatus={protocolStatus}
       />
       <p ref={nameRef} css={[styles.statusText(!hasBorder), statusColor]}>
-        {status !== NodeState.NODE_STATE_FAILED && (
-          <NodeStatusName
-            status={status}
-            type={type}
-            protocolStatus={protocolStatus}
-          />
-        )}
+        <NodeStatusName
+          status={status}
+          type={type}
+          protocolStatus={protocolStatus}
+        />
         {protocolProgressStatuses.includes(protocolStatus!) &&
           isDownloading &&
           view === 'simple' && (
