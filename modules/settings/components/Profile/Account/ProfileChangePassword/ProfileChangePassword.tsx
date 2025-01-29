@@ -1,16 +1,19 @@
 import { MouseEventHandler, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 import { Button, FormError, Input } from '@shared/components';
+import {
+  PasswordToggle,
+  useChangePassword,
+  PasswordField,
+} from '@modules/auth';
+import { useGetOrganizations } from '@modules/organization';
+import { containers } from 'styles/containers.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { reset } from 'styles/utils.reset.styles';
 import { typo } from 'styles/utils.typography.styles';
 import { colors } from 'styles/utils.colors.styles';
-import { PasswordToggle, useChangePassword } from '@modules/auth';
-import { containers } from 'styles/containers.styles';
 import { styles } from './ProfileChangePassword.styles';
-import { toast } from 'react-toastify';
-import { useGetOrganizations } from '@modules/organization';
-import { PasswordField } from '@modules/auth/components/PasswordField/PasswordField';
 
 type ChangePasswordForm = {
   currentPassword: string;

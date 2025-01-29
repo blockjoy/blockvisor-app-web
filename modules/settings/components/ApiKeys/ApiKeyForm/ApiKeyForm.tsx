@@ -13,15 +13,15 @@ import {
   OrganizationPicker,
 } from '@shared/components';
 import {
-  ApiKeyFormFields,
   useApiKeys,
   settingsAtoms,
   generateApiKeyFormParams,
   API_KEY_FORM_DEFAULT_VALUES,
-  ApiKeyFormHeader,
 } from '@modules/settings';
 import { authAtoms } from '@modules/auth';
 import { organizationSelectors } from '@modules/organization';
+import { ApiKeyFormHeader } from './ApiKeyFormHeader/ApiKeyFormHeader';
+import { ApiKeyFormFields } from './ApiKeyFormFields/ApiKeyFormFields';
 import { styles } from './ApiKeyForm.styles';
 
 export type ApiKeyForm = {

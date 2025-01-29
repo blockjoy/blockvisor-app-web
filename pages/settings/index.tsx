@@ -1,7 +1,7 @@
 import { AppLayout } from '@modules/layout';
-import { SettingsView } from '@modules/settings';
+import { SettingsWrapper } from '@modules/settings';
 
-const Settings = () => <SettingsView />;
+const Settings = () => <SettingsWrapper />;
 
 Settings.getLayout = function getLayout(page: React.ReactNode) {
   return (
