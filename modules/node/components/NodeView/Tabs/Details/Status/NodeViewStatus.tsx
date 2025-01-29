@@ -85,29 +85,31 @@ export const NodeViewStatus = () => {
               <h3 css={styles.cardLabel}>Protocol Health</h3>
             </div>
           )}
-        {Boolean(node.nodeStatus?.protocol?.state) && (
-          <div css={styles.card}>
-            <NodeStatusIcon
-              size={iconSize}
-              protocolStatus={node?.nodeStatus?.protocol?.state}
-            />
-            <var
-              css={[
-                styles.cardValue,
-                getNodeStatusColor(
-                  undefined,
-                  undefined,
-                  node?.nodeStatus?.protocol?.state,
-                ),
-              ]}
-            >
-              <NodeStatusName
+        {Boolean(node.nodeStatus?.protocol?.state) &&
+          node.nodeStatus?.protocol?.state !== 'uploading' &&
+          node.nodeStatus?.protocol?.state !== 'downloading' && (
+            <div css={styles.card}>
+              <NodeStatusIcon
+                size={iconSize}
                 protocolStatus={node?.nodeStatus?.protocol?.state}
               />
-            </var>
-            <h3 css={styles.cardLabel}>Protocol Status</h3>
-          </div>
-        )}
+              <var
+                css={[
+                  styles.cardValue,
+                  getNodeStatusColor(
+                    undefined,
+                    undefined,
+                    node?.nodeStatus?.protocol?.state,
+                  ),
+                ]}
+              >
+                <NodeStatusName
+                  protocolStatus={node?.nodeStatus?.protocol?.state}
+                />
+              </var>
+              <h3 css={styles.cardLabel}>Protocol Status</h3>
+            </div>
+          )}
       </div>
     </>
   );
