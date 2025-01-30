@@ -17,7 +17,6 @@ export const ApiKeyActions = ({ view, handleView }: Props) => {
 
   const handleClose = () => {
     handleView?.({
-      drawer: null,
       modal: null,
     });
 

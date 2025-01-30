@@ -1,5 +1,5 @@
 import { PropsWithChildren, useEffect, useRef } from 'react';
-import { SerializedStyles } from '@emotion/react';
+import { SerializedStylesAll } from 'types/theme';
 import { useEsc } from '@shared/index';
 import { SvgIcon } from '@shared/components';
 import { styles } from './Drawer.styles';
@@ -9,7 +9,7 @@ type Props = {
   title?: string;
   header?: React.ReactNode;
   isOpen: boolean;
-  asideStyles?: SerializedStyles[];
+  asideStyles?: SerializedStylesAll;
   onClose: VoidFunction;
 } & PropsWithChildren;
 

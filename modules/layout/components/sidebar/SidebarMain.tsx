@@ -15,7 +15,7 @@ import IconHost from '@public/assets/icons/app/Host.svg';
 import IconRocket from '@public/assets/icons/app/Rocket.svg';
 import IconChat from '@public/assets/icons/common/Chat.svg';
 import IconSliders from '@public/assets/icons/app/Sliders.svg';
-import IconBilling from '@public/assets/icons/common/Billing.svg';
+import IconCog from '@public/assets/icons/common/Cog.svg';
 
 type BlockItem = {
   id: string;
@@ -84,6 +84,12 @@ export default () => {
           icon: <IconOrganizations />,
           isOrganizations: true,
         },
+        {
+          name: 'Settings',
+          path: ROUTES.PROFILE,
+          icon: <IconCog />,
+          isOrganizations: true,
+        },
       ],
     },
     {
@@ -112,28 +118,10 @@ export default () => {
     });
   }
 
-  let navBlocks: BlockItem[] = blocks.map((block: BlockItem) => {
-    if (block.id === 'settings' && canInitCard) {
-      return {
-        ...block,
-        items: [
-          ...block.items,
-          {
-            name: 'Billing',
-            path: ROUTES.BILLING,
-            icon: <IconBilling />,
-          },
-        ],
-      };
-    }
-
-    return block;
-  });
-
   return (
     <main css={styles.wrapper(isSidebarOpenMobile)}>
       <div css={styles.navigation}>
-        {navBlocks.map((block) => (
+        {blocks.map((block) => (
           <div key={block.id} css={styles.block(isSidebarOpen)}>
             {block.title && isSidebarOpen && (
               <h4 css={styles.header}>{block.title}</h4>

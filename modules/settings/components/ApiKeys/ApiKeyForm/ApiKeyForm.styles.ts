@@ -1,20 +1,44 @@
 import { css } from '@emotion/react';
+import { breakpoints } from 'styles/variables.styles';
+import { ITheme } from 'types/theme';
 
 export const styles = {
-  drawer: css`
-    top: 0;
-    width: 1000px;
-    max-width: 90vw;
-    height: 100vh;
+  drawer: (isSidebarOpen?: boolean) => (theme: ITheme) =>
+    css`
+      top: 0;
+      width: 100%;
+      max-width: calc(100vw - ${isSidebarOpen ? '260' : '63'}px);
+      height: 100vh;
 
-    > div:nth-of-type(2) {
-      padding-bottom: 0;
-    }
-  `,
-  bottom: css`
+      @media ${breakpoints.toXlrg} {
+        max-width: calc(100vw - 200px);
+      }
+
+      @media ${breakpoints.toLrg} {
+        max-width: 90vw;
+      }
+
+      > div:nth-of-type(1) {
+        height: 72px;
+        background-color: ${theme.colorBackground};
+        position: sticky;
+        top: 0;
+        z-index: 1;
+      }
+
+      > div:nth-of-type(2) {
+        padding-bottom: 0;
+      }
+
+      > button {
+        top: 26px;
+        z-index: 1;
+      }
+    `,
+  bottom: (theme: ITheme) => css`
     position: sticky;
     bottom: 0;
-    background: #222524;
+    background: ${theme.colorBackground};
     padding: 10px 0;
   `,
   error: css`

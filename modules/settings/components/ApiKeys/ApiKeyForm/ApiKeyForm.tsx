@@ -19,6 +19,7 @@ import {
   API_KEY_FORM_DEFAULT_VALUES,
 } from '@modules/settings';
 import { authAtoms } from '@modules/auth';
+import { layoutSelectors } from '@modules/layout';
 import { organizationSelectors } from '@modules/organization';
 import { ApiKeyFormHeader } from './ApiKeyFormHeader/ApiKeyFormHeader';
 import { ApiKeyFormFields } from './ApiKeyFormFields/ApiKeyFormFields';
@@ -46,6 +47,7 @@ export const ApiKeyForm = ({ view, handleView }: Props) => {
   const userSettingsLoadingState = useRecoilValue(
     authAtoms.userSettingsLoadingState,
   );
+  const isSidebarOpen = useRecoilValue(layoutSelectors.isSidebarOpen);
 
   const [error, setError] = useState<string | null>(null);
 
@@ -128,7 +130,7 @@ export const ApiKeyForm = ({ view, handleView }: Props) => {
       header={<ApiKeyFormHeader view={view} />}
       isOpen={isOpen}
       onClose={handleClose}
-      asideStyles={[styles.drawer]}
+      asideStyles={[styles.drawer(isSidebarOpen)]}
     >
       <DrawerContent bottomBorder={false}>
         {isMed && (

@@ -20,7 +20,7 @@ export const ApiKeys = () => {
     }));
 
   return (
-    <div>
+    <>
       <ApiKeysHeader handleView={handleView} />
 
       {apiKeysLoadingState !== 'finished' ? (
@@ -36,6 +36,6 @@ export const ApiKeys = () => {
       ) : view.modal === 'delete' ? (
         <ApiKeyActions view={view.modal} handleView={handleView} />
       ) : null}
-    </div>
+    </>
   );
 };

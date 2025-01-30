@@ -2,7 +2,6 @@ export * from './components/BillingWrapper';
 export * from './components/Billing/PaymentDetails/BillingAddress/BillingAddress';
 export * from './components/Billing/PaymentDetails/BillingAddress/BillingAddressForm/BillingAddressForm';
 export * from './components/Billing/PaymentDetails/BillingAddress/BillingAddressForm/BillingAddressFormFields';
-export * from './components/Billing/PaymentDetails/PaymentDetails';
 export * from './components/Billing/PaymentDetails/PaymentMethods/PaymentMethodForm/AvailablePayments/AvailablePayments';
 export * from './components/Billing/PaymentDetails/PaymentMethods/PaymentMethodForm/CreditCardForm/CardComponent/CardComponent';
 export * from './components/Billing/PaymentDetails/PaymentMethods/PaymentMethodForm/CreditCardForm/CreditCardFormFields';
@@ -31,7 +30,7 @@ export * from './components/Billing/Subscription/Info/SubscriptionLifecycle/Subs
 export * from './components/Billing/Subscription/Info/SubscriptionLifecycle/SubscriptionActivation/SubscriptionActivation';
 export * from './components/Billing/Subscription/Info/SubscriptionLifecycle/SubscriptionCancellation/SubscriptionCancellation';
 export * from './components/Billing/Subscription/Info/SubscriptionInfo';
-export * from './components/Billing/Subscription/SubscriptionView';
+export * from './components/Billing/Subscription/Subscription';
 export * from './components/Billing/Subscription/Subscription';
 export * from './components/Shared/Subscription/BillingPeriodSelect/BillingPeriodSelect';
 export * from './components/Shared/Subscription/Invoices/InvoiceDownload/InvoiceDownload';

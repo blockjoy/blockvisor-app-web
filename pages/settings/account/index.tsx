@@ -1,12 +1,12 @@
 import { AppLayout } from '@modules/layout';
-import { BillingWrapper, PaymentDetails } from '@modules/billing';
+import { SettingsWrapper, Account } from '@modules/settings';
 
-const Component = () => <PaymentDetails />;
+const Component = () => <Account />;
 
 Component.getLayout = function getLayout(page: React.ReactNode) {
   return (
     <AppLayout isPageFlex>
-      <BillingWrapper>{page}</BillingWrapper>
+      <SettingsWrapper>{page}</SettingsWrapper>
     </AppLayout>
   );
 };

@@ -1,6 +1,6 @@
 import { ResourceType } from '@modules/grpc/library/blockjoy/common/v1/resource';
 import { ApiKeyServiceCreateRequest } from '@modules/grpc/library/blockjoy/v1/api_key';
-import { ApiKeyForm } from '@modules/settings';
+import { ApiKeyForm } from '../components/ApiKeys/ApiKeyForm/ApiKeyForm';
 
 export const generateApiKeyFormParams = (
   formParams: ApiKeyForm,

@@ -9,11 +9,24 @@ export const styles = {
   wrapper: css`
     display: grid;
     grid-gap: 10px;
-    grid-template-columns: repeat(2, minmax(100px, 1fr));
+    grid-template-columns: repeat(5, minmax(100px, 1fr));
+
+    @media ${breakpoints.toXHuge} {
+      grid-template-columns: repeat(4, minmax(100px, 1fr));
+    }
+
+    @media ${breakpoints.toHuge} {
+      grid-template-columns: repeat(3, minmax(100px, 1fr));
+    }
+
+    @media ${breakpoints.toXlrg} {
+      grid-template-columns: repeat(2, minmax(100px, 1fr));
+    }
 
     @media ${breakpoints.fromMed} {
       grid-auto-rows: 0;
     }
+
     @media ${breakpoints.toMed} {
       grid-template-columns: auto;
     }

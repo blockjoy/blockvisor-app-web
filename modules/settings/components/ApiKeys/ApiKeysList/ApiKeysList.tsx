@@ -68,7 +68,7 @@ export const ApiKeysList = ({ handleView }: Props) => {
   if (apiKeysLoadingState === 'initializing') return <TableSkeleton />;
 
   return (
-    <div>
+    <>
       {apiKeys.length ? (
         <Table
           isLoading={apiKeysLoadingState}
@@ -86,6 +86,6 @@ export const ApiKeysList = ({ handleView }: Props) => {
           description="When you add api keys, they will be shown here."
         />
       )}
-    </div>
+    </>
   );
 };
