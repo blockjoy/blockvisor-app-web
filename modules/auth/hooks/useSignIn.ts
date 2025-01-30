@@ -70,7 +70,7 @@ export function useSignIn() {
 
         await acceptInvitation(invitationId);
 
-        await getOrganizations();
+        await getOrganizations(true);
 
         await setDefaultOrganization(
           { orgId: activeInvitation?.orgId!, name: activeInvitation?.orgName! },

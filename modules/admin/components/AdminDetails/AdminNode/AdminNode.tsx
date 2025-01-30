@@ -10,6 +10,7 @@ import { createAdminUpdateRequest } from '@modules/admin/utils';
 import { AdminNodeUpgrade } from './AdminNodeUpgrade/AdminNodeUpgrade';
 import { escapeHtml } from '@shared/utils/escapeHtml';
 import { Currency } from '../../AdminFinancesByHost/Currency/Currency';
+import { ResourceType } from '@modules/grpc/library/blockjoy/common/v1/resource';
 
 const ignoreItems = [
   'nodeId',
@@ -163,11 +164,13 @@ export const AdminNode = () => {
       {
         id: 'protocolState',
         label: 'Protocol State',
-        data: (
+        data: node.nodeStatus?.protocol?.state ? (
           <NodeStatus
             hasBorder={false}
             protocolStatus={node.nodeStatus?.protocol?.state}
           ></NodeStatus>
+        ) : (
+          '-'
         ),
       },
       {
@@ -261,28 +264,40 @@ export const AdminNode = () => {
       {
         id: 'createdByName',
         label: 'Created By Name',
-        data: (
-          <p>
-            <NextLink
-              href={`/admin?name=users&id=${node?.createdBy?.resourceId}`}
-            >
-              {userName || 'No name'}
-            </NextLink>
-          </p>
-        ),
+        data:
+          node.createdBy?.resourceType === ResourceType.RESOURCE_TYPE_HOST ? (
+            <p>
+              <NextLink
+                href={`/admin?name=hosts&id=${node?.createdBy?.resourceId}`}
+              >
+                {node.hostDisplayName || node.hostNetworkName || 'No name'}
+              </NextLink>
+            </p>
+          ) : (
+            <p>
+              <NextLink
+                href={`/admin?name=users&id=${node?.createdBy?.resourceId}`}
+              >
+                {userName || 'No name'}
+              </NextLink>
+            </p>
+          ),
       },
       {
         id: 'createdByEmail',
         label: 'Created By Email',
-        data: (
-          <p>
-            <NextLink
-              href={`/admin?name=users&id=${node?.createdBy?.resourceId}`}
-            >
-              {user?.email || 'No email'}
-            </NextLink>
-          </p>
-        ),
+        data:
+          node.createdBy?.resourceType === ResourceType.RESOURCE_TYPE_HOST ? (
+            '-'
+          ) : (
+            <p>
+              <NextLink
+                href={`/admin?name=users&id=${node?.createdBy?.resourceId}`}
+              >
+                {user?.email || 'No email'}
+              </NextLink>
+            </p>
+          ),
       },
       {
         id: 'createdById',

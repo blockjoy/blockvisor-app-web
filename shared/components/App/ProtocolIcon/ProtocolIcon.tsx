@@ -166,6 +166,10 @@ const IconSui = dynamic(
   () => import(`@public/assets/icons/blockchain/Sui.svg`),
 );
 
+const IconTellor = dynamic(
+  () => import(`@public/assets/icons/blockchain/Tellor.svg`),
+);
+
 const IconTezos = dynamic(
   () => import(`@public/assets/icons/blockchain/Tezos.svg`),
 );
@@ -312,6 +316,9 @@ export const ProtocolIcon = ({
       break;
     case 'sui':
       Component = IconSui;
+      break;
+    case 'tellor':
+      Component = IconTellor;
       break;
     case 'tezos':
       Component = IconTezos;

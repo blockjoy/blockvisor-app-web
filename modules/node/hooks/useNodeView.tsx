@@ -85,11 +85,15 @@ export const useNodeView = (): Hook => {
       if (nextNode.orgId !== defaultOrganization?.orgId)
         switchOrganization(nextNode.orgId, nextNode.orgName);
 
-      const imageResponse = await imageClient.getImage({
-        versionKey: nextNode.versionKey!,
-        semanticVersion: nextNode.semanticVersion,
-      });
-      setNodeImage(imageResponse?.image!);
+      try {
+        const imageResponse = await imageClient.getImage({
+          versionKey: nextNode.versionKey!,
+          semanticVersion: nextNode.semanticVersion,
+        });
+        setNodeImage(imageResponse?.image!);
+      } catch (err) {
+        console.log('getImageError', err);
+      }
 
       return;
     }

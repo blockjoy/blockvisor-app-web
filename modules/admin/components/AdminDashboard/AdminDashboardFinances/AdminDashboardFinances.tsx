@@ -54,10 +54,6 @@ export const AdminDashboardFinances = () => {
           .map((node) => node.cost?.amount?.amountMinorUnits || 0)
           .reduce((prevValue, currentValue) => prevValue + currentValue, 0);
 
-        const profit = !host.cost
-          ? -1
-          : revenue - (host.cost?.amount?.amountMinorUnits! ?? 0);
-
         totalRevenue += revenue;
         totalCost += host.cost?.amount?.amountMinorUnits ?? 0;
       }
@@ -72,7 +68,7 @@ export const AdminDashboardFinances = () => {
         totalProfit,
         totalNegativeHosts: 0,
         totalPositiveHosts: 0,
-        totalProfitPercent,
+        totalProfitPercent: isNaN(totalProfitPercent) ? 0 : totalProfitPercent,
         totalNodesWithRevenue: customerNodes.length,
         totalHosts: hosts.length,
       });
