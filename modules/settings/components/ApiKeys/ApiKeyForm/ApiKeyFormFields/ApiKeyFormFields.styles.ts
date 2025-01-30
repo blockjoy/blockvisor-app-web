@@ -4,17 +4,22 @@ import { breakpoints } from 'styles/variables.styles';
 export const styles = {
   wrapper: css`
     display: grid;
-    grid-template-rows: repeat(2, auto);
-    grid-template-columns: repeat(2, 1fr);
     gap: 15px;
+    grid-template-columns: repeat(12, 1fr);
   `,
 
   formField: css`
     margin-bottom: 0;
-    grid-column: span 2;
+    grid-column-end: span 3;
 
-    @media ${breakpoints.fromMed} {
-      grid-column: span 1;
+    @media ${breakpoints.toXHuge} {
+      grid-column-end: span 4;
+    }
+    @media ${breakpoints.toXlrg} {
+      grid-column-end: span 6;
+    }
+    @media ${breakpoints.toMed} {
+      grid-column-end: span 12;
     }
 
     label + div {
@@ -22,11 +27,15 @@ export const styles = {
     }
   `,
   permissions: css`
-    grid-column: span 2;
+    grid-column: span 12;
   `,
   resourceType: css`
+    grid-row: 2;
+    grid-column-start: 1;
+  `,
+  resourceId: css`
     @media ${breakpoints.fromMed} {
-      grid-column-start: 1;
+      grid-row: 2;
     }
   `,
 };

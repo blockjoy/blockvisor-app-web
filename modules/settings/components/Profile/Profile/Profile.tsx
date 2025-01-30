@@ -11,14 +11,14 @@ import { colors } from 'styles/utils.colors.styles';
 import { reset } from 'styles/utils.reset.styles';
 import { spacing } from 'styles/utils.spacing.styles';
 import { typo } from 'styles/utils.typography.styles';
-import { styles } from './ProfileForm.styles';
+import { styles } from './Profile.styles';
 
 type EditUserForm = {
   firstName: string;
   lastName: string;
 };
 
-export function ProfileForm() {
+export function Profile() {
   const user = useRecoilValue(authAtoms.user);
   const { firstName, lastName, userId, email } = user!;
 

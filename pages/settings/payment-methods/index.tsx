@@ -1,12 +1,13 @@
 import { AppLayout } from '@modules/layout';
+import { PaymentMethods } from '@modules/billing';
 import { SettingsWrapper } from '@modules/settings';
 
-const Component = () => <SettingsWrapper />;
+const Component = () => <PaymentMethods />;
 
 Component.getLayout = function getLayout(page: React.ReactNode) {
   return (
-    <AppLayout pageTitle="Settings" isPageFlex>
-      {page}
+    <AppLayout isPageFlex>
+      <SettingsWrapper hideOrgPicker={false}>{page}</SettingsWrapper>
     </AppLayout>
   );
 };

@@ -1,13 +1,14 @@
 import { ReactNode } from 'react';
 import { AppLayout } from '@modules/layout';
-import { BillingWrapper, SubscriptionView } from '@modules/billing';
+import { Subscription } from '@modules/billing';
+import { SettingsWrapper } from '@modules/settings';
 
-const Component = () => <SubscriptionView />;
+const Component = () => <Subscription />;
 
 Component.getLayout = function getLayout(page: ReactNode) {
   return (
     <AppLayout isPageFlex>
-      <BillingWrapper>{page}</BillingWrapper>
+      <SettingsWrapper hideOrgPicker={false}>{page}</SettingsWrapper>
     </AppLayout>
   );
 };

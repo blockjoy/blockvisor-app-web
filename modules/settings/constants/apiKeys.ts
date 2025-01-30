@@ -2,7 +2,7 @@ import { ResourceType } from '@modules/grpc/library/blockjoy/common/v1/resource'
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { ApiKey } from '@modules/grpc/library/blockjoy/v1/api_key';
 import { BaseQueryParams, Sort } from '@shared/common/common';
-import { ApiKeyForm } from '@modules/settings';
+import { ApiKeyForm } from '../components/ApiKeys/ApiKeyForm/ApiKeyForm';
 
 export const API_KEYS_DEFAULT_SORT: Sort<keyof ApiKey> = {
   field: 'createdAt',

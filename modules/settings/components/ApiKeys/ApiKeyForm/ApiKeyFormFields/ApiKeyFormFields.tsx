@@ -106,7 +106,7 @@ export const ApiKeyFormFields = ({ view, form }: Props) => {
         ].includes(selectedResourceType)) ||
       (selectedResourceType === ResourceType.RESOURCE_TYPE_ORG &&
         view === 'view') ? (
-        <li css={[spacing.bottom.medium, styles.formField]}>
+        <li css={[spacing.bottom.medium, styles.formField, styles.resourceId]}>
           <Controller
             name="resourceId"
             rules={{
