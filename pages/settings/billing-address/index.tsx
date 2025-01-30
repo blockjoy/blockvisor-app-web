@@ -7,7 +7,7 @@ const Component = () => <BillingAddress />;
 Component.getLayout = function getLayout(page: React.ReactNode) {
   return (
     <AppLayout isPageFlex>
-      <SettingsWrapper hideOrgPicker={false}>{page}</SettingsWrapper>
+      <SettingsWrapper scope="org">{page}</SettingsWrapper>
     </AppLayout>
   );
 };

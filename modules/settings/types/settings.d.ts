@@ -94,3 +94,5 @@ type BillingSettings = {
 type ApiKeysSettings = {
   sort: ApiKeysSort;
 };
+
+type SettingsScope = 'user' | 'org';

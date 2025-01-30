@@ -1,6 +1,5 @@
-import { useRecoilValue } from 'recoil';
+import { useEffect, useState } from 'react';
 import { SerializedStyles } from '@emotion/react';
-import { authAtoms } from '@modules/auth';
 import { Checkbox, InputLabel } from '@shared/components';
 import { styles } from './PermissionSelector.styles';
 
@@ -25,9 +24,17 @@ export const PermissionSelector = ({
   onChange,
   value,
 }: Props) => {
-  const permissions = useRecoilValue(authAtoms.permissions);
+  const [selectedAll, setSelectedAll] = useState(false);
 
-  const permissionsGrouped = (items ?? permissions)?.reduce(
+  useEffect(() => {
+    if (items?.length && items.length === value.length) {
+      setSelectedAll(true);
+    } else if (value.length !== items?.length && selectedAll) {
+      setSelectedAll(false);
+    }
+  }, [value, items]);
+
+  const permissionsGrouped = items?.reduce(
     (acc: Record<string, string[]>, permission) => {
       const group = permission.split('-')[0];
 
@@ -52,17 +59,37 @@ export const PermissionSelector = ({
     onChange(newValue);
   };
 
+  const handleSelectAll = () => {
+    const newValues = selectedAll ? [] : items;
+
+    onChange(newValues);
+
+    setSelectedAll(!selectedAll);
+  };
+
   return (
     <>
-      {label && (
-        <InputLabel
-          additionalStyles={labelStyles}
-          labelSize={inputSize}
-          name={name}
+      <div css={styles.labelWrapper}>
+        {label && (
+          <InputLabel
+            additionalStyles={labelStyles}
+            labelSize={inputSize}
+            name={name}
+          >
+            {label}
+          </InputLabel>
+        )}
+        <Checkbox
+          onChange={handleSelectAll}
+          id={`${name}-all`}
+          name={`${name}-all`}
+          checked={selectedAll}
+          disabled={disabled}
+          additionalStyles={[styles.selectAll]}
         >
-          {label}
-        </InputLabel>
-      )}
+          Select All
+        </Checkbox>
+      </div>
       <div css={styles.container}>
         <div css={styles.wrapper}>
           {Object.keys(permissionsGrouped ?? {})?.map((permissiongGroupKey) => (

@@ -59,6 +59,17 @@ export const ApiKeyForm = ({ view, handleView }: Props) => {
     defaultValues: API_KEY_FORM_DEFAULT_VALUES,
   });
 
+  useEffect(() => {
+    if (apiKey?.label && apiKey.resource) {
+      form.reset({
+        label: apiKey?.label,
+        resourceId: apiKey?.resource?.resourceId,
+        resourceType: apiKey?.resource?.resourceType,
+        permissions: apiKey?.permissions,
+      });
+    }
+  }, [apiKey]);
+
   const {
     formState: { isValid, isDirty },
   } = form;
@@ -109,19 +120,6 @@ export const ApiKeyForm = ({ view, handleView }: Props) => {
       modal: 'delete',
     });
   };
-
-  useEffect(() => {
-    if (apiKey?.label && apiKey.resource) {
-      form.reset({
-        label: apiKey?.label,
-        resourceId: apiKey?.resource?.resourceId,
-        resourceType: apiKey?.resource?.resourceType,
-        permissions: apiKey?.permissions,
-      });
-    } else {
-      form.reset(API_KEY_FORM_DEFAULT_VALUES);
-    }
-  }, [apiKey]);
 
   const isOpen = view === 'view' || view === 'create';
 

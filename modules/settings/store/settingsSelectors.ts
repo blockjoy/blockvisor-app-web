@@ -37,12 +37,12 @@ const resources = selectorFamily<Item[], ResourceType>({
       if (!resourceType) return [];
 
       const nodeList = get(nodeAtoms.nodeList);
-      const allOrgs = get(organizationAtoms.allOrganizations);
-      const allHosts = get(hostAtoms.allHosts);
+      const orgList = get(organizationAtoms.allOrganizations);
+      const hostList = get(hostAtoms.hostList);
 
       switch (resourceType) {
         case ResourceType.RESOURCE_TYPE_ORG:
-          return allOrgs.map((org) => ({
+          return orgList.map((org) => ({
             id: org.orgId,
             name: org.name,
           }));
@@ -52,7 +52,7 @@ const resources = selectorFamily<Item[], ResourceType>({
             name: node.nodeName,
           }));
         case ResourceType.RESOURCE_TYPE_HOST:
-          return allHosts.map((host) => ({
+          return hostList.map((host) => ({
             id: host.hostId,
             name: host.displayName ?? host.networkName,
           }));

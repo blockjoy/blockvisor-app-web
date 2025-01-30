@@ -5,7 +5,7 @@ import { DeleteModal } from '@shared/components';
 import { settingsAtoms, useApiKeys } from '@modules/settings';
 
 type Props = {
-  view: ApiKeysView['modal'];
+  view: ApiKeysView;
   handleView?: (view: ApiKeysView) => void;
 };
 
@@ -20,7 +20,7 @@ export const ApiKeyActions = ({ view, handleView }: Props) => {
       modal: null,
     });
 
-    setApiKey(null);
+    if (!view.drawer) setApiKey(null);
   };
 
   const handleDelete = async () => {
@@ -28,8 +28,12 @@ export const ApiKeyActions = ({ view, handleView }: Props) => {
       { apiKeyId: apiKey?.apiKeyId! },
       () => {
         toast.success('API Key Deleted');
+        handleView?.({
+          modal: null,
+          drawer: null,
+        });
+
         setApiKey(null);
-        handleClose();
       },
       (error) => setError(error),
     );
@@ -37,7 +41,7 @@ export const ApiKeyActions = ({ view, handleView }: Props) => {
 
   return (
     <>
-      {view === 'delete' && (
+      {view.modal === 'delete' && (
         <DeleteModal
           portalId="delete-api-key-modal"
           elementName={apiKey?.label ?? ''}

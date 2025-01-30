@@ -1,11 +1,11 @@
-type SubSidebarItem = {
+type SubSidebarItem<T = string> = {
   name?: string;
   title?: string;
-  items?: SubSidebarElement[];
+  items?: SubSidebarElement<T>[];
 };
 
-type SubSidebarElement = {
-  name?: string;
+type SubSidebarElement<T = string> = {
+  name?: T;
   title?: string;
   icon?: React.ReactNode;
 };

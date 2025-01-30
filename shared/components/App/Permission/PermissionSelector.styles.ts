@@ -42,4 +42,12 @@ export const styles = {
     text-transform: uppercase;
     margin-bottom: 10px;
   `,
+  labelWrapper: css`
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  `,
+  selectAll: css`
+    margin-bottom: 8px;
+  `,
 };

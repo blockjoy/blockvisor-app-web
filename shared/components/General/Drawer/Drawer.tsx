@@ -50,14 +50,16 @@ export const Drawer = ({
         ]}
         ref={asideRef}
       >
-        <div css={styles.header}>{header ?? <h4>{title}</h4>}</div>
+        <div css={styles.header}>
+          {header ?? <h4>{title}</h4>}
+          <button type="button" onClick={onClose} css={styles.closeButton}>
+            <SvgIcon size="16px">
+              <IconClose />
+            </SvgIcon>
+          </button>
+        </div>
 
         <div css={styles.content}>{children}</div>
-        <button type="button" onClick={onClose} css={styles.closeButton}>
-          <SvgIcon size="16px">
-            <IconClose />
-          </SvgIcon>
-        </button>
       </aside>
     </>
   );

@@ -8,7 +8,7 @@ const Component = () => <Subscription />;
 Component.getLayout = function getLayout(page: ReactNode) {
   return (
     <AppLayout isPageFlex>
-      <SettingsWrapper hideOrgPicker={false}>{page}</SettingsWrapper>
+      <SettingsWrapper scope="org">{page}</SettingsWrapper>
     </AppLayout>
   );
 };

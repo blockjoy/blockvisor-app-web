@@ -1,8 +1,10 @@
-import { useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { authClient } from '@modules/grpc';
 import { authAtoms } from '@modules/auth';
-import { organizationSelectors } from '@modules/organization';
+import {
+  organizationAtoms,
+  organizationSelectors,
+} from '@modules/organization';
 
 export const usePersonalPermissions = () => {
   const user = useRecoilValue(authAtoms.user);
@@ -10,9 +12,12 @@ export const usePersonalPermissions = () => {
     organizationSelectors.personalOrganization,
   );
 
-  const [permissions, setPermissions] = useState<string[]>([]);
-  const [permissionsLoadingState, setPermissionsLoadingState] =
-    useState<LoadingState>('finished');
+  const [permissions, setPermissions] = useRecoilState(
+    organizationAtoms.personalPermissions,
+  );
+  const [permissionsLoadingState, setPermissionsLoadingState] = useRecoilState(
+    organizationAtoms.personalPermissionsLoadingState,
+  );
 
   const listPermissions = async () => {
     try {

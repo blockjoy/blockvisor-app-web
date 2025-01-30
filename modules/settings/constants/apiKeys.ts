@@ -25,6 +25,6 @@ export const DEFAULT_API_KEYS_VIEW: ApiKeysView = {
 export const API_KEY_FORM_DEFAULT_VALUES: ApiKeyForm = {
   label: '',
   resourceId: '',
-  resourceType: ResourceType.RESOURCE_TYPE_UNSPECIFIED,
+  resourceType: ResourceType.RESOURCE_TYPE_USER,
   permissions: [],
 };

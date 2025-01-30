@@ -37,7 +37,7 @@ export const NodeLauncherConfigAdvanced = ({
   const handleFirewallChanged = (nextFirewall: FirewallRule[]) =>
     onNodePropertyChanged('firewall', nextFirewall);
 
-  const sortedProperties = sort(properties, { field: 'key' });
+  const sortedProperties = sort(properties ?? [], { field: 'key' });
 
   return (
     <div css={[styles.advancedConfig, isOpen && styles.advancedConfigOpen]}>

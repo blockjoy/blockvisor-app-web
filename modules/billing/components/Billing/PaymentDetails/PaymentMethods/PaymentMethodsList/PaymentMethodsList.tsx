@@ -1,5 +1,5 @@
 import { useRecoilValue } from 'recoil';
-import { Button, SvgIcon } from '@shared/components';
+import { Button, SvgIcon, Unauthorized } from '@shared/components';
 import { usePaymentMethods, PaymentMethodsListItem } from '@modules/billing';
 import { authSelectors } from '@modules/auth';
 import { spacing } from 'styles/utils.spacing.styles';
@@ -14,11 +14,23 @@ type PaymentMethodsListProps = {
 export const PaymentMethodsList = ({
   handleAdding,
 }: PaymentMethodsListProps) => {
+  const canListPaymentMethods = useRecoilValue(
+    authSelectors.hasPermission('org-billing-list-payment-methods'),
+  );
   const canInitCard = useRecoilValue(
     authSelectors.hasPermission('org-billing-init-card'),
   );
 
   const { paymentMethods } = usePaymentMethods();
+
+  if (!canListPaymentMethods)
+    return (
+      <Unauthorized>
+        You don't have permission to view the payment methods for the current
+        organization! Try switching the organization or contact your
+        administrator.
+      </Unauthorized>
+    );
 
   return (
     <>

@@ -9,9 +9,12 @@ import {
   ResourceTypeSelector,
   PermissionSelector,
 } from '@shared/components';
-import { usePersonalPermissions } from '@modules/auth';
+import { authAtoms } from '@modules/auth';
 import { settingsSelectors } from '@modules/settings';
-import { organizationSelectors } from '@modules/organization';
+import {
+  organizationAtoms,
+  organizationSelectors,
+} from '@modules/organization';
 import { ApiKeyForm } from '../ApiKeyForm';
 import { spacing } from 'styles/utils.spacing.styles';
 import { typo } from 'styles/utils.typography.styles';
@@ -35,9 +38,10 @@ export const ApiKeyFormFields = ({ view, form }: Props) => {
   const resources = useRecoilValue(
     settingsSelectors.resources(selectedResourceType),
   );
-
-  const { listPermissions, permissions: personalPermissions } =
-    usePersonalPermissions();
+  const permissions = useRecoilValue(authAtoms.permissions);
+  const personalPermissions = useRecoilValue(
+    organizationAtoms.personalPermissions,
+  );
 
   const resourceType = RESOURCE_TYPE_ITEMS.find(
     (res) => res.value === selectedResourceType,
@@ -46,9 +50,7 @@ export const ApiKeyFormFields = ({ view, form }: Props) => {
   useEffect(() => {
     form.resetField('resourceId');
 
-    if (selectedResourceType === ResourceType.RESOURCE_TYPE_USER) {
-      listPermissions();
-    } else if (
+    if (
       selectedResourceType === ResourceType.RESOURCE_TYPE_ORG &&
       view === 'create' &&
       defaultOrganization?.orgId &&
@@ -58,7 +60,22 @@ export const ApiKeyFormFields = ({ view, form }: Props) => {
     }
   }, [selectedResourceType]);
 
+  useEffect(() => {
+    if (view === 'create' && personalPermissions.length) {
+      form.setValue('permissions', personalPermissions);
+    }
+  }, [view, personalPermissions]);
+
   const isDisabled = view === 'view';
+
+  const permissionsList =
+    selectedResourceType === ResourceType.RESOURCE_TYPE_USER
+      ? personalPermissions
+      : permissions;
+
+  useEffect(() => {
+    form.setValue('permissions', permissionsList ?? []);
+  }, [permissionsList, form]);
 
   return (
     <ul css={[reset.list, styles.wrapper]}>
@@ -145,9 +162,7 @@ export const ApiKeyFormFields = ({ view, form }: Props) => {
           render={({ field: { name, onChange, value } }) => (
             <PermissionSelector
               name={name}
-              {...(personalPermissions.length && {
-                items: personalPermissions,
-              })}
+              items={permissionsList}
               label="Permissions"
               labelStyles={[typo.base]}
               disabled={isDisabled}

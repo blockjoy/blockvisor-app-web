@@ -40,7 +40,8 @@ export const styles = {
     align-items: center;
     position: absolute;
     right: 10px;
-    top: 17px;
+    top: 50%;
+    transform: translateY(-50%);
     width: 24px;
     height: 24px;
     background: transparent;

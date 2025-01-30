@@ -52,6 +52,16 @@ const provisionTokenLoadingState = atom<LoadingState>({
   default: 'finished',
 });
 
+const personalPermissions = atom<string[]>({
+  key: 'organization.permissions.personal',
+  default: [],
+});
+
+const personalPermissionsLoadingState = atom<LoadingState>({
+  key: 'organization.permissions.personal.loadingState',
+  default: 'finished',
+});
+
 export const organizationAtoms = {
   selectedOrganization,
   organizationsPageIndex,
@@ -62,4 +72,7 @@ export const organizationAtoms = {
   organizationMemberLoadingState,
   provisionToken,
   provisionTokenLoadingState,
+
+  personalPermissions,
+  personalPermissionsLoadingState,
 };
