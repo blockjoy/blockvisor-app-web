@@ -28,7 +28,7 @@ export const AdminProtocolVariants = ({ protocol }: Props) => {
     return (
       <ul css={styles.variants}>
         {variants.map((variant) => (
-          <li>
+          <li key={variant.variantKey}>
             <h2 css={styles.variantHeader}>{variant.variantKey}</h2>
             <ul>
               {sortVersions(variant.versions).map((version, index) => (

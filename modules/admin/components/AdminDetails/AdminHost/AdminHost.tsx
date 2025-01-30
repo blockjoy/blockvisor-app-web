@@ -80,6 +80,12 @@ export const AdminHost = () => {
 
   const customItems = (host: Host): AdminDetailProperty[] => [
     {
+      id: 'networkName',
+      label: 'Network Name',
+      data: host.networkName,
+      copyValue: host.networkName,
+    },
+    {
       id: 'displayName',
       label: 'Display Name',
       data: host.displayName,
@@ -139,23 +145,27 @@ export const AdminHost = () => {
     {
       id: 'orgName',
       label: 'Org Name',
-      data: (
+      data: host.orgName ? (
         <p>
           <NextLink href={`/admin?name=orgs&id=${host.orgId}`}>
             {host.orgName}
           </NextLink>
         </p>
+      ) : (
+        '-'
       ),
     },
     {
       id: 'orgId',
       label: 'Org Id',
-      data: (
+      data: host.orgId ? (
         <p>
           <NextLink href={`/admin?name=orgs&id=${host.orgId}`}>
             {host.orgId}
           </NextLink>
         </p>
+      ) : (
+        '-'
       ),
       copyValue: host.orgId,
     },
@@ -176,7 +186,8 @@ export const AdminHost = () => {
       customItems={customItems}
       ignoreItems={[
         'hostId',
-        'name',
+        'displayName',
+        'networkName',
         'ipAddresses',
         'memSizeBytes',
         'diskSizeBytes',

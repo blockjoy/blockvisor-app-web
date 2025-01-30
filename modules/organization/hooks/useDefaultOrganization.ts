@@ -24,14 +24,11 @@ export function useDefaultOrganization() {
     organizations: Org[],
     userId?: string,
   ) => {
-    const doesLocalStorageDefaultOrgExistInList = organizations.find(
+    const doesDefaultOrgExistInList = organizations.find(
       (org) => org.orgId === defaultOrganization?.orgId,
     );
 
-    if (
-      organizations?.length &&
-      (!defaultOrganization || !doesLocalStorageDefaultOrgExistInList)
-    ) {
+    if (organizations?.length && !doesDefaultOrgExistInList) {
       const firstOrgInList = sort(organizations, {
         field: 'name',
         order: SortOrder.SORT_ORDER_ASCENDING,

@@ -25,6 +25,7 @@ import { Protocol } from '@modules/grpc/library/blockjoy/v1/protocol';
 import { AdminListEditCost } from '../AdminListEditCost/AdminListEditCost';
 import { BillingAmount } from '@modules/grpc/library/blockjoy/common/v1/currency';
 import { User } from '@modules/grpc/library/blockjoy/v1/user';
+import { ResourceType } from '@modules/grpc/library/blockjoy/common/v1/resource';
 
 const columns: AdminListColumn[] = [
   {
@@ -223,7 +224,10 @@ export const AdminNodes = () => {
   const listMap = (list: Node[]) =>
     list.map((node) => {
       const user = users.find((u) => u.userId === node.createdBy?.resourceId);
-      const createdBy = `${user?.firstName} ${user?.lastName}`;
+      const createdBy =
+        node.createdBy?.resourceType === ResourceType.RESOURCE_TYPE_HOST
+          ? node.hostDisplayName || node.hostNetworkName
+          : `${user?.firstName} ${user?.lastName}`;
       return {
         ...node,
         variant: node.versionKey?.variantKey,

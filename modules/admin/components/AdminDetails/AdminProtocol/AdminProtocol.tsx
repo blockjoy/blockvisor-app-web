@@ -59,6 +59,12 @@ export const AdminProtocol = () => {
       },
     },
     {
+      id: 'key',
+      label: 'Key',
+      data: protocol.key,
+      copyValue: protocol.key,
+    },
+    {
       id: 'protocolId',
       label: 'Protocol Id',
       data: protocol.protocolId,
@@ -106,6 +112,7 @@ export const AdminProtocol = () => {
       detailsName="name"
       ignoreItems={[
         'name',
+        'key',
         'protocolId',
         'nodeTypes',
         'stats',
