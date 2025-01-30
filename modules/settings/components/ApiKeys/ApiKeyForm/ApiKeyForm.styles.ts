@@ -9,6 +9,7 @@ export const styles = {
       width: 100%;
       max-width: calc(100vw - ${isSidebarOpen ? '260' : '63'}px);
       height: 100vh;
+      transition: none;
 
       @media ${breakpoints.toXlrg} {
         max-width: calc(100vw - 200px);

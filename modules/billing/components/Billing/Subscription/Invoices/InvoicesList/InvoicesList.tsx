@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import { useRecoilValue } from 'recoil';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { ROUTES } from '@shared/index';
-import { EmptyColumn, Table, TableSkeleton } from '@shared/components';
+import { EmptyColumn, Table } from '@shared/components';
 import { billingAtoms, mapInvoicesToRows } from '@modules/billing';
 import { spacing } from 'styles/utils.spacing.styles';
 import { flex } from 'styles/utils.flex.styles';
@@ -10,9 +10,6 @@ import { flex } from 'styles/utils.flex.styles';
 export const InvoicesList = () => {
   const router = useRouter();
 
-  const subscriptionLoadingState = useRecoilValue(
-    billingAtoms.subscriptionLoadingState,
-  );
   const invoices = useRecoilValue(billingAtoms.invoices);
   const invoicesLoadingState = useRecoilValue(
     billingAtoms.invoicesLoadingState,
@@ -23,12 +20,6 @@ export const InvoicesList = () => {
   const handleRowClicked = (id: string) => {
     router.push(ROUTES.INVOICE(id));
   };
-
-  if (
-    invoicesLoadingState === 'initializing' ||
-    subscriptionLoadingState !== 'finished'
-  )
-    return <TableSkeleton />;
 
   return invoices?.length ? (
     <InfiniteScroll
