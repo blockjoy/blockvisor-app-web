@@ -77,8 +77,6 @@ export function LoginForm() {
   useEffect(() => {
     if (user?.userId)
       (async () => {
-        await getOrganizations();
-
         handleRedirect();
       })();
   }, [user]);

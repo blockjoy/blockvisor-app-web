@@ -221,7 +221,7 @@ export const NodeViewConfig = () => {
       <ButtonGroup>
         <Button
           size="small"
-          loading={isLoading}
+          loading={isSaving}
           disabled={!isDirty || !isValid || isSaving}
           onClick={handleSave}
         >
