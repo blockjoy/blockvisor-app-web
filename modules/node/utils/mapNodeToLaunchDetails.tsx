@@ -9,10 +9,10 @@ export const mapNodeToLaunchDetails = (node: Node, isSuperUser?: boolean) => {
       data:
         node.orgId === node.hostOrgId || isSuperUser ? (
           <NextLink href={ROUTES.HOST(node.hostId)}>
-            {node.hostDisplayName}
+            {node.hostDisplayName || node.hostNetworkName}
           </NextLink>
         ) : (
-          node.hostDisplayName
+          node.hostDisplayName || node.hostNetworkName || '-'
         ),
     },
     {

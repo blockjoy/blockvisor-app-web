@@ -71,12 +71,14 @@ export const NodeViewHeader = () => {
 
   const handleUpdateNode = async (newDisplayName: string) => {
     setIsSaving(true);
-    await updateNode({
-      newDisplayName,
-      nodeId: node?.nodeId!,
-      newValues: [],
-    });
-    toast.success('Node name updated');
+    await updateNode(
+      {
+        newDisplayName,
+        nodeId: node?.nodeId!,
+        newValues: [],
+      },
+      true,
+    );
     setIsSaving(false);
     handleClose();
   };
@@ -106,8 +108,6 @@ export const NodeViewHeader = () => {
   const handleEditClicked = () => {
     setIsSaving(null);
   };
-
-  const hasTags = Boolean(node?.tags?.tags.length);
 
   return (
     <>

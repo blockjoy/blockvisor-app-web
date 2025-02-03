@@ -9,6 +9,9 @@ import {
 } from '@modules/node';
 import { styles } from './NodeLauncherConfig.styles';
 import { NodeLauncherConfigAdvanced } from './NodeLauncherConfigAdvanced/NodeLauncherConfigAdvanced';
+import { NodeLauncherConfigVariant } from './NodeLauncherConfigVariant/NodeLauncherConfigVariant';
+import { useRecoilValue } from 'recoil';
+import { authSelectors } from '@modules/auth';
 
 type NodeLauncherConfigProps = {
   onNodeConfigPropertyChanged: (
@@ -34,13 +37,21 @@ export const NodeLauncherConfig = ({
 
   const toggleAdvancedConfig = () => setShowAdvancedConfig(!showAdvancedConfig);
 
+  const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
+
   return (
     <NodeLauncherPanel>
       <div css={styles.wrapper}>
         <FormHeader>Config</FormHeader>
 
-        <FormLabel>Variant</FormLabel>
-        <NodeVariantSelect onChange={onVariantChanged} />
+        {/* {isSuperUser && ( */}
+        <>
+          <FormLabel>Variant</FormLabel>
+          <NodeVariantSelect onChange={onVariantChanged} />
+        </>
+        {/* )} */}
+
+        {/* <NodeLauncherConfigVariant onChange={onVariantChanged} /> */}
 
         <FormLabel>Version</FormLabel>
         <NodeVersionSelect onVersionChanged={onVersionChanged} />
