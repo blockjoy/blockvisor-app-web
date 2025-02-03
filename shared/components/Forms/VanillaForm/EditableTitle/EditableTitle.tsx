@@ -122,22 +122,18 @@ export const EditableTitle = ({
       css={[styles.wrapper, canUpdate && !isEditMode && styles.wrapperEditable]}
       onClick={handleWrapperClicked}
     >
-      {isEditMode ? (
-        <div
-          contentEditable
-          spellCheck={false}
-          ref={inputRef}
-          css={[styles.input, isEditMode && styles.inputEditable]}
-          onInput={handleChange}
-          onKeyDown={handleKeyDown}
-          onBlur={handleBlur}
-          suppressContentEditableWarning
-        >
-          {initialValue}
-        </div>
-      ) : (
-        <span css={styles.span}>{escapeHtml(initialValue)}</span>
-      )}
+      <div
+        contentEditable={isEditMode}
+        spellCheck={false}
+        ref={inputRef}
+        css={[styles.input, isEditMode && styles.inputEditable]}
+        onInput={handleChange}
+        onKeyDown={handleKeyDown}
+        onBlur={handleBlur}
+        suppressContentEditableWarning
+      >
+        {initialValue}
+      </div>
 
       <div css={styles.buttons}>
         {canUpdate && !isLoading && initialValue?.length && (
