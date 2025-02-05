@@ -61,6 +61,21 @@ export const useNodeView = () => {
     }
   };
 
+  const loadNodeImage = async (nextNode?: Node) => {
+    const { versionKey, semanticVersion } = nextNode!;
+
+    try {
+      const imageResponse = await imageClient.getImage({
+        versionKey,
+        semanticVersion,
+        orgId: defaultOrganization?.orgId,
+      });
+      setNodeImage(imageResponse?.image!);
+    } catch (err) {
+      console.log('loadNodeImageError', err);
+    }
+  };
+
   const loadNode = async (id: Args) => {
     let nextNode = nodeList?.find((n) => n.nodeId === id);
 
@@ -77,39 +92,28 @@ export const useNodeView = () => {
       if (nextNode.orgId !== defaultOrganization?.orgId)
         switchOrganization(nextNode.orgId, nextNode.orgName);
 
-      try {
-        const imageResponse = await imageClient.getImage({
-          versionKey: nextNode.versionKey!,
-          semanticVersion: nextNode.semanticVersion,
-        });
-        setNodeImage(imageResponse?.image!);
-      } catch (err) {
-        console.log('getImageError', err);
-      }
+      await loadNodeImage(nextNode);
 
       return;
     }
 
+    const nodeId = convertRouteParamToString(id);
+
     try {
-      const nodeId = convertRouteParamToString(id);
       nextNode = await nodeClient.getNode(nodeId);
-
-      const { orgId, orgName, versionKey } = nextNode;
-
-      setNode(nextNode);
-
-      if (orgId !== defaultOrganization?.orgId)
-        switchOrganization(orgId, orgName);
-
-      const imageResponse = await imageClient.getImage({
-        versionKey,
-      });
-      setNodeImage(imageResponse?.image!);
-
-      setIsLoading('finished');
+      setNode(nextNode!);
     } catch (err) {
       setNode(null);
     }
+
+    await loadNodeImage(nextNode);
+
+    setIsLoading('finished');
+
+    const { orgId, orgName } = nextNode!;
+
+    if (orgId !== defaultOrganization?.orgId)
+      switchOrganization(orgId, orgName);
   };
 
   const unloadNode = () => setNode(null);

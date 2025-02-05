@@ -161,7 +161,7 @@ export const EditableTitle = ({
               style="secondary"
               customCss={[styles.button]}
             >
-              Save
+              Update
             </Button>
           </>
         )}
