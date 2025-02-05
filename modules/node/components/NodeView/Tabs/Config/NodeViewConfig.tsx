@@ -111,16 +111,19 @@ export const NodeViewConfig = () => {
   };
 
   const buildConfig = () => {
-    if (!nodeImage || !node) return;
+    if (!node) {
+      setIsLoadingConfig(false);
+      return;
+    }
 
     const nextProperties = node.config?.image?.values?.map((property) => {
-      const imageProperty = nodeImage.properties.find(
+      const imageProperty = nodeImage?.properties.find(
         (p) => p.key === property.key,
       );
 
-      const imageProperties = nodeImage.properties.filter(
+      const imageProperties = nodeImage?.properties.filter(
         (p) => p.keyGroup === imageProperty?.keyGroup,
-      );
+      )!;
 
       return {
         key: property.key,
@@ -171,7 +174,7 @@ export const NodeViewConfig = () => {
     !isEqual(nodeConfig?.firewall, originalFirewall) ||
     nodeConfig?.autoUpgrade !== node?.autoUpgrade;
 
-  const isValid = nodeConfig?.properties.every(
+  const isValid = nodeConfig?.properties?.every(
     (property) =>
       property.uiType === UiType.UI_TYPE_TEXT ||
       property.uiType === UiType.UI_TYPE_PASSWORD ||
