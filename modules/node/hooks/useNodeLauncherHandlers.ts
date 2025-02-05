@@ -304,7 +304,6 @@ export const useNodeLauncherHandlers = ({
   }, [defaultOrganization?.orgId, isSuperUser]);
 
   useEffect(() => {
-    console.log('defaultOrganization', defaultOrganization);
     if (defaultOrganization?.orgId) getRegions();
   }, [defaultOrganization?.orgId, selectedImage]);
 

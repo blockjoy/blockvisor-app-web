@@ -22,7 +22,7 @@ export const NodeFirewallRules = ({
   onFirewallChanged,
 }: Props) => {
   const handleRuleAdded = () => {
-    const nextRules = [...rules!];
+    const nextRules = [...(rules ?? [])];
 
     nextRules?.push({
       key: 'rule' + (rules?.length! + 1),
