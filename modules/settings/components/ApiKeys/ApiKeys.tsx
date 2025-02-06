@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
+import { css, Global } from '@emotion/react';
 import { TableSkeleton } from '@shared/components';
 import { settingsAtoms, DEFAULT_API_KEYS_VIEW } from '@modules/settings';
 import { usePersonalPermissions } from '@modules/auth';
@@ -9,6 +10,7 @@ import { ApiKeysList } from './ApiKeysList/ApiKeysList';
 import { ApiKeyForm } from './ApiKeyForm/ApiKeyForm';
 import { ApiKeyView } from './ApiKeyView/ApiKeyView';
 import { ApiKeyActions } from './ApiKeyActions/ApiKeyActions';
+import { breakpoints } from 'styles/variables.styles';
 
 export const ApiKeys = () => {
   const personalOrganization = useRecoilValue(
@@ -41,7 +43,20 @@ export const ApiKeys = () => {
         <ApiKeysList handleView={handleView} />
       )}
 
-      {view.drawer && <ApiKeyForm view={view.drawer} handleView={handleView} />}
+      {view.drawer && (
+        <>
+          <ApiKeyForm view={view.drawer} handleView={handleView} />
+          <Global
+            styles={css`
+              body {
+                @media ${breakpoints.fromXLrg} {
+                  overflow: hidden;
+                }
+              }
+            `}
+          />
+        </>
+      )}
 
       {view.modal === 'viewToken' ? (
         <ApiKeyView handleView={handleView} />
