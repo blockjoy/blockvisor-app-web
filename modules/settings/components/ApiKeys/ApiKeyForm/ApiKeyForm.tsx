@@ -121,12 +121,10 @@ export const ApiKeyForm = ({ view, handleView }: Props) => {
     });
   };
 
-  const isOpen = view === 'view' || view === 'create';
-
   return (
     <Drawer
       header={<ApiKeyFormHeader view={view} />}
-      isOpen={isOpen}
+      isOpen={view === 'create'}
       onClose={handleClose}
       asideStyles={[styles.drawer(isSidebarOpen)]}
     >

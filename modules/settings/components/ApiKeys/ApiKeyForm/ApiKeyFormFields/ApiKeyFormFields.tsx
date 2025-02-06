@@ -2,15 +2,12 @@ import { useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 import { Controller, UseFormReturn } from 'react-hook-form';
 import { ResourceType } from '@modules/grpc/library/blockjoy/common/v1/resource';
-import { RESOURCE_TYPE_ITEMS } from '@shared/index';
 import {
   Input,
-  ResourceSelector,
   ResourceTypeSelector,
   PermissionSelector,
 } from '@shared/components';
 import { authAtoms } from '@modules/auth';
-import { settingsSelectors } from '@modules/settings';
 import {
   organizationAtoms,
   organizationSelectors,
@@ -35,16 +32,10 @@ export const ApiKeyFormFields = ({ view, form }: Props) => {
   const defaultOrganization = useRecoilValue(
     organizationSelectors.defaultOrganization,
   );
-  const resources = useRecoilValue(
-    settingsSelectors.resources(selectedResourceType),
-  );
+
   const permissions = useRecoilValue(authAtoms.permissions);
   const personalPermissions = useRecoilValue(
     organizationAtoms.personalPermissions,
-  );
-
-  const resourceType = RESOURCE_TYPE_ITEMS.find(
-    (res) => res.value === selectedResourceType,
   );
 
   useEffect(() => {
@@ -66,8 +57,6 @@ export const ApiKeyFormFields = ({ view, form }: Props) => {
     }
   }, [view, personalPermissions]);
 
-  const isDisabled = view === 'view';
-
   const permissionsList =
     selectedResourceType === ResourceType.RESOURCE_TYPE_USER
       ? personalPermissions
@@ -78,8 +67,8 @@ export const ApiKeyFormFields = ({ view, form }: Props) => {
   }, [permissionsList, form]);
 
   return (
-    <ul css={[reset.list, styles.wrapper]}>
-      <li css={[spacing.bottom.medium, styles.formField]}>
+    <div css={[reset.list, styles.wrapper]}>
+      <div css={[spacing.bottom.medium, styles.formField, styles.label]}>
         <Input
           name="label"
           label="Label"
@@ -88,18 +77,17 @@ export const ApiKeyFormFields = ({ view, form }: Props) => {
           validationOptions={{
             required: 'Label is required',
           }}
-          disabled={isDisabled}
         />
-      </li>
+      </div>
 
-      <li css={[spacing.bottom.medium, styles.formField, styles.resourceType]}>
+      <div css={[spacing.bottom.medium, styles.formField, styles.resourceType]}>
         <Controller
           name="resourceType"
           rules={{
-            required: 'Resource Type is required',
+            required: 'Scope is required',
             validate: (value) => {
               if (value === ResourceType.RESOURCE_TYPE_UNSPECIFIED) {
-                return 'Resource Type is required';
+                return 'Scope is required';
               }
             },
           }}
@@ -107,48 +95,15 @@ export const ApiKeyFormFields = ({ view, form }: Props) => {
             <ResourceTypeSelector
               name={name}
               value={value}
-              label="Resource Type"
+              label="Scope"
               labelStyles={[typo.base]}
               onChange={onChange}
-              disabled={isDisabled}
             />
           )}
         />
-      </li>
+      </div>
 
-      {(Boolean(selectedResourceType) &&
-        [
-          ResourceType.RESOURCE_TYPE_HOST,
-          ResourceType.RESOURCE_TYPE_NODE,
-        ].includes(selectedResourceType)) ||
-      (selectedResourceType === ResourceType.RESOURCE_TYPE_ORG &&
-        view === 'view') ? (
-        <li css={[spacing.bottom.medium, styles.formField, styles.resourceId]}>
-          <Controller
-            name="resourceId"
-            rules={{
-              required:
-                resourceType !== ResourceType.RESOURCE_TYPE_USER
-                  ? 'Resource is required'
-                  : false,
-            }}
-            render={({ field: { name, onChange, value } }) => (
-              <ResourceSelector
-                items={resources}
-                name={name}
-                value={value}
-                label={resourceType?.name ?? 'Resource'}
-                labelStyles={[typo.base]}
-                disabled={isDisabled}
-                resourceType={selectedResourceType}
-                onChange={onChange}
-              />
-            )}
-          />
-        </li>
-      ) : null}
-
-      <li css={[spacing.bottom.medium, styles.permissions]}>
+      <div css={[spacing.bottom.medium, styles.permissions]}>
         <Controller
           name="permissions"
           rules={{
@@ -165,13 +120,12 @@ export const ApiKeyFormFields = ({ view, form }: Props) => {
               items={permissionsList}
               label="Permissions"
               labelStyles={[typo.base]}
-              disabled={isDisabled}
               onChange={onChange}
               value={value}
             />
           )}
         />
-      </li>
-    </ul>
+      </div>
+    </div>
   );
 };

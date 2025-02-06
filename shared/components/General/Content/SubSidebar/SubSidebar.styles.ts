@@ -5,13 +5,14 @@ import { breakpoints } from 'styles/variables.styles';
 
 export const styles = {
   wrapper: (theme: ITheme) => css`
-    position: sticky;
-    z-index: 2;
     display: flex;
     flex-direction: column;
     gap: 4px;
 
     @media ${breakpoints.fromMed} {
+      position: sticky;
+      top: 92px;
+      z-index: 2;
       margin-top: 20px;
       padding-right: 20px;
       min-width: 200px;

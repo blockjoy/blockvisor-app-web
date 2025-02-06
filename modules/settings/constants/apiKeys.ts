@@ -4,6 +4,8 @@ import { ApiKey } from '@modules/grpc/library/blockjoy/v1/api_key';
 import { BaseQueryParams, Sort } from '@shared/common/common';
 import { ApiKeyForm } from '../components/ApiKeys/ApiKeyForm/ApiKeyForm';
 
+export const API_KEYS_LIST_GROUPS_PER_VIEW = 5;
+
 export const API_KEYS_DEFAULT_SORT: Sort<keyof ApiKey> = {
   field: 'createdAt',
   order: SortOrder.SORT_ORDER_DESCENDING,

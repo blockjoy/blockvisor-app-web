@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { SerializedStyles } from '@emotion/react';
+import { getPermissionsGrouped } from '@shared/index';
 import { Checkbox, InputLabel } from '@shared/components';
 import { styles } from './PermissionSelector.styles';
 
@@ -34,18 +35,7 @@ export const PermissionSelector = ({
     }
   }, [value, items]);
 
-  const permissionsGrouped = items?.reduce(
-    (acc: Record<string, string[]>, permission) => {
-      const group = permission.split('-')[0];
-
-      if (!acc[group]) acc[group] = [];
-
-      acc[group].push(permission);
-
-      return acc;
-    },
-    {},
-  );
+  const permissionsGrouped = getPermissionsGrouped(items);
 
   const handleChange = (item: string) => {
     let newValue: string[];
@@ -92,7 +82,7 @@ export const PermissionSelector = ({
       </div>
       <div css={styles.container}>
         <div css={styles.wrapper}>
-          {Object.keys(permissionsGrouped ?? {})?.map((permissiongGroupKey) => (
+          {Object.keys(permissionsGrouped)?.map((permissiongGroupKey) => (
             <div
               key={permissiongGroupKey}
               css={styles.group}

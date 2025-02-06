@@ -10,32 +10,36 @@ export const styles = {
 
   formField: css`
     margin-bottom: 0;
-    grid-column-end: span 3;
-
-    @media ${breakpoints.toXHuge} {
-      grid-column-end: span 4;
-    }
-    @media ${breakpoints.toXlrg} {
-      grid-column-end: span 6;
-    }
-    @media ${breakpoints.toMed} {
-      grid-column-end: span 12;
-    }
 
     label + div {
       margin-bottom: 0;
     }
   `,
-  permissions: css`
-    grid-column: span 12;
+  label: css`
+    grid-column-end: span 5;
+
+    @media ${breakpoints.toXHuge} {
+      grid-column-end: span 6;
+    }
+    @media ${breakpoints.toXlrg} {
+      grid-column-end: span 12;
+    }
   `,
   resourceType: css`
     grid-row: 2;
-    grid-column-start: 1;
-  `,
-  resourceId: css`
-    @media ${breakpoints.fromMed} {
-      grid-row: 2;
+    grid-column-end: span 3;
+
+    @media ${breakpoints.toHuge} {
+      grid-column-end: span 4;
     }
+    @media ${breakpoints.toXlrg} {
+      grid-column-end: span 6;
+    }
+    @media ${breakpoints.toSml} {
+      grid-column-end: span 12;
+    }
+  `,
+  permissions: css`
+    grid-column: span 12;
   `,
 };
