@@ -1,9 +1,8 @@
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
 import { NodeSortField } from '@modules/grpc/library/blockjoy/v1/node';
-import { NodeStatus, SortingItem } from '@shared/components';
-import { NodeItems, NodeGroups } from '@shared/components';
-import { NodeTags } from '@modules/node';
+import { SortingItem, NodeItems, NodeGroups } from '@shared/components';
+import { checkIfNodeInProgress, NodeTags } from '@modules/node';
 import { NodeListLayoutGroupItem, NodeListItem } from '../types/common';
 
 const SORT_ACTIONS: TableHeaderAction[] = ['sort_asc', 'sort_desc'];
@@ -51,18 +50,16 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
     width: '200px',
     dataField: NodeSortField.NODE_SORT_FIELD_PROTOCOL_STATE,
     isVisible: false,
-    component: (node: Node) =>
-      node.nodeStatus?.protocol?.state &&
-      node.nodeStatus?.protocol?.state !== 'uploading' &&
-      node.nodeStatus?.protocol?.state !== 'downloading' ? (
-        <NodeStatus
-          protocolStatus={node.nodeStatus?.protocol?.state}
-          hasBorder={false}
-          view="simple"
+    component: (node: Node) => {
+      const inProgress = checkIfNodeInProgress(node.nodeStatus);
+
+      return (
+        <NodeItems.ProtocolStatus
+          nodeStatus={!inProgress ? node.nodeStatus : undefined}
+          jobs={node.jobs}
         />
-      ) : (
-        <>-</>
-      ),
+      );
+    },
     actions: ALL_ACTIONS,
   },
   {
@@ -107,15 +104,18 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
     width: '200px',
     dataField: NodeSortField.NODE_SORT_FIELD_NODE_STATE,
     isVisible: true,
-    component: (node: Node) => (
-      <NodeStatus
-        status={node.nodeStatus?.state!}
-        protocolStatus={node.nodeStatus?.protocol?.state}
-        jobs={node.jobs}
-        hasBorder={false}
-        view="simple"
-      />
-    ),
+    component: (node: Node) => {
+      const inProgress = checkIfNodeInProgress(node.nodeStatus);
+
+      return inProgress ? (
+        <NodeItems.ProtocolStatus
+          nodeStatus={node.nodeStatus}
+          jobs={node.jobs}
+        />
+      ) : (
+        <NodeItems.NodeStatus nodeStatus={node.nodeStatus} />
+      );
+    },
     actions: ALL_ACTIONS,
   },
   {
@@ -126,12 +126,7 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
     dataField: NodeSortField.NODE_SORT_FIELD_PROTOCOL_HEALTH,
     isVisible: true,
     component: (node: Node) => (
-      <NodeStatus
-        status={node.nodeStatus?.protocol?.health!}
-        hasBorder={false}
-        view="simple"
-        type="protocol"
-      />
+      <NodeItems.ProtocolHealth nodeStatus={node.nodeStatus} />
     ),
     actions: LAYOUT_ACTIONS,
   },

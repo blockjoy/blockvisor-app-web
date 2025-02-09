@@ -3,11 +3,14 @@ import {
   AdminListFilterControl,
   dedupedAdminDropdownList,
 } from '@modules/admin';
-import { getNodeStatusInfo, sort } from '@shared/components';
+import { sort } from '@shared/components';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { AdminFilterControlProps } from '@modules/admin/types/AdminFilterControlProps';
 import { capitalize } from 'utils/capitalize';
-import { NodeState } from '@modules/grpc/library/blockjoy/common/v1/node';
+import {
+  NodeState,
+  NodeStatus,
+} from '@modules/grpc/library/blockjoy/common/v1/node';
 
 export const AdminNodesFilterStatus = ({
   columnName,
@@ -24,9 +27,7 @@ export const AdminNodesFilterStatus = ({
       )
       ?.map((node) => ({
         id: node.nodeStatus?.state,
-        name: capitalize(
-          getNodeStatusInfo(node.nodeStatus?.state!)?.name?.toLowerCase()!,
-        ),
+        name: capitalize(getNodeStatusName(node.nodeStatus!)),
       }));
 
     setList(sort(dedupedAdminDropdownList(all!), { field: 'name' }));
@@ -41,3 +42,6 @@ export const AdminNodesFilterStatus = ({
     />
   );
 };
+
+const getNodeStatusName = (nodeStatus: NodeStatus) =>
+  [NodeState[nodeStatus.state]]?.[0].replace('NODE_STATE_', '')?.toLowerCase();
