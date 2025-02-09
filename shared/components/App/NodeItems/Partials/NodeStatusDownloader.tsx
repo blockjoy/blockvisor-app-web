@@ -1,5 +1,44 @@
 import { css, keyframes } from '@emotion/react';
 import { ITheme } from 'types/theme';
+import { Node } from '@modules/grpc/library/blockjoy/v1/node';
+import { getNodeJobProgress } from '@modules/node';
+
+type Props = {
+  jobs?: Node['jobs'];
+  view?: NodeStatusView;
+};
+
+export const NodeStatusDownloader = ({ jobs, view = 'default' }: Props) => {
+  if (!jobs?.length) return <></>;
+
+  const progress = getNodeJobProgress(jobs!);
+
+  const current = progress?.current;
+  const total = progress?.total;
+
+  const isDownloading = current! >= 0 && current !== total;
+
+  if (!isDownloading) return <></>;
+
+  const percentageWithMinimum = current! > 0 ? (current! / total!) * 100 : 5;
+  const percentage = current! > 0 ? ((current! / total!) * 100).toFixed(2) : 0;
+
+  if (view === 'badge') {
+    return (
+      <>
+        <span
+          css={styles.backgroundWrapper}
+          style={{ width: `${percentageWithMinimum}%` }}
+        >
+          <span css={styles.background} />
+        </span>
+        <span css={styles.value}>{`${percentage}%`}</span>
+      </>
+    );
+  }
+
+  return <>{`${percentage}%`}</>;
+};
 
 const move = keyframes`
   0% {
@@ -13,7 +52,7 @@ const move = keyframes`
 export const styles = {
   backgroundWrapper: (theme: ITheme) => css`
     position: absolute;
-    z-index: 0;
+    z-index: -1;
     overflow: hidden;
     top: 0;
     left: 0;
@@ -59,12 +98,9 @@ export const styles = {
   `,
   value: (theme: ITheme) => css`
     color: ${theme.colorPrimary};
+    position: relative;
+    margin-left: 5px;
     font-style: normal;
     font-size: 10px;
-    position: absolute;
-    top: 50%;
-    right: 8px;
-    line-height: 1;
-    transform: translateY(-50%);
   `,
 };

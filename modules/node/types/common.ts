@@ -9,6 +9,7 @@ import { Node, NodeSort } from '@modules/grpc/library/blockjoy/v1/node';
 import { ImageProperty } from '@modules/grpc/library/blockjoy/v1/image';
 import { UiType } from '@modules/grpc/library/blockjoy/common/v1/protocol';
 import { FirewallRule } from '@modules/grpc/library/blockjoy/common/v1/config';
+import { ITheme } from 'types/theme';
 
 export type NodePropertyGroup = {
   key: string;
@@ -103,4 +104,14 @@ export type NodeListLayoutInputItem = {
 export type NodeListItem = TableHeader<NodeListColumnKey> & {
   component: (node: Node) => EmotionJSX.Element;
   isDisabled?: boolean;
+};
+
+export type NodeStatePresentationOptions = {
+  iconSpining?: boolean;
+};
+
+export type NodeStatePresentation = {
+  color?: keyof ITheme;
+  Icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  options?: NodeStatePresentationOptions;
 };

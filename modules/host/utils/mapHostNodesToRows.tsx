@@ -1,7 +1,6 @@
 import { useRecoilValue } from 'recoil';
 import { css } from '@emotion/react';
-import { TableBlock } from '@shared/components';
-import { ProtocolIcon, NodeStatus } from '@shared/components';
+import { NodeItems, TableBlock, ProtocolIcon } from '@shared/components';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { escapeHtml } from '@shared/utils/escapeHtml';
 import { authSelectors } from '@modules/auth';
@@ -64,7 +63,7 @@ export const mapHostNodesToRows = (nodeList: Node[]) => {
         {
           key: '3',
           component: (
-            <NodeStatus status={node.nodeStatus?.state!} jobs={node.jobs} />
+            <NodeItems.NodeStatus nodeStatus={node.nodeStatus} view="badge" />
           ),
         },
       ],
