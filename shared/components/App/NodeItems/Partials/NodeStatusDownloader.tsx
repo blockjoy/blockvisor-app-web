@@ -32,12 +32,12 @@ export const NodeStatusDownloader = ({ jobs, view = 'default' }: Props) => {
         >
           <span css={styles.background} />
         </span>
-        <span css={styles.value}>{`${percentage}%`}</span>
+        <span css={styles.value(view)}>{`${percentage}%`}</span>
       </>
     );
   }
 
-  return <>{`${percentage}%`}</>;
+  return <span css={styles.value(view)}>{`${percentage}%`}</span>;
 };
 
 const move = keyframes`
@@ -52,7 +52,7 @@ const move = keyframes`
 export const styles = {
   backgroundWrapper: (theme: ITheme) => css`
     position: absolute;
-    z-index: -1;
+    z-index: 0;
     overflow: hidden;
     top: 0;
     left: 0;
@@ -96,11 +96,14 @@ export const styles = {
     right: 0;
     bottom: 0;
   `,
-  value: (theme: ITheme) => css`
-    color: ${theme.colorPrimary};
-    position: relative;
-    margin-left: 5px;
-    font-style: normal;
-    font-size: 10px;
-  `,
+  value: (view?: NodeStatusView) => (theme: ITheme) =>
+    css`
+      color: ${theme.colorPrimary};
+      position: relative;
+      margin-left: ${view === 'badge' ? '10px' : '5px'};
+      ${view === 'badge' &&
+      `font-style: normal;
+      font-size: 10px;
+    `}
+    `,
 };
