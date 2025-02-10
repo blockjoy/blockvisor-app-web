@@ -1,3 +1,4 @@
+import { css } from '@emotion/react';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { NodePartials } from '@shared/components';
 import {
@@ -26,13 +27,19 @@ export const ProtocolStatus = ({ nodeStatus, jobs, view }: Props) => {
       options={options}
       view={view}
     >
-      <span>{protocolState?.replaceAll('_', ' ') ?? ''}</span>
+      <span {...(inProgress && { css: styles.text })}>
+        {protocolState?.replaceAll('_', ' ') ?? ''}
+      </span>
       {inProgress && (
-        <>
-          {' '}
-          <NodePartials.NodeStatusDownloader jobs={jobs} view={view} />
-        </>
+        <NodePartials.NodeStatusDownloader jobs={jobs} view={view} />
       )}
     </NodePartials.NodeStatusTextWIcon>
   );
+};
+
+const styles = {
+  text: css`
+    position: relative;
+    z-index: 1;
+  `,
 };

@@ -9,7 +9,9 @@ type Props = {
   options?: NodeStatePresentationOptions;
   view?: NodeStatusView;
   iconSize?: string;
-  additionalTextStyles?: ((theme: ITheme) => SerializedStyles)[];
+  additionalTextStyles?:
+    | SerializedStyles[]
+    | ((theme: ITheme) => SerializedStyles)[];
 } & React.PropsWithChildren;
 
 export const NodeStatusTextWIcon = ({
