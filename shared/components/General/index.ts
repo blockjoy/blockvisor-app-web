@@ -7,6 +7,8 @@ export * from './Billing/Promo/Promo';
 export * from './Card/Card';
 export * from './Checklist/Checklist';
 export * from './ConfirmDialog/ConfirmDialog';
+export * from './Content/Content';
+export * from './Content/SubSidebar/SubSidebar';
 export * from './Copy/Copy';
 export * from './CopyToClipboard/CopyToClipboard';
 export * from './CountrySelector/CountrySelector';

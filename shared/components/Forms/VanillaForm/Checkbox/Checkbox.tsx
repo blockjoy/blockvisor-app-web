@@ -14,6 +14,7 @@ type Props = {
   disabled?: boolean;
   onChange?: ChangeEventHandler<HTMLInputElement>;
   children?: ReactNode;
+  value?: string;
   additionalStyles?:
     | ((theme: ITheme) => SerializedStyles)[]
     | SerializedStyles[];
@@ -30,6 +31,7 @@ export const Checkbox = ({
   children,
   description = '',
   additionalStyles,
+  value,
   ...rest
 }: Props) => {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -47,6 +49,7 @@ export const Checkbox = ({
         disabled={disabled}
         type="checkbox"
         onChange={handleChange}
+        value={value}
         {...rest}
       />
       <label

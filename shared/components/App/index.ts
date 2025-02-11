@@ -36,3 +36,5 @@ export * from './DeleteModal/DeleteModal';
 export * from './NotFound/NotFound';
 export * from './Page/ProfileDropdown/ProfileDropdown';
 export * from './Sorting/Sorting';
+export * from './Permission/PermissionSelector';
+export * from './ResourceTypeSelector/ResourceTypeSelector';

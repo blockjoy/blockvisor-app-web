@@ -33,6 +33,7 @@ export type UIHostFilterCriteria = {
   hostCPU?: [number, number];
   hostSpace?: [number, number];
   keyword?: string;
+  orgIds?: string[];
 };
 
 export type HostPagination = {
@@ -55,7 +56,7 @@ class HostClient {
     sort?: HostSort[],
   ): Promise<HostServiceListHostsResponse> {
     const request: HostServiceListHostsRequest = {
-      orgIds: orgId ? [orgId!] : [],
+      orgIds: orgId ? [orgId!] : filter?.orgIds ?? [],
       bvVersions: [],
       offset: getPaginationOffset(pagination!),
       limit: pagination?.itemsPerPage!,

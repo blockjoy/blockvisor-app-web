@@ -8,8 +8,8 @@ import { ProfileBubble } from './ProfileBubble';
 import { styles } from './ProfileDropdown.styles';
 import { escapeHtml } from '@shared/utils/escapeHtml';
 import { spacing } from 'styles/utils.spacing.styles';
-import IconDoor from '@public/assets/icons/common/Door.svg';
 import IconPerson from '@public/assets/icons/common/Person.svg';
+import IconDoor from '@public/assets/icons/common/Door.svg';
 
 type ProfileDropdownItem = {
   id: string;

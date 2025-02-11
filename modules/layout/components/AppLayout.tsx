@@ -7,6 +7,7 @@ import { Burger } from './burger/Burger';
 import Page from './page/Page';
 import { useIdentityRepository } from '@modules/auth';
 import {
+  organizationAtoms,
   organizationSelectors,
   useInvitations,
   useProvisionToken,
@@ -33,6 +34,7 @@ const Layout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
   const defaultOrganization = useRecoilValue(
     organizationSelectors.defaultOrganization,
   );
+  const allOrganizations = useRecoilValue(organizationAtoms.allOrganizations);
 
   const {
     client: mqttClient,
@@ -41,8 +43,8 @@ const Layout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
     updateSubscription: updateMqttSubscription,
   } = useMqtt();
   const { getReceivedInvitations } = useInvitations();
-  const { loadNodes } = useNodeList();
-  const { loadHosts } = useHostList();
+  const { loadNodes, loadGlobalNodes } = useNodeList();
+  const { loadHosts, loadGlobalHosts } = useHostList();
   const { getProvisionToken, provisionToken } = useProvisionToken();
 
   useBilling();
@@ -73,6 +75,13 @@ const Layout = ({ children, isPageFlex, pageTitle }: LayoutProps) => {
       if (mqttClient?.connected) updateMqttSubscription();
     }
   }, [defaultOrganization?.orgId]);
+
+  useEffect(() => {
+    if (allOrganizations.length) {
+      loadGlobalNodes();
+      loadGlobalHosts();
+    }
+  }, [allOrganizations]);
 
   return (
     <>

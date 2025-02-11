@@ -92,7 +92,7 @@ export const TableHeader = ({
       return;
     }
 
-    if (handleSort) {
+    if (handleSort && isSortable) {
       handleSort(header.key);
 
       return;

@@ -1,4 +1,4 @@
-import { useRecoilCallback, useRecoilValue } from 'recoil';
+import { useRecoilCallback, useRecoilValue, useSetRecoilState } from 'recoil';
 import { authAtoms } from '@modules/auth';
 import { userClient } from '@modules/grpc';
 
@@ -14,6 +14,9 @@ type UseSettingsHook = {
 
 export const useSettings = (): UseSettingsHook => {
   const user = useRecoilValue(authAtoms.user);
+  const setUserSettingsLoadingState = useSetRecoilState(
+    authAtoms.userSettingsLoadingState,
+  );
 
   const updateSettings = useRecoilCallback(
     ({ snapshot, set }) =>
@@ -24,6 +27,8 @@ export const useSettings = (): UseSettingsHook => {
         userId?: string,
       ) => {
         console.log('%cUPDATE_SETTINGS', 'color: #f00', name, value);
+
+        setUserSettingsLoadingState('loading');
 
         const userSettings = await snapshot.getPromise(authAtoms.userSettings);
 
@@ -53,6 +58,8 @@ export const useSettings = (): UseSettingsHook => {
           onSuccess?.();
         } catch (err: any) {
           console.log('Error while updating User settings', err);
+        } finally {
+          setUserSettingsLoadingState('finished');
         }
       },
     [user],

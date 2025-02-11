@@ -19,6 +19,8 @@ export const styles = {
 
     :disabled {
       cursor: not-allowed;
+      user-select: none;
+      -webkit-text-fill-color: var(--color-text-3);
     }
 
     &,

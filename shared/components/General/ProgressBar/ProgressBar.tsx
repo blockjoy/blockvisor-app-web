@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation';
 import { settingsAtoms } from '@modules/settings';
 import { nodeAtoms } from '@modules/node';
 import { hostAtoms } from '@modules/host';
+import { authAtoms } from '@modules/auth';
 import { styles } from './ProgressBar.styles';
 
 export const ProgressBar = () => {
@@ -18,9 +19,11 @@ export const ProgressBar = () => {
 
   const nodeListPagination = useRecoilValue(nodeAtoms.nodeListPagination);
   const nodeListLoadingState = useRecoilValue(nodeAtoms.nodeListLoadingState);
-
   const hostListPagination = useRecoilValue(hostAtoms.hostListPagination);
   const hostListLoadingState = useRecoilValue(hostAtoms.hostListLoadingState);
+  const userSettingsLoadingState = useRecoilValue(
+    authAtoms.userSettingsLoadingState,
+  );
 
   const isLoading =
     (pathname?.includes('/nodes') &&
@@ -28,7 +31,8 @@ export const ProgressBar = () => {
       nodeListPagination.currentPage === 0) ||
     (pathname?.includes('/hosts') &&
       hostListLoadingState === 'loading' &&
-      hostListPagination.currentPage === 0);
+      hostListPagination.currentPage === 0) ||
+    (pathname?.includes('/settings') && userSettingsLoadingState === 'loading');
 
   useEffect(() => {
     if (appLoadingState === 'loading' && !hasStartedLoading)

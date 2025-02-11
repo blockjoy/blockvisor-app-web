@@ -2,6 +2,7 @@ import { useMemo, useRef } from 'react';
 import { useRecoilValue } from 'recoil';
 import { Tag } from '@modules/grpc/library/blockjoy/common/v1/tag';
 import { layoutSelectors } from '@modules/layout';
+import { TAG_VALIDATION_MESSAGES, TAG_VALIDATION_REGEX } from '@shared/index';
 import { Dropdown, SvgIcon, withSearchDropdown } from '@shared/components';
 import { Tag as SingleTag } from '../Tag';
 import { styles } from './TagsDropdown.styles';
@@ -36,6 +37,17 @@ export const TagsDropdown = ({
     handleNew?.(tag);
   };
 
+  const handleValidate = (value?: string) => {
+    if (!value?.trim()) return TAG_VALIDATION_MESSAGES?.required;
+
+    if (value.length < 3) return TAG_VALIDATION_MESSAGES?.minLength;
+
+    if (!TAG_VALIDATION_REGEX.test(value))
+      return TAG_VALIDATION_MESSAGES?.invalidFormat;
+
+    return '';
+  };
+
   const TagsDropdownWSearch = useMemo(
     () =>
       withSearchDropdown<Tag>(Dropdown, {
@@ -43,6 +55,10 @@ export const TagsDropdown = ({
         emptyMessage: tags?.length ? 'Create a new tag' : 'No tags created',
         addNewMessage: 'Press Enter to create a new tag',
         onSubmit: handleSubmit,
+        validation: {
+          required: TAG_VALIDATION_MESSAGES.required,
+          callback: handleValidate,
+        },
       }),
     [tags?.length, inactiveTags.length],
   );

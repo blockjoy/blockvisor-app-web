@@ -9,7 +9,8 @@ export function useClickOutside<T extends HTMLElement>(
     if (
       isActive &&
       ref?.current &&
-      !ref.current.contains(event.target as Node)
+      !ref.current.contains(event.target as Node) &&
+      handler
     ) {
       handler();
     }

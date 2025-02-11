@@ -29,8 +29,6 @@ export const Plan = () => {
             </p>
           </div>
         }
-        align="left"
-        additionalStyles={styles.emptyColumn}
       />
       {/* )} */}
       {/* {canCreateSubscription &&

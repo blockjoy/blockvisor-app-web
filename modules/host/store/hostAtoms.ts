@@ -18,6 +18,16 @@ const isLoadingActiveHost = atom<LoadingState>({
   default: 'initializing',
 });
 
+const hostListGlobal = atom<Host[]>({
+  key: 'host.global.all',
+  default: [],
+});
+
+const hostListGlobalLoadingState = atom<LoadingState>({
+  key: 'host.global.all.loadingState',
+  default: 'finished',
+});
+
 const hostList = atom<Host[]>({
   key: 'host.list',
   default: [],
@@ -62,6 +72,9 @@ const filtersSearchQuery = atom<string>({
 export const hostAtoms = {
   activeHost,
   isLoadingActiveHost,
+
+  hostListGlobal,
+  hostListGlobalLoadingState,
 
   hostList,
   hostListPagination,

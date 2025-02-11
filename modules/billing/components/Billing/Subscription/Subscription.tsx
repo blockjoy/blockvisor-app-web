@@ -1,50 +1,31 @@
-import { useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
-import { Tabs } from '@shared/components';
-import { useTabs } from '@shared/index';
-import {
-  Invoices,
-  billingAtoms,
-  // Estimates,
-  SubscriptionInfo,
-} from '@modules/billing';
+import { billingAtoms, SubscriptionInfo, Plan } from '@modules/billing';
+import { TableSkeleton, Unauthorized } from '@shared/components';
+import { authSelectors } from '@modules/auth';
+import { styles } from './Subscription.styles';
 
 export const Subscription = () => {
   const subscription = useRecoilValue(billingAtoms.subscription);
   const subscriptionLoadingState = useRecoilValue(
     billingAtoms.subscriptionLoadingState,
   );
-
-  const tabItems = useMemo(
-    () => [
-      {
-        label: 'Details',
-        value: 'details',
-        component: <SubscriptionInfo />,
-      },
-      // {
-      //   label: 'Estimates',
-      //   value: 'estimates',
-      //   component: <Estimates />,
-      // },
-      {
-        label: 'Invoices',
-        value: 'invoices',
-        component: <Invoices />,
-      },
-    ],
-    [subscription],
+  const canGetBillingDetails = useRecoilValue(
+    authSelectors.hasPermission('org-billing-get-billing-details'),
   );
 
-  const { activeTab, handleActiveTabChange } = useTabs(tabItems);
+  if (subscriptionLoadingState === 'initializing') return <TableSkeleton />;
+
+  if (!canGetBillingDetails)
+    return (
+      <Unauthorized>
+        You don't have access to read the current organization billing plan! Try
+        switching the organization.
+      </Unauthorized>
+    );
 
   return (
-    <Tabs
-      activeTab={activeTab}
-      onTabClick={handleActiveTabChange}
-      tabItems={tabItems}
-      isLoading={subscriptionLoadingState === 'initializing'}
-      type="inner"
-    />
+    <div css={styles.wrapper}>
+      {subscription ? <SubscriptionInfo /> : <Plan />}
+    </div>
   );
 };

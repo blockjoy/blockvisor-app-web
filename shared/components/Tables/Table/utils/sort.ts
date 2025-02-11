@@ -1,9 +1,10 @@
 import { SortOrder } from '@modules/grpc/library/blockjoy/common/v1/search';
+import { Sort } from '@shared/common/common';
 
-export const sort = (items: any, sort?: any) => {
-  return [...items].sort((a: any, b: any) => {
-    let aField = a[sort?.field!] || a;
-    let bField = b[sort?.field!] || b;
+export const sort = <T = any>(items: T[], sort?: Sort<keyof T>): T[] => {
+  return [...items].sort((a, b) => {
+    let aField = String(a[sort?.field!] || a);
+    let bField = String(b[sort?.field!] || b);
 
     const sortOrder = sort?.order || SortOrder.SORT_ORDER_ASCENDING;
 

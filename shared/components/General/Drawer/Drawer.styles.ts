@@ -40,7 +40,8 @@ export const styles = {
     align-items: center;
     position: absolute;
     right: 10px;
-    top: 17px;
+    top: 50%;
+    transform: translateY(-50%);
     width: 24px;
     height: 24px;
     background: transparent;
@@ -57,10 +58,13 @@ export const styles = {
       fill: ${theme.colorText};
     }
   `,
-  heading: (theme: ITheme) => css`
+  header: (theme: ITheme) => css`
     padding: 20px 40px 15px 10px;
     position: relative;
     margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
 
     ::after {
       content: '';

@@ -1,5 +1,4 @@
 import { ButtonHTMLAttributes, MouseEventHandler, ReactNode } from 'react';
-import { ITheme } from 'types/theme';
 import {
   buttonBorder,
   buttonSize,
@@ -9,7 +8,7 @@ import {
   button,
 } from './Button.styles';
 import { reset } from 'styles/utils.reset.styles';
-import { SerializedStyles } from '@emotion/serialize';
+import { SerializedStylesAll } from 'types/theme';
 import Link from 'next/link';
 import { Tooltip } from '@shared/components';
 import { ButtonSpinner } from './ButtonSpinner';
@@ -22,7 +21,7 @@ type Props = {
   border?: ButtonBorder;
   type?: 'button' | 'submit' | 'reset';
   display?: ButtonDisplay;
-  customCss?: ((theme: ITheme) => SerializedStyles)[] | SerializedStyles[];
+  customCss?: SerializedStylesAll;
   href?: string;
   loading?: boolean;
   disabled?: boolean;

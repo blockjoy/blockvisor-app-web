@@ -5,6 +5,5 @@ export const styles = {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    margin-bottom: 25px;
   `,
 };

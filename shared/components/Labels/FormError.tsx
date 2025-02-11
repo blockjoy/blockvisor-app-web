@@ -1,4 +1,4 @@
-import { css } from '@emotion/react';
+import { css, SerializedStyles } from '@emotion/react';
 import { useEffect, useRef, useState } from 'react';
 import { ITheme } from 'types/theme';
 
@@ -27,9 +27,10 @@ const styles = {
 type Props = {
   isVisible: boolean;
   children: React.ReactNode;
+  additionalStyles?: SerializedStyles;
 };
 
-export const FormError = ({ children, isVisible }: Props) => {
+export const FormError = ({ children, isVisible, additionalStyles }: Props) => {
   const paragraphRef = useRef<HTMLParagraphElement>(null);
 
   const [height, setHeight] = useState(0);
@@ -40,7 +41,11 @@ export const FormError = ({ children, isVisible }: Props) => {
 
   return (
     <div
-      css={[styles.error, isVisible && styles.errorVisible]}
+      css={[
+        styles.error,
+        isVisible && styles.errorVisible,
+        additionalStyles && additionalStyles,
+      ]}
       style={{ height: `${height}px` }}
     >
       <p ref={paragraphRef} css={styles.p}>

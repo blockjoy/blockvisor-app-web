@@ -1,4 +1,5 @@
 import { ThemeProvider } from '@emotion/react';
+import { SerializedStyles } from '@emotion/serialize';
 
 export type ITheme = {
   id?: string;
@@ -40,3 +41,11 @@ export type ITheme = {
 declare module '@emotion/react' {
   export interface Theme extends ITheme, ThemeProvider {}
 }
+
+export type SerializedStylesWTheme =
+  | SerializedStyles
+  | ((theme: ITheme) => SerializedStyles);
+
+export type SerializedStylesAll =
+  | SerializedStylesWTheme
+  | SerializedStylesWTheme[];

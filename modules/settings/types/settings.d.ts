@@ -23,6 +23,7 @@ type UserSettings = {
   organization?: string;
   admin?: string;
   billing?: string;
+  apiKeys?: string;
 };
 
 type UserSettingsUI = {
@@ -83,3 +84,5 @@ type AdminSettings = {
 type BillingSettings = {
   bypassBilling: boolean;
 };
+
+type SettingsScope = 'user' | 'org';

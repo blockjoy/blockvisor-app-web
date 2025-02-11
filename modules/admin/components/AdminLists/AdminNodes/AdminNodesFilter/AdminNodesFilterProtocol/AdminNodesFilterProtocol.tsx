@@ -1,9 +1,6 @@
-import { Protocol } from '@modules/grpc/library/blockjoy/v1/protocol';
 import { useEffect, useState } from 'react';
-import {
-  AdminListFilterControl,
-  dedupedAdminDropdownList,
-} from '@modules/admin';
+import { AdminListFilterControl } from '@modules/admin';
+import { unique } from '@shared/index';
 import { sort } from '@shared/components';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { AdminFilterControlProps } from '@modules/admin/types/AdminFilterControlProps';
@@ -15,7 +12,7 @@ export const AdminNodesFilterProtocol = ({
   listAll,
   onFilterChange,
 }: AdminFilterControlProps) => {
-  const [list, setList] = useState<Protocol[] | undefined>();
+  const [list, setList] = useState<AdminFilterDropdownItem[] | undefined>();
 
   useEffect(() => {
     const all: AdminFilterDropdownItem[] | undefined = (listAll as Node[])?.map(
@@ -24,7 +21,7 @@ export const AdminNodesFilterProtocol = ({
         name: capitalize(versionKey?.protocolKey!),
       }),
     );
-    setList(sort(dedupedAdminDropdownList(all!), { field: 'name' }));
+    setList(sort(unique(all!, 'id'), { field: 'name' }));
   }, [listAll]);
 
   return (
