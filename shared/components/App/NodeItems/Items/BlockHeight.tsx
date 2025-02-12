@@ -1,29 +1,45 @@
 import { css } from '@emotion/react';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
-import { NodeStatusIcon, SvgIcon } from '@shared/components';
+import { ITheme } from 'types/theme';
+import { NodePartials } from '@shared/components';
+import { NodeStatePresentationOptions } from '@modules/node';
 import IconBlockHeight from '@public/assets/icons/app/BlockHeight.svg';
+import IconCog from '@public/assets/icons/common/Cog.svg';
 
-type Props = Partial<Pick<Node, 'blockHeight'>>;
+type Props = Partial<Pick<Node, 'blockHeight'>> & {
+  view?: NodeStatusView;
+};
 
-export const BlockHeight = ({ blockHeight }: Props) => (
-  <div css={styles.blockHeight}>
-    <SvgIcon isDefaultColor size="14px">
-      {blockHeight! > -1 ? (
-        <IconBlockHeight />
-      ) : (
-        <NodeStatusIcon isDefaultColor size="14px" status={1} />
-      )}
-    </SvgIcon>
-    <var>{blockHeight?.toLocaleString('en-US') ?? 'Syncing'}</var>
-  </div>
-);
+export const BlockHeight = ({ blockHeight, view = 'default' }: Props) => {
+  const Icon = blockHeight! > -1 ? IconBlockHeight : IconCog;
+  const options: NodeStatePresentationOptions =
+    blockHeight! > -1 ? {} : { iconSpining: true };
+
+  return (
+    <NodePartials.NodeStatusTextWIcon
+      Icon={Icon}
+      options={options}
+      view={view}
+      {...(view === 'default' && {
+        iconSize: '14px',
+      })}
+      additionalTextStyles={[styles.text(view)]}
+    >
+      {blockHeight?.toLocaleString('en-US') ?? 'Syncing'}
+    </NodePartials.NodeStatusTextWIcon>
+  );
+};
 
 const styles = {
-  blockHeight: css`
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 8px;
-    font-size: 14px;
-  `,
+  text: (view?: NodeStatusView) => (theme: ITheme) =>
+    css`
+      text-transform: capitalize;
+      ${view === 'default' &&
+      `
+        font-size: 14px;
+        font-style: italic;
+        color: ${theme.colorText};
+        `}
+      letter-spacing: 0;
+    `,
 };

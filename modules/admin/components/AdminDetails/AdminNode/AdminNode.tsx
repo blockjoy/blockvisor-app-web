@@ -1,7 +1,7 @@
 import { nodeClient, userClient } from '@modules/grpc';
 import { useRouter } from 'next/router';
 import { AdminDetail } from '../AdminDetail/AdminDetail';
-import { NextLink, NodeStatus } from '@shared/components';
+import { NextLink, NodeItems } from '@shared/components';
 import {
   Node,
   NodeServiceUpdateConfigRequest,
@@ -143,32 +143,21 @@ export const AdminNode = () => {
       {
         id: 'status',
         label: 'Node State',
-        data: (
-          <NodeStatus
-            hasBorder={false}
-            status={node.nodeStatus?.state!}
-          ></NodeStatus>
-        ),
+        data: <NodeItems.NodeStatus nodeStatus={node.nodeStatus} />,
       },
       {
         id: 'health',
         label: 'Node Health',
-        data: (
-          <NodeStatus
-            hasBorder={false}
-            status={node.nodeStatus?.protocol?.health}
-            type="protocol"
-          ></NodeStatus>
-        ),
+        data: <NodeItems.ProtocolHealth nodeStatus={node.nodeStatus} />,
       },
       {
         id: 'protocolState',
         label: 'Protocol State',
         data: node.nodeStatus?.protocol?.state ? (
-          <NodeStatus
-            hasBorder={false}
-            protocolStatus={node.nodeStatus?.protocol?.state}
-          ></NodeStatus>
+          <NodeItems.ProtocolStatus
+            nodeStatus={node.nodeStatus}
+            jobs={node.jobs}
+          />
         ) : (
           '-'
         ),

@@ -1,6 +1,6 @@
 import { AdminList } from '../AdminList/AdminList';
 import { protocolClient, nodeClient, userClient } from '@modules/grpc';
-import { DateTime, NodeStatus } from '@shared/components';
+import { DateTime, NodeItems } from '@shared/components';
 import {
   AdminNodesFilterProtocol,
   AdminNodesFilterOrg,
@@ -231,27 +231,15 @@ export const AdminNodes = () => {
       return {
         ...node,
         variant: node.versionKey?.variantKey,
-        nodeState: (
-          <NodeStatus status={node.nodeStatus?.state!} hasBorder={false} />
+        nodeState: <NodeItems.NodeStatus nodeStatus={node.nodeStatus} />,
+        protocolHealth: (
+          <NodeItems.ProtocolHealth nodeStatus={node.nodeStatus} />
         ),
-        protocolHealth: node.nodeStatus?.protocol?.health ? (
-          <NodeStatus
-            status={node.nodeStatus?.protocol?.health!}
-            type="protocol"
-            hasBorder={false}
-          />
-        ) : (
-          '-'
-        ),
-        protocolState: node.nodeStatus?.protocol?.state ? (
-          <NodeStatus
-            view="simple"
-            protocolStatus={node.nodeStatus?.protocol?.state}
-            hasBorder={false}
+        protocolState: (
+          <NodeItems.ProtocolStatus
+            nodeStatus={node.nodeStatus}
             jobs={node.jobs}
           />
-        ) : (
-          '-'
         ),
         region: node.regionName,
         createdAt: <DateTime date={node.createdAt!} />,
