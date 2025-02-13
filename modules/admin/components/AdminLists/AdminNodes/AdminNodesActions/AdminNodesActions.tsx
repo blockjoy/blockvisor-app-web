@@ -1,6 +1,7 @@
 import { AdminHeaderButton } from '@modules/admin/components/AdminHeader/AdminHeaderButton/AdminHeaderButton';
 import IconStop from '@public/assets/icons/app/NodeStop.svg';
 import IconRestart from '@public/assets/icons/app/NodeRestart.svg';
+import IconStart from '@public/assets/icons/app/NodeStart.svg';
 import { nodeClient } from '@modules/grpc';
 import { toast } from 'react-toastify';
 import { AdminDetailHeaderDelete } from '@modules/admin';
@@ -37,12 +38,7 @@ export const AdminNodesActions = ({ selectedIds, list, setList }: Props) => {
       const calls = [];
 
       for (let nodeId of selectedIds) {
-        const node = list.find((n) => n.nodeId === nodeId);
-        if (node?.nodeStatus?.state === NodeState.NODE_STATE_STOPPED) {
-          calls.push(nodeClient.startNode(nodeId));
-        } else {
-          calls.push(nodeClient.restartNode(nodeId));
-        }
+        calls.push(nodeClient.restartNode(nodeId));
       }
 
       await Promise.all(calls);
