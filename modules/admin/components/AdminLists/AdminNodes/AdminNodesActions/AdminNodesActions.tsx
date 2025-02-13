@@ -1,13 +1,13 @@
 import { AdminHeaderButton } from '@modules/admin/components/AdminHeader/AdminHeaderButton/AdminHeaderButton';
 import IconStop from '@public/assets/icons/app/NodeStop.svg';
 import IconRestart from '@public/assets/icons/app/NodeRestart.svg';
-import IconStart from '@public/assets/icons/app/NodeStart.svg';
 import { nodeClient } from '@modules/grpc';
 import { toast } from 'react-toastify';
 import { AdminDetailHeaderDelete } from '@modules/admin';
 import { styles } from './AdminNodesActions.styles';
 import { Dispatch, SetStateAction } from 'react';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
+import { NodeState } from '@modules/grpc/library/blockjoy/common/v1/node';
 
 type Props = {
   selectedIds: string[];
@@ -32,28 +32,17 @@ export const AdminNodesActions = ({ selectedIds, list, setList }: Props) => {
     }
   };
 
-  const startNodes = async () => {
-    try {
-      const calls = [];
-
-      for (let nodeId of selectedIds) {
-        calls.push(nodeClient.startNode(nodeId));
-      }
-
-      await Promise.all(calls);
-
-      toast.success(`Nodes Started`);
-    } catch (err) {
-      toast.error(`Node Start Failed`);
-    }
-  };
-
   const restartNodes = async () => {
     try {
       const calls = [];
 
       for (let nodeId of selectedIds) {
-        calls.push(nodeClient.restartNode(nodeId));
+        const node = list.find((n) => n.nodeId === nodeId);
+        if (node?.nodeStatus?.state === NodeState.NODE_STATE_STOPPED) {
+          calls.push(nodeClient.startNode(nodeId));
+        } else {
+          calls.push(nodeClient.restartNode(nodeId));
+        }
       }
 
       await Promise.all(calls);
@@ -92,15 +81,9 @@ export const AdminNodesActions = ({ selectedIds, list, setList }: Props) => {
       />
       <AdminHeaderButton
         isDisabled={!selectedIds.length}
-        icon={<IconStart />}
-        onClick={startNodes}
-        tooltip="Start"
-      />
-      <AdminHeaderButton
-        isDisabled={!selectedIds.length}
         icon={<IconRestart />}
         onClick={restartNodes}
-        tooltip="Restart"
+        tooltip="Start/Restart"
       />
       <span css={styles.deleteButton}>
         <AdminDetailHeaderDelete
