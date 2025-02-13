@@ -1,6 +1,6 @@
 import { toast } from 'react-toastify';
 import { imageClient, nodeClient } from '@modules/grpc';
-import { SetterOrUpdater, useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { nodeAtoms } from '../store/nodeAtoms';
 import { useNodeList } from './useNodeList';
 import {
@@ -12,32 +12,15 @@ import {
   useSwitchOrganization,
 } from '@modules/organization';
 import { authSelectors } from '@modules/auth';
-import { Image } from '@modules/grpc/library/blockjoy/v1/image';
 
 type Args = string | string[] | undefined;
-
-type Hook = {
-  loadNode: (id: Args) => Promise<void>;
-  stopNode: (nodeId: Args) => void;
-  startNode: (nodeId: Args) => void;
-  modifyNode: (node: Node) => void;
-  updateNode: (
-    node: NodeServiceUpdateConfigRequest,
-    showSuccessToast?: boolean,
-  ) => Promise<void>;
-  isLoading: boolean;
-  unloadNode: any;
-  node: Node | null;
-  nodeImage: Image | null;
-  setIsLoading: SetterOrUpdater<LoadingState>;
-};
 
 const convertRouteParamToString = (id: Args) => {
   const uuid = id?.toString()!;
   return uuid;
 };
 
-export const useNodeView = (): Hook => {
+export const useNodeView = () => {
   const { switchOrganization } = useSwitchOrganization();
   const { nodeList, modifyNodeInNodeList } = useNodeList();
 
@@ -66,6 +49,15 @@ export const useNodeView = (): Hook => {
       toast.success(`Node Started`);
     } catch (err) {
       toast.error(`Node Start Failed`);
+    }
+  };
+
+  const restartNode = async (nodeId: Args) => {
+    try {
+      await nodeClient.restartNode(convertRouteParamToString(nodeId));
+      toast.success(`Node Restarted`);
+    } catch (err) {
+      toast.error(`Node Restart Failed`);
     }
   };
 
@@ -160,6 +152,7 @@ export const useNodeView = (): Hook => {
     loadNode,
     stopNode,
     startNode,
+    restartNode,
     unloadNode,
     updateNode,
     modifyNode,
