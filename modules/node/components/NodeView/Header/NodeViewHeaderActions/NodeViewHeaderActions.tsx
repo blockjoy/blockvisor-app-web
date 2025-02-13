@@ -22,11 +22,11 @@ export const NodeViewHeaderActions = ({
 }: NodeViewHeaderActionsProps) => {
   const router = useRouter();
 
-  const { node, stopNode, startNode } = useNodeView();
+  const { node, stopNode, startNode, restartNode } = useNodeView();
 
   const handleStop = () => stopNode(node?.nodeId);
-
   const handleStart = () => startNode(node?.nodeId);
+  const handleRestart = () => restartNode(node?.nodeId);
 
   const handleAdminClicked = () =>
     router.push(`/admin?name=nodes&id=${node?.nodeId}`);
@@ -51,6 +51,14 @@ export const NodeViewHeaderActions = ({
 
   const canStartAdmin = useRecoilValue(
     authSelectors.hasPermission('node-admin-start'),
+  );
+
+  const canRestart = useRecoilValue(
+    authSelectors.hasPermission('node-restart'),
+  );
+
+  const canRestartAdmin = useRecoilValue(
+    authSelectors.hasPermission('node-admin-restart'),
   );
 
   const canStop = useRecoilValue(authSelectors.hasPermission('node-stop'));
@@ -81,16 +89,22 @@ export const NodeViewHeaderActions = ({
     items.push({ name: 'Stop', icon: <IconStop />, onClick: handleStop });
   }
 
-  if (canStart || canStartAdmin) {
-    if (node?.nodeStatus?.state === NodeState.NODE_STATE_STOPPED) {
-      items.push({ name: 'Start', icon: <IconStart />, onClick: handleStart });
-    } else {
-      items.push({
-        name: 'Restart',
-        icon: <IconRestart />,
-        onClick: handleStart,
-      });
-    }
+  if (
+    (canStart || canStartAdmin) &&
+    node?.nodeStatus?.state === NodeState.NODE_STATE_STOPPED
+  ) {
+    items.push({ name: 'Start', icon: <IconStart />, onClick: handleStart });
+  }
+
+  if (
+    (canRestart || canRestartAdmin) &&
+    node?.nodeStatus?.state !== NodeState.NODE_STATE_STOPPED
+  ) {
+    items.push({
+      name: 'Restart',
+      icon: <IconRestart />,
+      onClick: handleRestart,
+    });
   }
 
   if (canReport) {
