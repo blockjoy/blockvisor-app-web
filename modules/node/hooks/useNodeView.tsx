@@ -20,6 +20,7 @@ type Hook = {
   loadNode: (id: Args) => Promise<void>;
   stopNode: (nodeId: Args) => void;
   startNode: (nodeId: Args) => void;
+  restartNode: (nodeId: Args) => void;
   modifyNode: (node: Node) => void;
   updateNode: (
     node: NodeServiceUpdateConfigRequest,
@@ -66,6 +67,15 @@ export const useNodeView = (): Hook => {
       toast.success(`Node Started`);
     } catch (err) {
       toast.error(`Node Start Failed`);
+    }
+  };
+
+  const restartNode = async (nodeId: Args) => {
+    try {
+      await nodeClient.restartNode(convertRouteParamToString(nodeId));
+      toast.success(`Node Restarted`);
+    } catch (err) {
+      toast.error(`Node Restart Failed`);
     }
   };
 
@@ -160,6 +170,7 @@ export const useNodeView = (): Hook => {
     loadNode,
     stopNode,
     startNode,
+    restartNode,
     unloadNode,
     updateNode,
     modifyNode,
