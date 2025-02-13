@@ -225,6 +225,15 @@ class NodeClient {
     }
   }
 
+  async restartNode(nodeId: string): Promise<void> {
+    try {
+      await authClient.refreshToken();
+      await this.client.restart({ nodeId }, getOptions());
+    } catch (err) {
+      return handleError(err);
+    }
+  }
+
   async upgradeNode(nodeIds: string[], imageId: string): Promise<void> {
     try {
       await authClient.refreshToken();

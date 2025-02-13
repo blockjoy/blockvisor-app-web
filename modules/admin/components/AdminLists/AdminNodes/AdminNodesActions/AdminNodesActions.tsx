@@ -7,6 +7,7 @@ import { AdminDetailHeaderDelete } from '@modules/admin';
 import { styles } from './AdminNodesActions.styles';
 import { Dispatch, SetStateAction } from 'react';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
+import { NodeState } from '@modules/grpc/library/blockjoy/common/v1/node';
 
 type Props = {
   selectedIds: string[];
@@ -31,19 +32,24 @@ export const AdminNodesActions = ({ selectedIds, list, setList }: Props) => {
     }
   };
 
-  const startNodes = async () => {
+  const restartNodes = async () => {
     try {
       const calls = [];
 
       for (let nodeId of selectedIds) {
-        calls.push(nodeClient.startNode(nodeId));
+        const node = list.find((n) => n.nodeId === nodeId);
+        if (node?.nodeStatus?.state === NodeState.NODE_STATE_STOPPED) {
+          calls.push(nodeClient.startNode(nodeId));
+        } else {
+          calls.push(nodeClient.restartNode(nodeId));
+        }
       }
 
       await Promise.all(calls);
 
       toast.success(`Nodes Restarted`);
     } catch (err) {
-      toast.error(`Node Stop Failed`);
+      toast.error(`Node Restart Failed`);
     }
   };
 
@@ -76,8 +82,8 @@ export const AdminNodesActions = ({ selectedIds, list, setList }: Props) => {
       <AdminHeaderButton
         isDisabled={!selectedIds.length}
         icon={<IconRestart />}
-        onClick={startNodes}
-        tooltip="Restart"
+        onClick={restartNodes}
+        tooltip="Start/Restart"
       />
       <span css={styles.deleteButton}>
         <AdminDetailHeaderDelete
