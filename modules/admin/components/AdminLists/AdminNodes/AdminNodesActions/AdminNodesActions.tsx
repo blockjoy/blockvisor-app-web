@@ -1,6 +1,7 @@
 import { AdminHeaderButton } from '@modules/admin/components/AdminHeader/AdminHeaderButton/AdminHeaderButton';
 import IconStop from '@public/assets/icons/app/NodeStop.svg';
 import IconRestart from '@public/assets/icons/app/NodeRestart.svg';
+import IconStart from '@public/assets/icons/app/NodeStart.svg';
 import { nodeClient } from '@modules/grpc';
 import { toast } from 'react-toastify';
 import { AdminDetailHeaderDelete } from '@modules/admin';
@@ -41,9 +42,25 @@ export const AdminNodesActions = ({ selectedIds, list, setList }: Props) => {
 
       await Promise.all(calls);
 
+      toast.success(`Nodes Started`);
+    } catch (err) {
+      toast.error(`Node Start Failed`);
+    }
+  };
+
+  const restartNodes = async () => {
+    try {
+      const calls = [];
+
+      for (let nodeId of selectedIds) {
+        calls.push(nodeClient.restartNode(nodeId));
+      }
+
+      await Promise.all(calls);
+
       toast.success(`Nodes Restarted`);
     } catch (err) {
-      toast.error(`Node Stop Failed`);
+      toast.error(`Node Restart Failed`);
     }
   };
 
@@ -75,8 +92,14 @@ export const AdminNodesActions = ({ selectedIds, list, setList }: Props) => {
       />
       <AdminHeaderButton
         isDisabled={!selectedIds.length}
-        icon={<IconRestart />}
+        icon={<IconStart />}
         onClick={startNodes}
+        tooltip="Start"
+      />
+      <AdminHeaderButton
+        isDisabled={!selectedIds.length}
+        icon={<IconRestart />}
+        onClick={restartNodes}
         tooltip="Restart"
       />
       <span css={styles.deleteButton}>
