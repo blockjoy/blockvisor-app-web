@@ -1,80 +1,168 @@
-import { VersionMetadata } from '@modules/grpc/library/blockjoy/common/v1/protocol';
 import { nodeLauncherAtoms } from '@modules/node/store/nodeLauncherAtoms';
-import { FormLabel, PillPicker, sort } from '@shared/components';
-import { Fragment, useEffect, useState } from 'react';
+import { nodeLauncherSelectors } from '@modules/node/store/nodeLauncherSelectors';
+import { NodeLauncherVariantSegments } from '@modules/node/types/common';
+import { FormLabel, PillPicker } from '@shared/components';
+import { useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
-import { kebabToCapitalized } from 'utils';
 
 type Props = {
-  onChange: (variant: string) => void;
+  onChange: (variantSegments: NodeLauncherVariantSegments) => void;
 };
 
 export const NodeLauncherConfigVariant = ({ onChange }: Props) => {
-  const selectedProtocol = useRecoilValue(nodeLauncherAtoms.selectedProtocol);
-  const selectedVariant = useRecoilValue(nodeLauncherAtoms.selectedVariant);
-  const variants = useRecoilValue(nodeLauncherAtoms.variants);
+  const selectedVariantSegments = useRecoilValue(
+    nodeLauncherAtoms.selectedVariantSegments,
+  );
 
-  const [groupedMetadata, setGroupedMetadata] =
-    useState<[string, string[]][]>();
+  const allNetworks = useRecoilValue(nodeLauncherSelectors.allNetworks);
+  const allNodeTypes = useRecoilValue(nodeLauncherSelectors.allNodeTypes);
+  const allClients = useRecoilValue(nodeLauncherSelectors.allClients);
 
-  function groupByMetadataKey(
-    data: VersionMetadata[],
-  ): Record<string, string[]> {
-    return data.reduce<Record<string, string[]>>((acc, item) => {
-      if (!acc[item.metadataKey]) {
-        acc[item.metadataKey] = [];
-      }
-      if (!acc[item.metadataKey].includes(item.value)) {
-        acc[item.metadataKey].push(item.value);
-      }
-      return acc;
-    }, {});
-  }
+  const availableNetworks = useRecoilValue(
+    nodeLauncherSelectors.availableNetworks,
+  );
 
-  const handleChange = (index: number, item: { id: string; name: string }) => {
-    splitVariantKey.reverse()[index] = item.id;
-    onChange(splitVariantKey.reverse().join('-'));
+  const availableClients = useRecoilValue(
+    nodeLauncherSelectors.availableClients,
+  );
+
+  const handleChange = (
+    key: 'nodeType' | 'network' | 'client',
+    item: { id?: string; name?: string },
+  ) => {
+    let nextSegments = {
+      ...selectedVariantSegments,
+      [key]: { ...selectedVariantSegments?.[key] },
+    };
+
+    nextSegments[key].selectedItem = {
+      ...{
+        id: item.id,
+        name: item.name,
+      },
+    };
+
+    onChange(nextSegments);
   };
 
   useEffect(() => {
-    (async () => {
-      const flattenedMetadata = selectedProtocol?.versions?.flatMap(
-        (v) => v.metadata,
-      )!;
-      // console.log('flattenedMetadata', flattenedMetadata);
-      setGroupedMetadata(Object.entries(groupByMetadataKey(flattenedMetadata)));
-    })();
-  }, [variants, selectedProtocol]);
+    const segmentsCopy = { ...selectedVariantSegments };
 
-  const splitVariantKey = selectedVariant?.variantKey.split('-')!;
+    if (
+      !availableNetworks.some(
+        (availableNetwork) =>
+          availableNetwork === selectedVariantSegments.network.selectedItem?.id,
+      )
+    ) {
+      segmentsCopy.network = { selectedItem: null };
+    }
+
+    if (
+      !availableClients.some(
+        (client) => client === selectedVariantSegments.client.selectedItem?.id,
+      )
+    ) {
+      segmentsCopy.client = { selectedItem: null };
+    }
+
+    onChange(segmentsCopy);
+  }, [selectedVariantSegments.nodeType]);
+
+  useEffect(() => {
+    const segmentsCopy = { ...selectedVariantSegments };
+
+    if (
+      !availableClients.some(
+        (c) => c === selectedVariantSegments.client.selectedItem?.id,
+      )
+    ) {
+      segmentsCopy.client = { selectedItem: null };
+    }
+
+    onChange(segmentsCopy);
+  }, [selectedVariantSegments.network]);
+
+  useEffect(() => {
+    if (
+      allClients.length === 1 &&
+      allNetworks.length === 1 &&
+      allNodeTypes.length === 1
+    ) {
+      onChange({
+        client: {
+          selectedItem: {
+            id: allClients[0],
+            name: allClients[0],
+          },
+        },
+        network: {
+          selectedItem: {
+            id: allNetworks[0],
+            name: allNetworks[0],
+          },
+        },
+        nodeType: {
+          selectedItem: {
+            id: allNodeTypes[0],
+            name: allNodeTypes[0],
+          },
+        },
+      });
+    }
+  }, [allClients, allNetworks, allNodeTypes]);
 
   return (
     <>
-      {groupedMetadata?.map((metadata, index) => {
-        const mappedItems = sort(
-          metadata[1].map((item) => ({
-            id: item,
-            name: item,
-          })),
-          { field: 'name' },
-        );
-        return (
-          <Fragment key={metadata[0]}>
-            <FormLabel isCapitalized>
-              {kebabToCapitalized(metadata[0])}
-            </FormLabel>
-            <PillPicker
-              onChange={(item) => handleChange(index, item)}
-              items={mappedItems}
-              selectedItem={{
-                id: splitVariantKey?.reverse()[index],
-                name: splitVariantKey?.reverse()[index],
-              }}
-              name={metadata[0]}
-            />
-          </Fragment>
-        );
-      })}
+      {Boolean(allNodeTypes.length) && (
+        <>
+          <FormLabel isCapitalized>Node Type</FormLabel>
+          <PillPicker
+            onChange={(item) => handleChange('nodeType', item)}
+            items={allNodeTypes.map((nodeType) => ({
+              id: nodeType,
+              name: nodeType,
+            }))}
+            selectedItem={selectedVariantSegments?.nodeType.selectedItem!}
+            name="node-type"
+          />
+        </>
+      )}
+
+      {Boolean(allNetworks.length) && (
+        <>
+          <FormLabel isCapitalized>Network</FormLabel>
+          <PillPicker
+            onChange={(item) => handleChange('network', item)}
+            items={allNetworks.map((network) => ({
+              id: network,
+              name: network,
+              isDisabled: !availableNetworks.some(
+                (availableNetwork) => availableNetwork === network,
+              ),
+            }))}
+            selectedItem={selectedVariantSegments?.network.selectedItem!}
+            name="network"
+          />
+        </>
+      )}
+
+      {Boolean(allClients.length) && (
+        <>
+          <FormLabel isCapitalized>Client</FormLabel>
+          <PillPicker
+            onChange={(item) => handleChange('client', item)}
+            items={allClients.map((client) => ({
+              id: client,
+              name: client,
+              isDisabled: !availableClients.some(
+                (availableClient) => availableClient === client,
+              ),
+            }))}
+            selectedItem={selectedVariantSegments?.client.selectedItem!}
+            name="client"
+          />
+        </>
+      )}
     </>
   );
 };

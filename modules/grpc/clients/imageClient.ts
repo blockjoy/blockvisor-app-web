@@ -21,7 +21,7 @@ class ImageClient {
     console.log('getImageRequest', request);
 
     try {
-      const response = await callWithTokenRefresh(
+      const response: ImageServiceGetImageResponse = await callWithTokenRefresh(
         this.client.getImage.bind(this.client),
         request,
       );

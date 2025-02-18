@@ -51,6 +51,19 @@ export type NodeLauncherVariant = {
   variantKey: string;
 };
 
+export type NodeLauncherVariantSegment = {
+  selectedItem: {
+    id?: string;
+    name?: string;
+  } | null;
+};
+
+export type NodeLauncherVariantSegments = {
+  client: NodeLauncherVariantSegment;
+  nodeType: NodeLauncherVariantSegment;
+  network: NodeLauncherVariantSegment;
+};
+
 export type CreateNodeParams = {
   version: string;
   nodeType: number;

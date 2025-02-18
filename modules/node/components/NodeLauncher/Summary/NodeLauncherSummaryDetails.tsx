@@ -17,6 +17,7 @@ export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
   const hasSummary = useRecoilValue(nodeLauncherSelectors.hasSummary);
   const nodeLauncher = useRecoilValue(nodeLauncherAtoms.nodeLauncher);
   const isNodeValid = useRecoilValue(nodeLauncherSelectors.isNodeValid);
+  const isVariantValid = useRecoilValue(nodeLauncherSelectors.isVariantValid);
   const isConfigValid = useRecoilValue(nodeLauncherSelectors.isConfigValid);
   const isNodeAllocationValid = useRecoilValue(
     nodeLauncherSelectors.isNodeAllocationValid,
@@ -25,8 +26,9 @@ export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
   const selectedHosts = useRecoilValue(nodeLauncherAtoms.selectedHosts);
   const allHosts = useRecoilValue(hostAtoms.allHosts);
   const selectedRegions = useRecoilValue(nodeLauncherAtoms.selectedRegions);
-  const selectedVersion = useRecoilValue(nodeLauncherAtoms.selectedVersion);
-  const selectedVariant = useRecoilValue(nodeLauncherAtoms.selectedVariant);
+  const selectedVariantSegments = useRecoilValue(
+    nodeLauncherAtoms.selectedVariantSegments,
+  );
   const selectedProtocol = useRecoilValue(nodeLauncherAtoms.selectedProtocol);
 
   const { properties } = nodeLauncher;
@@ -40,9 +42,10 @@ export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
           </span>
           <div>
             <label>Protocol</label>
-            <span>{capitalize(selectedProtocol?.name!) || 'Not Selected'}</span>
+            <span>{capitalize(selectedProtocol?.name!)}</span>
           </div>
         </li>
+
         {isSuperUser && (selectedHosts || selectedRegions) && (
           <li>
             {isConfigValid && isNodeValid && isNodeAllocationValid ? (
@@ -61,7 +64,10 @@ export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
           </li>
         )}
         <li>
-          {isConfigValid && isNodeValid && isNodeAllocationValid ? (
+          {isConfigValid &&
+          isNodeValid &&
+          isNodeAllocationValid &&
+          isVariantValid ? (
             <span css={styles.summaryIcon}>
               <IconCheckCircle />
             </span>
@@ -70,18 +76,23 @@ export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
               <IconUncheckCircle />
             </span>
           )}
-
           <div>
             <label>Config</label>
             <span>
-              {isConfigValid && isNodeValid && isNodeAllocationValid
+              {isConfigValid &&
+              isNodeValid &&
+              isNodeAllocationValid &&
+              isVariantValid
                 ? 'Ready For Liftoff'
                 : 'Needs Work'}
             </span>
           </div>
         </li>
       </ul>
-      {(!isConfigValid || !isNodeValid || !isNodeAllocationValid) && (
+      {(!isConfigValid ||
+        !isNodeValid ||
+        !isNodeAllocationValid ||
+        !isVariantValid) && (
         <>
           <h2 css={styles.missingFieldsTitle}>
             The following needs to be added:
@@ -98,13 +109,27 @@ export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
               : null}
             {!isNodeValid || !isNodeAllocationValid ? (
               <>
+                {!hasSummary ? <div>Protocol</div> : null}
+
                 {!selectedHosts && !selectedRegions && allHosts?.length ? (
                   <div>Host or Region</div>
                 ) : null}
                 {!selectedRegions && !allHosts?.length ? (
                   <div>Region</div>
                 ) : null}
-                {!hasSummary ? <div>Protocol</div> : null}
+              </>
+            ) : null}
+            {!isVariantValid ? (
+              <>
+                {!selectedVariantSegments.nodeType.selectedItem && (
+                  <div>Node Type</div>
+                )}
+                {!selectedVariantSegments.network.selectedItem && (
+                  <div>Network</div>
+                )}
+                {!selectedVariantSegments.client.selectedItem && (
+                  <div>Client</div>
+                )}
               </>
             ) : null}
             {(selectedHosts && !selectedHosts?.every((host) => host.isValid)) ||
