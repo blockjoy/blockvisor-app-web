@@ -1,6 +1,8 @@
+import { css } from '@emotion/react';
+import { Visibility } from '@modules/grpc/library/blockjoy/common/v1/protocol';
 import { Protocol } from '@modules/grpc/library/blockjoy/v1/protocol';
 import { sortVersions } from '@modules/node';
-import { sort } from '@shared/components';
+import { Badge, sort } from '@shared/components';
 import { spacing } from 'styles/utils.spacing.styles';
 import { styles } from './AdminProtocolVariants.styles';
 
@@ -40,6 +42,18 @@ export const AdminProtocolVariants = ({ protocol }: Props) => {
                   {version.description && (
                     <span css={styles.versionDescription}>
                       {version.description}
+                      {version.visibility === Visibility.VISIBILITY_PRIVATE && (
+                        <Badge
+                          style="outline"
+                          customCss={[
+                            css`
+                              margin-left: 10px;
+                            `,
+                          ]}
+                        >
+                          Private
+                        </Badge>
+                      )}
                     </span>
                   )}
                 </li>

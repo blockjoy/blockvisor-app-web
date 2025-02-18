@@ -4,13 +4,15 @@ import { styles } from './PillPicker.styles';
 type PillPickerProps<T = any> = {
   name: string;
   items: T[];
-  selectedItem: T;
+  selectedItem?: T;
   isCompact?: boolean;
   noBottomMargin?: boolean;
   onChange: (item: T) => void;
 };
 
-export const PillPicker = <T extends { id?: string; name?: string }>({
+export const PillPicker = <
+  T extends { id?: string; name?: string; isDisabled?: boolean },
+>({
   name,
   items,
   selectedItem,
@@ -35,6 +37,7 @@ export const PillPicker = <T extends { id?: string; name?: string }>({
             onKeyDown={(e) => handleKeyDown(e, item)}
             checked={item.id === selectedItem?.id}
             value={item.id}
+            disabled={item.isDisabled}
           />
           <label
             htmlFor={name + item.name}

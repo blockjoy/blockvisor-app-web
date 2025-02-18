@@ -75,6 +75,7 @@ export const NodeLauncherSummary = ({
   const isPropertiesValid = useRecoilValue(
     nodeLauncherSelectors.isPropertiesValid,
   );
+  const isVariantValid = useRecoilValue(nodeLauncherSelectors.isVariantValid);
 
   const [isLaunched, setIsLaunched] = useState(false);
 
@@ -206,6 +207,7 @@ export const NodeLauncherSummary = ({
               disabled={
                 isLaunching ||
                 (isSuperUser && nodeLauncherStatus.isDisabled) ||
+                !isVariantValid ||
                 !isPropertiesValid
               }
               css={[

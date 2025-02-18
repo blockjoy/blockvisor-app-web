@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { rgba } from 'polished';
 import { ITheme } from 'types/theme';
 
 export const styles = {
@@ -14,6 +15,7 @@ export const styles = {
   `,
   label: css`
     min-width: 80px;
+    user-select: none;
   `,
   labelCompact: css`
     min-width: 40px;
@@ -23,27 +25,43 @@ export const styles = {
     scale: 0;
 
     :checked + label span {
-      background: ${theme.colorPrimary};
+      border-color: ${theme.colorPrimary};
       color: ${theme.colorPrimaryText};
+      background: ${theme.colorPrimary};
+      cursor: default;
+      transition: none;
     }
 
-    :is(:focus, :hover, :active) + label span {
-      box-shadow: 0px 0px 0px 3px rgba(255, 255, 255, 0.125);
+    :disabled + label span {
+      color: rgb(255 255 255 / 25%);
+      border-color: rgb(255 255 255 / 5%);
+      background: transparent;
+      cursor: not-allowed;
+    }
+
+    :not(:disabled, :checked):is(:focus, :hover, :active) + label span {
+      border-color: rgb(255 255 255 / 45%);
+      color: ${theme.colorText};
+      box-shadow: 0 0 0 3px rgb(255 255 255 / 5%);
+      transition-property: box-shadow, border-color, color;
+      transition-duration: 0.3s;
     }
   `,
   button: (theme: ITheme) => css`
     display: grid;
     place-items: center;
-    background: ${theme.colorLightGrey};
-    padding: 12px 12px;
+    border: 1px solid rgb(255 255 255 / 24%);
+    color: ${theme.colorDefault};
+    padding: 0 12px;
     font-size: 14px;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
+    height: 40px;
     width: 100%;
-    transition: box-shadow 0.3s;
   `,
   buttonCompact: css`
     font-size: 12px;
     padding: 5px 6px;
+    height: 32px;
   `,
 };
