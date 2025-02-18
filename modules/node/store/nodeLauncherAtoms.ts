@@ -8,6 +8,7 @@ import {
   NodeLauncherRegion,
   NodeLauncherState,
   NodeLauncherVariant,
+  NodeLauncherVariantSegments,
 } from '@modules/node';
 import { Image } from '@modules/grpc/library/blockjoy/v1/image';
 
@@ -55,9 +56,23 @@ const versions = atom<ProtocolVersion[] | null>({
   default: null,
 });
 
+const versionMetadata = atom<Record<string, string>[] | null>({
+  key: 'nodeLauncher.versionMetadata',
+  default: null,
+});
+
 const selectedVariant = atom<NodeLauncherVariant | null>({
   key: 'nodeLauncher.variant',
   default: null,
+});
+
+const selectedVariantSegments = atom<NodeLauncherVariantSegments>({
+  key: 'nodeLauncher.variantSegments',
+  default: {
+    client: { selectedItem: null },
+    network: { selectedItem: null },
+    nodeType: { selectedItem: null },
+  },
 });
 
 const error = atom<string | null>({
@@ -79,6 +94,7 @@ export const nodeLauncherAtoms = {
   nodeLauncher,
   variants,
   versions,
+  versionMetadata,
 
   selectedProtocol,
   selectedRegions,
@@ -86,6 +102,7 @@ export const nodeLauncherAtoms = {
   selectedHosts,
   selectedImage,
   selectedVariant,
+  selectedVariantSegments,
 
   error,
   isLaunchError,

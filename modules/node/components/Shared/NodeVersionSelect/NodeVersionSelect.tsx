@@ -3,9 +3,14 @@ import { useRecoilCallback, useRecoilValue } from 'recoil';
 import { css } from '@emotion/react';
 import { ProtocolVersion } from '@modules/grpc/library/blockjoy/v1/protocol';
 import { Dropdown } from '@shared/components';
-import { nodeLauncherAtoms, sortVersions } from '@modules/node';
+import {
+  nodeLauncherAtoms,
+  nodeLauncherSelectors,
+  sortVersions,
+} from '@modules/node';
 import { authSelectors } from '@modules/auth';
 import { ITheme } from 'types/theme';
+import { Visibility } from '@modules/grpc/library/blockjoy/common/v1/protocol';
 
 type NodeVersionSelectProps = {
   onVersionChanged: (version: ProtocolVersion) => void;
@@ -29,6 +34,8 @@ export const NodeVersionSelect = ({
 
   const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
 
+  const isVariantValid = useRecoilValue(nodeLauncherSelectors.isVariantValid);
+
   const [isOpen, setIsOpen] = useState(false);
 
   const handleOpen = (open: boolean = true) => setIsOpen(open);
@@ -48,7 +55,11 @@ export const NodeVersionSelect = ({
     [versions],
   );
 
-  const items = sortVersions(versions!).map((version) => ({
+  const items = sortVersions(
+    versions?.filter(
+      (version) => version.visibility === Visibility.VISIBILITY_PUBLIC,
+    )!,
+  ).map((version) => ({
     id: version.protocolVersionId,
     name: isSuperUser
       ? `${version.semanticVersion} - ${version.description}`
@@ -57,20 +68,24 @@ export const NodeVersionSelect = ({
 
   return (
     <Dropdown
-      disabled={!isSuperUser || versions?.length! < 2 || !selectedVersion}
+      disabled={versions?.length! < 2 || !selectedVersion || !isVariantValid}
       items={items}
-      {...(selectedVersion
+      {...(selectedVersion && isVariantValid
         ? {
             renderButtonText: (
               <p css={styles.buttonText}>{selectedVersion?.semanticVersion}</p>
             ),
           }
         : isSuperUser
-        ? { error: 'No Versions Available' }
+        ? {
+            error: !isVariantValid
+              ? 'No Variant Selected'
+              : 'No Versions Available',
+          }
         : { defaultText: <>Auto select</> })}
       renderItem={(item) => item.name}
       isOpen={isOpen}
-      isLoading={isSuperUser && !versions}
+      isLoading={isSuperUser && isVariantValid && !selectedVersion}
       handleOpen={handleOpen}
       handleSelected={(item: {
         id?: string | undefined;

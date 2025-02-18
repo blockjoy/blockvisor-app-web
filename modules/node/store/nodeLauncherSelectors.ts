@@ -1,7 +1,8 @@
 import { selector, selectorFamily } from 'recoil';
-import { nodeLauncherAtoms } from '@modules/node';
+import { nodeLauncherAtoms, NodeLauncherVariantSegment } from '@modules/node';
 import { authSelectors } from '@modules/auth';
 import { billingAtoms } from '@modules/billing';
+import { sort } from '@shared/components';
 
 const hasProtocol = selector<boolean>({
   key: 'nodeLauncher.hasProtocol',
@@ -54,8 +55,6 @@ const isNodeAllocationValid = selector({
         totalNodesToLaunchVal > 0;
     }
 
-    console.log('isNodeAllocationValid', isValid);
-
     return isValid;
   },
 });
@@ -85,6 +84,126 @@ const isPropertiesValid = selector({
     const nodeLauncher = get(nodeLauncherAtoms.nodeLauncher);
     const { properties } = nodeLauncher;
     return properties?.every((propertyGroup) => propertyGroup.value);
+  },
+});
+
+const allNodeTypes = selector<string[]>({
+  key: 'nodeLauncher.allNodeTypes',
+  get: ({ get }) => {
+    const versionMetadata = get(nodeLauncherAtoms.versionMetadata);
+
+    const nodeTypes = [
+      ...new Set(versionMetadata?.map((item) => item['node-type']).flat()),
+    ];
+
+    return sort(nodeTypes);
+  },
+});
+
+const allNetworks = selector<string[]>({
+  key: 'nodeLauncher.allNetworks',
+  get: ({ get }) => {
+    const versionMetadata = get(nodeLauncherAtoms.versionMetadata);
+
+    const networks = [
+      ...new Set(versionMetadata?.map((item) => item['network']).flat()),
+    ];
+
+    return sort(networks);
+  },
+});
+
+const allClients = selector<string[]>({
+  key: 'nodeLauncher.allClients',
+  get: ({ get }) => {
+    const versionMetadata = get(nodeLauncherAtoms.versionMetadata);
+
+    const clients = [
+      ...new Set(versionMetadata?.map((item) => item['client']).flat()),
+    ];
+
+    return sort(clients);
+  },
+});
+
+const availableNetworks = selector<string[]>({
+  key: 'nodeLauncher.filteredNetworks',
+  get: ({ get }) => {
+    const selectedVariantSegments = get(
+      nodeLauncherAtoms.selectedVariantSegments,
+    );
+    const versionMetadata = get(nodeLauncherAtoms.versionMetadata);
+
+    const networks = [
+      ...new Set(
+        versionMetadata
+          ?.filter(
+            (metadata) =>
+              !selectedVariantSegments.nodeType.selectedItem ||
+              metadata['node-type'] ===
+                selectedVariantSegments.nodeType.selectedItem?.id,
+          )
+          ?.map((item) => item['network'])
+          .flat(),
+      ),
+    ];
+
+    return networks;
+  },
+});
+
+const availableClients = selector<string[]>({
+  key: 'nodeLauncher.filteredClients',
+  get: ({ get }) => {
+    const selectedVariantSegments = get(
+      nodeLauncherAtoms.selectedVariantSegments,
+    );
+    const versionMetadata = get(nodeLauncherAtoms.versionMetadata);
+
+    const clients = [
+      ...new Set(
+        versionMetadata
+          ?.filter(
+            (metadata) =>
+              (!selectedVariantSegments.nodeType.selectedItem ||
+                metadata['node-type'] ===
+                  selectedVariantSegments.nodeType.selectedItem?.id) &&
+              (!selectedVariantSegments.network.selectedItem ||
+                metadata['network'] ===
+                  selectedVariantSegments.network.selectedItem.id),
+          )
+          ?.map((item) => item['client'])
+          .flat(),
+      ),
+    ];
+
+    console.log('clients', clients);
+
+    return clients;
+  },
+});
+
+const isVariantValid = selector<boolean>({
+  key: 'nodeLauncher.isVariantValid',
+  get: ({ get }) => {
+    const selectedVariantSegments = get(
+      nodeLauncherAtoms.selectedVariantSegments,
+    );
+    return Boolean(
+      selectedVariantSegments.nodeType.selectedItem &&
+        selectedVariantSegments.network.selectedItem &&
+        selectedVariantSegments.client.selectedItem,
+    );
+  },
+});
+
+const isVariantSegmentsLoaded = selector<boolean>({
+  key: 'nodeLauncher.isVariantSegmentsLoaded',
+  get: ({ get }) => {
+    const nodeTypes = get(allNodeTypes);
+    const networks = get(allNetworks);
+    const clients = get(allClients);
+    return Boolean(nodeTypes.length && networks.length && clients.length);
   },
 });
 
@@ -126,6 +245,7 @@ const nodeLauncherStatus = selectorFamily<
       const selectedRegions = get(nodeLauncherAtoms.selectedRegions);
       const selectedProtocol = get(nodeLauncherAtoms.selectedProtocol);
       const isConfigValidVal = get(isConfigValid);
+      const isVariantValidVal = get(isVariantValid);
       const error = get(nodeLauncherAtoms.error);
       const price = get(billingAtoms.price);
       const isNodeAllocationValidVal = get(isNodeAllocationValid);
@@ -135,6 +255,7 @@ const nodeLauncherStatus = selectorFamily<
         NoPermission: !hasPermissionsToCreate,
         NoProtocol: !selectedProtocol,
         NoRegion: !(selectedHosts?.length || selectedRegions?.length),
+        NoVariant: !isVariantValidVal,
         InvalidConfig: !isConfigValidVal,
         ErrorExists: Boolean(error),
         NoPrice: !price && !billingExempt,
@@ -159,6 +280,15 @@ export const nodeLauncherSelectors = {
   isNodeValid,
   isConfigValid,
   isPropertiesValid,
+  isVariantValid,
+  isVariantSegmentsLoaded,
+
+  allClients,
+  allNetworks,
+  allNodeTypes,
+
+  availableClients,
+  availableNetworks,
 
   totalNodesToLaunch,
 

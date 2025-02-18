@@ -21,6 +21,7 @@ export const styles = {
     align-items: center;
     gap: 8px;
     cursor: pointer;
+    user-select: none;
     transition: color 0.1s;
 
     :hover {

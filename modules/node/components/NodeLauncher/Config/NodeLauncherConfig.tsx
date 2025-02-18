@@ -3,15 +3,15 @@ import { ProtocolVersion } from '@modules/grpc/library/blockjoy/v1/protocol';
 import { FormLabel, FormHeader, Checkbox } from '@shared/components';
 import {
   NodeLauncherPanel,
-  NodeVersionSelect,
   NodeLauncherState,
-  NodeVariantSelect,
+  NodeLauncherVariantSegments,
+  nodeLauncherSelectors,
+  nodeLauncherAtoms,
 } from '@modules/node';
 import { styles } from './NodeLauncherConfig.styles';
 import { NodeLauncherConfigAdvanced } from './NodeLauncherConfigAdvanced/NodeLauncherConfigAdvanced';
 import { NodeLauncherConfigVariant } from './NodeLauncherConfigVariant/NodeLauncherConfigVariant';
 import { useRecoilValue } from 'recoil';
-import { authSelectors } from '@modules/auth';
 
 type NodeLauncherConfigProps = {
   onNodeConfigPropertyChanged: (
@@ -24,7 +24,7 @@ type NodeLauncherConfigProps = {
     value: NodeLauncherState[K],
   ) => void;
   onVersionChanged: (version: ProtocolVersion) => void;
-  onVariantChanged: (variant: string) => void;
+  onVariantChanged: (variantSegments: NodeLauncherVariantSegments) => void;
 };
 
 export const NodeLauncherConfig = ({
@@ -37,41 +37,43 @@ export const NodeLauncherConfig = ({
 
   const toggleAdvancedConfig = () => setShowAdvancedConfig(!showAdvancedConfig);
 
-  const isSuperUser = useRecoilValue(authSelectors.isSuperUser);
+  const isVariantSegmentsLoaded = useRecoilValue(
+    nodeLauncherSelectors.isVariantSegmentsLoaded,
+  );
+
+  const selectedProtocol = useRecoilValue(nodeLauncherAtoms.selectedProtocol);
 
   return (
     <NodeLauncherPanel>
       <div css={styles.wrapper}>
         <FormHeader>Config</FormHeader>
 
-        {/* {isSuperUser && ( */}
-        <>
-          <FormLabel>Variant</FormLabel>
-          <NodeVariantSelect onChange={onVariantChanged} />
-        </>
-        {/* )} */}
+        <NodeLauncherConfigVariant onChange={onVariantChanged} />
 
-        {/* <NodeLauncherConfigVariant onChange={onVariantChanged} /> */}
+        {(isVariantSegmentsLoaded || selectedProtocol?.key === 'legacy') && (
+          <>
+            <FormLabel>
+              <button
+                css={styles.advancedConfigButton}
+                onClick={toggleAdvancedConfig}
+              >
+                <Checkbox
+                  name="showAdvancedConfig"
+                  checked={showAdvancedConfig}
+                />
+                Advanced Config
+              </button>
+            </FormLabel>
 
-        <FormLabel>Version</FormLabel>
-        <NodeVersionSelect onVersionChanged={onVersionChanged} />
-
-        <FormLabel>
-          <button
-            css={styles.advancedConfigButton}
-            onClick={toggleAdvancedConfig}
-          >
-            <Checkbox name="showAdvancedConfig" checked={showAdvancedConfig} />
-            Advanced Config
-          </button>
-        </FormLabel>
-
-        {showAdvancedConfig && (
-          <NodeLauncherConfigAdvanced
-            isOpen={showAdvancedConfig}
-            onNodeConfigPropertyChanged={onNodeConfigPropertyChanged}
-            onNodePropertyChanged={onNodePropertyChanged}
-          />
+            {showAdvancedConfig && (
+              <NodeLauncherConfigAdvanced
+                isOpen={showAdvancedConfig}
+                onNodeConfigPropertyChanged={onNodeConfigPropertyChanged}
+                onNodePropertyChanged={onNodePropertyChanged}
+                onVersionChanged={onVersionChanged}
+              />
+            )}
+          </>
         )}
       </div>
     </NodeLauncherPanel>

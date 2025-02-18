@@ -1,8 +1,8 @@
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import useSWR from 'swr';
 import { protocolClient } from '@modules/grpc';
 import { organizationSelectors } from '@modules/organization';
-import { protocolAtoms } from '@modules/node';
+import { nodeLauncherAtoms, protocolAtoms } from '@modules/node';
 import { Protocol } from '@modules/grpc/library/blockjoy/v1/protocol';
 
 type UseGetBlockchainsHook = {
@@ -15,6 +15,9 @@ export const useGetProtocols = (): UseGetBlockchainsHook => {
     organizationSelectors.defaultOrganization,
   );
   const [protocols, setBlockchains] = useRecoilState(protocolAtoms.protocols);
+  const setSelectedProtocol = useSetRecoilState(
+    nodeLauncherAtoms.selectedProtocol,
+  );
   const [protocolsLoadingState, setBlockchainsLoadingState] = useRecoilState(
     protocolAtoms.protocolsLoadingState,
   );
@@ -29,6 +32,7 @@ export const useGetProtocols = (): UseGetBlockchainsHook => {
     onSuccess: (data) => {
       setBlockchains(data.protocols);
       setBlockchainsLoadingState('finished');
+      setSelectedProtocol(data.protocols[0]);
     },
     onError: (error) => {
       console.log('Failed to fetch Blockchains', error);
