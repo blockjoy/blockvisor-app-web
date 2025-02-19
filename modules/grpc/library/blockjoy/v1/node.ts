@@ -6,7 +6,7 @@ import { Timestamp } from "../../google/protobuf/timestamp";
 import { FirewallConfig, FirewallRule, NodeConfig } from "../common/v1/config";
 import { BillingAmount } from "../common/v1/currency";
 import { NextState, NodeJob, NodeLauncher, NodeReport, NodeState, NodeStatus } from "../common/v1/node";
-import { ProtocolVersionKey } from "../common/v1/protocol";
+import { ProtocolVersionKey, VersionMetadata } from "../common/v1/protocol";
 import { Resource } from "../common/v1/resource";
 import { SearchOperator, SortOrder } from "../common/v1/search";
 import { Tags, UpdateTags } from "../common/v1/tag";
@@ -67,6 +67,7 @@ export interface Node {
   createdAt: Date | undefined;
   updatedAt: Date | undefined;
   cost?: BillingAmount | undefined;
+  versionMetadata: VersionMetadata[];
 }
 
 /** Create a new node for some image. */
@@ -343,6 +344,7 @@ function createBaseNode(): Node {
     createdAt: undefined,
     updatedAt: undefined,
     cost: undefined,
+    versionMetadata: [],
   };
 }
 
@@ -461,6 +463,9 @@ export const Node = {
     }
     if (message.cost !== undefined) {
       BillingAmount.encode(message.cost, writer.uint32(306).fork()).ldelim();
+    }
+    for (const v of message.versionMetadata) {
+      VersionMetadata.encode(v!, writer.uint32(314).fork()).ldelim();
     }
     return writer;
   },
@@ -738,6 +743,13 @@ export const Node = {
 
           message.cost = BillingAmount.decode(reader, reader.uint32());
           continue;
+        case 39:
+          if (tag !== 314) {
+            break;
+          }
+
+          message.versionMetadata.push(VersionMetadata.decode(reader, reader.uint32()));
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -801,6 +813,7 @@ export const Node = {
     message.cost = (object.cost !== undefined && object.cost !== null)
       ? BillingAmount.fromPartial(object.cost)
       : undefined;
+    message.versionMetadata = object.versionMetadata?.map((e) => VersionMetadata.fromPartial(e)) || [];
     return message;
   },
 };
@@ -2678,10 +2691,10 @@ export interface NodeServiceClient<CallOptionsExt = {}> {
   ): Promise<NodeServiceDeleteResponse>;
 }
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }

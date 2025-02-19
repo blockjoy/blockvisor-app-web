@@ -269,8 +269,11 @@ export const useNodeLauncherHandlers = ({
         });
       }
 
-      const outputData = selectedProtocol.versions
-        .filter((v) => v.visibility === Visibility.VISIBILITY_PUBLIC)
+      const metadata = selectedProtocol.versions
+        .filter(
+          (v) =>
+            v.visibility === Visibility.VISIBILITY_PUBLIC && v.metadata.length,
+        )
         .map((innerArray) => {
           const item: Record<string, string> = {};
 
@@ -282,10 +285,9 @@ export const useNodeLauncherHandlers = ({
           }
 
           return item;
-        })
-        .filter((obj) => Object.keys(obj).length > 0);
+        });
 
-      setVersionMetadata(outputData);
+      setVersionMetadata(metadata);
       setSelectedVariantSegments({
         client: { selectedItem: null },
         network: { selectedItem: null },

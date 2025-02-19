@@ -89,7 +89,6 @@ export const styles = {
     align-items: center;
     color: ${theme.colorLabel};
     font-size: 13px;
-    text-transform: capitalize;
   `,
   cellFooter: css`
     margin-top: 4px;

@@ -2,17 +2,17 @@ import { css } from '@emotion/react';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { ITheme } from 'types/theme';
 import { Copy } from '@shared/components';
+import { getNodeRpcUrl } from '@modules/node';
 
-type Props = Partial<Pick<Node, 'dnsUrl'>>;
+type Props = Partial<Pick<Node, 'dnsName'>>;
 
-export const RPCUrl = ({ dnsUrl }: Props) => {
-  if (!dnsUrl) return <>-</>;
+export const RPCUrl = ({ dnsName }: Props) => {
+  if (!dnsName) return <>-</>;
 
-  const rpcUrl = `http://${dnsUrl}`;
+  const rpcUrl = getNodeRpcUrl(dnsName);
 
-  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) =>
     e.stopPropagation();
-  };
 
   return (
     <a
