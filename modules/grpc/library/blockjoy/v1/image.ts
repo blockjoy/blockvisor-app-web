@@ -27,6 +27,7 @@ export interface Image {
   visibility: Visibility;
   createdAt: Date | undefined;
   updatedAt: Date | undefined;
+  dnsScheme?: string | undefined;
 }
 
 /** A config property of an image. */
@@ -116,6 +117,8 @@ export interface ImageServiceAddImageRequest {
   ramdisks: RamdiskConfig[];
   /** Point each combination of new_archive properties to the correct data. */
   archivePointers: ArchivePointer[];
+  /** The DNS scheme (e.g. "https", "wss") for node RPC requests. */
+  dnsScheme?: string | undefined;
 }
 
 export interface AddImageProperty {
@@ -243,6 +246,7 @@ function createBaseImage(): Image {
     visibility: 0,
     createdAt: undefined,
     updatedAt: undefined,
+    dnsScheme: undefined,
   };
 }
 
@@ -295,6 +299,9 @@ export const Image = {
     }
     if (message.updatedAt !== undefined) {
       Timestamp.encode(toTimestamp(message.updatedAt), writer.uint32(130).fork()).ldelim();
+    }
+    if (message.dnsScheme !== undefined) {
+      writer.uint32(138).string(message.dnsScheme);
     }
     return writer;
   },
@@ -418,6 +425,13 @@ export const Image = {
 
           message.updatedAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
+        case 17:
+          if (tag !== 138) {
+            break;
+          }
+
+          message.dnsScheme = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -451,6 +465,7 @@ export const Image = {
     message.visibility = object.visibility ?? 0;
     message.createdAt = object.createdAt ?? undefined;
     message.updatedAt = object.updatedAt ?? undefined;
+    message.dnsScheme = object.dnsScheme ?? undefined;
     return message;
   },
 };
@@ -764,6 +779,7 @@ function createBaseImageServiceAddImageRequest(): ImageServiceAddImageRequest {
     minBabelVersion: "",
     ramdisks: [],
     archivePointers: [],
+    dnsScheme: undefined,
   };
 }
 
@@ -804,6 +820,9 @@ export const ImageServiceAddImageRequest = {
     }
     for (const v of message.archivePointers) {
       ArchivePointer.encode(v!, writer.uint32(98).fork()).ldelim();
+    }
+    if (message.dnsScheme !== undefined) {
+      writer.uint32(106).string(message.dnsScheme);
     }
     return writer;
   },
@@ -899,6 +918,13 @@ export const ImageServiceAddImageRequest = {
 
           message.archivePointers.push(ArchivePointer.decode(reader, reader.uint32()));
           continue;
+        case 13:
+          if (tag !== 106) {
+            break;
+          }
+
+          message.dnsScheme = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -928,6 +954,7 @@ export const ImageServiceAddImageRequest = {
     message.minBabelVersion = object.minBabelVersion ?? "";
     message.ramdisks = object.ramdisks?.map((e) => RamdiskConfig.fromPartial(e)) || [];
     message.archivePointers = object.archivePointers?.map((e) => ArchivePointer.fromPartial(e)) || [];
+    message.dnsScheme = object.dnsScheme ?? undefined;
     return message;
   },
 };
@@ -1799,10 +1826,10 @@ export interface ImageServiceClient<CallOptionsExt = {}> {
   ): Promise<ImageServiceUpdateImageResponse>;
 }
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }

@@ -3,7 +3,7 @@ import { TableGridCell, NodeItems } from '@shared/components';
 import { ProtocolIcon } from '@shared/components';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
 import { escapeHtml } from '@shared/utils/escapeHtml';
-import { NodeTags } from '@modules/node';
+import { getNodeMetadataString, NodeTags } from '@modules/node';
 import { checkIfNodeInProgress } from './getNodeJobProgress';
 
 const styles = {
@@ -11,7 +11,7 @@ const styles = {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    text-transform: capitalize;
+    text-transform: lowercase;
     margin: 2px 0 10px;
     line-height: 1.6;
   `,
@@ -66,7 +66,9 @@ export const mapNodeListToGrid = (
             <>
               <NodeTags autoHide={false} node={node} itemsPerView={3} />
               <p css={styles.blockchainNetwork}>
-                {node.versionKey?.protocolKey} | {node.versionKey?.variantKey}
+                {node.protocolName}
+                {' | '}
+                {getNodeMetadataString(node.versionMetadata, node.versionKey!)}
               </p>
             </>
           }

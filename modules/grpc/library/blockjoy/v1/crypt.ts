@@ -10,8 +10,8 @@ export interface CryptServiceGetSecretRequest {
   resource:
     | Resource
     | undefined;
-  /** The secret name to read. */
-  name: string;
+  /** The secret key to read. */
+  key: string;
 }
 
 export interface CryptServiceGetSecretResponse {
@@ -24,8 +24,8 @@ export interface CryptServicePutSecretRequest {
   resource:
     | Resource
     | undefined;
-  /** The secret name to write. */
-  name: string;
+  /** The secret key to write. */
+  key: string;
   /** The secret bytes to encrypt. */
   value: Uint8Array;
 }
@@ -34,7 +34,7 @@ export interface CryptServicePutSecretResponse {
 }
 
 function createBaseCryptServiceGetSecretRequest(): CryptServiceGetSecretRequest {
-  return { resource: undefined, name: "" };
+  return { resource: undefined, key: "" };
 }
 
 export const CryptServiceGetSecretRequest = {
@@ -42,8 +42,8 @@ export const CryptServiceGetSecretRequest = {
     if (message.resource !== undefined) {
       Resource.encode(message.resource, writer.uint32(10).fork()).ldelim();
     }
-    if (message.name !== "") {
-      writer.uint32(18).string(message.name);
+    if (message.key !== "") {
+      writer.uint32(18).string(message.key);
     }
     return writer;
   },
@@ -67,7 +67,7 @@ export const CryptServiceGetSecretRequest = {
             break;
           }
 
-          message.name = reader.string();
+          message.key = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -87,13 +87,13 @@ export const CryptServiceGetSecretRequest = {
     message.resource = (object.resource !== undefined && object.resource !== null)
       ? Resource.fromPartial(object.resource)
       : undefined;
-    message.name = object.name ?? "";
+    message.key = object.key ?? "";
     return message;
   },
 };
 
 function createBaseCryptServiceGetSecretResponse(): CryptServiceGetSecretResponse {
-  return { value: new Uint8Array() };
+  return { value: new Uint8Array(0) };
 }
 
 export const CryptServiceGetSecretResponse = {
@@ -133,13 +133,13 @@ export const CryptServiceGetSecretResponse = {
 
   fromPartial(object: DeepPartial<CryptServiceGetSecretResponse>): CryptServiceGetSecretResponse {
     const message = createBaseCryptServiceGetSecretResponse();
-    message.value = object.value ?? new Uint8Array();
+    message.value = object.value ?? new Uint8Array(0);
     return message;
   },
 };
 
 function createBaseCryptServicePutSecretRequest(): CryptServicePutSecretRequest {
-  return { resource: undefined, name: "", value: new Uint8Array() };
+  return { resource: undefined, key: "", value: new Uint8Array(0) };
 }
 
 export const CryptServicePutSecretRequest = {
@@ -147,8 +147,8 @@ export const CryptServicePutSecretRequest = {
     if (message.resource !== undefined) {
       Resource.encode(message.resource, writer.uint32(10).fork()).ldelim();
     }
-    if (message.name !== "") {
-      writer.uint32(18).string(message.name);
+    if (message.key !== "") {
+      writer.uint32(18).string(message.key);
     }
     if (message.value.length !== 0) {
       writer.uint32(26).bytes(message.value);
@@ -175,7 +175,7 @@ export const CryptServicePutSecretRequest = {
             break;
           }
 
-          message.name = reader.string();
+          message.key = reader.string();
           continue;
         case 3:
           if (tag !== 26) {
@@ -202,8 +202,8 @@ export const CryptServicePutSecretRequest = {
     message.resource = (object.resource !== undefined && object.resource !== null)
       ? Resource.fromPartial(object.resource)
       : undefined;
-    message.name = object.name ?? "";
-    message.value = object.value ?? new Uint8Array();
+    message.key = object.key ?? "";
+    message.value = object.value ?? new Uint8Array(0);
     return message;
   },
 };

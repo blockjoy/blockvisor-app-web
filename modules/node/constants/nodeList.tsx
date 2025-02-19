@@ -35,12 +35,16 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
   },
   {
     key: 'versionKey',
-    label: 'Protocol',
+    label: 'Type',
     minWidth: '110px',
     width: '180px',
     isVisible: false,
     component: (node: Node) => (
-      <NodeItems.ProtocolName versionKey={node.versionKey} showName={true} />
+      <NodeItems.ProtocolName
+        versionKey={node.versionKey}
+        versionMetadata={node.versionMetadata}
+        showName={true}
+      />
     ),
     actions: LAYOUT_ACTIONS,
   },
@@ -141,26 +145,6 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
     actions: LAYOUT_ACTIONS,
   },
   {
-    key: 'ipAddress',
-    label: 'Ip Address',
-    width: '160px',
-    isVisible: true,
-    component: (node: Node) => (
-      <NodeItems.IpAddress ipAddress={node.ipAddress} />
-    ),
-    actions: LAYOUT_ACTIONS,
-  },
-  {
-    key: 'ipGateway',
-    label: 'Ip Gateway',
-    width: '160px',
-    isVisible: false,
-    component: (node: Node) => (
-      <NodeItems.IpGetaway ipGateway={node.ipGateway} />
-    ),
-    actions: LAYOUT_ACTIONS,
-  },
-  {
     key: 'blockHeight',
     label: 'Block Height',
     minWidth: '140px',
@@ -199,21 +183,12 @@ export const NODE_LIST_ITEMS: NodeListItem[] = [
     actions: LAYOUT_ACTIONS,
   },
   {
-    key: 'cost',
-    label: 'Cost per month',
-    minWidth: '130px',
-    width: '160px',
-    isVisible: true,
-    component: (node: Node) => <NodeItems.Cost cost={node.cost} />,
-    actions: LAYOUT_ACTIONS,
-  },
-  {
-    key: 'dnsUrl',
+    key: 'dnsName',
     label: 'RPC Url',
     minWidth: '130px',
     width: '160px',
     isVisible: true,
-    component: (node: Node) => <NodeItems.RPCUrl dnsUrl={node.dnsUrl} />,
+    component: (node: Node) => <NodeItems.RPCUrl dnsName={node.dnsName} />,
     actions: LAYOUT_ACTIONS,
   },
 ];
