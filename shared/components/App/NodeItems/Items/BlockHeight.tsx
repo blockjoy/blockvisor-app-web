@@ -23,7 +23,7 @@ export const BlockHeight = ({ blockHeight, view = 'default' }: Props) => {
       {...(view === 'default' && {
         iconSize: '14px',
       })}
-      additionalTextStyles={[styles.text(view)]}
+      additionalTextStyles={[styles.text(view, blockHeight)]}
     >
       {blockHeight?.toLocaleString('en-US') ?? 'Syncing'}
     </NodePartials.NodeStatusTextWIcon>
@@ -31,14 +31,13 @@ export const BlockHeight = ({ blockHeight, view = 'default' }: Props) => {
 };
 
 const styles = {
-  text: (view?: NodeStatusView) => (theme: ITheme) =>
+  text: (view?: NodeStatusView, blockHeight?: number) => (theme: ITheme) =>
     css`
       text-transform: capitalize;
       ${view === 'default' &&
       `
         font-size: 14px;
-        font-style: italic;
-        color: ${theme.colorText};
+        color: ${blockHeight! > -1 ? theme.colorText : theme.colorDefault};
         `}
       letter-spacing: 0;
     `,

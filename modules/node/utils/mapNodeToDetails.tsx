@@ -1,35 +1,52 @@
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
-import { formatters } from '@shared/index';
 import { Copy } from '@shared/components';
 import { styles } from '@shared/components/Buttons/NextLink/NextLink.styles';
+import { getNodeRpcUrl } from './getNodeRpcUrl';
 
 export const mapNodeToDetails = (node: Node) => {
-  const rpcUrl = node.dnsUrl ? `http://${node.dnsUrl}` : undefined;
+  const rpcUrl = getNodeRpcUrl(node.dnsName);
+
+  const nodeType = node.versionMetadata.find(
+    (m) => m.metadataKey === 'node-type',
+  )?.value;
+
+  const network = node.versionMetadata.find(
+    (m) => m.metadataKey === 'network',
+  )?.value;
+
+  const client = node.versionMetadata.find(
+    (m) => m.metadataKey === 'client',
+  )?.value;
 
   const details: {
     label: string | any;
     data: any | undefined;
   }[] = [
-    { label: 'IP Address', data: node.ipAddress || '-' },
-    { label: 'Gateway IP', data: node.ipGateway || '-' },
     {
       label: 'Version',
       data: node.semanticVersion || 'Latest',
     },
-    {
-      label: 'Network',
-      data: node.hostNetworkName || '-',
-    },
-    {
-      label: 'Cost per month',
-      data: node.cost?.amount?.amountMinorUnits
-        ? formatters.formatCurrency(node.cost?.amount?.amountMinorUnits!)
-        : '-',
-    },
   ];
 
-  if (node.p2pAddress) {
-    details.unshift({ label: 'P2P Address', data: node.p2pAddress || '-' });
+  if (client) {
+    details.unshift({
+      label: 'Client',
+      data: client,
+    });
+  }
+
+  if (network) {
+    details.unshift({
+      label: 'Network',
+      data: network,
+    });
+  }
+
+  if (nodeType) {
+    details.unshift({
+      label: 'Node Type',
+      data: nodeType,
+    });
   }
 
   if (rpcUrl) {

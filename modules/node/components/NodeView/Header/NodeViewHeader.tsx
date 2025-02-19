@@ -9,6 +9,7 @@ import { styles } from './NodeViewHeader.styles';
 import { ProtocolIcon } from '@shared/components';
 import {
   checkIfNodeInProgress,
+  getNodeMetadataString,
   NodeTags,
   NodeViewReportProblem,
   useNodeAdd,
@@ -157,6 +158,7 @@ export const NodeViewHeader = () => {
                   <ProtocolIcon
                     size="40px"
                     protocolName={node.versionKey?.protocolKey}
+                    hideTooltip
                   />
                 </div>
                 <div css={styles.name}>
@@ -178,9 +180,11 @@ export const NodeViewHeader = () => {
                     <div css={styles.detailsFooter}>
                       <div css={styles.nodeType}>
                         <p>
-                          {node.versionKey?.protocolKey}
-                          {' | '}
-                          {node.versionKey?.variantKey}
+                          {node.protocolName} |{' '}
+                          {getNodeMetadataString(
+                            node.versionMetadata,
+                            node.versionKey!,
+                          )}
                         </p>
                       </div>
                       {node!.createdAt && (

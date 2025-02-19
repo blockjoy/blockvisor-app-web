@@ -4,17 +4,25 @@ import { NodeItems } from '@shared/components';
 import { typo } from 'styles/utils.typography.styles';
 
 type Props = Partial<
-  Pick<Node, 'displayName' | 'nodeName' | 'versionKey' | 'createdAt'>
+  Pick<
+    Node,
+    'displayName' | 'nodeName' | 'versionKey' | 'versionMetadata' | 'createdAt'
+  >
 >;
 
 export const Info = ({
   displayName,
   nodeName,
   versionKey,
+  versionMetadata,
   createdAt,
 }: Props) => (
   <span css={styles.wrapper}>
-    <NodeItems.ProtocolName versionKey={versionKey} showName={false} />
+    <NodeItems.ProtocolName
+      versionKey={versionKey}
+      versionMetadata={versionMetadata}
+      showName={false}
+    />
     <span css={[styles.rightColumn, typo.ellipsis]}>
       <NodeItems.DisplayName displayName={displayName} nodeName={nodeName} />
       <NodeItems.CreatedAt createdAt={createdAt} inGroup />
