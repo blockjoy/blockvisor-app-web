@@ -28,6 +28,7 @@ export const NodeLauncher = ({
     handleNodePropertyChanged,
     handleNodeConfigPropertyChanged,
     handleVersionChanged,
+    handleVariantSegmentsChanged,
     handleVariantChanged,
   } = useNodeLauncherHandlers({ fulfilReqs, resetFulfilReqs });
 
@@ -55,6 +56,7 @@ export const NodeLauncher = ({
                 onNodePropertyChanged={handleNodePropertyChanged}
                 onVersionChanged={handleVersionChanged}
                 onVariantChanged={handleVariantChanged}
+                onVariantSegmentsChanged={handleVariantSegmentsChanged}
               />
             )}
             {hasSummary && (

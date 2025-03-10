@@ -47,6 +47,7 @@ export type UINodeFilterCriteria = {
   ips?: string[];
   semanticVersions?: string[];
   networks?: string[];
+  versionKeys?: string[];
 };
 
 export type UIPagination = {
@@ -81,7 +82,14 @@ class NodeClient {
       nodeStates: filter?.nodeStatus?.map((f) => +f)!,
       protocolIds: filter?.protocol!,
       nextStates: [],
-      versionKeys: [],
+      versionKeys:
+        filter?.versionKeys?.map((versionKey) => ({
+          protocolKey: versionKey.substring(0, versionKey.indexOf('|')),
+          variantKey: versionKey.substring(
+            versionKey.indexOf('|') + 1,
+            versionKey.length,
+          ),
+        })) ?? [],
       sort: sort || [
         {
           field: NodeSortField.NODE_SORT_FIELD_CREATED_AT,

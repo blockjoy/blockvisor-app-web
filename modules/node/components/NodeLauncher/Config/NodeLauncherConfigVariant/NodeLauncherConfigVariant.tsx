@@ -6,10 +6,14 @@ import { useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 
 type Props = {
-  onChange: (variantSegments: NodeLauncherVariantSegments) => void;
+  onVariantSegmentsChanged: (
+    variantSegments: NodeLauncherVariantSegments,
+  ) => void;
 };
 
-export const NodeLauncherConfigVariant = ({ onChange }: Props) => {
+export const NodeLauncherConfigVariant = ({
+  onVariantSegmentsChanged,
+}: Props) => {
   const selectedVariantSegments = useRecoilValue(
     nodeLauncherAtoms.selectedVariantSegments,
   );
@@ -42,14 +46,14 @@ export const NodeLauncherConfigVariant = ({ onChange }: Props) => {
       },
     };
 
-    onChange(nextSegments);
+    onVariantSegmentsChanged(nextSegments);
   };
 
   useEffect(() => {
     const segmentsCopy = { ...selectedVariantSegments };
 
     if (
-      !availableNetworks.some(
+      !availableNetworks?.some(
         (availableNetwork) =>
           availableNetwork === selectedVariantSegments.network.selectedItem?.id,
       )
@@ -65,7 +69,7 @@ export const NodeLauncherConfigVariant = ({ onChange }: Props) => {
       segmentsCopy.client = { selectedItem: null };
     }
 
-    onChange(segmentsCopy);
+    onVariantSegmentsChanged(segmentsCopy);
   }, [selectedVariantSegments.nodeType]);
 
   useEffect(() => {
@@ -79,85 +83,62 @@ export const NodeLauncherConfigVariant = ({ onChange }: Props) => {
       segmentsCopy.client = { selectedItem: null };
     }
 
-    onChange(segmentsCopy);
+    onVariantSegmentsChanged(segmentsCopy);
   }, [selectedVariantSegments.network]);
-
-  useEffect(() => {
-    if (
-      allClients.length === 1 &&
-      allNetworks.length === 1 &&
-      allNodeTypes.length === 1
-    ) {
-      onChange({
-        client: {
-          selectedItem: {
-            id: allClients[0],
-            name: allClients[0],
-          },
-        },
-        network: {
-          selectedItem: {
-            id: allNetworks[0],
-            name: allNetworks[0],
-          },
-        },
-        nodeType: {
-          selectedItem: {
-            id: allNodeTypes[0],
-            name: allNodeTypes[0],
-          },
-        },
-      });
-    }
-  }, [allClients, allNetworks, allNodeTypes]);
 
   return (
     <>
-      {Boolean(allNodeTypes.length) && (
+      {Boolean(allNodeTypes?.length) && (
         <>
           <FormLabel isCapitalized>Node Type</FormLabel>
           <PillPicker
             onChange={(item) => handleChange('nodeType', item)}
-            items={allNodeTypes.map((nodeType) => ({
-              id: nodeType,
-              name: nodeType,
-            }))}
+            items={
+              allNodeTypes?.map((nodeType) => ({
+                id: nodeType,
+                name: nodeType,
+              }))!
+            }
             selectedItem={selectedVariantSegments?.nodeType.selectedItem!}
             name="node-type"
           />
         </>
       )}
 
-      {Boolean(allNetworks.length) && (
+      {Boolean(allNetworks?.length) && (
         <>
           <FormLabel isCapitalized>Network</FormLabel>
           <PillPicker
             onChange={(item) => handleChange('network', item)}
-            items={allNetworks.map((network) => ({
-              id: network,
-              name: network,
-              isDisabled: !availableNetworks.some(
-                (availableNetwork) => availableNetwork === network,
-              ),
-            }))}
+            items={
+              allNetworks?.map((network) => ({
+                id: network,
+                name: network,
+                isDisabled: !availableNetworks?.some(
+                  (availableNetwork) => availableNetwork === network,
+                ),
+              }))!
+            }
             selectedItem={selectedVariantSegments?.network.selectedItem!}
             name="network"
           />
         </>
       )}
 
-      {Boolean(allClients.length) && (
+      {Boolean(allClients?.length) && (
         <>
           <FormLabel isCapitalized>Client</FormLabel>
           <PillPicker
             onChange={(item) => handleChange('client', item)}
-            items={allClients.map((client) => ({
-              id: client,
-              name: client,
-              isDisabled: !availableClients.some(
-                (availableClient) => availableClient === client,
-              ),
-            }))}
+            items={
+              allClients?.map((client) => ({
+                id: client,
+                name: client,
+                isDisabled: !availableClients.some(
+                  (availableClient) => availableClient === client,
+                ),
+              }))!
+            }
             selectedItem={selectedVariantSegments?.client.selectedItem!}
             name="client"
           />

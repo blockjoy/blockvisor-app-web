@@ -16,9 +16,9 @@ export const AdminNodesFilterProtocol = ({
 
   useEffect(() => {
     const all: AdminFilterDropdownItem[] | undefined = (listAll as Node[])?.map(
-      ({ protocolId, versionKey }) => ({
+      ({ protocolId, protocolName }) => ({
         id: protocolId,
-        name: capitalize(versionKey?.protocolKey!),
+        name: capitalize(protocolName),
       }),
     );
     setList(sort(unique(all!, 'id'), { field: 'name' }));

@@ -5,7 +5,7 @@ export const styles = {
     width: 40px;
   `,
   menu: css`
-    width: 140px;
+    width: max-content;
     top: 48px;
   `,
   scrollbar: css`

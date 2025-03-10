@@ -5,6 +5,7 @@ import IconClose from '@public/assets/icons/common/Close.svg';
 import { Button } from '../../../Buttons/Button/Button';
 import { SvgIcon } from '../../../General/SvgIcon/SvgIcon';
 import { escapeHtml } from '@shared/utils/escapeHtml';
+import { useClickOutside } from '@shared/hooks/useClickOutside';
 
 type Props = {
   isLoading?: boolean;
@@ -46,13 +47,14 @@ export const EditableTitle = ({
   const [isValid, setIsValid] = useState<boolean>(false);
   const [isDirty, setIsDirty] = useState<boolean>(false);
 
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const inputValue = useRef<string>('');
 
   const handleEditToggled = () => {
     onEditClicked();
 
-    if (isEditMode && inputRef.current) {
+    if (inputRef.current && isEditMode) {
       inputRef.current.focus();
       inputRef.current.value = initialValue;
       inputValue.current = initialValue;
@@ -84,7 +86,7 @@ export const EditableTitle = ({
   };
 
   const handleBlur = () => {
-    if (!isDirty) {
+    if (!isDirty && isEditMode) {
       handleEditToggled();
     }
   };
@@ -95,6 +97,8 @@ export const EditableTitle = ({
       setIsEditMode(true);
     }
   };
+
+  useClickOutside<HTMLDivElement>(wrapperRef, handleBlur);
 
   useEffect(() => {
     inputValue.current = initialValue;
@@ -119,6 +123,7 @@ export const EditableTitle = ({
 
   return (
     <div
+      ref={wrapperRef}
       css={[styles.wrapper, canUpdate && !isEditMode && styles.wrapperEditable]}
       onClick={handleWrapperClicked}
     >
@@ -129,7 +134,6 @@ export const EditableTitle = ({
         css={[styles.input, isEditMode && styles.inputEditable]}
         onInput={handleChange}
         onKeyDown={handleKeyDown}
-        onBlur={handleBlur}
         suppressContentEditableWarning
       >
         {initialValue}

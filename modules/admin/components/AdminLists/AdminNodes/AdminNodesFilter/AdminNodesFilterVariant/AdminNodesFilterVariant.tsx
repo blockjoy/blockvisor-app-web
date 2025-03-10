@@ -26,17 +26,17 @@ export const AdminNodesFilterVariant = ({
     protocolFilters?.some((protocolFilter) => protocolFilter === p.protocolId),
   );
 
-  const filteredNetworks =
+  const filteredVariants =
     listAll?.filter(
       (item) =>
         !selectedProtocols?.length ||
         selectedProtocols.some((p) => p.protocolId === item.protocolId),
     ) ?? [];
 
-  const sortedNetworks = sort(
+  const sortedVariants = sort(
     unique(
-      filteredNetworks.map(({ versionKey }) => ({
-        id: versionKey?.variantKey,
+      filteredVariants.map(({ versionKey }) => ({
+        id: `${versionKey?.protocolKey}|${versionKey?.variantKey}`,
         name: versionKey?.variantKey,
       })),
       'name',
@@ -47,8 +47,8 @@ export const AdminNodesFilterVariant = ({
   useEffect(() => {
     const newList = sort(
       listAll?.map(({ versionKey }) => ({
-        id: versionKey?.protocolKey,
-        name: versionKey?.variantKey,
+        id: `${versionKey?.protocolKey}|${versionKey?.variantKey}`,
+        name: `${versionKey?.protocolKey}|${versionKey?.variantKey}`,
       })) ?? [],
       { field: 'name' },
     );
@@ -59,7 +59,7 @@ export const AdminNodesFilterVariant = ({
   return (
     <AdminListFilterControl
       columnName={columnName}
-      items={sortedNetworks?.length ? sortedNetworks : list}
+      items={sortedVariants?.length ? sortedVariants : list}
       values={values}
       onFilterChange={onFilterChange}
     />

@@ -30,7 +30,6 @@ export const AdminDetailEditOrgSelect = ({
       setSelectedOrg(
         response.orgs.find((org) => org.orgId === editSettings.defaultValue),
       );
-      console.log('orgs', response.orgs);
       setIsLoading(false);
     })();
   }, []);
