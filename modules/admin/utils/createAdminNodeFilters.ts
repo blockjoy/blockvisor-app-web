@@ -10,4 +10,5 @@ export const createAdminNodeFilters = (filters: AdminListColumn[]) => ({
   ips: createAdminFilterList(filters!, 'ipAddress'),
   networks: createAdminFilterList(filters!, 'network'),
   semanticVersions: createAdminFilterList(filters!, 'semanticVersion'),
+  versionKeys: createAdminFilterList(filters!, 'versionKeys'),
 });

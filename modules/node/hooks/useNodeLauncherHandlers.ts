@@ -55,7 +55,10 @@ interface IUseNodeLauncherHandlersHook {
     value: string | boolean,
   ) => void;
   handleVersionChanged: (version: ProtocolVersion) => void;
-  handleVariantChanged: (variantSegments: NodeLauncherVariantSegments) => void;
+  handleVariantChanged: (variant: string) => void;
+  handleVariantSegmentsChanged: (
+    variantSegments: NodeLauncherVariantSegments,
+  ) => void;
   handleCreateNodeClicked: () => void;
 }
 
@@ -109,6 +112,15 @@ export const useNodeLauncherHandlers = ({
   const resetSelectedVersion = useResetRecoilState(
     nodeLauncherAtoms.selectedVersion,
   );
+
+  const resetSelectedVariant = useResetRecoilState(
+    nodeLauncherAtoms.selectedVariant,
+  );
+
+  const resetSelectedVariantSegments = useResetRecoilState(
+    nodeLauncherAtoms.selectedVariantSegments,
+  );
+
   const [selectedRegions, setSelectedRegions] = useRecoilState(
     nodeLauncherAtoms.selectedRegions,
   );
@@ -287,7 +299,7 @@ export const useNodeLauncherHandlers = ({
           return item;
         });
 
-      setVersionMetadata(metadata);
+      setVersionMetadata(metadata?.length ? metadata : null);
       setSelectedVariantSegments({
         client: { selectedItem: null },
         network: { selectedItem: null },
@@ -299,7 +311,7 @@ export const useNodeLauncherHandlers = ({
 
   useEffect(() => {
     (async () => {
-      if (!isVariantValid || !selectedProtocol?.key) {
+      if ((!isVariantValid || !selectedProtocol?.key) && !selectedVariant) {
         setSelectedVersion(null);
         return;
       }
@@ -307,7 +319,9 @@ export const useNodeLauncherHandlers = ({
       const versionsResponse = await protocolClient.listVersions({
         versionKey: {
           protocolKey: selectedProtocol?.key!,
-          variantKey: `${selectedVariantSegments.client.selectedItem?.id}-${selectedVariantSegments.network.selectedItem?.id}-${selectedVariantSegments.nodeType.selectedItem?.id}`,
+          variantKey:
+            selectedVariant?.variantKey ||
+            `${selectedVariantSegments.client.selectedItem?.id}-${selectedVariantSegments.network.selectedItem?.id}-${selectedVariantSegments.nodeType.selectedItem?.id}`,
         },
         orgId: defaultOrganization?.orgId,
       });
@@ -325,7 +339,7 @@ export const useNodeLauncherHandlers = ({
           : null,
       );
     })();
-  }, [selectedVariant]);
+  }, [selectedVariant, selectedVariantSegments]);
 
   useEffect(() => {
     if (selectedVersion && selectedRegions && defaultOrganization)
@@ -448,13 +462,19 @@ export const useNodeLauncherHandlers = ({
     setSelectedVersion(version);
   };
 
-  const handleVariantChanged = (
-    variantSegments: NodeLauncherVariantSegments,
-  ) => {
+  const handleVariantChanged = (variantKey: string) => {
+    Mixpanel.track('Launch Node - Variant Changed');
+    resetSelectedVariantSegments();
     setSelectedVariant({
       protocol: selectedProtocol?.key!,
-      variantKey: `${variantSegments.client.selectedItem?.id}-${variantSegments.network.selectedItem?.id}-${variantSegments.nodeType.selectedItem?.id}`,
+      variantKey,
     });
+  };
+
+  const handleVariantSegmentsChanged = (
+    variantSegments: NodeLauncherVariantSegments,
+  ) => {
+    if (isVariantValid) resetSelectedVariant();
     setSelectedVariantSegments(variantSegments);
   };
 
@@ -532,6 +552,7 @@ export const useNodeLauncherHandlers = ({
     handleNodeConfigPropertyChanged,
     handleVersionChanged,
     handleVariantChanged,
+    handleVariantSegmentsChanged,
     handleCreateNodeClicked,
   };
 };

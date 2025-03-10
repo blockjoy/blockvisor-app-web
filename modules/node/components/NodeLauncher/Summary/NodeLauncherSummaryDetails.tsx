@@ -26,6 +26,8 @@ export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
   const selectedHosts = useRecoilValue(nodeLauncherAtoms.selectedHosts);
   const allHosts = useRecoilValue(hostAtoms.allHosts);
   const selectedRegions = useRecoilValue(nodeLauncherAtoms.selectedRegions);
+  const selectedVersion = useRecoilValue(nodeLauncherAtoms.selectedVersion);
+  const selectedVariant = useRecoilValue(nodeLauncherAtoms.selectedVariant);
   const selectedVariantSegments = useRecoilValue(
     nodeLauncherAtoms.selectedVariantSegments,
   );
@@ -67,7 +69,8 @@ export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
           {isConfigValid &&
           isNodeValid &&
           isNodeAllocationValid &&
-          isVariantValid ? (
+          selectedVersion &&
+          (isVariantValid || selectedVariant) ? (
             <span css={styles.summaryIcon}>
               <IconCheckCircle />
             </span>
@@ -82,7 +85,8 @@ export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
               {isConfigValid &&
               isNodeValid &&
               isNodeAllocationValid &&
-              isVariantValid
+              selectedVersion &&
+              (isVariantValid || selectedVariant)
                 ? 'Ready For Liftoff'
                 : 'Needs Work'}
             </span>
@@ -92,7 +96,7 @@ export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
       {(!isConfigValid ||
         !isNodeValid ||
         !isNodeAllocationValid ||
-        !isVariantValid) && (
+        (!isVariantValid && !selectedVersion)) && (
         <>
           <h2 css={styles.missingFieldsTitle}>
             The following needs to be added:
@@ -119,7 +123,7 @@ export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
                 ) : null}
               </>
             ) : null}
-            {!isVariantValid ? (
+            {!isVariantValid && !selectedVariant ? (
               <>
                 {!selectedVariantSegments.nodeType.selectedItem && (
                   <div>Node Type</div>
@@ -132,6 +136,7 @@ export const NodeLauncherSummaryDetails = ({ totalNodesToLaunch }: Props) => {
                 )}
               </>
             ) : null}
+            {!selectedVersion && isSuperUser && <div>Version</div>}
             {(selectedHosts && !selectedHosts?.every((host) => host.isValid)) ||
             (selectedRegions &&
               !selectedRegions?.every((region) => region.isValid) && (

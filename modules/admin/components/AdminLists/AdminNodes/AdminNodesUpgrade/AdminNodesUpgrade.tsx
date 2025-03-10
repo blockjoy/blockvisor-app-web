@@ -13,8 +13,10 @@ import { AdminDropdownHeader } from '@modules/admin/components';
 import { protocolClient, nodeClient, imageClient } from '@modules/grpc';
 import { toast } from 'react-toastify';
 import { ProtocolVersion } from '@modules/grpc/library/blockjoy/v1/protocol';
-import IconUpgrade from '@public/assets/icons/app/NodeUpgrade.svg';
 import { Node } from '@modules/grpc/library/blockjoy/v1/node';
+import { sortVersions } from '@modules/node';
+import { Visibility } from '@modules/grpc/library/blockjoy/common/v1/protocol';
+import IconUpgrade from '@public/assets/icons/app/NodeUpgrade.svg';
 
 type Props = {
   selectedIds: string[];
@@ -74,7 +76,13 @@ export const AdminNodesUpgrade = ({ selectedIds, list, setList }: Props) => {
         const versions = await protocolClient.listVersions({
           versionKey,
         });
-        setVersions(versions);
+        setVersions(
+          sortVersions(
+            versions.filter(
+              (v) => v.visibility === Visibility.VISIBILITY_PUBLIC,
+            ),
+          ),
+        );
       }
     })();
   }, [selectedIds]);
@@ -100,7 +108,7 @@ export const AdminNodesUpgrade = ({ selectedIds, list, setList }: Props) => {
               size="medium"
             >
               <div>
-                {version.semanticVersion}
+                {version.semanticVersion} - {version.versionKey?.variantKey}
                 {selectedVersion === version && (
                   <Badge style="outline">Selected</Badge>
                 )}

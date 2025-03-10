@@ -129,7 +129,6 @@ export const AdminFinancesByOrg = () => {
       const orgRevenueArray: OrgRevenue[] = [];
 
       for (let org of orgs) {
-        console.log('org', org);
         const revenue = nodes
           .filter((node) => node.orgId === org.orgId && node.cost)
           .map((node) => node.cost?.amount?.amountMinorUnits ?? 0)

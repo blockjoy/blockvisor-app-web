@@ -22,6 +22,7 @@ import {
   ProtocolServiceAddProtocolResponse,
   ProtocolServiceUpdateProtocolRequest,
   ProtocolServiceUpdateProtocolResponse,
+  ProtocolServiceUpdateVersionRequest,
 } from '../library/blockjoy/v1/protocol';
 import {
   callWithTokenRefresh,
@@ -195,6 +196,23 @@ class ProtocolClient {
         );
       console.log('listVersionsResponse', response);
       return response.protocolVersions;
+    } catch (err: any) {
+      return handleError(err);
+    }
+  }
+
+  async updateVersion(
+    request: ProtocolServiceUpdateVersionRequest,
+  ): Promise<Protocol | undefined> {
+    console.log('updateVersionRequest', request);
+    try {
+      const response: ProtocolServiceUpdateProtocolResponse =
+        await callWithTokenRefresh(
+          this.client.updateVersion.bind(this.client),
+          request,
+        );
+      console.log('updateVersionResponse', response);
+      return response.protocol;
     } catch (err: any) {
       return handleError(err);
     }

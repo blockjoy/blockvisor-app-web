@@ -3,6 +3,7 @@ import { protocolClient } from '@modules/grpc';
 import {
   Protocol,
   ProtocolServiceUpdateProtocolRequest,
+  ProtocolVersion,
 } from '@modules/grpc/library/blockjoy/v1/protocol';
 import { AdminDetail } from '../AdminDetail/AdminDetail';
 import { useState } from 'react';
@@ -14,12 +15,20 @@ import {
 import { Visibility } from '@modules/grpc/library/blockjoy/common/v1/protocol';
 import { capitalize } from 'utils/capitalize';
 import { AdminProtocolVariants } from './AdminProtocolVariants/AdminProtocolVariants';
+import { AdminProtocolVersionEdit } from './AdminProtocolVersionEdit/AdminProtocolVersionEdit';
+import { toast } from 'react-toastify';
 
 export const AdminProtocol = () => {
   const router = useRouter();
   const { id } = router.query;
 
   const [shouldRefresh, setShouldRefresh] = useState(false);
+
+  const [isVisibilityModalOpen, setIsVisibilityModalOpen] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
+
+  const [selectedVersion, setSelectedVersion] =
+    useState<ProtocolVersion | null>(null);
 
   const handleRefreshed = async () => {
     setShouldRefresh(true);
@@ -28,22 +37,6 @@ export const AdminProtocol = () => {
   };
 
   const getItem = async () => await protocolClient.getProtocol(id as string);
-
-  const handleSaveChanges = async (
-    properties: AdminDetailProperty[],
-    onSuccess: VoidFunction,
-  ) => {
-    const defaultRequest: ProtocolServiceUpdateProtocolRequest = {
-      protocolId: id as string,
-    };
-    const request =
-      createAdminUpdateRequest<ProtocolServiceUpdateProtocolRequest>(
-        defaultRequest,
-        properties,
-      );
-    await protocolClient.updateProtocol(request);
-    onSuccess();
-  };
 
   const customItems = (protocol: Protocol): AdminDetailProperty[] => [
     {
@@ -98,30 +91,93 @@ export const AdminProtocol = () => {
       data: !protocol.versions.length ? (
         '-'
       ) : (
-        <AdminProtocolVariants protocol={protocol} />
+        <AdminProtocolVariants
+          protocol={protocol}
+          onSelectVersion={handleSelectVersion}
+        />
       ),
     },
   ];
 
+  const handleSaveChanges = async (
+    properties: AdminDetailProperty[],
+    onSuccess: VoidFunction,
+  ) => {
+    const defaultRequest: ProtocolServiceUpdateProtocolRequest = {
+      protocolId: id as string,
+    };
+    const request =
+      createAdminUpdateRequest<ProtocolServiceUpdateProtocolRequest>(
+        defaultRequest,
+        properties,
+      );
+    await protocolClient.updateProtocol(request);
+    onSuccess();
+  };
+
+  const handleClose = () => {
+    setSelectedVersion(null);
+    setIsVisibilityModalOpen(false);
+  };
+
+  const handleSelectVersion = (version: ProtocolVersion) => {
+    setIsVisibilityModalOpen(true);
+    setSelectedVersion(version);
+  };
+
+  const updateVersion = async () => {
+    setIsUpdating(true);
+
+    if (!selectedVersion) return;
+
+    try {
+      await protocolClient.updateVersion({
+        protocolVersionId: selectedVersion.protocolVersionId,
+        visibility: selectedVersion.visibility,
+      });
+
+      handleRefreshed();
+
+      toast.success('Version Updated');
+
+      setIsVisibilityModalOpen(false);
+      setSelectedVersion(null);
+    } catch (err) {
+      toast.error('Error Updating Version');
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
   return (
-    <AdminDetail
-      shouldRefresh={shouldRefresh}
-      onRefreshed={handleRefreshed}
-      onSaveChanges={handleSaveChanges}
-      getItem={getItem}
-      detailsName="name"
-      ignoreItems={[
-        'name',
-        'key',
-        'protocolId',
-        'nodeTypes',
-        'stats',
-        'visibility',
-        'updatedAt',
-        'orgId',
-        'versions',
-      ]}
-      customItems={customItems}
-    />
+    <>
+      <AdminProtocolVersionEdit
+        isOpen={isVisibilityModalOpen}
+        isUpdating={isUpdating}
+        onUpdate={updateVersion}
+        onClose={handleClose}
+        onSelectVersion={handleSelectVersion}
+        selectedVersion={selectedVersion}
+      />
+      <AdminDetail
+        shouldRefresh={shouldRefresh}
+        onRefreshed={handleRefreshed}
+        onSaveChanges={handleSaveChanges}
+        getItem={getItem}
+        detailsName="name"
+        ignoreItems={[
+          'name',
+          'key',
+          'protocolId',
+          'nodeTypes',
+          'stats',
+          'visibility',
+          'updatedAt',
+          'orgId',
+          'versions',
+        ]}
+        customItems={customItems}
+      />
+    </>
   );
 };

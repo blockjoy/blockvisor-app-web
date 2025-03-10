@@ -83,6 +83,7 @@ export const styles = {
     opacity: 0;
     visibility: hidden;
     transition: 0.3s;
+    margin-left: 4px;
 
     @media ${breakpoints.toXlrg} {
       display: none;

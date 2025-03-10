@@ -16,4 +16,3 @@ export * from './AdminDetails/AdminDetail/AdminDetailEdit/AdminDetailEditControl
 export * from './AdminDetails/AdminDetail/AdminDetailEdit/AdminDetailEditControl/AdminDetailEditSelect/AdminDetailEditSelect';
 export * from './AdminDetails/AdminDetail/AdminDetailEdit/AdminDetailEditControl/AdminDetailEditSwitch/AdminDetailEditSwitch';
 export * from './AdminDetails/AdminDetail/AdminDetailEdit/AdminDetailEditControl/AdminDetailEditTextbox/AdminDetailEditTextbox';
-export * from './AdminDetails/AdminDetail/AdminDetailEdit/AdminDetailEditControl/AdminDetailEditFirewall/AdminDetailEditFirewall';

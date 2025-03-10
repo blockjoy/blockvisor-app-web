@@ -8,6 +8,8 @@ import {
 } from '@shared/components';
 import { styles } from './Select.styles';
 import { useAccessibleDropdown } from '@shared/index';
+import { SerializedStyles } from '@emotion/react';
+import { ITheme } from 'types/theme';
 
 type Props<T = any> = {
   disabled?: boolean;
@@ -15,6 +17,7 @@ type Props<T = any> = {
   selectedItem: T;
   buttonText: string | React.ReactNode;
   noBottomMargin?: boolean;
+  buttonStyles?: (theme?: ITheme) => SerializedStyles;
   onSelect: (value: string) => void;
 };
 
@@ -24,6 +27,7 @@ export const Select = <T extends { id?: string; name?: string }>({
   selectedItem,
   buttonText,
   noBottomMargin = false,
+  buttonStyles,
   onSelect,
 }: Props<T>) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -64,6 +68,7 @@ export const Select = <T extends { id?: string; name?: string }>({
         text={buttonText}
         onClick={handleClick}
         isOpen={isOpen}
+        buttonStyles={[buttonStyles!]}
         {...(handleFocus && { onFocus: handleFocus })}
         {...(handleBlur && { onBlur: handleBlur })}
       />

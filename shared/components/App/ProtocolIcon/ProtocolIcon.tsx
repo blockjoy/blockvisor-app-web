@@ -62,6 +62,10 @@ const IconBnB = dynamic(
   () => import(`@public/assets/icons/blockchain/BNB.svg`),
 );
 
+const IconBoba = dynamic(
+  () => import(`@public/assets/icons/blockchain/Boba.svg`),
+);
+
 const IconCardano = dynamic(
   () => import(`@public/assets/icons/blockchain/Cardano.svg`),
 );
@@ -116,6 +120,10 @@ const IconLightning = dynamic(
 
 const IconHelium = dynamic(
   () => import(`@public/assets/icons/blockchain/Helium.svg`),
+);
+
+const IconMantle = dynamic(
+  () => import(`@public/assets/icons/blockchain/Mantle.svg`),
 );
 
 const IconMonero = dynamic(
@@ -236,6 +244,9 @@ export const ProtocolIcon = ({
     case 'bsc':
       Component = IconBnB;
       break;
+    case 'boba':
+      Component = IconBoba;
+      break;
     case 'cardano':
       Component = IconCardano;
       break;
@@ -276,6 +287,9 @@ export const ProtocolIcon = ({
       break;
     case 'lightning':
       Component = IconLightning;
+      break;
+    case 'mantle':
+      Component = IconMantle;
       break;
     case 'monero':
       Component = IconMonero;

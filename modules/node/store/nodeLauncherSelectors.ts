@@ -87,10 +87,12 @@ const isPropertiesValid = selector({
   },
 });
 
-const allNodeTypes = selector<string[]>({
+const allNodeTypes = selector<string[] | null>({
   key: 'nodeLauncher.allNodeTypes',
   get: ({ get }) => {
     const versionMetadata = get(nodeLauncherAtoms.versionMetadata);
+
+    if (!versionMetadata) return null;
 
     const nodeTypes = [
       ...new Set(versionMetadata?.map((item) => item['node-type']).flat()),
@@ -100,10 +102,12 @@ const allNodeTypes = selector<string[]>({
   },
 });
 
-const allNetworks = selector<string[]>({
+const allNetworks = selector<string[] | null>({
   key: 'nodeLauncher.allNetworks',
   get: ({ get }) => {
     const versionMetadata = get(nodeLauncherAtoms.versionMetadata);
+
+    if (!versionMetadata) return null;
 
     const networks = [
       ...new Set(versionMetadata?.map((item) => item['network']).flat()),
@@ -113,10 +117,12 @@ const allNetworks = selector<string[]>({
   },
 });
 
-const allClients = selector<string[]>({
+const allClients = selector<string[] | null>({
   key: 'nodeLauncher.allClients',
   get: ({ get }) => {
     const versionMetadata = get(nodeLauncherAtoms.versionMetadata);
+
+    if (!versionMetadata) return null;
 
     const clients = [
       ...new Set(versionMetadata?.map((item) => item['client']).flat()),
@@ -203,7 +209,10 @@ const isVariantSegmentsLoaded = selector<boolean>({
     const nodeTypes = get(allNodeTypes);
     const networks = get(allNetworks);
     const clients = get(allClients);
-    return Boolean(nodeTypes.length && networks.length && clients.length);
+
+    if (!nodeTypes && !networks && !clients) return true;
+
+    return Boolean(nodeTypes?.length && networks?.length && clients?.length);
   },
 });
 
@@ -244,6 +253,8 @@ const nodeLauncherStatus = selectorFamily<
       const selectedHosts = get(nodeLauncherAtoms.selectedHosts);
       const selectedRegions = get(nodeLauncherAtoms.selectedRegions);
       const selectedProtocol = get(nodeLauncherAtoms.selectedProtocol);
+      const selectedVersion = get(nodeLauncherAtoms.selectedVersion);
+      const selectedVariant = get(nodeLauncherAtoms.selectedVariant);
       const isConfigValidVal = get(isConfigValid);
       const isVariantValidVal = get(isVariantValid);
       const error = get(nodeLauncherAtoms.error);
@@ -255,7 +266,8 @@ const nodeLauncherStatus = selectorFamily<
         NoPermission: !hasPermissionsToCreate,
         NoProtocol: !selectedProtocol,
         NoRegion: !(selectedHosts?.length || selectedRegions?.length),
-        NoVariant: !isVariantValidVal,
+        NoVariant: !isVariantValidVal && !selectedVariant,
+        NoVersion: !selectedVersion,
         InvalidConfig: !isConfigValidVal,
         ErrorExists: Boolean(error),
         NoPrice: !price && !billingExempt,

@@ -7,7 +7,7 @@ import { authSelectors } from '@modules/auth';
 import { ITheme } from 'types/theme';
 
 type NodeVariantSelectProps = {
-  onChange: (variant: string) => void;
+  onVariantChanged: (variant: string) => void;
 };
 
 const styles = {
@@ -19,7 +19,9 @@ const styles = {
   `,
 };
 
-export const NodeVariantSelect = ({ onChange }: NodeVariantSelectProps) => {
+export const NodeVariantSelect = ({
+  onVariantChanged,
+}: NodeVariantSelectProps) => {
   const variants = useRecoilValue(nodeLauncherAtoms.variants);
 
   const selectedVariant = useRecoilValue(nodeLauncherAtoms.selectedVariant);
@@ -30,7 +32,7 @@ export const NodeVariantSelect = ({ onChange }: NodeVariantSelectProps) => {
 
   const handleOpen = (open: boolean = true) => setIsOpen(open);
 
-  const handleSelect = (variant: string) => onChange(variant);
+  const handleSelect = (variant: string) => onVariantChanged(variant);
 
   const items = sort(
     variants?.map((variant) => ({
@@ -40,12 +42,11 @@ export const NodeVariantSelect = ({ onChange }: NodeVariantSelectProps) => {
     { field: 'name' },
   );
 
-  const error =
-    !selectedVariant || !variants?.length ? 'No Variants Available' : '';
+  const error = !variants?.length ? 'No Variants Available' : '';
 
   return (
     <Dropdown
-      disabled={variants?.length! < 2 || !!error}
+      disabled={!!error}
       items={items}
       itemKey="version"
       {...(selectedVariant?.variantKey
