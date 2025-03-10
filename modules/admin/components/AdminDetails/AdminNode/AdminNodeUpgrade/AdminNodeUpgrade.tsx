@@ -10,7 +10,9 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { styles } from './AdminNodeUpgrade.styles';
 import { toast } from 'react-toastify';
-import { sortVersionStringArray } from '@modules/admin/utils';
+import { Visibility } from '@modules/grpc/library/blockjoy/common/v1/protocol';
+import { sortVersions } from '@modules/node';
+import { ProtocolVersion } from '@modules/grpc/library/blockjoy/v1/protocol';
 import IconUpgrade from '@public/assets/icons/app/NodeUpgrade.svg';
 
 export const AdminNodeUpgrade = () => {
@@ -19,7 +21,7 @@ export const AdminNodeUpgrade = () => {
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const [versions, setVersions] = useState<string[]>([]);
+  const [versions, setVersions] = useState<ProtocolVersion[]>([]);
 
   const handleUpgrade = async (version: string) => {
     try {
@@ -36,15 +38,16 @@ export const AdminNodeUpgrade = () => {
     try {
       const node = await nodeClient.getNode(id as string);
 
-      const protocolsResponse = await protocolClient.listProtocols();
-
-      const protocol = protocolsResponse.protocols.find(
-        (b) => b.protocolId === node.protocolId,
-      );
+      const versionsResponse = await protocolClient.listVersions({
+        versionKey: node.versionKey,
+        orgId: node.orgId,
+      });
 
       setVersions(
-        sortVersionStringArray(
-          protocol?.versions.map(({ semanticVersion }) => semanticVersion),
+        sortVersions(
+          versionsResponse.filter(
+            (version) => version.visibility === Visibility.VISIBILITY_PUBLIC,
+          ),
         ),
       );
     } catch (err) {
@@ -54,7 +57,7 @@ export const AdminNodeUpgrade = () => {
 
   useEffect(() => {
     (async () => loadVersions())();
-  }, []);
+  }, [id]);
 
   return (
     <div css={styles.wrapper}>
@@ -72,12 +75,14 @@ export const AdminNodeUpgrade = () => {
           <Scrollbar additionalStyles={[styles.scrollbar]}>
             {versions.map((version) => (
               <DropdownItem
-                key={version}
-                onButtonClick={() => handleUpgrade(version)}
+                key={version.protocolVersionId}
+                onButtonClick={() => handleUpgrade(version.semanticVersion)}
                 type="button"
                 size="medium"
               >
-                <div>{version}</div>
+                <div>
+                  {version.semanticVersion} - {version.versionKey?.variantKey}
+                </div>
               </DropdownItem>
             ))}
           </Scrollbar>

@@ -18,9 +18,35 @@ export const styles = {
     margin-bottom: 20px;
     color: ${theme.colorDefault};
   `,
-  versionDescription: (theme: ITheme) => css`
-    color: ${theme.colorLabel};
-    margin-left: 10px;
-    font-size: 14px;
-  `,
+  versionDescription: (theme: ITheme) =>
+    css`
+      color: ${theme.colorLabel};
+      margin-left: 10px;
+      font-size: 14px;
+    `,
+  versionToggle: (isVisible: boolean) => (theme: ITheme) =>
+    css`
+      background: transparent;
+      border: 0;
+      padding: 0;
+      color: ${theme.colorText};
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+
+      ${!isVisible &&
+      css`
+        p {
+          text-decoration: line-through;
+        }
+      `}
+
+      :hover {
+        color: ${theme.colorText};
+      }
+
+      :hover p {
+        text-decoration: underline;
+      }
+    `,
 };

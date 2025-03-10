@@ -1,5 +1,4 @@
 import {
-  AdminDetailEditFirewall,
   AdminDetailEditOrgSelect,
   AdminDetailEditSelect,
   AdminDetailEditSwitch,
@@ -34,12 +33,6 @@ export const AdminDetailEditControl = ({
     ),
     org: (
       <AdminDetailEditOrgSelect
-        editSettings={editSettings}
-        onChange={onChange}
-      />
-    ),
-    firewall: (
-      <AdminDetailEditFirewall
         editSettings={editSettings}
         onChange={onChange}
       />

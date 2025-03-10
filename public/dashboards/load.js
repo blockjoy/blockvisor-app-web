@@ -9,8 +9,6 @@ const callback = (nextHost) => {
 };
 
 function loadScript() {
-  // let host = `https://magellan-1.slc.blockjoy.com/host/${name}`;
-  // const netdataUrl = `https://netdata.blockjoy.com`;
   const netdataUrl = `https://netdata.blkjy.io`;
   let host = `${netdataUrl}/host/${name}`;
   var url = `${host}/dashboard.js`;

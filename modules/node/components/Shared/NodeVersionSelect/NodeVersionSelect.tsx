@@ -29,6 +29,7 @@ export const NodeVersionSelect = ({
   onVersionChanged,
 }: NodeVersionSelectProps) => {
   const selectedVersion = useRecoilValue(nodeLauncherAtoms.selectedVersion);
+  const selectedVariant = useRecoilValue(nodeLauncherAtoms.selectedVariant);
 
   const versions = useRecoilValue(nodeLauncherAtoms.versions);
 
@@ -68,9 +69,13 @@ export const NodeVersionSelect = ({
 
   return (
     <Dropdown
-      disabled={versions?.length! < 2 || !selectedVersion || !isVariantValid}
+      disabled={
+        versions?.length! < 2 ||
+        !selectedVersion ||
+        (!isVariantValid && !selectedVariant)
+      }
       items={items}
-      {...(selectedVersion && isVariantValid
+      {...(selectedVersion || isVariantValid
         ? {
             renderButtonText: (
               <p css={styles.buttonText}>{selectedVersion?.semanticVersion}</p>
@@ -78,9 +83,10 @@ export const NodeVersionSelect = ({
           }
         : isSuperUser
         ? {
-            error: !isVariantValid
-              ? 'No Variant Selected'
-              : 'No Versions Available',
+            error:
+              !isVariantValid && !selectedVariant
+                ? 'No Variant Selected'
+                : 'No Versions Available',
           }
         : { defaultText: <>Auto select</> })}
       renderItem={(item) => item.name}

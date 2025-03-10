@@ -40,8 +40,6 @@ export const AdminNodesOrgAssign = ({ selectedIds, list, setList }: Props) => {
 
     const listCopy = [...list];
 
-    console.log('handleOrgAssign', selectedIds, selectedOrg);
-
     try {
       const calls = [];
 

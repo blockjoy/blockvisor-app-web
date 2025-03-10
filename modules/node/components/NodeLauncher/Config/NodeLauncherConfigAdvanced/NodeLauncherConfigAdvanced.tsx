@@ -5,7 +5,7 @@ import { ProtocolVersion } from '@modules/grpc/library/blockjoy/v1/protocol';
 import {
   NodeFirewallRules,
   nodeLauncherAtoms,
-  nodeLauncherSelectors,
+  NodeVariantSelect,
   NodeVersionSelect,
 } from '@modules/node';
 import {
@@ -31,6 +31,7 @@ type Props = {
     value: NodeLauncherState[K],
   ) => void;
   onVersionChanged: (version: ProtocolVersion) => void;
+  onVariantChanged: (variant: string) => void;
 };
 
 export const NodeLauncherConfigAdvanced = ({
@@ -38,6 +39,7 @@ export const NodeLauncherConfigAdvanced = ({
   onNodeConfigPropertyChanged,
   onNodePropertyChanged,
   onVersionChanged,
+  onVariantChanged,
 }: Props) => {
   const nodeLauncher = useRecoilValue(nodeLauncherAtoms.nodeLauncher);
 
@@ -54,6 +56,9 @@ export const NodeLauncherConfigAdvanced = ({
     <div css={[styles.advancedConfig, isOpen && styles.advancedConfigOpen]}>
       {isSuperUser && (
         <>
+          <FormLabel>Variant</FormLabel>
+          <NodeVariantSelect onVariantChanged={onVariantChanged} />
+
           <FormLabel>Version</FormLabel>
           <NodeVersionSelect onVersionChanged={onVersionChanged} />
         </>

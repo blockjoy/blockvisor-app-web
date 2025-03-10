@@ -24,13 +24,17 @@ type NodeLauncherConfigProps = {
     value: NodeLauncherState[K],
   ) => void;
   onVersionChanged: (version: ProtocolVersion) => void;
-  onVariantChanged: (variantSegments: NodeLauncherVariantSegments) => void;
+  onVariantSegmentsChanged: (
+    variantSegments: NodeLauncherVariantSegments,
+  ) => void;
+  onVariantChanged: (variant: string) => void;
 };
 
 export const NodeLauncherConfig = ({
   onNodeConfigPropertyChanged,
   onNodePropertyChanged,
   onVersionChanged,
+  onVariantSegmentsChanged,
   onVariantChanged,
 }: NodeLauncherConfigProps) => {
   const [showAdvancedConfig, setShowAdvancedConfig] = useState(false);
@@ -48,7 +52,9 @@ export const NodeLauncherConfig = ({
       <div css={styles.wrapper}>
         <FormHeader>Config</FormHeader>
 
-        <NodeLauncherConfigVariant onChange={onVariantChanged} />
+        <NodeLauncherConfigVariant
+          onVariantSegmentsChanged={onVariantSegmentsChanged}
+        />
 
         {(isVariantSegmentsLoaded || selectedProtocol?.key === 'legacy') && (
           <>
@@ -71,6 +77,7 @@ export const NodeLauncherConfig = ({
                 onNodeConfigPropertyChanged={onNodeConfigPropertyChanged}
                 onNodePropertyChanged={onNodePropertyChanged}
                 onVersionChanged={onVersionChanged}
+                onVariantChanged={onVariantChanged}
               />
             )}
           </>

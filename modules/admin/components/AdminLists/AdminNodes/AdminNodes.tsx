@@ -98,7 +98,8 @@ const columns: AdminListColumn[] = [
     filterDropdownMinWidth: 200,
   },
   {
-    name: 'variant',
+    name: 'versionKeys',
+    displayName: 'variant',
     width: '140px',
     isVisible: true,
     filterComponent: AdminNodesFilterVariant,
@@ -230,7 +231,7 @@ export const AdminNodes = () => {
           : `${user?.firstName} ${user?.lastName}`;
       return {
         ...node,
-        variant: node.versionKey?.variantKey,
+        versionKeys: node.versionKey?.variantKey,
         nodeState: <NodeItems.NodeStatus nodeStatus={node.nodeStatus} />,
         protocolHealth: (
           <NodeItems.ProtocolHealth nodeStatus={node.nodeStatus} />
@@ -252,7 +253,7 @@ export const AdminNodes = () => {
             onUpdate={handleUpdate}
           />
         ),
-        protocolName: capitalized(node.versionKey?.protocolKey!),
+        protocolName: capitalized(node.protocolName),
       };
     });
 

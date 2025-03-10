@@ -100,6 +100,7 @@ export const AdminListFilter = ({
         isOpen={isOpen}
         columnName={column.name}
         onFilterChange={onFilterChange}
+        onReset={onReset}
         items={column?.filterSettings?.items}
         values={column?.filterSettings?.values}
       />

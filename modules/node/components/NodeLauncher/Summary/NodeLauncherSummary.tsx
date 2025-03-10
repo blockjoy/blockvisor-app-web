@@ -60,6 +60,7 @@ export const NodeLauncherSummary = ({
   const error = useRecoilValue(nodeLauncherAtoms.error);
   const selectedHosts = useRecoilValue(nodeLauncherAtoms.selectedHosts);
   const selectedRegions = useRecoilValue(nodeLauncherAtoms.selectedRegions);
+  const selectedVariant = useRecoilValue(nodeLauncherAtoms.selectedVariant);
   const totalNodesToLaunch = useRecoilValue(
     nodeLauncherSelectors.totalNodesToLaunch,
   );
@@ -207,7 +208,7 @@ export const NodeLauncherSummary = ({
               disabled={
                 isLaunching ||
                 (isSuperUser && nodeLauncherStatus.isDisabled) ||
-                !isVariantValid ||
+                (!isVariantValid && !selectedVariant) ||
                 !isPropertiesValid
               }
               css={[
