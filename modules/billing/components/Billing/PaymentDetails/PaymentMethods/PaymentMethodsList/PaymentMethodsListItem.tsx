@@ -15,6 +15,8 @@ type PaymentMethodsListItemProps = {
 export const PaymentMethodsListItem = ({
   paymentMethod,
 }: PaymentMethodsListItemProps) => {
+  if (!paymentMethod?.id) return null;
+
   return (
     <div css={styles.wrapper}>
       <div css={styles.content}>

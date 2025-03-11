@@ -1,16 +1,10 @@
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { RegionInfo } from '@modules/grpc/library/blockjoy/v1/host';
+import { Image } from '@modules/grpc/library/blockjoy/v1/image';
 import { hostClient } from '@modules/grpc';
 import { organizationSelectors } from '@modules/organization';
-import { nodeAtoms, nodeLauncherAtoms } from '@modules/node';
+import { nodeAtoms } from '@modules/node';
 
-type UseGetRegionsHook = {
-  getRegions: () => Promise<void>;
-  regions: RegionInfo[];
-  regionsLoadingState: LoadingState;
-};
-
-export const useGetRegions = (): UseGetRegionsHook => {
+export const useGetRegions = () => {
   const [regions, setRegions] = useRecoilState(nodeAtoms.regions);
   const [regionsLoadingState, setRegionsLoadingState] = useRecoilState(
     nodeAtoms.regionsLoadingState,
@@ -19,9 +13,8 @@ export const useGetRegions = (): UseGetRegionsHook => {
   const defaultOrganization = useRecoilValue(
     organizationSelectors.defaultOrganization,
   );
-  const image = useRecoilValue(nodeLauncherAtoms.selectedImage);
 
-  const getRegions = async () => {
+  const getRegions = async (image?: Image | null) => {
     try {
       setRegionsLoadingState('loading');
 

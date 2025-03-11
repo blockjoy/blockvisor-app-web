@@ -10,7 +10,8 @@ export const PageTitleLaunchNode = () => {
   if (router.query.id && router.pathname === '/hosts/[id]')
     query.hostId = router.query.id;
 
-  return !router.pathname.includes('launch-node') ? (
+  return !router.pathname.includes('launch-node') &&
+    !router.pathname.includes('node-launcher') ? (
     <button
       css={styles.button}
       onClick={() =>

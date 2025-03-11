@@ -1,6 +1,8 @@
 import { ChangeEvent } from 'react';
 import IconSearch from '@public/assets/icons/common/Search.svg';
 import { styles } from './ListSearch.styles';
+import { SerializedStyles } from '@emotion/react';
+import { ITheme } from 'types/theme';
 
 type ListSearchProps = {
   name: string;
@@ -8,6 +10,9 @@ type ListSearchProps = {
   placeholder?: string;
   handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
   handleFocus?: (isFocus: boolean) => void;
+  additionalStyles?:
+    | ((theme: ITheme) => SerializedStyles)[]
+    | SerializedStyles[];
 };
 
 export const ListSearch = ({
@@ -16,9 +21,10 @@ export const ListSearch = ({
   placeholder = 'Search...',
   handleChange,
   handleFocus,
+  additionalStyles,
 }: ListSearchProps) => {
   return (
-    <div css={styles.searchWrapper}>
+    <div css={[styles.searchWrapper, additionalStyles && additionalStyles]}>
       <input
         autoFocus
         autoComplete="off"
