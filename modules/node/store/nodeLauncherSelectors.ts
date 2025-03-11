@@ -183,8 +183,6 @@ const availableClients = selector<string[]>({
       ),
     ];
 
-    console.log('clients', clients);
-
     return clients;
   },
 });
