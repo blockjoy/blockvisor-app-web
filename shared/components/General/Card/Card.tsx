@@ -15,7 +15,7 @@ export const Card = ({ name, icon, children }: CardProps) => {
         <SvgIcon size="20px"> {icon}</SvgIcon>
         <span css={typo.capitalize}>{name}</span>
       </div>
-      <div>{children}</div>
+      {children && <div>{children}</div>}
     </article>
   );
 };

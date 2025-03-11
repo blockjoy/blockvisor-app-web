@@ -8,5 +8,6 @@
   "eslint.validate": ["typescript", "typescriptreact"],
   "github-actions.workflows.pinned.workflows": [".github/workflows/*.yml"],
   "cssVariables.lookupFiles": ["**/*.styles.ts"],
-  "typescript.enablePromptUseWorkspaceTsdk": true
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "colorize.languages": ["typescript", "typescriptreact"]
 }

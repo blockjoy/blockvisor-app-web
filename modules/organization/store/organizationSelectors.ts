@@ -155,6 +155,7 @@ export const organizationSelectors = {
   settings,
 
   defaultOrganization,
+  currentOrganization,
   personalOrganization,
 
   allOrganizationsSorted,

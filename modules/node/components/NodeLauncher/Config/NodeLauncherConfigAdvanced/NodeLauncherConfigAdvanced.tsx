@@ -52,6 +52,8 @@ export const NodeLauncherConfigAdvanced = ({
 
   const sortedProperties = sort(properties ?? [], { field: 'key' });
 
+  console.log('FIREWALL OLD', firewall);
+
   return (
     <div css={[styles.advancedConfig, isOpen && styles.advancedConfigOpen]}>
       {isSuperUser && (

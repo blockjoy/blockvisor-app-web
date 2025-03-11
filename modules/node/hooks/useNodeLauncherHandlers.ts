@@ -369,7 +369,7 @@ export const useNodeLauncherHandlers = ({
   }, [defaultOrganization?.orgId, isSuperUser]);
 
   useEffect(() => {
-    if (defaultOrganization?.orgId) getRegions();
+    if (defaultOrganization?.orgId) getRegions(selectedImage);
   }, [defaultOrganization?.orgId, selectedImage]);
 
   const handleHostsChanged = (hosts: NodeLauncherHost[] | null) => {
@@ -519,6 +519,9 @@ export const useNodeLauncherHandlers = ({
       };
     }
 
+    console.log('PARAMS OLD', params);
+
+    return;
     await createNode(
       params,
       (nodeId: string) => {

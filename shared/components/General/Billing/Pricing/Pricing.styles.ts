@@ -5,7 +5,7 @@ export const styles = {
   wrapper: css`
     display: flex;
     justify-content: space-between;
-    margin-bottom: 15px;
+    // margin-bottom: 15px;
   `,
   priceWrapper: css`
     display: flex;

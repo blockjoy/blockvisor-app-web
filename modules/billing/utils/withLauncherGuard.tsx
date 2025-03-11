@@ -116,7 +116,6 @@ export const withLauncherGuard = (Component: any) => {
                 : 'Resource'
             } requires a payment method.`}
             handleCancel={handleCancelAction}
-            handleSubmit={handleSubmittedPayment}
           />
         )}
         {activeView === 'confirm-subscription' && (

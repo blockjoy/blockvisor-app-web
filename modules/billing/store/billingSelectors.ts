@@ -1,5 +1,5 @@
 import { selector, selectorFamily } from 'recoil';
-import { Invoice } from '@modules/grpc/library/blockjoy/v1/org';
+import { Invoice, PaymentMethod } from '@modules/grpc/library/blockjoy/v1/org';
 import { billingAtoms } from '@modules/billing';
 import { organizationSelectors } from '@modules/organization';
 import { authAtoms } from '@modules/auth';
@@ -64,6 +64,28 @@ const canCreateResource = selector({
   },
 });
 
+const defaultPaymentMethod = selector<PaymentMethod | null>({
+  key: 'billing.paymentMethods.default',
+  get: ({ get }) => {
+    const paymentMethods = get(billingAtoms.paymentMethods);
+    console.log('paymentMethods123', paymentMethods);
+    const currentOrganization = get(organizationSelectors.currentOrganization);
+    const subscription = get(billingAtoms.subscription);
+    console.log('subscription123', subscription);
+    console.log('currentOrganization123', currentOrganization);
+
+    return paymentMethods[0];
+
+    // if (!subscription) return null;
+
+    // return (
+    //   paymentMethods?.find(
+    //     (pm) => pm.id === subscription.defaultPaymentMethod,
+    //   ) ?? null
+    // );
+  },
+});
+
 export const billingSelectors = {
   bypassBillingForSuperUser,
 
@@ -73,4 +95,6 @@ export const billingSelectors = {
   hasSubscription,
 
   canCreateResource,
+
+  defaultPaymentMethod,
 };
